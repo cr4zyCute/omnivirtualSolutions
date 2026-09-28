@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Level Dropdown Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+        }
+        .menu {
+            width: 250px;
+            border-right: 2px solid #ddd;
+            padding: 10px;
+        }
+        .menu-item {
+            cursor: pointer;
+            padding: 10px;
+            background: #f4f4f4;
+            margin: 5px 0;
+        }
+        .submenu {
+            display: none;
+            padding-left: 20px;
+        }
+        .submenu-item {
+            cursor: pointer;
+            padding: 8px;
+            background: #e0e0e0;
+            margin: 3px 0;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .content-section {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="menu-item" onclick="toggleMenu('item1')">Editorial Services</div>
+        <div class="submenu" id="item1">
+            <div class="submenu-item" onclick="showContent('content1')">Advanced Editorial Services</div>
+            <div class="submenu-item" onclick="showContent('content2')">Developmental Editing</div>
+            <div class="submenu-item" onclick="showContent('content3')">Book Doctor</div>
+        </div>
+    </div>
+    <div class="content">
+        <div id="content1" class="content-section active">
+            <h2>Advanced Editorial Services</h2>
+            <p>Details about Advanced Editorial Services...</p>
+        </div>
+        <div id="content2" class="content-section">
+            <h2>Developmental Editing</h2>
+            <p>Details about Developmental Editing...</p>
+        </div>
+        <div id="content3" class="content-section">
+            <h2>Book Doctor</h2>
+            <p>Details about Book Doctor services...</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleMenu(id) {
+            var submenu = document.getElementById(id);
+            submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+        }
+        function showContent(id) {
+            var sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+    </script>
+</body>
+</html>
