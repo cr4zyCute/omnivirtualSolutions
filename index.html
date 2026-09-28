@@ -15,7 +15,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -33,56 +33,61 @@
 <body class="index-page">
 
   <header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center me-auto">
-        <img src="./assets/img/OmniLogo2.png" alt="Omni Virtual Solutions" style="height: 50px;">
-        <h1 style="color: black;" >Omni Virtual Solutions</h1>
-    </a>
-      <nav id="navmenu" class="navmenu" >
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="./assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo">
+        <span class="sitename">Omni Virtual Solutions</span>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="#hero" class="active" >Home</a></li>
+          <li><a href="#hero" class="active">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#services">Services</a></li>
-         
           <li><a href="#footer">Contact</a></li>
         </ul>
-        
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
 
     </div>
-    <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-  </header><hr>
+  </header>
 
   <main class="main">
     <!-- Hero Section -->
-    <section id="hero" class="hero section">
-
-      <div class="container">
-        <div class="row gy-4">
-          <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center text-center" data-aos="fade-up">
-          <div style="position: relative; top: -20%;">
-                <img src="./assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo" class="img-fluid" style="max-width: 45%;">
-            </div>
-            <h1 style="position: relative; top: -20%;">Omni Virtual Solutions </h1>
-            <p></p>
-            <div class="d-flex"></div>
+    <section id="hero" class="hero section hero-redesign">
+      <div class="container text-center position-relative">
+        <div class="hero-content" data-aos="fade-up">
+          <h1 class="hero-main-title">
+            Empowering Individuals<br>and Businesses
+          </h1>
+          <p class="hero-main-subtitle">
+            With knowledge, strategies, and solutions for a better tomorrow.
+          </p>
+          <div class="hero-cta-group">
+            <a href="#services" class="btn-hero-start">
+              <span>Get Started</span>
+              <i class="bi bi-arrow-right"></i>
+            </a>
+            <a href="#about" class="btn-hero-learn">
+              <span class="play-btn-circle"><i class="bi bi-play-fill"></i></span>
+              <span>Learn More</span>
+            </a>
+          </div>
         </div>
-        
-          <div class="col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-out" data-aos-delay="100">
-            <img src="assets/img/11.png" class="img-fluid animated" alt="" style="position: relative; top: -20%;">
+
+        <div class="hero-showcase-wrapper" data-aos="fade-up" data-aos-delay="100">
+          <div class="hero-watermark-text" aria-hidden="true">
+            OMNI VIRTUAL SOLUTIONS
+          </div>
+          <div class="hero-books-container">
+            <img src="assets/img/hero-books.jpg" alt="Published Books Showcase - Omni Virtual Solutions" class="hero-books-image">
           </div>
         </div>
       </div>
-
     </section><!-- /Hero Section -->
 
-    <!-- Featured Services Section -->
-    <section id="featured-services" class="featured-services section">
 
-   
-
-    </section><!-- /Featured Services Section -->
 
     <div class="container-fluid" style="position: relative; padding: 0;">
   
