@@ -35,15 +35,78 @@
   mobileNavToggleBtn.addEventListener('click', mobileNavToogle);
 
   /**
-   * Hide mobile nav on same-page/hash links
+   * Smooth navigation redirect to each section with header offset & mobile nav handling
    */
-  document.querySelectorAll('#navmenu a').forEach(navmenu => {
-    navmenu.addEventListener('click', () => {
-      if (document.querySelector('.mobile-nav-active')) {
-        mobileNavToogle();
+  document.querySelectorAll('#navmenu a, .btn-getstarted').forEach(navLink => {
+    navLink.addEventListener('click', function(e) {
+      const hash = this.hash;
+      if (!hash) return;
+
+      const isSamePage = this.pathname === window.location.pathname || this.pathname === '' || this.getAttribute('href').startsWith('#');
+      if (!isSamePage) return;
+
+      let target = document.querySelector(hash);
+      if (!target && (hash === '#contact' || hash === '#footer')) {
+        target = document.querySelector('#contact') || document.querySelector('#footer');
+      }
+
+      if (target) {
+        e.preventDefault();
+
+        // Close mobile nav menu if open
+        if (document.body.classList.contains('mobile-nav-active')) {
+          document.body.classList.remove('mobile-nav-active');
+          if (mobileNavToggleBtn) {
+            mobileNavToggleBtn.classList.add('bi-list');
+            mobileNavToggleBtn.classList.remove('bi-x');
+          }
+        }
+
+        const header = document.querySelector('#header');
+        const headerOffset = header ? header.offsetHeight : 70;
+        const windowHeight = window.innerHeight;
+        const availableHeight = windowHeight - headerOffset;
+
+        let sectionElement = target;
+        if (target.id === 'contact' && target.closest('footer')) {
+          sectionElement = target.closest('footer');
+        }
+
+        const sectionHeight = sectionElement.offsetHeight;
+        const sectionAbsoluteTop = sectionElement.getBoundingClientRect().top + window.pageYOffset;
+
+        let targetTop;
+        if (hash === '#hero') {
+          targetTop = 0;
+        } else if (hash === '#contact' || hash === '#footer') {
+          if (sectionHeight <= availableHeight) {
+            targetTop = sectionAbsoluteTop - headerOffset - (availableHeight - sectionHeight);
+          } else {
+            targetTop = sectionAbsoluteTop - headerOffset;
+          }
+        } else if (sectionHeight <= availableHeight) {
+          const extraSpace = availableHeight - sectionHeight;
+          targetTop = sectionAbsoluteTop - headerOffset - (extraSpace / 2);
+        } else {
+          targetTop = sectionAbsoluteTop - headerOffset - 10;
+        }
+
+        window.scrollTo({
+          top: Math.max(0, Math.round(targetTop)),
+          behavior: 'smooth'
+        });
+
+        if (history.pushState) {
+          history.pushState(null, null, hash);
+        }
+
+        // Update active class
+        document.querySelectorAll('#navmenu a.active').forEach(link => link.classList.remove('active'));
+        if (this.closest('#navmenu')) {
+          this.classList.add('active');
+        }
       }
     });
-
   });
 
   /**
@@ -171,15 +234,47 @@
    */
   window.addEventListener('load', function(e) {
     if (window.location.hash) {
-      if (document.querySelector(window.location.hash)) {
+      const hash = window.location.hash;
+      let target = document.querySelector(hash);
+      if (!target && (hash === '#contact' || hash === '#footer')) {
+        target = document.querySelector('#contact') || document.querySelector('#footer');
+      }
+      if (target) {
         setTimeout(() => {
-          let section = document.querySelector(window.location.hash);
-          let scrollMarginTop = getComputedStyle(section).scrollMarginTop;
+          const header = document.querySelector('#header');
+          const headerOffset = header ? header.offsetHeight : 70;
+          const windowHeight = window.innerHeight;
+          const availableHeight = windowHeight - headerOffset;
+
+          let sectionElement = target;
+          if (target.id === 'contact' && target.closest('footer')) {
+            sectionElement = target.closest('footer');
+          }
+
+          const sectionHeight = sectionElement.offsetHeight;
+          const sectionAbsoluteTop = sectionElement.getBoundingClientRect().top + window.pageYOffset;
+
+          let targetTop;
+          if (hash === '#hero') {
+            targetTop = 0;
+          } else if (hash === '#contact' || hash === '#footer') {
+            if (sectionHeight <= availableHeight) {
+              targetTop = sectionAbsoluteTop - headerOffset - (availableHeight - sectionHeight);
+            } else {
+              targetTop = sectionAbsoluteTop - headerOffset;
+            }
+          } else if (sectionHeight <= availableHeight) {
+            const extraSpace = availableHeight - sectionHeight;
+            targetTop = sectionAbsoluteTop - headerOffset - (extraSpace / 2);
+          } else {
+            targetTop = sectionAbsoluteTop - headerOffset - 10;
+          }
+
           window.scrollTo({
-            top: section.offsetTop - parseInt(scrollMarginTop),
+            top: Math.max(0, Math.round(targetTop)),
             behavior: 'smooth'
           });
-        }, 100);
+        }, 150);
       }
     }
   });
@@ -190,18 +285,31 @@
   let navmenulinks = document.querySelectorAll('.navmenu a');
 
   function navmenuScrollspy() {
+    let header = document.querySelector('#header');
+    let headerOffset = header ? header.offsetHeight : 70;
+    let scrollPosition = window.scrollY + headerOffset + 80;
+
+    let isNearBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 80);
+
     navmenulinks.forEach(navmenulink => {
       if (!navmenulink.hash) return;
       let section = document.querySelector(navmenulink.hash);
+      if (!section && (navmenulink.hash === '#contact' || navmenulink.hash === '#footer')) {
+        section = document.querySelector('#contact') || document.querySelector('#footer');
+      }
       if (!section) return;
-      let position = window.scrollY + 200;
-      if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
+
+      let sectionTop = section.offsetTop;
+      let sectionBottom = sectionTop + section.offsetHeight;
+
+      if (isNearBottom && (navmenulink.hash === '#contact' || navmenulink.hash === '#footer')) {
         document.querySelectorAll('.navmenu a.active').forEach(link => link.classList.remove('active'));
         navmenulink.classList.add('active');
-      } else {
-        navmenulink.classList.remove('active');
+      } else if (!isNearBottom && scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+        document.querySelectorAll('.navmenu a.active').forEach(link => link.classList.remove('active'));
+        navmenulink.classList.add('active');
       }
-    })
+    });
   }
   window.addEventListener('load', navmenuScrollspy);
   document.addEventListener('scroll', navmenuScrollspy);
