@@ -56,7 +56,7 @@
   <main class="main">
     <!-- Hero Section -->
     <section id="hero" class="hero section hero-redesign">
-      <div class="container text-center position-relative">
+      <div class="hero-inner-container">
         <div class="hero-content" data-aos="fade-up">
           <h1 class="hero-main-title">
             Empowering Individuals<br>and Businesses
@@ -80,8 +80,149 @@
           <div class="hero-watermark-text" aria-hidden="true">
             OMNI VIRTUAL SOLUTIONS
           </div>
-          <div class="hero-books-container">
-            <img src="assets/img/hero-books.jpg" alt="Published Books Showcase - Omni Virtual Solutions" class="hero-books-image">
+
+          <div class="hero-books-swiper-container">
+            <div class="swiper hero-books-swiper init-swiper">
+              <script type="application/json" class="swiper-config">
+                {
+                  "loop": true,
+                  "initialSlide": 7,
+                  "speed": 850,
+                  "autoplay": {
+                    "delay": 3000,
+                    "disableOnInteraction": false,
+                    "pauseOnMouseEnter": false
+                  },
+                  "slidesPerView": "auto",
+                  "centeredSlides": true,
+                  "effect": "coverflow",
+                  "coverflowEffect": {
+                    "rotate": 0,
+                    "stretch": -18,
+                    "depth": 110,
+                    "modifier": 1.1,
+                    "slideShadows": false
+                  },
+                  "pagination": {
+                    "el": ".hero-books-pagination",
+                    "clickable": true
+                  }
+                }
+              </script>
+              <div class="swiper-wrapper align-items-center">
+                <!-- Cycle 1 (for seamless loop balance) -->
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book1.png" alt="Atomic Habits - James Clear" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book2.png" alt="The Psychology of Money - Morgan Housel" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book3.png" alt="Deep Work - Cal Newport" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book4.png" alt="The Lean Startup - Eric Ries" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book5.png" alt="Principles - Ray Dalio" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book6.png" alt="Rich Dad Poor Dad - Robert Kiyosaki" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book7.png" alt="Start with Why - Simon Sinek" class="book-cover-img">
+                  </div>
+                </div>
+
+                <!-- Cycle 2 (Active starting set) -->
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book1.png" alt="Atomic Habits - James Clear" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book2.png" alt="The Psychology of Money - Morgan Housel" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book3.png" alt="Deep Work - Cal Newport" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book4.png" alt="The Lean Startup - Eric Ries" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book5.png" alt="Principles - Ray Dalio" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book6.png" alt="Rich Dad Poor Dad - Robert Kiyosaki" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book7.png" alt="Start with Why - Simon Sinek" class="book-cover-img">
+                  </div>
+                </div>
+
+                <!-- Cycle 3 (for seamless loop balance) -->
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book1.png" alt="Atomic Habits - James Clear" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book2.png" alt="The Psychology of Money - Morgan Housel" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book3.png" alt="Deep Work - Cal Newport" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book4.png" alt="The Lean Startup - Eric Ries" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book5.png" alt="Principles - Ray Dalio" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book6.png" alt="Rich Dad Poor Dad - Robert Kiyosaki" class="book-cover-img">
+                  </div>
+                </div>
+                <div class="swiper-slide">
+                  <div class="book-card-wrap">
+                    <img src="assets/img/books/book7.png" alt="Start with Why - Simon Sinek" class="book-cover-img">
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-pagination hero-books-pagination"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -89,10 +230,10 @@
 
 
 
-    <div class="container-fluid" style="position: relative; padding: 0;">
+    <div class="container-fluid" style="position: relative; padding: 0; overflow: hidden;">
   
       <!-- Yellow Strip (Full Width) -->
-      <div style="position: absolute; top: 50%; left: 0; width: 100vw; height: 200px; background-color: #eba22d; transform: translateY(-50%); z-index: 0;"></div>
+      <div style="position: absolute; top: 50%; left: 0; width: 100%; height: 200px; background-color: #eba22d; transform: translateY(-50%); z-index: 0;"></div>
       
       <!-- Image (Centered) -->
       <div class="container section-title" data-aos="fade-up" style="position: relative; z-index: 1; text-align: center;">

@@ -99,6 +99,11 @@ ol li {
 /*--------------------------------------------------------------
 # General Styling & Shared Classes
 --------------------------------------------------------------*/
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   color: var(--default-color);
   background-color: var(--background-color);
@@ -913,34 +918,63 @@ section,
 /*--------------------------------------------------------------
 # Hero Section Redesign
 --------------------------------------------------------------*/
+/*--------------------------------------------------------------
+# Hero Section Redesign (One-Screen Fit)
+--------------------------------------------------------------*/
 .hero-redesign {
   width: 100%;
   position: relative;
   background-color: #ffffff;
-  padding: 55px 0 0 0 !important;
-  display: block !important;
-  min-height: auto !important;
-  overflow: hidden;
+  padding: 10px 0 0 0 !important;
+  margin: 0 !important;
+  height: calc(100vh - 58px);
+  min-height: 480px;
+  max-height: calc(100dvh - 58px);
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+.hero-inner-container {
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+.hero-content {
+  flex: 0 0 auto;
+  text-align: center;
+  padding-top: 4px;
 }
 
 .hero-main-title {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(2.3rem, 4.2vw + 0.6rem, 3.85rem);
+  font-size: clamp(1.65rem, 2.6vw, 2.5rem);
   font-weight: 600;
   color: #111827;
-  line-height: 1.18;
+  line-height: 1.15;
   letter-spacing: -0.015em;
-  margin: 0 auto 16px auto;
-  max-width: 900px;
+  margin: 0 auto 6px auto;
+  max-width: 800px;
 }
 
 .hero-main-subtitle {
   font-family: var(--default-font);
-  font-size: clamp(1rem, 1.2vw + 0.3rem, 1.15rem);
+  font-size: clamp(0.82rem, 1vw, 1rem);
   color: #64748b;
-  margin: 0 auto 28px auto;
-  max-width: 650px;
-  line-height: 1.55;
+  margin: 0 auto 12px auto;
+  max-width: 600px;
+  line-height: 1.45;
   font-weight: 400;
 }
 
@@ -948,36 +982,36 @@ section,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  margin-bottom: 35px;
+  gap: 16px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
 }
 
 .btn-hero-start {
   background: #c29a6b;
   color: #ffffff !important;
-  padding: 11px 26px;
+  padding: 7px 22px;
   border-radius: 50px;
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 500;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 14px rgba(194, 154, 107, 0.32);
-  transition: all 0.25s ease;
+  gap: 7px;
+  box-shadow: 0 3px 10px rgba(194, 154, 107, 0.28);
+  transition: all 0.2s ease;
 }
 
 .btn-hero-start:hover {
   background: #b58b5b;
   color: #ffffff !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(194, 154, 107, 0.45);
+  box-shadow: 0 5px 16px rgba(194, 154, 107, 0.4);
 }
 
 .btn-hero-start i {
   transition: transform 0.2s ease;
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .btn-hero-start:hover i {
@@ -986,12 +1020,12 @@ section,
 
 .btn-hero-learn {
   color: #b58b5b !important;
-  font-size: 15px;
+  font-size: 13.5px;
   font-weight: 500;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   transition: color 0.2s ease;
 }
 
@@ -1000,16 +1034,16 @@ section,
 }
 
 .play-btn-circle {
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border: 1.5px solid #c29a6b;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: #c29a6b;
-  font-size: 16px;
-  transition: all 0.25s ease;
+  font-size: 13px;
+  transition: all 0.2s ease;
 }
 
 .play-btn-circle i {
@@ -1024,57 +1058,133 @@ section,
 
 .hero-showcase-wrapper {
   position: relative;
-  margin-top: 10px;
-  padding-bottom: 0;
-  overflow: visible;
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .hero-watermark-text {
   position: absolute;
-  top: 32%;
+  top: 42%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
+  max-width: 100%;
+  text-align: center;
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  font-size: clamp(2.6rem, 7.2vw, 6.2rem);
+  font-size: clamp(2rem, 5.5vw, 4.6rem);
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: rgba(0, 0, 0, 0.032);
+  color: rgba(0, 0, 0, 0.04);
   pointer-events: none;
   user-select: none;
   z-index: 1;
   white-space: nowrap;
+  overflow: hidden;
 }
 
-.hero-books-container {
+.hero-books-swiper-container {
   position: relative;
   z-index: 2;
-  display: flex;
-  justify-content: center;
+  width: 100%;
+  max-width: 1140px;
   margin: 0 auto;
-  max-width: 950px;
+  padding-bottom: 22px;
 }
 
-.hero-books-image {
+.hero-books-swiper {
   width: 100%;
-  max-width: 900px;
+  padding-top: 10px;
+  padding-bottom: 26px;
+  overflow: visible !important;
+  cursor: grab;
+}
+
+.hero-books-swiper:active {
+  cursor: grabbing;
+}
+
+.hero-books-swiper .swiper-slide {
+  width: clamp(140px, 14vw, 182px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  transition: all 0.4s ease;
+  filter: brightness(0.92);
+}
+
+.hero-books-swiper .swiper-slide-active {
+  filter: brightness(1) !important;
+  z-index: 10;
+}
+
+.book-card-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: 6px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.04),
+              -10px 14px 26px rgba(0, 0, 0, 0.22),
+              0 18px 36px rgba(0, 0, 0, 0.12);
+  -webkit-box-reflect: below 2px linear-gradient(transparent 70%, rgba(0, 0, 0, 0.16));
+}
+
+.swiper-slide-active .book-card-wrap {
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: -3px 0 6px rgba(0, 0, 0, 0.05),
+              -14px 20px 34px rgba(0, 0, 0, 0.28),
+              0 24px 44px rgba(0, 0, 0, 0.16);
+}
+
+.book-cover-img {
+  width: 100%;
   height: auto;
   display: block;
+  border-radius: 6px;
   object-fit: contain;
+}
+
+.hero-books-pagination {
+  bottom: 0px !important;
+}
+
+.hero-books-pagination .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background-color: #c59b63;
+  opacity: 0.35;
+  transition: all 0.3s ease;
+}
+
+.hero-books-pagination .swiper-pagination-bullet-active {
+  width: 24px;
+  border-radius: 4px;
+  opacity: 1;
+  background-color: #c59b63;
 }
 
 @media (max-width: 768px) {
   .hero-redesign {
-    padding-top: 40px;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    padding: 24px 0 0 0 !important;
+  }
+  .hero-inner-container {
+    height: auto;
   }
   .hero-watermark-text {
     top: 25%;
-    font-size: clamp(1.6rem, 6.5vw, 2.8rem);
+    font-size: clamp(1.4rem, 6vw, 2.4rem);
     letter-spacing: 0.04em;
   }
-  .hero-cta-group {
-    gap: 14px;
-    margin-bottom: 22px;
+  .hero-books-container {
+    max-height: 280px;
   }
 }
 
