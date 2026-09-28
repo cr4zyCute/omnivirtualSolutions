@@ -1073,7 +1073,7 @@ footer,
   align-items: center;
   min-height: 0;
   padding-bottom: 12px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .hero-watermark-text {
@@ -1103,11 +1103,12 @@ footer,
   max-width: 1200px;
   margin: 0 auto;
   padding-bottom: 16px;
+  overflow: visible;
 }
 
 .hero-books-swiper {
   width: 100%;
-  padding-top: 24px;
+  padding-top: 48px;
   padding-bottom: 30px;
   overflow: visible !important;
   cursor: grab;
@@ -1208,24 +1209,34 @@ footer,
     letter-spacing: 0.04em;
     opacity: 0.025;
   }
+  .hero-showcase-wrapper {
+    overflow: visible;
+  }
+  .hero-books-swiper {
+    padding-top: 48px !important;
+    padding-bottom: 24px !important;
+  }
   .hero-books-swiper .swiper-slide {
     width: clamp(110px, 30vw, 138px);
   }
   .swiper-slide-active .book-card-wrap {
-    transform: translateY(-8px) scale(1.22);
+    transform: translateY(-4px) scale(1.18);
   }
 }
 
 @media (max-width: 480px) {
+  .hero-showcase-wrapper {
+    overflow: visible;
+  }
+  .hero-books-swiper {
+    padding-top: 44px !important;
+    padding-bottom: 20px !important;
+  }
   .hero-books-swiper .swiper-slide {
     width: clamp(100px, 32vw, 126px);
   }
   .swiper-slide-active .book-card-wrap {
-    transform: translateY(-6px) scale(1.18);
-  }
-  .hero-books-swiper {
-    padding-top: 14px;
-    padding-bottom: 20px;
+    transform: translateY(-3px) scale(1.16);
   }
 }
 
@@ -2155,20 +2166,9 @@ footer,
     padding: 20px 15px;
   }
 
-  h1 {
-    font-size: 6vw;
-    /* Adjusts dynamically based on screen width */
+  .main-content-section h1 {
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
     margin-bottom: 15px;
-  }
-
-  p {
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-
-  .container {
-    max-width: 100%;
-    padding: 0 10px;
   }
 }
 
@@ -2243,6 +2243,7 @@ footer,
   height: auto;
   max-height: 375px;
   object-fit: cover;
+  object-position: center 20%;
   display: block;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -2419,14 +2420,15 @@ footer,
   .about-visual-card {
     padding: 0;
     max-width: 520px;
-    margin: 0 auto;
+    margin: 0 auto 32px auto;
   }
   .about-floating-stat {
-    left: 10px;
-    bottom: -10px;
+    left: 12px;
+    bottom: -12px;
   }
   .about-floating-chip {
-    right: 10px;
+    right: 12px;
+    top: 14px;
   }
 }
 
@@ -3082,6 +3084,12 @@ body {
     padding: 40px 0;
   }
 
+  .container,
+  .container-fluid {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
   /* Header Controls */
   .header {
     padding: 10px 0;
@@ -3098,29 +3106,44 @@ body {
     min-height: 40px;
   }
 
+  /* Hero Section */
+  .hero-showcase-wrapper {
+    overflow: visible !important;
+  }
+
+  .hero-books-swiper-container {
+    overflow: visible !important;
+  }
+
+  .hero-books-swiper {
+    padding-top: 48px !important;
+    overflow: visible !important;
+  }
+
   /* About Us Redesign */
   .about-redesign {
     padding: 36px 0 42px 0;
   }
 
   .about-visual-card {
-    max-width: 420px;
-    margin: 0 auto;
+    max-width: 440px;
+    margin: 0 auto 30px auto;
   }
 
   .about-primary-img {
-    max-height: 320px;
+    max-height: 290px;
+    object-position: center 20%;
   }
 
   .about-floating-stat {
-    left: 10px;
-    bottom: -10px;
+    left: 12px;
+    bottom: -12px;
     padding: 10px 16px;
   }
 
   .about-floating-chip {
-    right: 10px;
-    top: 16px;
+    right: 12px;
+    top: 14px;
     padding: 6px 14px;
     font-size: 12px;
   }
@@ -3191,6 +3214,12 @@ body {
 
 /* Small Phones (< 480px) */
 @media (max-width: 480px) {
+  .container,
+  .container-fluid {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
   /* Header */
   .header .logo img {
     max-height: 28px;
@@ -3213,7 +3242,7 @@ body {
 
   /* Hero Section */
   .hero-redesign {
-    padding: 16px 0 12px 0 !important;
+    padding: 18px 0 12px 0 !important;
   }
 
   .hero-main-title {
@@ -3227,10 +3256,42 @@ body {
     line-height: 1.4;
   }
 
+  .hero-showcase-wrapper {
+    overflow: visible !important;
+  }
+
+  .hero-books-swiper-container {
+    overflow: visible !important;
+  }
+
+  .hero-books-swiper {
+    padding-top: 45px !important;
+    padding-bottom: 22px !important;
+    overflow: visible !important;
+  }
+
+  .hero-books-swiper .swiper-slide {
+    width: clamp(100px, 32vw, 126px);
+  }
+
+  .swiper-slide-active .book-card-wrap {
+    transform: translateY(-3px) scale(1.16);
+  }
+
   /* About Us */
+  .about-visual-card {
+    max-width: 100%;
+    margin: 0 auto 28px auto;
+  }
+
+  .about-primary-img {
+    max-height: 240px;
+    object-position: center 20%;
+  }
+
   .about-floating-stat {
-    left: 6px;
-    bottom: -8px;
+    left: 8px;
+    bottom: -10px;
     padding: 8px 12px;
     gap: 8px;
     border-radius: 12px;
@@ -3253,14 +3314,22 @@ body {
 
   .about-floating-chip {
     top: 10px;
-    right: 6px;
+    right: 8px;
     padding: 5px 10px;
     font-size: 11px;
     gap: 5px;
   }
 
+  .about-lead-text {
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
   .about-callout-card {
-    padding: 10px 14px;
+    padding: 13px 16px;
+    margin-bottom: 14px;
+    border-radius: 12px;
   }
 
   .about-callout-card .callout-tag {
@@ -3272,8 +3341,9 @@ body {
   }
 
   .about-point-card {
-    padding: 10px 12px;
-    gap: 10px;
+    padding: 12px 14px;
+    gap: 12px;
+    border-radius: 12px;
   }
 
   .point-icon-box {

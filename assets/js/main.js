@@ -72,29 +72,35 @@
           sectionElement = target.closest('footer');
         }
 
-        const sectionHeight = sectionElement.offsetHeight;
-        const sectionAbsoluteTop = sectionElement.getBoundingClientRect().top + window.pageYOffset;
-
-        let targetTop;
-        if (hash === '#hero') {
-          targetTop = 0;
-        } else if (hash === '#contact' || hash === '#footer') {
-          if (sectionHeight <= availableHeight) {
-            targetTop = sectionAbsoluteTop - headerOffset - (availableHeight - sectionHeight);
-          } else {
-            targetTop = sectionAbsoluteTop - headerOffset;
-          }
-        } else if (sectionHeight <= availableHeight) {
-          const extraSpace = availableHeight - sectionHeight;
-          targetTop = sectionAbsoluteTop - headerOffset - (extraSpace / 2);
-        } else {
-          targetTop = sectionAbsoluteTop - headerOffset - 10;
+        let sectionTop = 0;
+        let el = sectionElement;
+        while (el) {
+          sectionTop += el.offsetTop;
+          el = el.offsetParent;
         }
 
-        window.scrollTo({
-          top: Math.max(0, Math.round(targetTop)),
-          behavior: 'smooth'
-        });
+        const sectionHeight = sectionElement.offsetHeight;
+        let targetTop;
+
+        if (hash === '#hero') {
+          targetTop = 0;
+        } else if (window.innerWidth < 992) {
+          // On mobile & tablets, always align to top of section so title, badges and media are fully visible
+          targetTop = sectionTop - headerOffset;
+        } else if (sectionHeight <= availableHeight) {
+          // On desktop, center compact sections within available height
+          const extraSpace = availableHeight - sectionHeight;
+          targetTop = sectionTop - headerOffset - Math.round(extraSpace / 2);
+        } else {
+          targetTop = sectionTop - headerOffset;
+        }
+
+        setTimeout(() => {
+          window.scrollTo({
+            top: Math.max(0, Math.round(targetTop)),
+            behavior: 'smooth'
+          });
+        }, 50);
 
         if (history.pushState) {
           history.pushState(null, null, hash);
@@ -251,23 +257,27 @@
             sectionElement = target.closest('footer');
           }
 
-          const sectionHeight = sectionElement.offsetHeight;
-          const sectionAbsoluteTop = sectionElement.getBoundingClientRect().top + window.pageYOffset;
+          let sectionTop = 0;
+          let el = sectionElement;
+          while (el) {
+            sectionTop += el.offsetTop;
+            el = el.offsetParent;
+          }
 
+          const sectionHeight = sectionElement.offsetHeight;
           let targetTop;
+
           if (hash === '#hero') {
             targetTop = 0;
-          } else if (hash === '#contact' || hash === '#footer') {
-            if (sectionHeight <= availableHeight) {
-              targetTop = sectionAbsoluteTop - headerOffset - (availableHeight - sectionHeight);
-            } else {
-              targetTop = sectionAbsoluteTop - headerOffset;
-            }
+          } else if (window.innerWidth < 992) {
+            // On mobile & tablets, always align to top of section
+            targetTop = sectionTop - headerOffset;
           } else if (sectionHeight <= availableHeight) {
+            // On desktop, center compact sections
             const extraSpace = availableHeight - sectionHeight;
-            targetTop = sectionAbsoluteTop - headerOffset - (extraSpace / 2);
+            targetTop = sectionTop - headerOffset - Math.round(extraSpace / 2);
           } else {
-            targetTop = sectionAbsoluteTop - headerOffset - 10;
+            targetTop = sectionTop - headerOffset;
           }
 
           window.scrollTo({
