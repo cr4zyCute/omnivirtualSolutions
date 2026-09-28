@@ -302,19 +302,29 @@ h6 {
 
 .header .btn-getstarted,
 .header .btn-getstarted:focus {
-  color: var(--contrast-color);
-  background: var(--accent-color);
+  color: #ffffff !important;
+  background: #c29a6b;
+  font-family: var(--default-font);
   font-size: 14px;
-  padding: 8px 25px;
-  margin: 0 0 0 30px;
+  font-weight: 500;
+  padding: 7px 22px;
+  margin: 0 0 0 25px;
   border-radius: 50px;
-  transition: 0.3s;
+  box-shadow: 0 3px 10px rgba(194, 154, 107, 0.28);
+  transition: all 0.25s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 .header .btn-getstarted:hover,
 .header .btn-getstarted:focus:hover {
-  color: var(--contrast-color);
-  background: color-mix(in srgb, var(--accent-color), transparent 15%);
+  background: #b58b5b;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(194, 154, 107, 0.4);
 }
 
 @media (max-width: 1200px) {
@@ -324,8 +334,9 @@ h6 {
 
   .header .btn-getstarted {
     order: 2;
-    margin: 0 15px 0 0;
-    padding: 6px 15px;
+    margin: 0 12px 0 auto;
+    padding: 6px 16px;
+    font-size: 13px;
   }
 
   .header .navmenu {
@@ -970,10 +981,10 @@ section,
 
 .hero-main-subtitle {
   font-family: var(--default-font);
-  font-size: clamp(0.82rem, 1vw, 1rem);
+  font-size: clamp(0.85rem, 1.1vw, 1.05rem);
   color: #64748b;
-  margin: 0 auto 12px auto;
-  max-width: 600px;
+  margin: 0 auto 6px auto;
+  max-width: 620px;
   line-height: 1.45;
   font-weight: 400;
 }
@@ -1070,14 +1081,14 @@ section,
 
 .hero-watermark-text {
   position: absolute;
-  top: 42%;
+  top: 38%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
   max-width: 100%;
   text-align: center;
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  font-size: clamp(2rem, 5.5vw, 4.6rem);
+  font-size: clamp(2.2rem, 6vw, 5.2rem);
   font-weight: 800;
   letter-spacing: 0.08em;
   color: rgba(0, 0, 0, 0.04);
@@ -1092,15 +1103,15 @@ section,
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 1140px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding-bottom: 22px;
+  padding-bottom: 24px;
 }
 
 .hero-books-swiper {
   width: 100%;
-  padding-top: 10px;
-  padding-bottom: 26px;
+  padding-top: 12px;
+  padding-bottom: 30px;
   overflow: visible !important;
   cursor: grab;
 }
@@ -1110,7 +1121,7 @@ section,
 }
 
 .hero-books-swiper .swiper-slide {
-  width: clamp(140px, 14vw, 182px);
+  width: clamp(165px, 17vw, 225px);
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -1135,10 +1146,10 @@ section,
 }
 
 .swiper-slide-active .book-card-wrap {
-  transform: translateY(-8px) scale(1.05);
-  box-shadow: -3px 0 6px rgba(0, 0, 0, 0.05),
-              -14px 20px 34px rgba(0, 0, 0, 0.28),
-              0 24px 44px rgba(0, 0, 0, 0.16);
+  transform: translateY(-10px) scale(1.06);
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.06),
+              -16px 22px 38px rgba(0, 0, 0, 0.3),
+              0 28px 48px rgba(0, 0, 0, 0.16);
 }
 
 .book-cover-img {
