@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { CmsProvider } from './context/CmsContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -7,6 +7,19 @@ import ScrollTop from './components/ScrollTop';
 import Home from './pages/Home';
 import ServicesPage from './pages/ServicesPage';
 import './App.css';
+
+// Automatically scrolls to top on route change
+function ScrollToTopOnNavigate() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
+
+  return null;
+}
 
 export default function App() {
   useEffect(() => {
@@ -24,6 +37,7 @@ export default function App() {
   return (
     <CmsProvider>
       <Router>
+        <ScrollToTopOnNavigate />
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />

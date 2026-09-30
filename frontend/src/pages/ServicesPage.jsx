@@ -388,6 +388,11 @@ export default function ServicesPage() {
     }
   }, [openParam, serviceParam, allServicesList, catalog]);
 
+  // Scroll to top on initial page mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Toggle category expansion
   const toggleCategoryAccordion = (tag) => {
     setExpandedCategories((prev) => ({ ...prev, [tag]: !prev[tag] }));
