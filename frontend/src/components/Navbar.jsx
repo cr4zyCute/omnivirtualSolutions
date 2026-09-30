@@ -72,15 +72,30 @@ export default function Navbar() {
         id="header"
         className={`header d-flex align-items-center sticky-top ${isScrolled ? 'scrolled' : ''}`}
       >
-        <div className="container-fluid container-xl position-relative d-flex align-items-center justify-content-between px-3 px-sm-4">
-          {/* Logo */}
-          <Link to="/" className="logo me-auto" onClick={closeMobileNav}>
+        <div className="header-container">
+          {/* Mobile Animated Hamburger Button — pinned left via absolute positioning in CSS */}
+          <button
+            type="button"
+            className={`navbar-hamburger-btn ${mobileNavOpen ? 'is-active' : ''}`}
+            onClick={toggleMobileNav}
+            aria-label={mobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileNavOpen}
+          >
+            <span className="hamburger-icon-lines" aria-hidden="true">
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+            </span>
+          </button>
+
+          {/* Logo & Title — centered on mobile, left-aligned on desktop */}
+          <Link to="/" className="logo header-center-brand" onClick={closeMobileNav}>
             <img src="/assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo" />
             <span className="sitename">Omni Virtual Solutions</span>
           </Link>
 
           {/* Desktop Navigation (Screens >= 1200px) */}
-          <nav className="desktop-navmenu d-none d-xl-flex">
+          <nav className="desktop-navmenu">
             <ul>
               <li>
                 {location.pathname === '/' ? (
@@ -136,9 +151,8 @@ export default function Navbar() {
             </ul>
           </nav>
 
-          {/* Header Right Actions */}
+          {/* Header Right Actions (Get Started button — desktop only) */}
           <div className="header-right-actions">
-            {/* Get Started Button */}
             <a
               className="header-btn-getstarted"
               href={location.pathname === '/' ? '#services' : '/services'}
@@ -152,21 +166,6 @@ export default function Navbar() {
             >
               {t('home.hero.cta_label', 'Get Started')}
             </a>
-
-            {/* Accessible Animated Hamburger Button (Screens < 1200px) */}
-            <button
-              type="button"
-              className={`navbar-hamburger-btn ${mobileNavOpen ? 'is-active' : ''}`}
-              onClick={toggleMobileNav}
-              aria-label={mobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              aria-expanded={mobileNavOpen}
-            >
-              <span className="hamburger-icon-lines" aria-hidden="true">
-                <span className="hamburger-line"></span>
-                <span className="hamburger-line"></span>
-                <span className="hamburger-line"></span>
-              </span>
-            </button>
           </div>
         </div>
       </header>
@@ -178,13 +177,28 @@ export default function Navbar() {
         aria-hidden="true"
       />
 
-      {/* Slide-Down Mobile Drawer Menu */}
+      {/* Side Cabinet Drawer */}
       <div
         className={`mobile-nav-drawer ${mobileNavOpen ? 'open' : ''}`}
         role="dialog"
         aria-modal="true"
         aria-label="Mobile Navigation"
       >
+        {/* Cabinet Header: Brand + Close Button */}
+        <div className="mobile-drawer-header">
+          <Link to="/" className="mobile-drawer-brand" onClick={closeMobileNav}>
+            <img src="/assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo" />
+            <span className="drawer-sitename">Omni Virtual Solutions</span>
+          </Link>
+          <button
+            type="button"
+            className="mobile-drawer-close"
+            onClick={closeMobileNav}
+            aria-label="Close navigation menu"
+          >
+            <i className="bi bi-x-lg"></i>
+          </button>
+        </div>
         <ul className="mobile-nav-list">
           <li>
             {location.pathname === '/' ? (

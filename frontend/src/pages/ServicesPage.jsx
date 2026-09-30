@@ -437,21 +437,19 @@ export default function ServicesPage() {
     <main className="main services-catalog-page">
       <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 24px)' }}>
         
-        {/* Top Header Bar (No awkward fixed overlaps!) */}
-        <div className="services-top-bar">
-          <Link to="/" className="services-back-link">
-            <i className="bi bi-arrow-left"></i>
-            <span>Back to Home</span>
-          </Link>
-
-          <div className="d-flex align-items-sm-center justify-content-between flex-wrap gap-3 mt-1">
-            <div>
-              <h1 className="services-main-title">Omni Services Catalog</h1>
-              <p className="services-subtitle">
-                Explore our full spectrum of publishing, editorial, and author marketing solutions.
-              </p>
-            </div>
+        {/* Top Header Bar (Centered) */}
+        <div className="services-top-bar text-center">
+          <div className="d-flex justify-content-center mb-2">
+            <Link to="/" className="services-back-link">
+              <i className="bi bi-arrow-left"></i>
+              <span>Back to Home</span>
+            </Link>
           </div>
+
+          <h1 className="services-main-title text-center">Omni Services Catalog</h1>
+          <p className="services-subtitle text-center mx-auto" style={{ maxWidth: '640px' }}>
+            Explore our full spectrum of publishing, editorial, and author marketing solutions.
+          </p>
 
           {/* Search & Mobile Drawer Trigger Bar */}
           <div className="services-control-bar">

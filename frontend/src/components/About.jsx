@@ -1,119 +1,128 @@
 import React from 'react';
 import { useCms } from '../context/CmsContext';
+import './About.css';
+
+const stats = [
+  { icon: 'bi-people-fill',     value: '200+',  label: 'Clients Served'    },
+  { icon: 'bi-clock-fill',      value: '24/7',  label: 'Operations'        },
+  { icon: 'bi-star-fill',       value: '5★',    label: 'Satisfaction Rate' },
+  { icon: 'bi-globe2',          value: '10+',   label: 'Industries Served' },
+];
+
+const pillars = [
+  {
+    icon: 'bi-shield-check-fill',
+    title: 'Autonomy with Oversight',
+    body: 'We believe in employee autonomy as a pivotal component of corporate success — carefully balanced with the right level of oversight, without crossing into micro-management.',
+  },
+  {
+    icon: 'bi-people-fill',
+    title: 'Elite Virtual Specialists',
+    body: 'We hire only the most qualified virtual professionals so you can focus on what matters — the essentials that drive your organization\'s sustainability and industry superiority.',
+  },
+  {
+    icon: 'bi-headset',
+    title: 'Full-Spectrum Coverage',
+    body: 'From lead generation to customer service — phone, chat, and email — we cover every operational touchpoint, 24 hours a day, 7 days a week.',
+  },
+];
 
 export default function About() {
   const { t } = useCms();
 
   return (
-    <section id="about" className="about section about-redesign">
-      <div className="container" data-aos="fade-up" data-aos-delay="100">
-        <div className="about-header text-center">
-          <div className="about-pill-badge">
-            <span data-block-key="home.about.badge">
-              {t('home.about.badge', '✦ WHO WE ARE & WHAT WE BELIEVE')}
-            </span>
-          </div>
-          <h2 className="about-section-heading" data-block-key="home.about.heading">
-            {t('home.about.heading', 'About Us')}
+    <section id="about" className="about-v2">
+      {/* ── Background decoration ── */}
+      <div className="about-v2-bg" aria-hidden="true">
+        <div className="about-v2-glow glow-1" />
+        <div className="about-v2-glow glow-2" />
+        <div className="about-v2-grid" />
+      </div>
+
+      <div className="container about-v2-inner">
+
+        {/* ════ TOP: Eyebrow + Headline ════ */}
+        <div className="about-v2-head">
+          <span className="about-v2-eyebrow">
+            <i className="bi bi-stars" />
+            {t('home.about.badge', 'Who We Are')}
+          </span>
+          <h2 className="about-v2-title" data-block-key="home.about.heading">
+            {t('home.about.heading',
+              <>Built on Trust,<br /><em>Driven by Excellence.</em></>
+            )}
           </h2>
-          <div className="about-heading-divider"></div>
+          <p className="about-v2-lead" data-block-key="home.about.lead">
+            {t(
+              'home.about.lead',
+              'Omni Virtual Solutions pairs world-class virtual talent with robust management systems — so your business runs smoothly while you stay focused on growth.'
+            )}
+          </p>
         </div>
 
-        <div className="row gy-5 align-items-center mt-3">
-          {/* Visual Column */}
-          <div className="col-lg-6" data-aos="fade-right" data-aos-delay="150">
-            <div className="about-visual-card">
-              <div className="about-image-wrapper">
-                <img
-                  src={t('home.about.image', '/assets/img/about_team.jpg')}
-                  alt="Omni Virtual Solutions Professional Team"
-                  className="img-fluid about-primary-img"
-                  data-block-key="home.about.image"
-                />
-              </div>
+        {/* ════ MIDDLE: Image + Pillars ════ */}
+        <div className="about-v2-body">
 
-              {/* Floating badge 1: Autonomy & Oversight */}
-              <div className="about-floating-stat">
-                <div className="stat-icon-wrap">
-                  <i className="bi bi-shield-check"></i>
-                </div>
-                <div className="stat-text-wrap">
-                  <span className="stat-num" data-block-key="home.about.badge_stat">
-                    {t('home.about.badge_stat', 'Balanced')}
-                  </span>
-                  <span className="stat-lbl" data-block-key="home.about.badge_lbl">
-                    {t('home.about.badge_lbl', 'Autonomy & Oversight')}
-                  </span>
-                </div>
-              </div>
+          {/* Image stack */}
+          <div className="about-v2-visual">
+            <div className="about-v2-img-frame">
+              <img
+                src={t('home.about.image', '/assets/img/about_team.jpg')}
+                alt="Omni Virtual Solutions team at work"
+                className="about-v2-img"
+                data-block-key="home.about.image"
+              />
+              <div className="about-v2-img-overlay" />
+            </div>
 
-              {/* Floating badge 2: 24/7 Coverage */}
-              <div className="about-floating-chip">
-                <i className="bi bi-clock-history"></i>
-                <span>24/7 Operations</span>
+            {/* Floating badge */}
+            <div className="about-v2-float-badge">
+              <div className="float-badge-icon">
+                <i className="bi bi-patch-check-fill" />
               </div>
+              <div className="float-badge-text">
+                <strong>Balanced</strong>
+                <span>Autonomy &amp; Oversight</span>
+              </div>
+            </div>
+
+            {/* Corner accent tag */}
+            <div className="about-v2-corner-tag">
+              <i className="bi bi-clock-history" />
+              <span>24 / 7</span>
+              <small>Operations</small>
             </div>
           </div>
 
-          {/* Content Column */}
-          <div className="col-lg-6 content about-content-block" data-aos="fade-left" data-aos-delay="200">
-            {/* Luxury Lead Narrative Card */}
-            <div className="about-lead-card">
-              <div className="lead-tag">
-                <i className="bi bi-shield-check me-2" style={{ color: '#c29a6b' }}></i>
-                Our Core Philosophy
-              </div>
-              <p className="about-lead-text" data-block-key="home.about.lead">
-                {t(
-                  'home.about.lead',
-                  'We at Omni Virtual Solutions believe in employee autonomy as a pivotal component of corporate success. On the other hand, delicately balancing it w/ proper oversight w/o crossing over to the realm of micro management is something that every business needs to consider.'
-                )}
-              </p>
-            </div>
-
-            <div className="about-callout-card">
-              <div className="callout-tag" data-block-key="home.about.callout_tag">
-                {t('home.about.callout_tag', "That's where we come in.")}
-              </div>
-              <p className="callout-body" data-block-key="home.about.callout">
-                {t(
-                  'home.about.callout',
-                  "We hire only the most qualified Virtual specialists to get the job done for you so you can focus on the essentials that contribute to your organization's sustainability and industry superiority."
-                )}
-              </p>
-            </div>
-
-            <div className="about-points-list">
-              <div className="about-point-card">
-                <div className="point-icon-box">
-                  <i className="bi bi-person-check-fill"></i>
+          {/* Pillar cards */}
+          <div className="about-v2-pillars">
+            {pillars.map((p, i) => (
+              <div className="about-pillar-card" key={i} style={{ '--delay': `${i * 80}ms` }}>
+                <div className="pillar-icon">
+                  <i className={`bi ${p.icon}`} />
                 </div>
-                <div className="point-text">
-                  <p data-block-key="home.about.point1">
-                    {t(
-                      'home.about.point1',
-                      "We're staffed with the most experienced and competent managers and supervisors who take care in monitoring the performance, attendance, and general demeanor of your virtual specialists on-site."
-                    )}
-                  </p>
+                <div className="pillar-body">
+                  <h3 className="pillar-title">{p.title}</h3>
+                  <p className="pillar-text">{p.body}</p>
                 </div>
               </div>
-
-              <div className="about-point-card">
-                <div className="point-icon-box">
-                  <i className="bi bi-headset"></i>
-                </div>
-                <div className="point-text">
-                  <p data-block-key="home.about.point2">
-                    {t(
-                      'home.about.point2',
-                      'From Sales (from Lead generation to Closer) to Customer Service (phone, chat, email) and everything else in between, we got your operational needs covered 24/7.'
-                    )}
-                  </p>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
+
+        {/* ════ BOTTOM: Stats strip ════ */}
+        <div className="about-v2-stats">
+          {stats.map((s, i) => (
+            <div className="about-stat-item" key={i}>
+              <div className="stat-icon-ring">
+                <i className={`bi ${s.icon}`} />
+              </div>
+              <div className="stat-value">{s.value}</div>
+              <div className="stat-label">{s.label}</div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </section>
   );
