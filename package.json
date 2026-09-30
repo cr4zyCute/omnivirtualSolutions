@@ -1,0 +1,39 @@
+{
+  "name": "omni",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node backend/server.js",
+    "start": "node backend/server.js",
+    "migrate": "node backend/migrate.js",
+    "migrate:cms": "node backend/migrate-cms.js",
+    "migrate:email": "node backend/migrate-email.js",
+    "seed": "node backend/seed.js",
+    "setup": "node backend/migrate.js && node backend/seed.js && node backend/migrate-cms.js && node backend/migrate-email.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cr4zyCute/omnivirtualSolutions.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/cr4zyCute/omnivirtualSolutions/issues"
+  },
+  "homepage": "https://github.com/cr4zyCute/omnivirtualSolutions#readme",
+  "dependencies": {
+    "@libsql/client": "^0.18.0",
+    "bcryptjs": "^3.0.3",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.4",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.4.0",
+    "nodemailer": "^10.0.13"
+  }
+}

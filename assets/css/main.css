@@ -3478,3 +3478,279 @@ body {
     font-size: 12.5px;
   }
 }
+
+/* ==============================================================
+   Contact Section Redesign — Luxury Glassmorphism & Direct DB Form
+   ============================================================== */
+.contact-redesign {
+  padding: 80px 0;
+  position: relative;
+  background: linear-gradient(180deg, #0e1217 0%, #141922 50%, #0e1217 100%);
+  color: #f7f3ee;
+}
+
+.contact-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(235, 162, 45, 0.12);
+  border: 1px solid rgba(235, 162, 45, 0.35);
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: #eba22d;
+  margin-bottom: 16px;
+}
+
+.contact-section-heading {
+  font-size: 2.3rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.contact-heading-divider {
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #eba22d, #df9524);
+  margin: 0 auto 36px auto;
+  border-radius: 2px;
+}
+
+.contact-info-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.contact-info-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(235, 162, 45, 0.4);
+}
+
+.contact-info-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(235, 162, 45, 0.12);
+  border: 1px solid rgba(235, 162, 45, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #eba22d;
+  flex-shrink: 0;
+}
+
+.contact-info-content h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.contact-info-content p {
+  font-size: 14px;
+  color: #a0aec0;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.contact-form-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(235, 162, 45, 0.2);
+  border-radius: 20px;
+  padding: 36px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.contact-form-card .form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #cbd5e0;
+  margin-bottom: 6px;
+}
+
+.contact-form-card .form-control,
+.contact-form-card .form-select {
+  background: rgba(14, 18, 23, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+.contact-form-card .form-control:focus,
+.contact-form-card .form-select:focus {
+  background: rgba(14, 18, 23, 0.95);
+  border-color: #eba22d;
+  box-shadow: 0 0 0 3px rgba(235, 162, 45, 0.2);
+  color: #ffffff;
+}
+
+.contact-form-card .form-select option {
+  background: #141922;
+  color: #ffffff;
+}
+
+.contact-btn-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #eba22d 0%, #c87a1d 100%);
+  color: #0d1117;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 13px 32px;
+  border-radius: 12px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(235, 162, 45, 0.35);
+  color: #000;
+}
+
+/* ── Placeholder text color (visible on dark fields) ── */
+.contact-form-card .form-control::placeholder,
+.contact-form-card .form-select::placeholder {
+  color: rgba(160, 174, 192, 0.65);
+}
+
+/* ── Select dropdown arrow — white on dark background ── */
+.contact-form-card .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px 14px;
+  padding-right: 36px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ── Override Bootstrap default white bg on form controls ── */
+.contact-form-card .form-control,
+.contact-form-card .form-select {
+  background-color: rgba(14, 18, 23, 0.7) !important;
+  color: #ffffff !important;
+}
+
+.contact-form-card .form-control:focus,
+.contact-form-card .form-select:focus {
+  background-color: rgba(14, 18, 23, 0.95) !important;
+}
+
+/* ── Textarea min-height for comfortable message entry ── */
+.contact-form-card textarea.form-control {
+  min-height: 130px;
+  resize: vertical;
+}
+
+/* ── Alert box text ── */
+#contactAlert {
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+/* ── Responsive: tablet (768 px) ── */
+@media (max-width: 768px) {
+  .contact-redesign {
+    padding: 60px 0;
+  }
+
+  .contact-section-heading {
+    font-size: 1.75rem;
+  }
+
+  .contact-form-card {
+    padding: 28px 20px;
+  }
+
+  .contact-info-card {
+    padding: 18px 16px;
+    gap: 12px;
+  }
+
+  .contact-info-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+    border-radius: 10px;
+  }
+}
+
+/* ── Responsive: small phones (480 px) ── */
+@media (max-width: 480px) {
+  .contact-redesign {
+    padding: 48px 0;
+  }
+
+  .contact-section-heading {
+    font-size: 1.5rem;
+  }
+
+  .contact-pill-badge {
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 5px 12px;
+  }
+
+  .contact-form-card {
+    padding: 22px 14px;
+    border-radius: 14px;
+  }
+
+  .contact-info-card {
+    padding: 16px 14px;
+    border-radius: 12px;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .contact-info-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .contact-info-content h4 {
+    font-size: 14px;
+  }
+
+  .contact-info-content p {
+    font-size: 13px;
+  }
+
+  .contact-btn-submit {
+    font-size: 14px;
+    padding: 13px 20px;
+    border-radius: 10px;
+    /* Ensure ≥44 px touch target */
+    min-height: 48px;
+  }
+
+  .contact-form-card .form-control,
+  .contact-form-card .form-select {
+    font-size: 15px; /* Prevents iOS auto-zoom on focus */
+    padding: 11px 12px;
+  }
+}

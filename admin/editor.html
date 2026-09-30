@@ -2,41 +2,271 @@
 <html lang="en">
 
 <head>
+  <base href="/">
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>Omni Virtual Solutions</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+  <title>Omni CMS — Live Website Editor</title>
+  <link rel="icon" type="image/png" href="assets/img/OmniLogo2.png">
 
   <!-- Favicons -->
-  <link href="assets/img/OmniLogo2.png" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 
+  <!-- ── In-Place CMS Live Editor Styles ── -->
+  <style>
+    /* CRITICAL: Force all elements with animation tags to be 100% visible in the editor */
+    [data-aos] {
+      opacity: 1 !important;
+      transform: none !important;
+      visibility: visible !important;
+      transition: none !important;
+    }
 
+    /* Top Floating Admin Toolbar */
+    #editorTopBar {
+      position: sticky;
+      top: 0; left: 0; right: 0;
+      height: 52px;
+      background: rgba(14, 18, 23, 0.96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(235, 162, 45, 0.35);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      color: #f7f3ee;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .editor-bar-left, .editor-bar-right, .editor-bar-center {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .editor-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #eba22d;
+      background: rgba(235, 162, 45, 0.12);
+      border: 1px solid rgba(235, 162, 45, 0.25);
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .editor-live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #48bb78;
+      background: rgba(72, 187, 120, 0.12);
+      border: 1px solid rgba(72, 187, 120, 0.25);
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+    .editor-live-badge .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #48bb78;
+      box-shadow: 0 0 8px #48bb78;
+      animation: editorPulse 1.8s infinite;
+    }
+    @keyframes editorPulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .editor-save-status {
+      font-size: 12px;
+      color: #a0aec0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .editor-save-status.saving { color: #eba22d; }
+    .editor-save-status.saved { color: #48bb78; }
+
+    .editor-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      color: #e2e8f0;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .editor-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(235, 162, 45, 0.5);
+      color: #ffffff;
+    }
+    .editor-btn.active {
+      background: #eba22d;
+      color: #0d1117;
+      border-color: #eba22d;
+    }
+
+    /* Editable highlights */
+    body.mode-edit [data-block-key] {
+      outline: 2px dashed rgba(235, 162, 45, 0.45);
+      outline-offset: 3px;
+      border-radius: 4px;
+      cursor: text;
+      transition: outline-color 0.2s, background-color 0.2s;
+    }
+    body.mode-edit [data-block-key]:hover {
+      outline: 2px solid #eba22d;
+      background-color: rgba(235, 162, 45, 0.1) !important;
+    }
+    body.mode-edit [data-block-key]:focus {
+      outline: 2px solid #eba22d !important;
+      background-color: rgba(235, 162, 45, 0.15) !important;
+    }
+    body.mode-edit img[data-block-key] {
+      cursor: pointer !important;
+      position: relative;
+    }
+    body.mode-preview [data-block-key] {
+      outline: none !important;
+      cursor: default;
+    }
+
+    /* Toast */
+    #editorToast {
+      position: fixed;
+      bottom: 20px; right: 20px;
+      background: #141922;
+      border: 1px solid rgba(235, 162, 45, 0.4);
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      z-index: 999999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #editorToast.show { transform: translateY(0); opacity: 1; }
+
+    /* Media Modal */
+    #mediaModal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      width: min(620px, 92vw);
+      max-height: 85vh;
+      background: #12161f;
+      border: 1px solid rgba(235, 162, 45, 0.35);
+      border-radius: 12px;
+      z-index: 999999;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+    #mediaModal.show { display: flex; transform: translate(-50%, -50%) scale(1); }
+    .modal-backdrop-custom {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 999998;
+      display: none;
+    }
+    .modal-backdrop-custom.show { display: block; }
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      max-height: 360px;
+      overflow-y: auto;
+      padding: 16px;
+    }
+    .media-thumb {
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      width: 100%;
+      border-radius: 6px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .media-thumb:hover {
+      border-color: #eba22d;
+      transform: scale(1.04);
+    }
+  </style>
 </head>
 
-<body class="index-page">
+<body class="index-page mode-edit">
 
+  <!-- ── 1. Floating Top Bar ── -->
+  <div id="editorTopBar">
+    <div class="editor-bar-left">
+      <a href="admin/" class="editor-brand" title="Back to Admin Dashboard">
+        <i class="bi bi-arrow-left"></i> Dashboard
+      </a>
+      <span class="editor-live-badge">
+        <span class="dot"></span> Live In-Place Editor
+      </span>
+      <div class="editor-save-status" id="editorSaveStatus">
+        <i class="bi bi-check-circle-fill text-success"></i> All changes saved
+      </div>
+    </div>
+
+    <div class="editor-bar-center">
+      <button class="editor-btn active" id="btnEdit" onclick="setEditorMode(true)">
+        <i class="bi bi-pencil-fill"></i> Edit Mode
+      </button>
+      <button class="editor-btn" id="btnPreview" onclick="setEditorMode(false)">
+        <i class="bi bi-eye-fill"></i> Visitor Preview
+      </button>
+    </div>
+
+    <div class="editor-bar-right">
+      <button class="editor-btn" onclick="openMediaPicker()">
+        <i class="bi bi-images"></i> Media Library
+      </button>
+      <a href="index.html" target="_blank" class="editor-btn">
+        <i class="bi bi-box-arrow-up-right"></i> View Public Site
+      </a>
+    </div>
+  </div>
+
+  <!-- ── 2. The Entire Website (Exact Verbatim Layout) ── -->
   <header id="header" class="header d-flex align-items-center sticky-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
 
       <a href="index.html" class="logo d-flex align-items-center me-auto">
-        <img src="./assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo">
+        <img src="assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo">
         <span class="sitename">Omni Virtual Solutions</span>
       </a>
 
@@ -59,7 +289,7 @@
     <!-- Hero Section -->
     <section id="hero" class="hero section hero-redesign">
       <div class="hero-inner-container">
-        <div class="hero-content" data-aos="fade-up">
+        <div class="hero-content">
           <h1 class="hero-main-title" data-block-key="home.hero.title">
             Empowering Individuals<br>and Businesses
           </h1>
@@ -68,7 +298,7 @@
           </p>
         </div>
 
-        <div class="hero-showcase-wrapper" data-aos="fade-up" data-aos-delay="100">
+        <div class="hero-showcase-wrapper">
           <div class="hero-watermark-text" aria-hidden="true" data-block-key="home.hero.watermark">
             OMNI VIRTUAL SOLUTIONS
           </div>
@@ -102,131 +332,24 @@
                 }
               </script>
               <div class="swiper-wrapper align-items-center">
-                <!-- Cycle 1 (for seamless loop balance) -->
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book1.png" alt="Atomic Habits - James Clear" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book2.png" alt="The Psychology of Money - Morgan Housel" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book3.png" alt="Deep Work - Cal Newport" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book4.png" alt="The Lean Startup - Eric Ries" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book5.png" alt="Principles - Ray Dalio" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book6.png" alt="Rich Dad Poor Dad - Robert Kiyosaki" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book7.png" alt="Start with Why - Simon Sinek" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book8.png" alt="Shoe Dog - Phil Knight" class="book-cover-img">
-                  </div>
-                </div>
-
-                <!-- Cycle 2 (Active starting set) -->
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book1.png" alt="Atomic Habits - James Clear" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book2.png" alt="The Psychology of Money - Morgan Housel" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book3.png" alt="Deep Work - Cal Newport" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book4.png" alt="The Lean Startup - Eric Ries" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book5.png" alt="Principles - Ray Dalio" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book6.png" alt="Rich Dad Poor Dad - Robert Kiyosaki" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book7.png" alt="Start with Why - Simon Sinek" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book8.png" alt="Shoe Dog - Phil Knight" class="book-cover-img">
-                  </div>
-                </div>
-
-                <!-- Cycle 3 (for seamless loop balance) -->
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book1.png" alt="Atomic Habits - James Clear" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book2.png" alt="The Psychology of Money - Morgan Housel" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book3.png" alt="Deep Work - Cal Newport" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book4.png" alt="The Lean Startup - Eric Ries" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book5.png" alt="Principles - Ray Dalio" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book6.png" alt="Rich Dad Poor Dad - Robert Kiyosaki" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book7.png" alt="Start with Why - Simon Sinek" class="book-cover-img">
-                  </div>
-                </div>
-                <div class="swiper-slide">
-                  <div class="book-card-wrap">
-                    <img src="assets/img/books/book8.png" alt="Shoe Dog - Phil Knight" class="book-cover-img">
-                  </div>
-                </div>
+                <!-- Cycle 1 -->
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book1.png" alt="Book 1" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book2.png" alt="Book 2" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book3.png" alt="Book 3" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book4.png" alt="Book 4" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book5.png" alt="Book 5" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book6.png" alt="Book 6" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book7.png" alt="Book 7" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book8.png" alt="Book 8" class="book-cover-img"></div></div>
+                <!-- Cycle 2 -->
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book1.png" alt="Book 1" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book2.png" alt="Book 2" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book3.png" alt="Book 3" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book4.png" alt="Book 4" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book5.png" alt="Book 5" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book6.png" alt="Book 6" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book7.png" alt="Book 7" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book8.png" alt="Book 8" class="book-cover-img"></div></div>
               </div>
               <div class="swiper-pagination hero-books-pagination"></div>
             </div>
@@ -235,11 +358,9 @@
       </div>
     </section><!-- /Hero Section -->
 
-
-
     <!-- About Section -->
     <section id="about" class="about section about-redesign">
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="container">
         
         <div class="about-header text-center">
           <div class="about-pill-badge">
@@ -251,8 +372,8 @@
 
         <div class="row gy-5 align-items-center mt-3">
           <!-- Visual Column -->
-          <div class="col-lg-6" data-aos="fade-right" data-aos-delay="150">
-            <div class="about-visual-card">
+          <div class="col-lg-6">
+            <div class="about-visual-card position-relative">
               <div class="about-image-wrapper">
                 <img src="assets/img/about_team.jpg" alt="Omni Virtual Solutions Professional Team" class="img-fluid about-primary-img" data-block-key="home.about.image">
               </div>
@@ -277,7 +398,7 @@
           </div>
 
           <!-- Content Column -->
-          <div class="col-lg-6 content about-content-block" data-aos="fade-left" data-aos-delay="200">
+          <div class="col-lg-6 content about-content-block">
             <p class="about-lead-text" data-block-key="home.about.lead">
               We at Omni Virtual Solutions believe in employee autonomy as a pivotal component of corporate success. On the other hand, delicately balancing it w/ proper oversight w/o crossing over to the realm of micro management is something that every business needs to consider.
             </p>
@@ -321,48 +442,39 @@
 
     <!-- Stats Section -->
     <section id="stats" class="stats section">
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-        <div class="row gy-4">          <div class="col-lg-3 col-md-6 col-6">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-3 col-md-6 col-6">
             <div class="stats-item text-center w-100 h-100">
               <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter" data-stat-key="clients">232</span>
               <p>Clients</p>
             </div>
-          </div><!-- End Stats Item -->
-
+          </div>
           <div class="col-lg-3 col-md-6 col-6">
             <div class="stats-item text-center w-100 h-100">
               <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter" data-stat-key="projects">521</span>
               <p>Projects</p>
             </div>
-          </div><!-- End Stats Item -->
-
+          </div>
           <div class="col-lg-3 col-md-6 col-6">
             <div class="stats-item text-center w-100 h-100">
               <span data-purecounter-start="0" data-purecounter-end="1453" data-purecounter-duration="1" class="purecounter" data-stat-key="hours_support">1453</span>
               <p>Hours Of Support</p>
             </div>
-          </div><!-- End Stats Item -->
-
+          </div>
           <div class="col-lg-3 col-md-6 col-6">
             <div class="stats-item text-center w-100 h-100">
               <span data-purecounter-start="0" data-purecounter-end="32" data-purecounter-duration="1" class="purecounter" data-stat-key="workers">32</span>
               <p>Workers</p>
             </div>
-          </div><!-- End Stats Item -->
-
+          </div>
         </div>
-
       </div>
-
     </section><!-- /Stats Section -->
 
     <!-- Services Section -->
     <section id="services" class="services section services-redesign">
-
-      <!-- Section Title -->
-      <div class="container" data-aos="fade-up">
+      <div class="container">
         <div class="services-header text-center">
           <div class="services-pill-badge">
             <span data-block-key="home.services.badge">✦ WHAT WE OFFER</span>
@@ -370,84 +482,65 @@
           <h2 class="services-section-heading" data-block-key="home.services.heading">Our Services</h2>
           <div class="services-heading-divider"></div>
         </div>
-      </div><!-- End Section Title -->
+      </div>
 
       <div class="container">
-
         <div class="row gy-4 justify-content-center">
-
-          <!-- Service Item 1: Marketing Services -->
-          <div class="col-lg-6 col-md-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-6 col-md-6">
             <div class="service-card-luxury position-relative">
               <div class="service-card-top">
-                <div class="service-icon-box">
-                  <i class="bi bi-megaphone-fill"></i>
-                </div>
+                <div class="service-icon-box"><i class="bi bi-megaphone-fill"></i></div>
                 <div class="service-card-tag">Specialized Strategy</div>
               </div>
-
               <a href="services.html?open=marketing-dropdown" class="stretched-link text-decoration-none">
                 <h3 class="service-card-title">Marketing Services</h3>
               </a>
-
               <p class="service-card-desc">
                 One of the key features that makes an Omni book distinct from other self-published books is our professional editorial evaluation.
               </p>
-
               <div class="service-feature-pills">
                 <span class="service-pill"><i class="bi bi-check2"></i> Editorial Evaluation</span>
                 <span class="service-pill"><i class="bi bi-check2"></i> Strategic Visibility</span>
                 <span class="service-pill"><i class="bi bi-check2"></i> Target Reach</span>
               </div>
-
               <div class="service-card-footer">
                 <span class="service-link-text">Learn More</span>
                 <i class="bi bi-arrow-right service-link-arrow"></i>
               </div>
             </div>
-          </div><!-- End Service Item -->
+          </div>
 
-          <!-- Service Item 2: Publishing Packages -->
-          <div class="col-lg-6 col-md-6" data-aos="fade-up" data-aos-delay="200">
+          <div class="col-lg-6 col-md-6">
             <div class="service-card-luxury position-relative">
               <div class="service-card-top">
-                <div class="service-icon-box">
-                  <i class="bi bi-book-half"></i>
-                </div>
+                <div class="service-icon-box"><i class="bi bi-book-half"></i></div>
                 <div class="service-card-tag">End-to-End Support</div>
               </div>
-
               <a href="services.html?open=eval-services" class="stretched-link text-decoration-none">
                 <h3 class="service-card-title">Publishing Packages</h3>
               </a>
-
               <p class="service-card-desc">
                 Our packages are designed to offer authors the support and tools they need to maximize their book's potential. Each package guarantees one-on-one author support for every step of the self-publishing journey.
               </p>
-
               <div class="service-feature-pills">
                 <span class="service-pill"><i class="bi bi-check2"></i> 1-on-1 Author Guidance</span>
                 <span class="service-pill"><i class="bi bi-check2"></i> Complete Tool Suite</span>
                 <span class="service-pill"><i class="bi bi-check2"></i> Maximize Potential</span>
               </div>
-
               <div class="service-card-footer">
                 <span class="service-link-text">Learn More</span>
                 <i class="bi bi-arrow-right service-link-arrow"></i>
               </div>
             </div>
-          </div><!-- End Service Item -->
-
+          </div>
         </div>
-
       </div>
-
     </section><!-- /Services Section -->
 
     <!-- Call To Action Section -->
     <section id="call-to-action" class="call-to-action section cta-luxury-section">
       <div class="cta-glow-backdrop"></div>
-      <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+      <div class="container position-relative">
         <div class="row justify-content-center">
           <div class="col-xl-9 col-lg-10 text-center">
             <div class="cta-pill-badge">
@@ -475,7 +568,7 @@
 
     <!-- Contact Section -->
     <section id="contact" class="contact section contact-redesign">
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="container">
 
         <div class="text-center">
           <div class="contact-pill-badge">
@@ -487,7 +580,7 @@
 
         <div class="row gy-4 mt-2">
           <!-- Contact Info -->
-          <div class="col-lg-5" data-aos="fade-right" data-aos-delay="150">
+          <div class="col-lg-5">
             <div class="contact-info-card">
               <div class="contact-info-icon"><i class="bi bi-geo-alt-fill"></i></div>
               <div class="contact-info-content">
@@ -522,13 +615,9 @@
           </div>
 
           <!-- Contact Form -->
-          <div class="col-lg-7" data-aos="fade-left" data-aos-delay="200">
+          <div class="col-lg-7">
             <div class="contact-form-card">
               <form id="omniContactForm" novalidate>
-                <!-- Bot protection: honeypot + timing -->
-                <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;opacity:0;pointer-events:none;height:0;width:0;" aria-hidden="true">
-                <input type="hidden" name="_form_load_time" id="_form_load_time">
-
                 <div class="row gy-3">
                   <div class="col-md-6">
                     <label class="form-label">Your Name <span class="text-warning">*</span></label>
@@ -560,12 +649,9 @@
                     <label class="form-label">Message <span class="text-warning">*</span></label>
                     <textarea name="message" class="form-control" rows="4" placeholder="Tell us about your project or workforce needs..." required></textarea>
                   </div>
-                  <div class="col-12">
-                    <div id="contactAlert" class="alert d-none" role="alert"></div>
-                  </div>
                   <div class="col-12 mt-2">
-                    <button type="submit" class="contact-btn-submit">
-                      <span>Send Message</span>
+                    <button type="button" class="contact-btn-submit">
+                      <span>Send Message (Preview)</span>
                       <i class="bi bi-arrow-right"></i>
                     </button>
                   </div>
@@ -585,8 +671,8 @@
       <div class="row gy-4 align-items-start">
         
         <!-- Corporate Visual Column -->
-        <div class="col-lg-3 col-md-4 footer-image-col" data-aos="fade-up" data-aos-delay="100">
-          <div class="footer-img-wrapper">
+        <div class="col-lg-3 col-md-4 footer-image-col">
+          <div class="footer-img-wrapper position-relative">
             <img src="assets/img/footer-image.jpg" alt="Omni Virtual Solutions Headquarters" class="img-fluid footer-building-img" data-block-key="footer.hq.image">
             <div class="footer-img-caption">
               <span data-block-key="footer.hq.caption">New York, NY</span>
@@ -595,7 +681,7 @@
         </div>
 
         <!-- Corporate Info Column -->
-        <div class="col-lg-4 col-md-8 footer-about" data-aos="fade-up" data-aos-delay="150">
+        <div class="col-lg-4 col-md-8 footer-about">
           <a href="index.html" class="d-flex align-items-center text-decoration-none">
             <span class="sitename">Omni Virtual Solutions</span>
           </a>
@@ -615,19 +701,19 @@
         </div>
 
         <!-- Useful Links Column -->
-        <div class="col-lg-2 col-md-6 col-6 footer-links" data-aos="fade-up" data-aos-delay="200">
+        <div class="col-lg-2 col-md-6 col-6 footer-links">
           <h4>Useful Links</h4>
           <ul>
             <li><i class="bi bi-chevron-right"></i> <a href="/index.html#hero">Home</a></li>
             <li><i class="bi bi-chevron-right"></i> <a href="/index.html#about">About us</a></li>
             <li><i class="bi bi-chevron-right"></i> <a href="/index.html#services">Services</a></li>
             <li><i class="bi bi-chevron-right"></i> <a href="/index.html#contact">Contact</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="/admin/">Admin CMS</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="admin/">Admin Dashboard</a></li>
           </ul>
         </div>
 
         <!-- Our Services Column -->
-        <div class="col-lg-3 col-md-6 col-6 footer-links" data-aos="fade-up" data-aos-delay="250">
+        <div class="col-lg-3 col-md-6 col-6 footer-links">
           <h4>Our Services</h4>
           <ul>
             <li><i class="bi bi-chevron-right"></i> <a href="services.html">Evaluation Services</a></li>
@@ -645,26 +731,260 @@
         <p>© <span>Copyright</span> <strong class="px-1 sitename">Omni Virtual Solutions</strong> <span>All Rights Reserved</span></p>
       </div>
     </div>
-
   </footer>
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <!-- ── 3. Image Picker Modal ── -->
+  <div class="modal-backdrop-custom" id="modalBackdrop" onclick="closeMediaPicker()"></div>
+  <div id="mediaModal">
+    <div style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; color:#fff;">
+      <h4 style="margin:0; font-size:16px; font-weight:700; color:#eba22d;"><i class="bi bi-images me-2"></i> Media Library & Image Picker</h4>
+      <button type="button" class="btn-close btn-close-white" onclick="closeMediaPicker()"></button>
+    </div>
+    <div style="padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2);">
+      <label class="editor-btn" style="cursor: pointer;">
+        <i class="bi bi-cloud-arrow-up-fill"></i> Upload New Image
+        <input type="file" id="mediaUploadInput" accept="image/*" style="display:none" onchange="uploadImage(this)">
+      </label>
+      <span style="font-size:12px; color:#a0aec0; margin-left: 10px;">Click an image below to update the target photo</span>
+    </div>
+    <div class="media-grid" id="mediaGrid">
+      <div style="color:#718096; padding: 20px;">Loading images...</div>
+    </div>
+  </div>
 
-  <div id="preloader"></div>
+  <!-- ── 4. Toast ── -->
+  <div id="editorToast">
+    <i class="bi bi-check-circle-fill text-warning fs-5"></i>
+    <span id="editorToastMsg">Saved successfully</span>
+  </div>
 
+  <!-- Vendor Scripts -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-
   <script src="assets/js/main.js"></script>
-  <!-- Real-Time Database CMS Sync & Dynamic Form Handling -->
-  <script src="assets/js/cms-sync.js"></script>
+
+  <!-- ── 5. In-Place Editor Logic ── -->
+  <script>
+    (function() {
+      'use strict';
+
+      const token = localStorage.getItem('omni_admin_token');
+      if (!token) {
+        window.location.href = 'admin/login.html';
+        return;
+      }
+
+      let isEditMode = true;
+      let targetImgKey = null;
+      const debounceTimers = {};
+
+      const saveStatus = document.getElementById('editorSaveStatus');
+      const toast = document.getElementById('editorToast');
+      const toastMsg = document.getElementById('editorToastMsg');
+
+      function showToast(msg) {
+        toastMsg.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2400);
+      }
+
+      function setSaving(saving) {
+        if (saving) {
+          saveStatus.className = 'editor-save-status saving';
+          saveStatus.innerHTML = '<span class="spinner-border spinner-border-sm me-1 text-warning"></span> Saving...';
+        } else {
+          saveStatus.className = 'editor-save-status saved';
+          saveStatus.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> All changes saved';
+        }
+      }
+
+      window.setEditorMode = function(edit) {
+        isEditMode = edit;
+        document.body.classList.toggle('mode-edit', edit);
+        document.body.classList.toggle('mode-preview', !edit);
+        document.getElementById('btnEdit').classList.toggle('active', edit);
+        document.getElementById('btnPreview').classList.toggle('active', !edit);
+
+        document.querySelectorAll('[data-block-key]').forEach(el => {
+          if (el.tagName.toLowerCase() !== 'img') {
+            el.contentEditable = edit ? 'true' : 'false';
+            el.spellcheck = false;
+          }
+        });
+
+        showToast(edit ? 'Edit Mode active: click text or photo to edit' : 'Visitor Preview active');
+      };
+
+      async function saveBlock(key, value) {
+        setSaving(true);
+        try {
+          const res = await fetch(`/api/v1/cms/blocks/${encodeURIComponent(key)}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ value })
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            setSaving(false);
+            showToast(`Saved: ${key}`);
+          } else {
+            throw new Error(data.error?.message || 'Save error');
+          }
+        } catch (e) {
+          setSaving(false);
+          alert('Save failed: ' + e.message);
+        }
+      }
+
+      function initEditor() {
+        document.querySelectorAll('[data-block-key]').forEach(el => {
+          const key = el.getAttribute('data-block-key');
+
+          if (el.tagName.toLowerCase() === 'img') {
+            el.addEventListener('click', (e) => {
+              if (!isEditMode) return;
+              e.preventDefault();
+              openMediaPicker(key);
+            });
+          } else {
+            el.contentEditable = 'true';
+            el.spellcheck = false;
+
+            if (el.tagName.toLowerCase() === 'a' || el.closest('a')) {
+              el.addEventListener('click', (e) => {
+                if (isEditMode) e.preventDefault();
+              });
+            }
+
+            el.addEventListener('blur', () => {
+              if (!isEditMode) return;
+              saveBlock(key, el.innerText.trim());
+            });
+
+            el.addEventListener('input', () => {
+              if (!isEditMode) return;
+              setSaving(true);
+              clearTimeout(debounceTimers[key]);
+              debounceTimers[key] = setTimeout(() => {
+                saveBlock(key, el.innerText.trim());
+              }, 900);
+            });
+          }
+        });
+      }
+
+      async function loadContent() {
+        try {
+          const res = await fetch('/api/v1/site-meta');
+          if (!res.ok) return;
+          const data = await res.json();
+          if (data.blockMap) {
+            Object.entries(data.blockMap).forEach(([k, v]) => {
+              document.querySelectorAll(`[data-block-key="${k}"]`).forEach(el => {
+                if (el.tagName.toLowerCase() === 'img') {
+                  el.src = v.startsWith('/') ? v.slice(1) : v;
+                } else {
+                  if (v.includes('\n')) {
+                    el.innerHTML = v.replace(/\n/g, '<br>');
+                  } else {
+                    el.textContent = v;
+                  }
+                }
+              });
+            });
+          }
+        } catch (err) {}
+      }
+
+      window.openMediaPicker = function(key = null) {
+        targetImgKey = key;
+        document.getElementById('modalBackdrop').classList.add('show');
+        document.getElementById('mediaModal').classList.add('show');
+        loadMedia();
+      };
+
+      window.closeMediaPicker = function() {
+        document.getElementById('modalBackdrop').classList.remove('show');
+        document.getElementById('mediaModal').classList.remove('show');
+        targetImgKey = null;
+      };
+
+      async function loadMedia() {
+        const grid = document.getElementById('mediaGrid');
+        try {
+          const res = await fetch('/api/v1/site-meta');
+          const data = await res.json();
+          const assets = data.media_assets || [];
+          const defaultImgs = [
+            'assets/img/about_team.jpg',
+            'assets/img/footer-image.jpg',
+            'assets/img/OmniLogo2.png',
+            'assets/img/books/book1.png',
+            'assets/img/books/book2.png',
+            'assets/img/books/book3.png',
+            'assets/img/books/book4.png'
+          ];
+          const all = Array.from(new Set([...assets.map(a => a.file_path), ...defaultImgs]));
+
+          grid.innerHTML = all.map(path => {
+            const clean = path.startsWith('/') ? path.slice(1) : path;
+            return `<div><img src="${clean}" class="media-thumb" onclick="pickImage('${clean}')"></div>`;
+          }).join('');
+        } catch (e) {
+          grid.innerHTML = '<div class="text-danger p-3">Failed to load media.</div>';
+        }
+      }
+
+      window.pickImage = async function(path) {
+        if (targetImgKey) {
+          document.querySelectorAll(`img[data-block-key="${targetImgKey}"]`).forEach(img => img.src = path);
+          await saveBlock(targetImgKey, path);
+        }
+        closeMediaPicker();
+      };
+
+      window.uploadImage = async function(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('image', file);
+        if (targetImgKey) formData.append('block_key', targetImgKey);
+
+        showToast('Uploading image...');
+
+        try {
+          const res = await fetch('/api/v1/cms/upload', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token },
+            body: formData
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            showToast('Uploaded!');
+            if (targetImgKey) {
+              document.querySelectorAll(`img[data-block-key="${targetImgKey}"]`).forEach(img => img.src = data.path);
+            }
+            loadMedia();
+          } else {
+            alert('Upload error: ' + (data.error?.message || 'Failed'));
+          }
+        } catch (e) {
+          alert('Upload failed: ' + e.message);
+        }
+      };
+
+      document.addEventListener('DOMContentLoaded', () => {
+        loadContent();
+        initEditor();
+      });
+    })();
+  </script>
 
 </body>
 

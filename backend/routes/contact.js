@@ -1,0 +1,467 @@
+// =================================================================
+// backend/routes/contact.js  —  /api/v1/contact
+// =================================================================
+// Public endpoints (rate-limited):
+//   POST /api/v1/contact/submit   → save message + trigger email notification
+//
+// Admin endpoints (requireAuth):
+//   GET    /api/v1/contact/submissions       → list all (with search/filter)
+//   GET    /api/v1/contact/submissions/:id   → single submission + replies
+//   PATCH  /api/v1/contact/submissions/:id   → update status / admin_notes
+//   DELETE /api/v1/contact/submissions/:id   → delete submission + replies
+//   POST   /api/v1/contact/submissions/:id/reply  → send reply email
+//   POST   /api/v1/contact/submissions/:id/retry  → retry failed email notification
+//   GET    /api/v1/contact/email-settings    → read email settings (no passwords)
+//   PUT    /api/v1/contact/email-settings    → save email settings
+//   POST   /api/v1/contact/email-settings/test  → test SMTP connection
+//   GET    /api/v1/contact/email-stats       → email usage stats
+// =================================================================
+
+const express   = require("express");
+const router    = express.Router();
+const { db }    = require("../db");
+const { requireAuth } = require("../middleware/auth");
+const emailSvc  = require("../email-service");
+
+// ── Rate limiting: max 5 submissions per IP per 15 min ────────────
+let rateLimit;
+try {
+  const rl = require("express-rate-limit");
+  rateLimit = rl({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: { code: "RATE_LIMIT", message: "Too many submissions. Please wait 15 minutes before trying again." } },
+    keyGenerator: (req) =>
+      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket?.remoteAddress || "unknown",
+  });
+} catch (_) {
+  rateLimit = (_req, _res, next) => next(); // fallback if package missing
+}
+
+// ── Helpers ───────────────────────────────────────────────────────
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// Honeypot field check (bot protection)
+function isBot(body) {
+  // If a hidden "website" field is filled, it's almost certainly a bot
+  if (body.website && body.website.trim().length > 0) return true;
+  // If timestamps are impossible fast (< 2 seconds from page load)
+  if (body._form_load_time) {
+    const elapsed = Date.now() - parseInt(body._form_load_time, 10);
+    if (elapsed < 2000) return true;
+  }
+  return false;
+}
+
+// =================================================================
+// POST /api/v1/contact/submit  (public, rate-limited)
+// =================================================================
+router.post("/submit", rateLimit, async (req, res) => {
+  // Bot check
+  if (isBot(req.body)) {
+    // Silently return 200 to confuse bots
+    return res.status(200).json({ success: true, message: "Thank you for your message." });
+  }
+
+  const { full_name, email, subject, message, phone, service_interest_id } = req.body;
+
+  // Validation
+  const errors = [];
+  if (!full_name || full_name.trim().length < 2) errors.push("Full name is required (min 2 characters).");
+  if (!email || !isValidEmail(email))             errors.push("A valid email address is required.");
+  if (!message || message.trim().length < 10)     errors.push("Message is required (min 10 characters).");
+  if (phone && phone.trim().length > 0 && !/^[\d\s\+\-\(\)\.]+$/.test(phone.trim()))
+    errors.push("Phone number format is invalid.");
+
+  if (errors.length > 0) {
+    return res.status(400).json({ error: { code: "VALIDATION_ERROR", message: errors.join(" ") } });
+  }
+
+  const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket?.remoteAddress || null;
+
+  // Duplicate submission guard: same email + message within last 10 minutes
+  try {
+    const dupeCheck = await db.execute({
+      sql: `SELECT id FROM contact_submissions WHERE email = ? AND message = ? AND created_at > datetime('now', '-10 minutes') LIMIT 1`,
+      args: [email.trim().toLowerCase(), message.trim()],
+    });
+    if (dupeCheck.rows.length > 0) {
+      return res.status(200).json({ success: true, message: "Your message has already been received. We will get back to you shortly." });
+    }
+  } catch (_) {}
+
+  // ── SAVE TO DB FIRST ─────────────────────────────────────────────
+  let newId;
+  try {
+    const result = await db.execute({
+      sql: `INSERT INTO contact_submissions
+              (full_name, email, phone, subject, message, service_interest_id, status, ip_address, email_notify_status)
+            VALUES (?,?,?,?,?,?,'new',?,'pending')`,
+      args: [
+        full_name.trim(),
+        email.trim().toLowerCase(),
+        phone ? phone.trim() : null,
+        subject ? subject.trim() : null,
+        message.trim(),
+        service_interest_id ? parseInt(service_interest_id, 10) : null,
+        ip,
+      ],
+    });
+    newId = result.lastInsertRowid;
+    console.log(`[contact] New submission #${newId} from: ${email.trim().toLowerCase()}`);
+  } catch (err) {
+    console.error("[contact] Insert error:", err.message);
+    return res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to save your submission. Please try again." } });
+  }
+
+  // ── SEND EMAIL NOTIFICATION (async, non-blocking) ─────────────────
+  const submission = { id: newId, full_name: full_name.trim(), email: email.trim().toLowerCase(), phone: phone?.trim(), subject: subject?.trim(), message: message.trim(), ip_address: ip, created_at: new Date().toISOString() };
+  
+  // Don't await — respond to visitor immediately, email sends in background
+  emailSvc.sendNewSubmissionNotification(submission).catch((e) => console.error("[contact] Notification error:", e.message));
+  emailSvc.sendAutoReply(submission).catch((e) => console.error("[contact] Auto-reply error:", e.message));
+
+  res.status(201).json({
+    success: true,
+    message: "Your message has been received! We will get back to you within 1-2 business days.",
+  });
+});
+
+// =================================================================
+// GET /api/v1/contact/submissions  — Admin: list all
+// Query: ?status=new|in_review|contacted|closed|replied
+//        &search=<text>
+//        &page=1&limit=50
+// =================================================================
+router.get("/submissions", requireAuth, async (req, res) => {
+  const { status, search, page = 1, limit = 50 } = req.query;
+  const offset = (parseInt(page) - 1) * parseInt(limit);
+
+  try {
+    const conditions = [];
+    const args = [];
+
+    if (status) {
+      conditions.push("cs.status = ?");
+      args.push(status);
+    }
+    if (search) {
+      conditions.push("(cs.full_name LIKE ? OR cs.email LIKE ? OR cs.subject LIKE ? OR cs.message LIKE ?)");
+      const q = `%${search}%`;
+      args.push(q, q, q, q);
+    }
+
+    const where = conditions.length > 0 ? "WHERE " + conditions.join(" AND ") : "";
+
+    const [rows, countRow] = await Promise.all([
+      db.execute({
+        sql: `SELECT cs.id, cs.full_name, cs.email, cs.phone, cs.subject, cs.message,
+                     cs.status, cs.created_at, cs.read_at, cs.admin_notes, cs.email_notify_status,
+                     s.title AS service_interest_title,
+                     (SELECT COUNT(*) FROM contact_replies r WHERE r.submission_id = cs.id) AS reply_count
+              FROM contact_submissions cs
+              LEFT JOIN services s ON cs.service_interest_id = s.id
+              ${where}
+              ORDER BY cs.created_at DESC
+              LIMIT ? OFFSET ?`,
+        args: [...args, parseInt(limit), offset],
+      }),
+      db.execute({
+        sql: `SELECT COUNT(*) AS total FROM contact_submissions cs ${where}`,
+        args,
+      }),
+    ]);
+
+    res.json({ submissions: rows.rows, total: countRow.rows[0].total, page: parseInt(page), limit: parseInt(limit) });
+  } catch (err) {
+    console.error("[contact/submissions] GET Error:", err.message);
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to load submissions." } });
+  }
+});
+
+// =================================================================
+// GET /api/v1/contact/submissions/:id  — Admin: single submission + replies
+// =================================================================
+router.get("/submissions/:id", requireAuth, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const [subRow, replies] = await Promise.all([
+      db.execute({
+        sql: `SELECT cs.*, s.title AS service_interest_title
+              FROM contact_submissions cs
+              LEFT JOIN services s ON cs.service_interest_id = s.id
+              WHERE cs.id = ? LIMIT 1`,
+        args: [id],
+      }),
+      db.execute({
+        sql: "SELECT * FROM contact_replies WHERE submission_id = ? ORDER BY sent_at ASC",
+        args: [id],
+      }),
+    ]);
+
+    if (subRow.rows.length === 0) {
+      return res.status(404).json({ error: { code: "NOT_FOUND", message: "Submission not found." } });
+    }
+
+    // Auto-mark as read on first open
+    if (!subRow.rows[0].read_at) {
+      await db.execute({
+        sql: "UPDATE contact_submissions SET read_at = CURRENT_TIMESTAMP WHERE id = ?",
+        args: [id],
+      });
+    }
+
+    res.json({ submission: subRow.rows[0], replies: replies.rows });
+  } catch (err) {
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to load submission." } });
+  }
+});
+
+// =================================================================
+// PATCH /api/v1/contact/submissions/:id  — Admin: update status/notes
+// Body: { status?, admin_notes?, mark_unread? }
+// =================================================================
+router.patch("/submissions/:id", requireAuth, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const { status, admin_notes, mark_unread } = req.body;
+  const VALID_STATUSES = ["new", "in_review", "contacted", "replied", "closed"];
+
+  const updates = [];
+  const args = [];
+
+  if (status !== undefined) {
+    if (!VALID_STATUSES.includes(status)) {
+      return res.status(400).json({ error: { code: "VALIDATION_ERROR", message: `status must be one of: ${VALID_STATUSES.join(", ")}` } });
+    }
+    updates.push("status = ?");
+    args.push(status);
+  }
+  if (admin_notes !== undefined) {
+    updates.push("admin_notes = ?");
+    args.push(admin_notes);
+  }
+  if (mark_unread === true) {
+    updates.push("read_at = NULL");
+  }
+
+  if (updates.length === 0) {
+    return res.status(400).json({ error: { code: "VALIDATION_ERROR", message: "Nothing to update." } });
+  }
+
+  args.push(id);
+  try {
+    await db.execute({ sql: `UPDATE contact_submissions SET ${updates.join(", ")} WHERE id = ?`, args });
+    console.log(`[cms] admin updated submission #${id}`);
+    res.json({ success: true, id, status });
+  } catch (err) {
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to update submission." } });
+  }
+});
+
+// =================================================================
+// DELETE /api/v1/contact/submissions/:id  — Admin: delete message
+// =================================================================
+router.delete("/submissions/:id", requireAuth, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    await db.execute({ sql: "DELETE FROM contact_submissions WHERE id = ?", args: [id] });
+    console.log(`[cms] admin deleted submission #${id}`);
+    res.json({ success: true, id });
+  } catch (err) {
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to delete submission." } });
+  }
+});
+
+// =================================================================
+// POST /api/v1/contact/submissions/:id/reply  — Admin: send reply
+// Body: { reply_body: "..." }
+// =================================================================
+router.post("/submissions/:id/reply", requireAuth, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const { reply_body } = req.body;
+
+  if (!reply_body || reply_body.trim().length < 5) {
+    return res.status(400).json({ error: { code: "VALIDATION_ERROR", message: "Reply body is required (min 5 characters)." } });
+  }
+
+  // Fetch submission
+  let submission;
+  try {
+    const row = await db.execute({ sql: "SELECT * FROM contact_submissions WHERE id = ? LIMIT 1", args: [id] });
+    if (row.rows.length === 0) return res.status(404).json({ error: { code: "NOT_FOUND", message: "Submission not found." } });
+    submission = row.rows[0];
+  } catch (err) {
+    return res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to fetch submission." } });
+  }
+
+  // Save reply to DB first
+  let replyId;
+  try {
+    const r = await db.execute({
+      sql: `INSERT INTO contact_replies (submission_id, direction, reply_body, sent_by, email_sent)
+            VALUES (?, 'outbound', ?, ?, 0)`,
+      args: [id, reply_body.trim(), req.admin.username],
+    });
+    replyId = r.lastInsertRowid;
+    // Auto-update status to 'replied'
+    await db.execute({ sql: "UPDATE contact_submissions SET status = 'replied' WHERE id = ?", args: [id] });
+  } catch (err) {
+    return res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to save reply." } });
+  }
+
+  // Send email in background
+  const emailResult = await emailSvc.sendReply({
+    submission,
+    replyBody: reply_body.trim(),
+    replyId,
+    sentBy: req.admin.username,
+  });
+
+  console.log(`[cms] admin replied to submission #${id} — email: ${emailResult.success ? "sent" : "failed"}`);
+
+  res.json({
+    success: true,
+    replyId,
+    emailSent: emailResult.success,
+    emailError: emailResult.reason || null,
+  });
+});
+
+// =================================================================
+// POST /api/v1/contact/submissions/:id/retry  — Admin: retry notification
+// =================================================================
+router.post("/submissions/:id/retry", requireAuth, async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  try {
+    const row = await db.execute({ sql: "SELECT * FROM contact_submissions WHERE id = ? LIMIT 1", args: [id] });
+    if (row.rows.length === 0) return res.status(404).json({ error: { code: "NOT_FOUND", message: "Submission not found." } });
+    const submission = row.rows[0];
+
+    await db.execute({ sql: "UPDATE contact_submissions SET email_notify_status = 'pending' WHERE id = ?", args: [id] });
+
+    const result = await emailSvc.sendNewSubmissionNotification(submission);
+    res.json({ success: result.success, reason: result.reason || null });
+  } catch (err) {
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to retry." } });
+  }
+});
+
+// =================================================================
+// GET /api/v1/contact/email-settings  — Admin: read settings
+// NOTE: Never return smtp_pass in response
+// =================================================================
+router.get("/email-settings", requireAuth, async (req, res) => {
+  try {
+    const result = await db.execute("SELECT setting_key, setting_value, setting_label, updated_at, updated_by FROM email_settings ORDER BY setting_key");
+    // Mask password
+    const settings = result.rows.map((r) => ({
+      ...r,
+      setting_value: r.setting_key === "smtp_pass" && r.setting_value ? "••••••••" : r.setting_value,
+    }));
+    res.json({ settings });
+  } catch (err) {
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to load email settings." } });
+  }
+});
+
+// =================================================================
+// PUT /api/v1/contact/email-settings  — Admin: save one or many settings
+// Body: { settings: [{ key, value }] }
+//   OR: { key, value }  (single update)
+// =================================================================
+router.put("/email-settings", requireAuth, async (req, res) => {
+  const editor = req.admin.username;
+  let pairs = [];
+
+  if (Array.isArray(req.body.settings)) {
+    pairs = req.body.settings;
+  } else if (req.body.key !== undefined) {
+    pairs = [{ key: req.body.key, value: req.body.value }];
+  } else {
+    // Treat entire body as key→value map
+    pairs = Object.entries(req.body).map(([key, value]) => ({ key, value }));
+  }
+
+  if (pairs.length === 0) {
+    return res.status(400).json({ error: { code: "VALIDATION_ERROR", message: "No settings to save." } });
+  }
+
+  try {
+    for (const { key, value } of pairs) {
+      if (!key) continue;
+      // Don't overwrite password if masked value sent
+      if (key === "smtp_pass" && value === "••••••••") continue;
+
+      await db.execute({
+        sql: `INSERT INTO email_settings (setting_key, setting_value, updated_by)
+              VALUES (?,?,?)
+              ON CONFLICT(setting_key) DO UPDATE SET
+                setting_value = excluded.setting_value,
+                updated_at = CURRENT_TIMESTAMP,
+                updated_by = excluded.updated_by`,
+        args: [key, value ?? "", editor],
+      });
+      if (key === "recipient_email") {
+        console.log(`[cms] admin changed receiving email to: ${value}`);
+      }
+    }
+    res.json({ success: true, saved: pairs.length });
+  } catch (err) {
+    console.error("[email-settings] Save error:", err.message);
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to save settings." } });
+  }
+});
+
+// =================================================================
+// POST /api/v1/contact/email-settings/test  — Admin: test SMTP
+// =================================================================
+router.post("/email-settings/test", requireAuth, async (req, res) => {
+  try {
+    // Load current settings from DB, then override with request body (allows testing before saving)
+    const dbSettings = await emailSvc.getSettings();
+    const testSettings = { ...dbSettings, ...req.body };
+    // If password sent as masked, use DB value
+    if (testSettings.smtp_pass === "••••••••") testSettings.smtp_pass = dbSettings.smtp_pass;
+
+    const result = await emailSvc.testSmtpConnection(testSettings);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, reason: err.message });
+  }
+});
+
+// =================================================================
+// GET /api/v1/contact/email-stats  — Admin: email usage overview
+// =================================================================
+router.get("/email-stats", requireAuth, async (req, res) => {
+  try {
+    const [emailStats, contactStats] = await Promise.all([
+      emailSvc.getEmailStats(),
+      db.execute(`SELECT 
+        COUNT(*) AS total_submissions,
+        SUM(CASE WHEN status = 'new' THEN 1 ELSE 0 END) AS new_count,
+        SUM(CASE WHEN email_notify_status = 'sent' THEN 1 ELSE 0 END) AS notified,
+        SUM(CASE WHEN email_notify_status = 'failed' THEN 1 ELSE 0 END) AS notify_failed,
+        SUM(CASE WHEN email_notify_status = 'skipped' THEN 1 ELSE 0 END) AS notify_skipped
+        FROM contact_submissions`),
+    ]);
+
+    const recentLog = await db.execute(
+      "SELECT * FROM email_log ORDER BY sent_at DESC LIMIT 20"
+    );
+
+    res.json({
+      emailStats,
+      contactStats: contactStats.rows[0],
+      recentLog: recentLog.rows,
+    });
+  } catch (err) {
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to load stats." } });
+  }
+});
+
+module.exports = router;

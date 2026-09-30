@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Messages — Omni Virtual Solutions Admin</title>
+  <link rel="icon" type="image/png" href="assets/img/OmniLogo2.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #0b0e14;
+      --sidebar:  #0f131a;
+      --card:     #151a23;
+      --card2:    #1a202c;
+      --border:   rgba(255,255,255,0.08);
+      --gold:     #eba22d;
+      --gold-dim: rgba(235,162,45,0.12);
+      --text:     #f0f4f8;
+      --muted:    #8a99ad;
+      --success:  #34d399;
+      --danger:   #f87171;
+      --blue:     #60a5fa;
+      --radius:   12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────────────── */
+    #sidebar {
+      width: 250px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      z-index: 1000;
+    }
+    .brand-box { padding: 22px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .brand-icon { width:36px;height:36px; background:var(--gold-dim); border:1px solid rgba(235,162,45,0.3); border-radius:8px; display:flex;align-items:center;justify-content:center; color:var(--gold); font-size:18px; }
+    .brand-title { font-size:14px; font-weight:700; color:#fff; line-height:1.2; }
+    .brand-sub   { font-size:11px; color:var(--muted); }
+
+    .nav-list { list-style:none; padding:16px 12px; flex:1; overflow-y:auto; }
+    .nav-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#55657a; padding:10px 12px 6px; }
+    .nav-item {
+      display:flex; align-items:center; gap:11px; padding:10px 14px; border-radius:8px;
+      font-size:13.5px; font-weight:500; color:var(--muted); cursor:pointer;
+      text-decoration:none; transition:all 0.2s; margin-bottom:4px;
+    }
+    .nav-item:hover { background:rgba(255,255,255,0.04); color:#fff; }
+    .nav-item.active { background:var(--gold-dim); color:var(--gold); font-weight:600; border:1px solid rgba(235,162,45,0.25); }
+    .nav-item i { font-size:16px; }
+    .nav-badge { margin-left:auto; background:#e53e3e; color:#fff; font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:20px; }
+    .sidebar-footer { padding:16px; border-top:1px solid var(--border); }
+    .user-info { display:flex; align-items:center; justify-content:space-between; }
+    .user-details { font-size:12px; color:var(--muted); }
+    .user-name { font-weight:700; color:#fff; }
+
+    /* ── Layout ──────────────────────────────────────────────────── */
+    #mainContent { margin-left:250px; flex:1; min-height:100vh; display:flex; flex-direction:column; }
+    .top-header {
+      height:60px; background:rgba(15,19,26,0.85); backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--border); display:flex; align-items:center;
+      justify-content:space-between; padding:0 28px;
+      position:sticky; top:0; z-index:900;
+    }
+    .page-title { font-size:17px; font-weight:700; display:flex; align-items:center; gap:10px; }
+    .header-actions { display:flex; align-items:center; gap:12px; }
+
+    /* Buttons */
+    .btn { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; padding:7px 14px; border-radius:7px; border:1px solid var(--border); background:rgba(255,255,255,0.04); color:var(--text); cursor:pointer; transition:all 0.2s; font-family:inherit; }
+    .btn:hover { background:rgba(255,255,255,0.09); border-color:rgba(235,162,45,0.4); color:#fff; }
+    .btn-gold { background:var(--gold); color:#0d1117 !important; border-color:var(--gold); font-weight:700; }
+    .btn-gold:hover { background:#df9524; box-shadow:0 4px 14px rgba(235,162,45,0.35); }
+    .btn-danger { background:rgba(239,68,68,0.12); color:var(--danger); border-color:rgba(239,68,68,0.3); }
+    .btn-danger:hover { background:rgba(239,68,68,0.25); }
+    .btn-sm { padding:4px 10px; font-size:11.5px; border-radius:6px; }
+    .btn-icon { padding:5px 8px; }
+
+    /* Content area */
+    .content-area { padding:24px 28px; flex:1; }
+    .admin-tab { display:none; }
+    .admin-tab.active { display:block; }
+
+    /* ── Inbox Layout (3-pane) ─────────────────────────────────── */
+    .inbox-shell {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      height: calc(100vh - 140px);
+      min-height: 500px;
+    }
+
+    /* Message list pane */
+    .inbox-list-pane {
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .inbox-toolbar {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .search-box {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      width: 100%;
+      font-family: inherit;
+    }
+    .search-box:focus { outline: none; border-color: var(--gold); }
+    .filter-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+    .filter-tab { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .filter-tab:hover, .filter-tab.active { background: var(--gold-dim); color: var(--gold); border-color: rgba(235,162,45,0.3); }
+
+    .inbox-list { flex: 1; overflow-y: auto; }
+    .msg-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .msg-item:hover { background: rgba(255,255,255,0.03); }
+    .msg-item.selected { background: var(--gold-dim); border-left: 3px solid var(--gold); }
+    .msg-item.unread .msg-name { font-weight: 700; color: #fff; }
+    .msg-item.unread .msg-preview { color: #cbd5e0; }
+    .msg-unread-dot { position:absolute; top:18px; right:14px; width:8px; height:8px; background:var(--gold); border-radius:50%; }
+    .msg-name { font-size: 13.5px; font-weight: 500; color: #e2e8f0; margin-bottom: 3px; display: flex; align-items: center; gap: 8px; }
+    .msg-subject { font-size: 12px; color: #cbd5e0; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .msg-preview { font-size: 11.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .msg-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
+    .msg-time { font-size: 11px; color: var(--muted); }
+    .msg-empty { text-align:center; padding:48px 20px; color:var(--muted); font-size:14px; }
+
+    /* Status badges */
+    .badge { display:inline-flex; align-items:center; gap:4px; font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:20px; text-transform:capitalize; }
+    .badge-new      { background:rgba(239,68,68,0.15);   color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+    .badge-in_review{ background:rgba(235,162,45,0.15);  color:#fbbf24; border:1px solid rgba(235,162,45,0.3); }
+    .badge-contacted{ background:rgba(59,130,246,0.15);  color:#60a5fa; border:1px solid rgba(59,130,246,0.3); }
+    .badge-replied  { background:rgba(139,92,246,0.15);  color:#a78bfa; border:1px solid rgba(139,92,246,0.3); }
+    .badge-closed   { background:rgba(16,185,129,0.15);  color:#34d399; border:1px solid rgba(16,185,129,0.3); }
+    .badge-sent     { background:rgba(16,185,129,0.15);  color:#34d399; border:1px solid rgba(16,185,129,0.3); }
+    .badge-failed   { background:rgba(239,68,68,0.15);   color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+    .badge-skipped  { background:rgba(255,255,255,0.06); color:var(--muted); border:1px solid var(--border); }
+    .badge-pending  { background:rgba(235,162,45,0.1);   color:#fbbf24; border:1px solid rgba(235,162,45,0.25); }
+
+    /* Detail pane */
+    .inbox-detail-pane {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .detail-empty {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: var(--muted); gap: 12px;
+    }
+    .detail-empty i { font-size: 48px; color: rgba(255,255,255,0.08); }
+
+    /* Opened message */
+    #msgDetailView { display: none; flex-direction: column; height: 100%; overflow: hidden; }
+    #msgDetailView.visible { display: flex; }
+    .detail-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .detail-subject { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .detail-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .detail-meta-item { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .detail-meta-item strong { color: #e2e8f0; }
+    .detail-actions {
+      padding: 12px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex-shrink: 0;
+    }
+    .status-select {
+      background: var(--card2); color: #fff; border: 1px solid var(--border);
+      border-radius: 7px; padding: 5px 10px; font-size: 12.5px; font-family: inherit;
+      cursor: pointer;
+    }
+
+    /* Scrollable body */
+    .detail-body { flex: 1; overflow-y: auto; padding: 22px; }
+    .msg-body-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      line-height: 1.7;
+      font-size: 14px;
+      color: #e2e8f0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin-bottom: 20px;
+    }
+
+    /* Thread / replies */
+    .thread-divider { display: flex; align-items: center; gap: 10px; margin: 20px 0 16px; }
+    .thread-divider span { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
+    .thread-divider::before, .thread-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .reply-bubble {
+      background: rgba(235,162,45,0.06);
+      border: 1px solid rgba(235,162,45,0.2);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+    .reply-meta { font-size: 11.5px; color: var(--muted); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .reply-meta strong { color: var(--gold); }
+    .reply-body-text { font-size: 14px; color: #e2e8f0; white-space: pre-wrap; line-height: 1.65; }
+
+    /* Reply compose */
+    .reply-compose {
+      border-top: 1px solid var(--border);
+      padding: 16px 22px;
+      flex-shrink: 0;
+      background: var(--sidebar);
+    }
+    .reply-compose-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .reply-textarea {
+      width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+      color: #fff; padding: 12px 14px; border-radius: 9px; font-size: 14px;
+      font-family: inherit; resize: vertical; min-height: 90px; transition: border-color 0.2s;
+    }
+    .reply-textarea:focus { outline: none; border-color: var(--gold); }
+    .reply-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; gap: 10px; }
+    .reply-to-info { font-size: 12px; color: var(--muted); }
+
+    /* ── Email Settings Panel ───────────────────────────────────── */
+    .settings-grid { display: grid; gap: 24px; }
+    .settings-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .settings-card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14.5px; font-weight: 700;
+    }
+    .settings-card-body { padding: 20px 22px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label { display: block; font-size: 12.5px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+    .form-input {
+      width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+      color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 14px;
+      font-family: inherit; transition: border-color 0.2s;
+    }
+    .form-input:focus { outline: none; border-color: var(--gold); }
+    .form-select-styled {
+      width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+      color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 14px;
+      font-family: inherit; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center; background-size: 14px;
+      padding-right: 36px; -webkit-appearance: none; appearance: none;
+    }
+    .form-select-styled:focus { outline: none; border-color: var(--gold); }
+    .form-hint { font-size: 11.5px; color: var(--muted); margin-top: 5px; line-height: 1.5; }
+    .toggle-switch { display: flex; align-items: center; gap: 12px; }
+    .toggle-input { width: 36px; height: 20px; accent-color: var(--gold); cursor: pointer; }
+    .toggle-label { font-size: 14px; color: #e2e8f0; }
+
+    /* Stat row */
+    .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .mini-stat { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+    .mini-stat-val { font-size: 22px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+    .mini-stat-lbl { font-size: 11.5px; color: var(--muted); }
+
+    /* Alert / toast */
+    .toast-msg {
+      position: fixed; bottom: 24px; right: 24px;
+      background: #1a202c; border: 1px solid rgba(235,162,45,0.4); color: #fff;
+      padding: 12px 18px; border-radius: 9px; font-size: 13.5px; z-index: 99999;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.6); transition: opacity 0.3s;
+      display: flex; align-items: center; gap: 10px;
+      max-width: 360px;
+    }
+    .toast-msg.success { border-color: rgba(52,211,153,0.4); }
+    .toast-msg.error   { border-color: rgba(248,113,113,0.4); }
+
+    /* Loading */
+    .spinner-sm { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.15); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Email log table */
+    .log-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .log-table th { text-align: left; padding: 9px 12px; color: var(--muted); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.6px; border-bottom: 1px solid var(--border); }
+    .log-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #e2e8f0; }
+    .log-table tr:hover td { background: rgba(255,255,255,0.02); }
+  </style>
+</head>
+<body>
+
+  <!-- ── Sidebar ── -->
+  <aside id="sidebar">
+    <div class="brand-box">
+      <div class="brand-icon">✦</div>
+      <div>
+        <div class="brand-title">Omni Virtual</div>
+        <div class="brand-sub">Management Suite</div>
+      </div>
+    </div>
+    <ul class="nav-list">
+      <li class="nav-label">Navigation</li>
+      <li><a class="nav-item" href="admin/">
+        <i class="bi bi-grid-1x2-fill"></i> Overview Dashboard
+      </a></li>
+      <li><a class="nav-item active" onclick="switchTab('inbox', this)">
+        <i class="bi bi-inbox-fill"></i> Contact Messages
+        <span class="nav-badge" id="unreadBadge">0</span>
+      </a></li>
+      <li><a class="nav-item" onclick="switchTab('email-settings', this)">
+        <i class="bi bi-gear-fill"></i> Email Settings
+      </a></li>
+      <li><a class="nav-item" onclick="switchTab('email-stats', this)">
+        <i class="bi bi-bar-chart-fill"></i> Email Usage Stats
+      </a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div>
+          <div class="user-name" id="sidebarUserName">admin</div>
+          <div class="user-details">Administrator</div>
+        </div>
+        <button class="btn btn-sm" onclick="adminLogout()" title="Logout" style="color:#f87171; border-color:rgba(248,113,113,0.3);">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main Content ── -->
+  <main id="mainContent">
+    <header class="top-header">
+      <div class="page-title" id="topTitle">
+        <i class="bi bi-inbox-fill" style="color:var(--gold)"></i> Contact Messages
+      </div>
+      <div class="header-actions">
+        <button class="btn" onclick="loadInbox()"><i class="bi bi-arrow-clockwise"></i> Refresh</button>
+        <a href="admin/" class="btn"><i class="bi bi-arrow-left"></i> Dashboard</a>
+        <a href="index.html" target="_blank" class="btn"><i class="bi bi-box-arrow-up-right"></i> Live Site</a>
+      </div>
+    </header>
+
+    <div class="content-area">
+
+      <!-- ── TAB: INBOX ── -->
+      <div id="tab-inbox" class="admin-tab active">
+        <div class="inbox-shell">
+
+          <!-- Left: message list -->
+          <div class="inbox-list-pane">
+            <div class="inbox-toolbar">
+              <input class="search-box" type="text" id="inboxSearch" placeholder="🔍  Search messages..." oninput="searchDebounce()">
+              <div class="filter-tabs">
+                <button class="filter-tab active" onclick="setFilter('', this)">All</button>
+                <button class="filter-tab" onclick="setFilter('new', this)">New</button>
+                <button class="filter-tab" onclick="setFilter('in_review', this)">In Review</button>
+                <button class="filter-tab" onclick="setFilter('contacted', this)">Contacted</button>
+                <button class="filter-tab" onclick="setFilter('replied', this)">Replied</button>
+                <button class="filter-tab" onclick="setFilter('closed', this)">Closed</button>
+              </div>
+            </div>
+            <div class="inbox-list" id="inboxList">
+              <div class="msg-empty"><i class="bi bi-hourglass-split"></i><br>Loading messages...</div>
+            </div>
+          </div>
+
+          <!-- Right: detail view -->
+          <div class="inbox-detail-pane">
+            <div class="detail-empty" id="detailEmpty">
+              <i class="bi bi-envelope-open"></i>
+              <p>Select a message to read it</p>
+            </div>
+
+            <div id="msgDetailView">
+              <div class="detail-header">
+                <div class="detail-subject" id="detailSubject">—</div>
+                <div class="detail-meta">
+                  <div class="detail-meta-item"><i class="bi bi-person-fill"></i> <strong id="detailName">—</strong></div>
+                  <div class="detail-meta-item"><i class="bi bi-envelope-fill"></i> <a id="detailEmail" href="#" style="color:var(--gold); text-decoration:none;">—</a></div>
+                  <div class="detail-meta-item" id="detailPhoneWrap" style="display:none"><i class="bi bi-telephone-fill"></i> <strong id="detailPhone">—</strong></div>
+                  <div class="detail-meta-item"><i class="bi bi-clock-fill"></i> <span id="detailDate">—</span></div>
+                  <div class="detail-meta-item"><span id="detailStatusBadge" class="badge badge-new">new</span></div>
+                  <div class="detail-meta-item" id="detailEmailNotify"></div>
+                </div>
+              </div>
+
+              <div class="detail-actions">
+                <select class="status-select" id="statusSelect" onchange="updateStatus(this.value)">
+                  <option value="new">● New</option>
+                  <option value="in_review">● In Review</option>
+                  <option value="contacted">● Contacted</option>
+                  <option value="replied">● Replied</option>
+                  <option value="closed">● Closed</option>
+                </select>
+                <button class="btn btn-sm" onclick="markUnread()" title="Mark as unread"><i class="bi bi-envelope"></i> Mark Unread</button>
+                <button class="btn btn-sm" onclick="retryNotification()" id="retryBtn" style="display:none"><i class="bi bi-arrow-repeat"></i> Retry Email</button>
+                <div style="flex:1"></div>
+                <button class="btn btn-sm btn-danger" onclick="deleteMessage()"><i class="bi bi-trash3"></i> Delete</button>
+              </div>
+
+              <div class="detail-body" id="detailBodyScroll">
+                <!-- Original message -->
+                <div style="font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px;">Original Message</div>
+                <div class="msg-body-card" id="detailMessage">—</div>
+
+                <!-- Thread -->
+                <div id="replyThread"></div>
+              </div>
+
+              <!-- Compose reply -->
+              <div class="reply-compose">
+                <div class="reply-compose-title"><i class="bi bi-reply-fill"></i> Reply to Customer</div>
+                <textarea class="reply-textarea" id="replyTextarea" placeholder="Write your reply here..."></textarea>
+                <div class="reply-footer">
+                  <div class="reply-to-info">Sending to: <span id="replyToEmail" style="color:var(--gold);">—</span></div>
+                  <button class="btn btn-gold" id="sendReplyBtn" onclick="sendReply()">
+                    <i class="bi bi-send-fill"></i> Send Reply
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── TAB: EMAIL SETTINGS ── -->
+      <div id="tab-email-settings" class="admin-tab">
+        <div class="settings-grid">
+
+          <!-- Notification toggle -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <i class="bi bi-bell-fill" style="color:var(--gold)"></i> Email Notification Control
+            </div>
+            <div class="settings-card-body">
+              <div class="form-group">
+                <label class="form-label">Email Notifications</label>
+                <div class="toggle-switch">
+                  <input type="checkbox" class="toggle-input" id="notifEnabled">
+                  <label class="toggle-label" for="notifEnabled">Enable email notifications for new contact submissions</label>
+                </div>
+                <div class="form-hint">When OFF, messages are still saved to the inbox. You'll never lose a submission.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Notification Preference</label>
+                <select class="form-select-styled" id="notifPref">
+                  <option value="all">Email me for every new inquiry</option>
+                  <option value="new_only">Send notification only for NEW status inquiries</option>
+                  <option value="off">Do not send email notifications</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Recipient Email (who receives new inquiry notifications)</label>
+                <input class="form-input" type="email" id="recipientEmail" placeholder="company@example.com">
+                <div class="form-hint">This is the email address that will receive a notification when someone fills in the Contact Us form.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Notification Subject Template</label>
+                <input class="form-input" type="text" id="notifSubject" placeholder="New Website Inquiry — {customer_name}">
+                <div class="form-hint">Use <code style="color:var(--gold)">{customer_name}</code> to insert the visitor's name.</div>
+              </div>
+              <button class="btn btn-gold" onclick="saveNotifSettings()"><i class="bi bi-floppy2-fill"></i> Save Notification Settings</button>
+            </div>
+          </div>
+
+          <!-- SMTP Config -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <i class="bi bi-send-fill" style="color:var(--gold)"></i> SMTP Email Server Configuration
+            </div>
+            <div class="settings-card-body">
+              <div style="background:rgba(235,162,45,0.08); border:1px solid rgba(235,162,45,0.25); border-radius:8px; padding:12px 14px; font-size:13px; color:#fbbf24; margin-bottom:18px; line-height:1.6;">
+                <strong>📧 Free Email Options:</strong><br>
+                • <strong>Gmail</strong>: Use smtp.gmail.com + an App Password (requires 2FA). Free up to your account limit.<br>
+                • <strong>Outlook/Hotmail</strong>: smtp-mail.outlook.com, port 587.<br>
+                • <strong>Brevo (formerly Sendinblue)</strong>: 300 emails/day free tier.<br>
+                • <strong>Mailjet</strong>: 200 emails/day free tier.<br>
+                Leave these blank to disable email sending — your inbox will still work.
+              </div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                <div class="form-group">
+                  <label class="form-label">SMTP Host</label>
+                  <input class="form-input" type="text" id="smtpHost" placeholder="smtp.gmail.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">SMTP Port</label>
+                  <input class="form-input" type="number" id="smtpPort" placeholder="587">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">SMTP Username / Email</label>
+                  <input class="form-input" type="email" id="smtpUser" placeholder="yourname@gmail.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">SMTP Password / App Password</label>
+                  <input class="form-input" type="password" id="smtpPass" placeholder="••••••••">
+                  <div class="form-hint">For Gmail: generate an <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color:var(--gold)">App Password</a>. Never use your main Gmail password.</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">From Name</label>
+                  <input class="form-input" type="text" id="senderName" placeholder="Omni Virtual Solutions">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">From Email Address</label>
+                  <input class="form-input" type="email" id="senderEmail" placeholder="no-reply@omnivirtualsolution.com">
+                </div>
+              </div>
+              <div class="form-group" style="margin-top:4px;">
+                <div class="toggle-switch">
+                  <input type="checkbox" class="toggle-input" id="smtpSecure">
+                  <label class="toggle-label" for="smtpSecure">Use SSL (port 465) — leave unchecked for TLS (port 587)</label>
+                </div>
+              </div>
+              <div style="display:flex; gap:10px; margin-top:6px;">
+                <button class="btn btn-gold" onclick="saveSmtpSettings()"><i class="bi bi-floppy2-fill"></i> Save SMTP Settings</button>
+                <button class="btn" onclick="testSmtp()"><i class="bi bi-wifi"></i> Test Connection</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reply template -->
+          <div class="settings-card">
+            <div class="settings-card-header">
+              <i class="bi bi-chat-quote-fill" style="color:var(--gold)"></i> Reply & Auto-Reply Templates
+            </div>
+            <div class="settings-card-body">
+              <div class="form-group">
+                <label class="form-label">Reply Email Template</label>
+                <textarea class="form-input" id="replyTemplate" rows="6" style="resize:vertical; min-height:100px;"></textarea>
+                <div class="form-hint">Use <code style="color:var(--gold)">{customer_name}</code> and <code style="color:var(--gold)">{reply_body}</code>. The {reply_body} will be replaced with whatever you write in the Reply box.</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="margin-top:4px;">Auto-Reply to Customer on Submission</label>
+                <div class="toggle-switch" style="margin-bottom:10px;">
+                  <input type="checkbox" class="toggle-input" id="autoReplyEnabled">
+                  <label class="toggle-label" for="autoReplyEnabled">Automatically send acknowledgment to visitor when they submit the form</label>
+                </div>
+                <input class="form-input" type="text" id="autoReplySubject" placeholder="We received your message — Omni Virtual Solutions" style="margin-bottom:10px;">
+                <textarea class="form-input" id="autoReplyBody" rows="5" style="resize:vertical; min-height:90px;"></textarea>
+                <div class="form-hint">Use <code style="color:var(--gold)">{customer_name}</code> in the auto-reply body.</div>
+              </div>
+              <button class="btn btn-gold" onclick="saveTemplateSettings()"><i class="bi bi-floppy2-fill"></i> Save Templates</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── TAB: EMAIL STATS ── -->
+      <div id="tab-email-stats" class="admin-tab">
+
+        <div class="stat-row" id="statsRow">
+          <div class="mini-stat"><div class="mini-stat-val" id="statTotalSub">—</div><div class="mini-stat-lbl">Total Submissions</div></div>
+          <div class="mini-stat"><div class="mini-stat-val" id="statNewSub" style="color:var(--danger)">—</div><div class="mini-stat-lbl">New (Unactioned)</div></div>
+          <div class="mini-stat"><div class="mini-stat-val" id="statEmailSent" style="color:var(--success)">—</div><div class="mini-stat-lbl">Emails Sent</div></div>
+          <div class="mini-stat"><div class="mini-stat-val" id="statEmailFailed" style="color:var(--danger)">—</div><div class="mini-stat-lbl">Failed Notifications</div></div>
+          <div class="mini-stat"><div class="mini-stat-val" id="statEmailSkipped" style="color:var(--muted)">—</div><div class="mini-stat-lbl">Skipped / Disabled</div></div>
+        </div>
+
+        <div class="settings-card">
+          <div class="settings-card-header"><i class="bi bi-list-ul" style="color:var(--gold)"></i> Recent Email Log (last 20)</div>
+          <div style="overflow-x:auto;">
+            <table class="log-table" id="emailLogTable">
+              <thead>
+                <tr><th>Event</th><th>Submission #</th><th>Recipient</th><th>Subject</th><th>Status</th><th>Time</th></tr>
+              </thead>
+              <tbody id="emailLogBody">
+                <tr><td colspan="6" style="text-align:center; padding:24px; color:var(--muted)">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </main>
+
+  <!-- Toast container -->
+  <div id="toastEl" class="toast-msg" style="display:none"></div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    const token = localStorage.getItem('omni_admin_token');
+    if (!token) { window.location.href = 'admin/login.html'; return; }
+
+    fetch('/api/v1/auth/me', { headers: { Authorization: 'Bearer ' + token } })
+      .then(r => { if (!r.ok) window.location.href = 'admin/login.html'; })
+      .catch(() => {});
+
+    window.adminLogout = () => {
+      localStorage.removeItem('omni_admin_token');
+      localStorage.removeItem('omni_admin_user');
+      window.location.href = 'admin/login.html';
+    };
+
+    const userData = JSON.parse(localStorage.getItem('omni_admin_user') || '{}');
+    if (userData.username) document.getElementById('sidebarUserName').textContent = userData.username;
+
+    // ── Tab switching ────────────────────────────────────────────
+    window.switchTab = function (id, el) {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById('tab-' + id)?.classList.add('active');
+      if (el) el.classList.add('active');
+
+      const titles = {
+        inbox: '<i class="bi bi-inbox-fill" style="color:var(--gold)"></i> Contact Messages',
+        'email-settings': '<i class="bi bi-gear-fill" style="color:var(--gold)"></i> Email Settings',
+        'email-stats': '<i class="bi bi-bar-chart-fill" style="color:var(--gold)"></i> Email Usage Stats',
+      };
+      document.getElementById('topTitle').innerHTML = titles[id] || 'Admin';
+
+      if (id === 'email-settings') loadEmailSettings();
+      if (id === 'email-stats')    loadEmailStats();
+    };
+
+    // ── Toast ────────────────────────────────────────────────────
+    function toast(msg, type = 'success') {
+      const el = document.getElementById('toastEl');
+      el.textContent = (type === 'success' ? '✅ ' : type === 'error' ? '❌ ' : 'ℹ️ ') + msg;
+      el.className = 'toast-msg ' + type;
+      el.style.display = 'flex';
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => { el.style.display = 'none'; }, 3500);
+    }
+
+    function escHtml(s) {
+      if (!s) return '';
+      return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function fmt(dt) {
+      if (!dt) return '—';
+      try {
+        const d = new Date(dt.includes('T') ? dt : dt.replace(' ', 'T') + 'Z');
+        const now = new Date();
+        const diff = now - d;
+        if (diff < 60000) return 'Just now';
+        if (diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+        if (diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
+        if (diff < 604800000) {
+          const days = Math.floor(diff/86400000);
+          return days === 1 ? 'Yesterday' : days + 'd ago';
+        }
+        return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+      } catch { return dt; }
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // INBOX
+    // ════════════════════════════════════════════════════════════
+    let allMessages = [];
+    let currentFilter = '';
+    let currentSearch = '';
+    let currentMsgId = null;
+    let searchTimer = null;
+
+    window.loadInbox = loadInbox;
+    window.setFilter = setFilter;
+    window.searchDebounce = function () {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        currentSearch = document.getElementById('inboxSearch').value.trim();
+        loadInbox();
+      }, 350);
+    };
+
+    async function loadInbox() {
+      try {
+        const params = new URLSearchParams();
+        if (currentFilter) params.set('status', currentFilter);
+        if (currentSearch) params.set('search', currentSearch);
+        params.set('limit', '200');
+
+        const res = await fetch('/api/v1/contact/submissions?' + params, { headers: { Authorization: 'Bearer ' + token } });
+        const data = await res.json();
+        allMessages = data.submissions || [];
+
+        renderList();
+
+        // Update unread badge (messages without read_at)
+        const unread = allMessages.filter(m => !m.read_at).length;
+        document.getElementById('unreadBadge').textContent = unread;
+      } catch (e) {
+        document.getElementById('inboxList').innerHTML = '<div class="msg-empty"><i class="bi bi-wifi-off"></i><br>Could not load messages</div>';
+      }
+    }
+
+    function setFilter(status, el) {
+      currentFilter = status;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      loadInbox();
+    }
+
+    function renderList() {
+      const list = document.getElementById('inboxList');
+      if (!allMessages.length) {
+        list.innerHTML = '<div class="msg-empty"><i class="bi bi-inbox"></i><br>No messages found</div>';
+        return;
+      }
+      list.innerHTML = allMessages.map(m => {
+        const unread = !m.read_at;
+        const selected = m.id === currentMsgId ? ' selected' : '';
+        return `
+          <div class="msg-item${unread ? ' unread' : ''}${selected}" onclick="openMessage(${m.id})" id="msgItem-${m.id}">
+            ${unread ? '<div class="msg-unread-dot"></div>' : ''}
+            <div class="msg-name">
+              ${escHtml(m.full_name)}
+              <span class="badge badge-${m.status}" style="font-size:9.5px;">${m.status}</span>
+            </div>
+            <div class="msg-subject">${escHtml(m.subject || 'No subject')}</div>
+            <div class="msg-preview">${escHtml(m.message)}</div>
+            <div class="msg-meta">
+              <span class="msg-time">${fmt(m.created_at)}</span>
+              ${m.reply_count > 0 ? `<span style="font-size:10.5px; color:var(--muted);"><i class="bi bi-chat-left-fill"></i> ${m.reply_count}</span>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    window.openMessage = async function (id) {
+      currentMsgId = id;
+
+      // Update selected state
+      document.querySelectorAll('.msg-item').forEach(el => el.classList.remove('selected'));
+      document.getElementById('msgItem-' + id)?.classList.add('selected');
+      document.getElementById('msgItem-' + id)?.classList.remove('unread');
+      document.querySelector('#msgItem-' + id + ' .msg-unread-dot')?.remove();
+
+      document.getElementById('detailEmpty').style.display = 'none';
+      const view = document.getElementById('msgDetailView');
+      view.classList.add('visible');
+
+      try {
+        const res = await fetch('/api/v1/contact/submissions/' + id, { headers: { Authorization: 'Bearer ' + token } });
+        const data = await res.json();
+        const m = data.submission;
+        const replies = data.replies || [];
+
+        // Fill header
+        document.getElementById('detailSubject').textContent = m.subject || 'No Subject';
+        document.getElementById('detailName').textContent = m.full_name;
+        document.getElementById('detailEmail').textContent = m.email;
+        document.getElementById('detailEmail').href = 'mailto:' + m.email;
+        document.getElementById('replyToEmail').textContent = m.email;
+        document.getElementById('detailDate').textContent = fmt(m.created_at);
+
+        if (m.phone) {
+          document.getElementById('detailPhoneWrap').style.display = '';
+          document.getElementById('detailPhone').textContent = m.phone;
+        } else {
+          document.getElementById('detailPhoneWrap').style.display = 'none';
+        }
+
+        // Status badge
+        const sb = document.getElementById('detailStatusBadge');
+        sb.textContent = m.status;
+        sb.className = 'badge badge-' + m.status;
+
+        // Status select
+        document.getElementById('statusSelect').value = m.status;
+
+        // Email notify status
+        const ens = document.getElementById('detailEmailNotify');
+        if (m.email_notify_status) {
+          ens.innerHTML = `<span class="badge badge-${m.email_notify_status}" title="Email notification status">✉ ${m.email_notify_status}</span>`;
+        }
+        const retryBtn = document.getElementById('retryBtn');
+        retryBtn.style.display = m.email_notify_status === 'failed' ? '' : 'none';
+
+        // Message body
+        document.getElementById('detailMessage').textContent = m.message;
+
+        // Render thread
+        const thread = document.getElementById('replyThread');
+        if (replies.length > 0) {
+          thread.innerHTML = `
+            <div class="thread-divider"><span>Reply Thread (${replies.length})</span></div>
+            ${replies.map(r => `
+              <div class="reply-bubble">
+                <div class="reply-meta">
+                  <strong>${escHtml(r.sent_by || 'Admin')}</strong>
+                  <span>${fmt(r.sent_at)}</span>
+                  <span class="badge badge-${r.email_sent ? 'sent' : 'failed'}" style="font-size:9px;">${r.email_sent ? '✓ Emailed' : '✗ Email failed'}</span>
+                  ${r.email_error ? `<span style="font-size:10.5px; color:var(--danger);" title="${escHtml(r.email_error)}">⚠ ${escHtml(r.email_error.substring(0,50))}</span>` : ''}
+                </div>
+                <div class="reply-body-text">${escHtml(r.reply_body)}</div>
+              </div>
+            `).join('')}
+          `;
+        } else {
+          thread.innerHTML = '';
+        }
+
+        // Clear reply box
+        document.getElementById('replyTextarea').value = '';
+
+        // Scroll to top
+        document.getElementById('detailBodyScroll').scrollTop = 0;
+
+        // Refresh list to remove unread dot
+        const idx = allMessages.findIndex(x => x.id === id);
+        if (idx !== -1) { allMessages[idx].read_at = new Date().toISOString(); allMessages[idx].status = m.status; }
+        document.getElementById('unreadBadge').textContent = allMessages.filter(x => !x.read_at).length;
+
+      } catch (e) {
+        toast('Failed to load message', 'error');
+      }
+    };
+
+    window.updateStatus = async function (status) {
+      if (!currentMsgId) return;
+      try {
+        const res = await fetch('/api/v1/contact/submissions/' + currentMsgId, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ status }),
+        });
+        if (res.ok) {
+          toast('Status updated to ' + status);
+          const idx = allMessages.findIndex(x => x.id === currentMsgId);
+          if (idx !== -1) { allMessages[idx].status = status; renderList(); }
+          document.getElementById('detailStatusBadge').textContent = status;
+          document.getElementById('detailStatusBadge').className = 'badge badge-' + status;
+        }
+      } catch (e) { toast('Failed to update status', 'error'); }
+    };
+
+    window.markUnread = async function () {
+      if (!currentMsgId) return;
+      await fetch('/api/v1/contact/submissions/' + currentMsgId, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({ mark_unread: true }),
+      });
+      const idx = allMessages.findIndex(x => x.id === currentMsgId);
+      if (idx !== -1) { allMessages[idx].read_at = null; renderList(); }
+      toast('Marked as unread');
+    };
+
+    window.retryNotification = async function () {
+      if (!currentMsgId) return;
+      const btn = document.getElementById('retryBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-sm"></span> Retrying...';
+      try {
+        const res = await fetch('/api/v1/contact/submissions/' + currentMsgId + '/retry', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        const data = await res.json();
+        if (data.success) {
+          toast('Notification email sent!');
+          btn.style.display = 'none';
+          document.getElementById('detailEmailNotify').innerHTML = '<span class="badge badge-sent">✉ sent</span>';
+        } else {
+          toast('Email still failing: ' + (data.reason || 'unknown'), 'error');
+        }
+      } catch (e) { toast('Retry failed', 'error'); }
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Retry Email';
+    };
+
+    window.deleteMessage = async function () {
+      if (!currentMsgId) return;
+      if (!confirm('Delete this message and all its replies? This cannot be undone.')) return;
+      try {
+        await fetch('/api/v1/contact/submissions/' + currentMsgId, {
+          method: 'DELETE',
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        toast('Message deleted');
+        allMessages = allMessages.filter(m => m.id !== currentMsgId);
+        currentMsgId = null;
+        document.getElementById('msgDetailView').classList.remove('visible');
+        document.getElementById('detailEmpty').style.display = '';
+        renderList();
+      } catch (e) { toast('Failed to delete', 'error'); }
+    };
+
+    window.sendReply = async function () {
+      if (!currentMsgId) return;
+      const body = document.getElementById('replyTextarea').value.trim();
+      if (!body) { toast('Please write a reply first', 'error'); return; }
+
+      const btn = document.getElementById('sendReplyBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-sm"></span> Sending...';
+
+      try {
+        const res = await fetch('/api/v1/contact/submissions/' + currentMsgId + '/reply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ reply_body: body }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          if (data.emailSent) {
+            toast('Reply sent and email delivered! ✓');
+          } else {
+            toast('Reply saved. Email failed: ' + (data.emailError || 'SMTP not configured'), 'error');
+          }
+          // Reload message to show reply thread
+          openMessage(currentMsgId);
+        } else {
+          toast(data.error?.message || 'Failed to send reply', 'error');
+        }
+      } catch (e) { toast('Failed to send reply', 'error'); }
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-send-fill"></i> Send Reply';
+    };
+
+    // ════════════════════════════════════════════════════════════
+    // EMAIL SETTINGS
+    // ════════════════════════════════════════════════════════════
+    let settingsMap = {};
+
+    async function loadEmailSettings() {
+      try {
+        const res = await fetch('/api/v1/contact/email-settings', { headers: { Authorization: 'Bearer ' + token } });
+        const data = await res.json();
+        settingsMap = {};
+        (data.settings || []).forEach(s => { settingsMap[s.setting_key] = s.setting_value; });
+
+        // Notification settings
+        document.getElementById('notifEnabled').checked  = settingsMap.email_notifications_enabled === 'true';
+        document.getElementById('notifPref').value       = settingsMap.notification_pref || 'all';
+        document.getElementById('recipientEmail').value  = settingsMap.recipient_email || '';
+        document.getElementById('notifSubject').value    = settingsMap.notification_subject || '';
+
+        // SMTP
+        document.getElementById('smtpHost').value    = settingsMap.smtp_host || '';
+        document.getElementById('smtpPort').value    = settingsMap.smtp_port || '587';
+        document.getElementById('smtpUser').value    = settingsMap.smtp_user || '';
+        document.getElementById('smtpPass').value    = settingsMap.smtp_pass ? '••••••••' : '';
+        document.getElementById('senderName').value  = settingsMap.sender_name || '';
+        document.getElementById('senderEmail').value = settingsMap.sender_email || '';
+        document.getElementById('smtpSecure').checked = settingsMap.smtp_secure === 'true';
+
+        // Templates
+        document.getElementById('replyTemplate').value      = settingsMap.reply_template || '';
+        document.getElementById('autoReplyEnabled').checked = settingsMap.auto_reply_enabled === 'true';
+        document.getElementById('autoReplySubject').value   = settingsMap.auto_reply_subject || '';
+        document.getElementById('autoReplyBody').value      = settingsMap.auto_reply_body || '';
+      } catch (e) {
+        toast('Failed to load email settings', 'error');
+      }
+    }
+
+    async function saveSettings(pairs) {
+      const res = await fetch('/api/v1/contact/email-settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({ settings: pairs }),
+      });
+      return res.ok;
+    }
+
+    window.saveNotifSettings = async function () {
+      const ok = await saveSettings([
+        { key: 'email_notifications_enabled', value: document.getElementById('notifEnabled').checked ? 'true' : 'false' },
+        { key: 'notification_pref',            value: document.getElementById('notifPref').value },
+        { key: 'recipient_email',              value: document.getElementById('recipientEmail').value.trim() },
+        { key: 'notification_subject',         value: document.getElementById('notifSubject').value.trim() },
+      ]);
+      ok ? toast('Notification settings saved!') : toast('Save failed', 'error');
+    };
+
+    window.saveSmtpSettings = async function () {
+      const pass = document.getElementById('smtpPass').value;
+      const pairs = [
+        { key: 'smtp_host',    value: document.getElementById('smtpHost').value.trim() },
+        { key: 'smtp_port',    value: document.getElementById('smtpPort').value.trim() },
+        { key: 'smtp_user',    value: document.getElementById('smtpUser').value.trim() },
+        { key: 'smtp_secure',  value: document.getElementById('smtpSecure').checked ? 'true' : 'false' },
+        { key: 'sender_name',  value: document.getElementById('senderName').value.trim() },
+        { key: 'sender_email', value: document.getElementById('senderEmail').value.trim() },
+      ];
+      // Only include password if it was changed (not the masked value)
+      if (pass && pass !== '••••••••') pairs.push({ key: 'smtp_pass', value: pass });
+      const ok = await saveSettings(pairs);
+      ok ? toast('SMTP settings saved!') : toast('Save failed', 'error');
+    };
+
+    window.testSmtp = async function () {
+      const btn = event.currentTarget;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-sm"></span> Testing...';
+      try {
+        const pass = document.getElementById('smtpPass').value;
+        const body = {
+          smtp_host:   document.getElementById('smtpHost').value.trim(),
+          smtp_port:   document.getElementById('smtpPort').value.trim(),
+          smtp_user:   document.getElementById('smtpUser').value.trim(),
+          smtp_secure: document.getElementById('smtpSecure').checked ? 'true' : 'false',
+        };
+        if (pass && pass !== '••••••••') body.smtp_pass = pass;
+
+        const res = await fetch('/api/v1/contact/email-settings/test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        data.success ? toast('✓ SMTP connection successful!') : toast('✗ SMTP failed: ' + data.reason, 'error');
+      } catch (e) { toast('Test request failed', 'error'); }
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-wifi"></i> Test Connection';
+    };
+
+    window.saveTemplateSettings = async function () {
+      const ok = await saveSettings([
+        { key: 'reply_template',      value: document.getElementById('replyTemplate').value },
+        { key: 'auto_reply_enabled',  value: document.getElementById('autoReplyEnabled').checked ? 'true' : 'false' },
+        { key: 'auto_reply_subject',  value: document.getElementById('autoReplySubject').value.trim() },
+        { key: 'auto_reply_body',     value: document.getElementById('autoReplyBody').value },
+      ]);
+      ok ? toast('Templates saved!') : toast('Save failed', 'error');
+    };
+
+    // ════════════════════════════════════════════════════════════
+    // EMAIL STATS
+    // ════════════════════════════════════════════════════════════
+    async function loadEmailStats() {
+      try {
+        const res = await fetch('/api/v1/contact/email-stats', { headers: { Authorization: 'Bearer ' + token } });
+        const data = await res.json();
+
+        document.getElementById('statTotalSub').textContent  = data.contactStats?.total_submissions ?? '—';
+        document.getElementById('statNewSub').textContent    = data.contactStats?.new_count ?? '—';
+        document.getElementById('statEmailSent').textContent = data.emailStats?.sent ?? '—';
+        document.getElementById('statEmailFailed').textContent = data.emailStats?.failed ?? '—';
+        document.getElementById('statEmailSkipped').textContent = data.emailStats?.skipped ?? '—';
+
+        const log = data.recentLog || [];
+        document.getElementById('emailLogBody').innerHTML = log.length ? log.map(l => `
+          <tr>
+            <td><code style="color:var(--gold); font-size:11px;">${escHtml(l.event_type)}</code></td>
+            <td>${l.submission_id ? `#${l.submission_id}` : '—'}</td>
+            <td style="color:var(--muted);">${escHtml(l.recipient_email || '—')}</td>
+            <td style="max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escHtml(l.subject || '—')}</td>
+            <td><span class="badge badge-${l.status}">${l.status}</span></td>
+            <td style="color:var(--muted); font-size:11px;">${fmt(l.sent_at)}</td>
+          </tr>
+        `).join('') : '<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--muted)">No email activity yet.</td></tr>';
+
+      } catch (e) { toast('Failed to load stats', 'error'); }
+    }
+
+    // ── Init ─────────────────────────────────────────────────────
+    loadInbox();
+
+  })();
+  </script>
+</body>
+</html>

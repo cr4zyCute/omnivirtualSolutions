@@ -1,0 +1,20 @@
+# ─────────────────────────────────────────────────────
+# Omni Virtual Solutions — .gitignore
+# ─────────────────────────────────────────────────────
+
+# Dependencies
+node_modules/
+
+# Environment variables — NEVER commit these
+.env
+
+# Local SQLite database — never commit local DB data
+data/omni.db
+data/*.db
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
