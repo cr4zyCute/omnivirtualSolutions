@@ -46,10 +46,6 @@ export default function Hero() {
             modifier: 1.15,
             slideShadows: false,
           },
-          pagination: {
-            el: '.hero-books-pagination',
-            clickable: true,
-          },
         });
       }
     }, 100);
@@ -103,7 +99,6 @@ export default function Hero() {
                   </div>
                 ))}
               </div>
-              <div className="swiper-pagination hero-books-pagination"></div>
             </div>
           </div>
         </div>
