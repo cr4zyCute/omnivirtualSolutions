@@ -444,13 +444,6 @@ export default function ServicesPage() {
         
         {/* Top Header Bar (Centered) */}
         <div className="services-top-bar text-center">
-          <div className="d-flex justify-content-center mb-2">
-            <Link to="/" className="services-back-link">
-              <i className="bi bi-arrow-left"></i>
-              <span>Back to Home</span>
-            </Link>
-          </div>
-
           <h1 className="services-main-title text-center">Omni Services Catalog</h1>
           <p className="services-subtitle text-center mx-auto" style={{ maxWidth: '640px' }}>
             Explore our full spectrum of publishing, editorial, and author marketing solutions.
@@ -498,30 +491,6 @@ export default function ServicesPage() {
               <i className="bi bi-grid-fill"></i>
               <span>Categories</span>
             </button>
-          </div>
-
-          {/* Horizontal Category Filter Pills (Touch friendly, thumb reachable) */}
-          <div className="category-pills-bar">
-            <button
-              type="button"
-              className={`category-pill-btn ${activeCategoryTag === 'all' ? 'active' : ''}`}
-              onClick={() => setActiveCategoryTag('all')}
-            >
-              <i className="bi bi-stars"></i> All Categories
-            </button>
-            {catalog.map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                className={`category-pill-btn ${activeCategoryTag === cat.tag ? 'active' : ''}`}
-                onClick={() => {
-                  setActiveCategoryTag(cat.tag);
-                  setExpandedCategories((prev) => ({ ...prev, [cat.tag]: true }));
-                }}
-              >
-                <i className={`bi ${cat.icon}`}></i> {cat.title}
-              </button>
-            ))}
           </div>
         </div>
 

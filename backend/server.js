@@ -107,7 +107,8 @@ app.use("/api", (req, res) => {
 // ─────────────────────────────────────────────────────────────────
 // SPA Fallback for React frontend
 // ─────────────────────────────────────────────────────────────────
-app.get("*", (req, res, next) => {
+app.use((req, res, next) => {
+  if (req.method !== "GET") return next();
   if (req.path.startsWith("/api") || req.path.startsWith("/admin")) return next();
   const indexFile = path.resolve(__dirname, "../frontend/dist/index.html");
   if (fs.existsSync(indexFile)) {
