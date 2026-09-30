@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "node backend/server.js",
+    "dev:backend": "node backend/server.js",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build",
     "start": "node backend/server.js",
     "migrate": "node backend/migrate.js",
     "migrate:cms": "node backend/migrate-cms.js",

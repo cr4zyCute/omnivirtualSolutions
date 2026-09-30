@@ -58,6 +58,13 @@ app.use(cors({
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 
+// ── Serve React Vite frontend if built ────────────────────────────
+const fs = require("fs");
+const frontendDist = path.resolve(__dirname, "../frontend/dist");
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+}
+
 // ── Serve all static files (HTML, CSS, JS, images, uploads) ──────
 app.use(express.static(path.resolve(__dirname, "..")));
 
@@ -95,6 +102,18 @@ app.use("/api", (req, res) => {
   res.status(404).json({
     error: { code: "NOT_FOUND", message: `Route not found: ${req.method} ${req.originalUrl}` }
   });
+});
+
+// ─────────────────────────────────────────────────────────────────
+// SPA Fallback for React frontend
+// ─────────────────────────────────────────────────────────────────
+app.get("*", (req, res, next) => {
+  if (req.path.startsWith("/api") || req.path.startsWith("/admin")) return next();
+  const indexFile = path.resolve(__dirname, "../frontend/dist/index.html");
+  if (fs.existsSync(indexFile)) {
+    return res.sendFile(indexFile);
+  }
+  next();
 });
 
 // ─────────────────────────────────────────────────────────────────

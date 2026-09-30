@@ -1,0 +1,161 @@
+/* Custom Global Additions for React Vite App */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1 0 auto;
+}
+
+/* ==============================================================
+   About Lead Card — Luxury Card Presentation & Fluid Typography
+   ============================================================== */
+.about-lead-card {
+  background: linear-gradient(135deg, #fdfbf8 0%, #f7f2e7 100%);
+  border: 1px solid rgba(194, 154, 107, 0.3);
+  border-left: 4px solid #c29a6b;
+  border-radius: 12px;
+  padding: clamp(14px, 2.5vw, 20px);
+  margin-bottom: clamp(12px, 2vw, 16px);
+  box-shadow: 0 4px 16px rgba(194, 154, 107, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-lead-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(194, 154, 107, 0.14);
+}
+
+.about-lead-card .lead-tag {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(15px, 1.8vw, 17px);
+  font-weight: 700;
+  color: #1c1917;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.about-lead-card .about-lead-text {
+  font-size: clamp(0.92rem, 1.4vw + 0.45rem, 1.05rem);
+  line-height: clamp(1.55, 2vw, 1.68);
+  color: #57534e;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ==============================================================
+   Mobile Responsiveness for About Section (Skill Guidelines)
+   ============================================================== */
+@media (max-width: 768px) {
+  .about-visual-card {
+    max-width: 440px;
+    margin: 0 auto clamp(28px, 6vw, 36px) auto;
+  }
+
+  .about-content-block {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .about-lead-card {
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .about-callout-card {
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+
+  .about-point-card {
+    padding: 12px 14px;
+  }
+}
+
+/* ==============================================================
+   Floating Scroll-To-Top Button — Mobile Clearances & Touch Target
+   ============================================================== */
+.scroll-top {
+  position: fixed;
+  visibility: hidden;
+  opacity: 0;
+  right: clamp(12px, 3vw, 24px);
+  bottom: -20px;
+  z-index: 999;
+  background-color: rgba(173, 125, 66, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  width: 44px; /* WCAG 2.2 AA touch target */
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #ffffff;
+}
+
+.scroll-top i {
+  font-size: 22px;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.scroll-top.active {
+  visibility: visible;
+  opacity: 0.85;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+}
+
+.scroll-top:hover,
+.scroll-top:focus,
+.scroll-top:active {
+  opacity: 1;
+  background-color: #ad7d42;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .scroll-top {
+    /* Slightly more compact & semi-transparent on phones so content beneath is visible */
+    width: 42px;
+    height: 42px;
+    opacity: 0.7;
+    background-color: rgba(173, 125, 66, 0.8);
+  }
+
+  .scroll-top.active {
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    right: 12px;
+  }
+
+  .scroll-top:active {
+    opacity: 1;
+  }
+}
+
+/* Pulsing effect for live CMS updates */
+.cms-live-pulsing {
+  outline: 2px dashed #ad7d42 !important;
+  animation: cmsPulse 1.2s ease-in-out;
+}
+
+@keyframes cmsPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
