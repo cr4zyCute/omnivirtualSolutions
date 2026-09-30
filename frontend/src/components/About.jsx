@@ -11,7 +11,7 @@ const stats = [
 
 const pillars = [
   {
-    icon: 'bi-shield-check-fill',
+    icon: 'bi-shield-fill-check',
     title: 'Autonomy with Oversight',
     body: 'We believe in employee autonomy as a pivotal component of corporate success — carefully balanced with the right level of oversight, without crossing into micro-management.',
   },
