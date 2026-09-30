@@ -98,6 +98,7 @@ async function seedStats() {
 // ─────────────────────────────────────────────────────────────────
 async function seedMediaAssets() {
   console.log("🖼️  Seeding media assets...");
+  await db.execute("DELETE FROM showcase_books");
   await db.execute("DELETE FROM media_assets");
 
   const assets = [
@@ -128,6 +129,11 @@ async function seedMediaAssets() {
     { key: "book_6", path: "assets/img/books/book6.png", alt: "Rich Dad Poor Dad - Robert Kiyosaki",           cat: "book_cover" },
     { key: "book_7", path: "assets/img/books/book7.png", alt: "Start with Why - Simon Sinek",                  cat: "book_cover" },
     { key: "book_8", path: "assets/img/books/book8.png", alt: "Shoe Dog - Phil Knight",                        cat: "book_cover" },
+    { key: "book_9", path: "assets/img/books/book9.png", alt: "Zero to One - Peter Thiel",                      cat: "book_cover" },
+    { key: "book_10", path: "assets/img/books/book10.png", alt: "Good to Great - Jim Collins",                   cat: "book_cover" },
+    { key: "book_11", path: "assets/img/books/book11.png", alt: "Thinking, Fast and Slow - Daniel Kahneman",     cat: "book_cover" },
+    { key: "book_12", path: "assets/img/books/book12.png", alt: "The 7 Habits of Highly Effective People - Stephen R. Covey", cat: "book_cover" },
+    { key: "book_13", path: "assets/img/books/book13.png", alt: "Rework - Jason Fried",                          cat: "book_cover" },
   ];
 
   for (const a of assets) {
@@ -155,6 +161,11 @@ async function seedShowcaseBooks() {
     { title: "Rich Dad Poor Dad",       author: "Robert Kiyosaki",   assetKey: "book_6", order: 6 },
     { title: "Start with Why",          author: "Simon Sinek",       assetKey: "book_7", order: 7 },
     { title: "Shoe Dog",                author: "Phil Knight",       assetKey: "book_8", order: 8 },
+    { title: "Zero to One",             author: "Peter Thiel",       assetKey: "book_9", order: 9 },
+    { title: "Good to Great",           author: "Jim Collins",       assetKey: "book_10", order: 10 },
+    { title: "Thinking, Fast and Slow", author: "Daniel Kahneman",   assetKey: "book_11", order: 11 },
+    { title: "The 7 Habits of Highly Effective People", author: "Stephen R. Covey", assetKey: "book_12", order: 12 },
+    { title: "Rework",                  author: "Jason Fried",       assetKey: "book_13", order: 13 },
   ];
 
   for (const b of books) {
@@ -170,7 +181,7 @@ async function seedShowcaseBooks() {
       args: [b.title, b.author, assetId, b.order],
     });
   }
-  console.log("  ✅ 8 showcase books seeded.");
+  console.log("  ✅ 13 showcase books seeded.");
 }
 
 // ─────────────────────────────────────────────────────────────────

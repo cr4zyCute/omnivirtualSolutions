@@ -16,10 +16,19 @@ export default function Hero() {
     { id: 6, title: 'Rich Dad Poor Dad - Robert Kiyosaki', img: '/assets/img/books/book6.png' },
     { id: 7, title: 'Start with Why - Simon Sinek', img: '/assets/img/books/book7.png' },
     { id: 8, title: 'Shoe Dog - Phil Knight', img: '/assets/img/books/book8.png' },
+    { id: 9, title: 'Zero to One - Peter Thiel', img: '/assets/img/books/book9.png' },
+    { id: 10, title: 'Good to Great - Jim Collins', img: '/assets/img/books/book10.png' },
+    { id: 11, title: 'Thinking, Fast and Slow - Daniel Kahneman', img: '/assets/img/books/book11.png' },
+    { id: 12, title: 'The 7 Habits of Highly Effective People - Stephen R. Covey', img: '/assets/img/books/book12.png' },
+    { id: 13, title: 'Rework - Jason Fried & David Heinemeier Hansson', img: '/assets/img/books/book13.png' },
   ];
 
-  // Repeat for seamless 3D coverflow loop
-  const displayBooks = [...defaultBooks, ...defaultBooks, ...defaultBooks];
+  // Repeat for seamless 3D coverflow loop across wide viewports
+  const displayBooks = [
+    ...defaultBooks,
+    ...defaultBooks,
+    ...defaultBooks,
+  ];
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -29,7 +38,8 @@ export default function Hero() {
         }
         swiperInstanceRef.current = new window.Swiper(swiperRef.current, {
           loop: true,
-          initialSlide: 8,
+          loopAdditionalSlides: 8,
+          initialSlide: 13,
           speed: 750,
           autoplay: {
             delay: 2000,
