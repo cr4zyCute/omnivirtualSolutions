@@ -309,6 +309,28 @@ export default function ServicesPage() {
   const [expandedCategories, setExpandedCategories] = useState({ 'eval-services': true });
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [emailCopied, setEmailCopied] = useState(false);
+
+  const handleCopyEmail = (e) => {
+    e?.preventDefault?.();
+    const email = 'admin@omnivirtualsolution.com';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = email;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+      } catch (err) {}
+      document.body.removeChild(textarea);
+    }
+    setEmailCopied(true);
+    setTimeout(() => setEmailCopied(false), 2200);
+  };
 
   // 1. Fetch live services from backend API if available
   useEffect(() => {
@@ -618,7 +640,7 @@ export default function ServicesPage() {
 
                 {/* Direct Action Card (Book / Consult) */}
                 <div className="service-cta-card">
-                  <div>
+                  <div className="service-cta-text-col">
                     <h4 className="fw-bold mb-1" style={{ color: '#ffffff', fontSize: '1.25rem' }}>
                       Ready to start with {selectedService.title}?
                     </h4>
@@ -626,10 +648,30 @@ export default function ServicesPage() {
                       Get a free consultation, custom quote, and turnaround timeline today.
                     </p>
                   </div>
-                  <Link to="/#contact" className="service-cta-btn">
-                    <span>Inquire About This Service</span>
-                    <i className="bi bi-arrow-right"></i>
-                  </Link>
+
+                  <div className="service-cta-actions">
+                    <Link to="/#contact" className="service-cta-btn">
+                      <span>Inquire About This Service</span>
+                      <i className="bi bi-arrow-right"></i>
+                    </Link>
+
+                    <div className="service-email-action-row">
+                      <span className="service-email-label">or email us on</span>
+                      <button
+                        type="button"
+                        className={`service-email-chip ${emailCopied ? 'copied' : ''}`}
+                        onClick={handleCopyEmail}
+                        title={emailCopied ? "Copied to clipboard!" : "Click to copy email address"}
+                        aria-label="Copy email: admin@omnivirtualsolution.com"
+                      >
+                        <i className={`bi ${emailCopied ? 'bi-check-circle-fill' : 'bi-envelope-fill'} email-lead-icon`}></i>
+                        <span className="service-email-address">admin@omnivirtualsolution.com</span>
+                        <span className="email-copy-icon-btn" aria-hidden="true">
+                          <i className={`bi ${emailCopied ? 'bi-check2' : 'bi-clipboard'}`}></i>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Mobile Next / Previous Controls */}
