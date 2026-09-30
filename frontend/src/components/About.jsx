@@ -38,11 +38,10 @@ export default function About() {
 
   return (
     <section id="about" className="about-v2">
-      {/* ── Background decoration with floating moving glow spheres ── */}
+      {/* ── Background decoration with single moving highlight circle ── */}
       <div className="about-v2-bg" aria-hidden="true">
-        <div className="about-v2-glow glow-1 glow-animated-1" />
-        <div className="about-v2-glow glow-2 glow-animated-2" />
-        <div className="about-v2-glow glow-ambient-orb" />
+        <div className="about-v2-glow glow-1" />
+        <div className="about-v2-glow glow-2" />
         <div className="about-v2-grid" />
       </div>
 

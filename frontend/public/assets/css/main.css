@@ -1140,6 +1140,10 @@ footer,
   box-shadow: -2px 0 4px rgba(0, 0, 0, 0.04),
               -10px 14px 26px rgba(25, 35, 50, 0.22),
               0 18px 36px rgba(25, 35, 50, 0.12);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
   -webkit-box-reflect: below 2px linear-gradient(transparent 70%, rgba(25, 35, 50, 0.18));
 }
 

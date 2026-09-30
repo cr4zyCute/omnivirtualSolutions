@@ -8,6 +8,10 @@
   overflow: hidden;
   background: #0d0b07;
   padding: clamp(72px, 10vw, 120px) 0;
+  isolation: isolate;
+  contain: paint;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 /* ── Decorative background ── */
@@ -16,116 +20,70 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  overflow: hidden;
+  contain: strict;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .about-v2-glow {
   position: absolute;
   border-radius: 50%;
   pointer-events: none;
-  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
+/* Primary Moving Highlight Circle — silky smooth GPU-only translation */
 .glow-1 {
-  width: clamp(480px, 46vw, 680px);
-  height: clamp(480px, 46vw, 680px);
+  width: clamp(340px, 36vw, 500px);
+  height: clamp(340px, 36vw, 500px);
   background: radial-gradient(
-    circle at center,
-    rgba(212, 174, 130, 0.42) 0%,
-    rgba(194, 154, 107, 0.24) 35%,
-    rgba(173, 125, 66, 0.08) 60%,
-    transparent 75%
+    circle closest-side,
+    rgba(212, 174, 130, 0.38) 0%,
+    rgba(212, 174, 130, 0.26) 24%,
+    rgba(194, 154, 107, 0.14) 48%,
+    rgba(173, 125, 66, 0.05) 72%,
+    transparent 100%
   );
-  top: -80px;
-  right: -60px;
-  filter: blur(85px);
-  animation: moveHighlightCircle 15s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+  top: 10px;
+  right: 5%;
+  animation: moveHighlightCircle 20s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
 }
 
+/* Secondary static ambient glow — zero animation overhead */
 .glow-2 {
-  width: clamp(420px, 40vw, 560px);
-  height: clamp(420px, 40vw, 560px);
+  width: clamp(320px, 32vw, 440px);
+  height: clamp(320px, 32vw, 440px);
   background: radial-gradient(
-    circle at center,
-    rgba(194, 154, 107, 0.3) 0%,
-    rgba(74, 53, 32, 0.22) 40%,
-    transparent 70%
+    circle closest-side,
+    rgba(194, 154, 107, 0.22) 0%,
+    rgba(194, 154, 107, 0.12) 30%,
+    rgba(74, 53, 32, 0.06) 60%,
+    transparent 100%
   );
-  bottom: -60px;
-  left: -80px;
-  filter: blur(95px);
-  animation: moveHighlightCircleBottom 18s ease-in-out infinite alternate-reverse;
+  bottom: 0px;
+  left: -40px;
 }
 
-/* Radiant core orb that glides around the headline & right side */
-.glow-ambient-orb {
-  width: 340px;
-  height: 340px;
-  background: radial-gradient(
-    circle at center,
-    rgba(250, 226, 178, 0.38) 0%,
-    rgba(194, 154, 107, 0.18) 45%,
-    transparent 72%
-  );
-  top: 20px;
-  right: 60px;
-  filter: blur(65px);
-  animation: orbitHighlightOrb 11s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
-}
-
+/* Pure 3D translate keyframes — no scale/opacity thrashing, 100% GPU composited */
 @keyframes moveHighlightCircle {
   0% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.85;
+    transform: translate3d(0, 0, 0);
   }
   25% {
-    transform: translate(-140px, 90px) scale(1.18);
-    opacity: 1;
+    transform: translate3d(-120px, 70px, 0);
   }
   50% {
-    transform: translate(-300px, 40px) scale(0.92);
-    opacity: 0.75;
+    transform: translate3d(-240px, 20px, 0);
   }
   75% {
-    transform: translate(-120px, 170px) scale(1.22);
-    opacity: 0.95;
+    transform: translate3d(-90px, 130px, 0);
   }
   100% {
-    transform: translate(60px, 70px) scale(1.05);
-    opacity: 0.85;
-  }
-}
-
-@keyframes moveHighlightCircleBottom {
-  0% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0.7;
-  }
-  35% {
-    transform: translate(160px, -80px) scale(1.15);
-    opacity: 0.9;
-  }
-  70% {
-    transform: translate(90px, -170px) scale(0.85);
-    opacity: 0.65;
-  }
-  100% {
-    transform: translate(220px, -40px) scale(1.1);
-    opacity: 0.8;
-  }
-}
-
-@keyframes orbitHighlightOrb {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-  40% {
-    transform: translate(-200px, 110px) scale(1.25);
-  }
-  80% {
-    transform: translate(-90px, 220px) scale(0.9);
-  }
-  100% {
-    transform: translate(40px, 140px) scale(1.1);
+    transform: translate3d(40px, 60px, 0);
   }
 }
 
@@ -349,9 +307,7 @@
   border: 1px solid rgba(194, 154, 107, 0.15);
   border-radius: 16px;
   padding: 20px 22px;
-  transition: all 0.28s ease;
-  animation: pillarFadeIn 0.5s ease both;
-  animation-delay: var(--delay, 0ms);
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .about-pillar-card:hover {
@@ -359,11 +315,6 @@
   border-color: rgba(194, 154, 107, 0.35);
   transform: translateX(6px);
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
-}
-
-@keyframes pillarFadeIn {
-  from { opacity: 0; transform: translateX(-12px); }
-  to   { opacity: 1; transform: translateX(0); }
 }
 
 .pillar-icon {
@@ -523,5 +474,25 @@
 
   .about-stat-item {
     padding: 18px 10px;
+  }
+
+  /* Compact glow sizing on mobile to guarantee smooth 60fps scrolling */
+  .glow-1 {
+    width: 260px;
+    height: 260px;
+    top: 10px;
+    right: 0;
+  }
+
+  .glow-2 {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .glow-1 {
+    animation: none;
   }
 }

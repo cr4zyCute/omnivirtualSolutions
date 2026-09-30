@@ -1,0 +1,273 @@
+/* ================================================================
+   Footer Redesign — Luxury Dark Aesthetic (With Building Image, No NY, No Useful Links)
+   ================================================================ */
+
+.footer-v2 {
+  position: relative;
+  background: #0a0805;
+  color: #c9bfb0;
+  border-top: 1px solid rgba(194, 154, 107, 0.22);
+  padding: clamp(52px, 7vw, 76px) 0 32px 0;
+  overflow: hidden;
+  font-family: var(--default-font, 'Plus Jakarta Sans', sans-serif);
+}
+
+/* Ambient glow in footer background */
+.footer-v2-glow {
+  position: absolute;
+  top: -120px;
+  right: 15%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(194, 154, 107, 0.14) 0%,
+    rgba(194, 154, 107, 0.08) 35%,
+    rgba(194, 154, 107, 0.02) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.footer-v2-inner {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Building Image Column ── */
+.footer-img-col {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.footer-img-frame {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(194, 154, 107, 0.28);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  width: 100%;
+  max-width: 280px;
+  height: 200px;
+  background: #1a140e;
+}
+
+.footer-building-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.footer-img-frame:hover .footer-building-img {
+  transform: scale(1.06);
+}
+
+.footer-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 8, 5, 0.45) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ── Brand Column ── */
+.footer-brand-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer-brand-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.footer-brand-logo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-brand-title {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: #fae2b2;
+  letter-spacing: -0.01em;
+}
+
+.footer-brand-tagline {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: #9c9284;
+  margin: 0;
+  max-width: 460px;
+}
+
+.footer-trust-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.footer-trust-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(194, 154, 107, 0.08);
+  border: 1px solid rgba(194, 154, 107, 0.25);
+  color: #e5be75;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 50px;
+  letter-spacing: 0.02em;
+}
+
+.footer-contact-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.footer-inline-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #c29a6b;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(194, 154, 107, 0.16);
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+.footer-inline-contact:hover {
+  background: rgba(194, 154, 107, 0.15);
+  border-color: rgba(194, 154, 107, 0.4);
+  color: #fae2b2;
+  transform: translateY(-2px);
+}
+
+/* ── Services Column ── */
+.footer-col-title {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f7f2ea;
+  margin-bottom: 18px;
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.02em;
+}
+
+.footer-col-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 28px;
+  height: 2px;
+  background: linear-gradient(90deg, #c29a6b, transparent);
+  border-radius: 2px;
+}
+
+.footer-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #a89f92;
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.footer-nav-link i {
+  font-size: 0.75rem;
+  color: #c29a6b;
+  transition: transform 0.25s ease;
+}
+
+.footer-nav-link:hover {
+  color: #fae2b2;
+  transform: translateX(4px);
+}
+
+.footer-nav-link:hover i {
+  transform: translateX(3px);
+  color: #f0cd89;
+}
+
+/* ── Bottom Bar / Copyright ── */
+.footer-v2-bottom {
+  margin-top: clamp(36px, 5vw, 54px);
+  padding-top: 22px;
+  border-top: 1px solid rgba(194, 154, 107, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.84rem;
+  color: #7d7365;
+}
+
+.footer-copyright-text {
+  margin: 0;
+}
+
+.footer-copyright-text strong {
+  color: #c29a6b;
+  font-weight: 600;
+}
+
+/* ── Responsive ── */
+@media (max-width: 991px) {
+  .footer-img-frame {
+    max-width: 100%;
+    height: 180px;
+  }
+
+  .footer-v2-bottom {
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 575px) {
+  .footer-v2 {
+    padding: 44px 0 24px 0;
+  }
+
+  .footer-brand-title {
+    font-size: 1.15rem;
+  }
+
+  .footer-img-frame {
+    height: 160px;
+  }
+
+  .footer-contact-inline {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

@@ -99,7 +99,7 @@ export default function Hero() {
           </div>
 
           <div className="hero-books-swiper-container">
-            <div className="swiper hero-books-swiper init-swiper" ref={swiperRef}>
+            <div className="swiper hero-books-swiper" ref={swiperRef}>
               <div className="swiper-wrapper align-items-center">
                 {displayBooks.map((book, index) => (
                   <div className="swiper-slide" key={`${book.id}-${index}`}>
