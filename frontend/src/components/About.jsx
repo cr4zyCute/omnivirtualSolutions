@@ -30,19 +30,26 @@ const pillars = [
 export default function About() {
   const { t } = useCms();
 
+  React.useEffect(() => {
+    if (window.AOS) {
+      window.AOS.refresh();
+    }
+  }, []);
+
   return (
     <section id="about" className="about-v2">
-      {/* ── Background decoration ── */}
+      {/* ── Background decoration with floating moving glow spheres ── */}
       <div className="about-v2-bg" aria-hidden="true">
-        <div className="about-v2-glow glow-1" />
-        <div className="about-v2-glow glow-2" />
+        <div className="about-v2-glow glow-1 glow-animated-1" />
+        <div className="about-v2-glow glow-2 glow-animated-2" />
+        <div className="about-v2-glow glow-ambient-orb" />
         <div className="about-v2-grid" />
       </div>
 
       <div className="container about-v2-inner">
 
         {/* ════ TOP: Eyebrow + Headline ════ */}
-        <div className="about-v2-head">
+        <div className="about-v2-head" data-aos="fade-up" data-aos-delay="100">
           <span className="about-v2-eyebrow">
             <i className="bi bi-stars" />
             {t('home.about.badge', 'Who We Are')}
@@ -64,7 +71,7 @@ export default function About() {
         <div className="about-v2-body">
 
           {/* Image stack */}
-          <div className="about-v2-visual">
+          <div className="about-v2-visual" data-aos="fade-right" data-aos-delay="150">
             <div className="about-v2-img-frame">
               <img
                 src={t('home.about.image', '/assets/img/about_team.jpg')}
@@ -97,7 +104,13 @@ export default function About() {
           {/* Pillar cards */}
           <div className="about-v2-pillars">
             {pillars.map((p, i) => (
-              <div className="about-pillar-card" key={i} style={{ '--delay': `${i * 80}ms` }}>
+              <div
+                className="about-pillar-card"
+                key={i}
+                data-aos="fade-left"
+                data-aos-delay={200 + i * 100}
+                style={{ '--delay': `${i * 80}ms` }}
+              >
                 <div className="pillar-icon">
                   <i className={`bi ${p.icon}`} />
                 </div>
@@ -111,9 +124,14 @@ export default function About() {
         </div>
 
         {/* ════ BOTTOM: Stats strip ════ */}
-        <div className="about-v2-stats">
+        <div className="about-v2-stats" data-aos="fade-up" data-aos-delay="250">
           {stats.map((s, i) => (
-            <div className="about-stat-item" key={i}>
+            <div
+              className="about-stat-item"
+              key={i}
+              data-aos="zoom-in"
+              data-aos-delay={300 + i * 75}
+            >
               <div className="stat-icon-ring">
                 <i className={`bi ${s.icon}`} />
               </div>

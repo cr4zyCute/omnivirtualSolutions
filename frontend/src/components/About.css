@@ -21,24 +21,112 @@
 .about-v2-glow {
   position: absolute;
   border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.18;
+  pointer-events: none;
+  will-change: transform, opacity;
 }
 
 .glow-1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, #c29a6b, transparent 70%);
-  top: -120px;
-  right: -100px;
+  width: clamp(480px, 46vw, 680px);
+  height: clamp(480px, 46vw, 680px);
+  background: radial-gradient(
+    circle at center,
+    rgba(212, 174, 130, 0.42) 0%,
+    rgba(194, 154, 107, 0.24) 35%,
+    rgba(173, 125, 66, 0.08) 60%,
+    transparent 75%
+  );
+  top: -80px;
+  right: -60px;
+  filter: blur(85px);
+  animation: moveHighlightCircle 15s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
 }
 
 .glow-2 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #4a3520, transparent 70%);
-  bottom: -80px;
-  left: -100px;
+  width: clamp(420px, 40vw, 560px);
+  height: clamp(420px, 40vw, 560px);
+  background: radial-gradient(
+    circle at center,
+    rgba(194, 154, 107, 0.3) 0%,
+    rgba(74, 53, 32, 0.22) 40%,
+    transparent 70%
+  );
+  bottom: -60px;
+  left: -80px;
+  filter: blur(95px);
+  animation: moveHighlightCircleBottom 18s ease-in-out infinite alternate-reverse;
+}
+
+/* Radiant core orb that glides around the headline & right side */
+.glow-ambient-orb {
+  width: 340px;
+  height: 340px;
+  background: radial-gradient(
+    circle at center,
+    rgba(250, 226, 178, 0.38) 0%,
+    rgba(194, 154, 107, 0.18) 45%,
+    transparent 72%
+  );
+  top: 20px;
+  right: 60px;
+  filter: blur(65px);
+  animation: orbitHighlightOrb 11s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+}
+
+@keyframes moveHighlightCircle {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.85;
+  }
+  25% {
+    transform: translate(-140px, 90px) scale(1.18);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-300px, 40px) scale(0.92);
+    opacity: 0.75;
+  }
+  75% {
+    transform: translate(-120px, 170px) scale(1.22);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate(60px, 70px) scale(1.05);
+    opacity: 0.85;
+  }
+}
+
+@keyframes moveHighlightCircleBottom {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.7;
+  }
+  35% {
+    transform: translate(160px, -80px) scale(1.15);
+    opacity: 0.9;
+  }
+  70% {
+    transform: translate(90px, -170px) scale(0.85);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate(220px, -40px) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes orbitHighlightOrb {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  40% {
+    transform: translate(-200px, 110px) scale(1.25);
+  }
+  80% {
+    transform: translate(-90px, 220px) scale(0.9);
+  }
+  100% {
+    transform: translate(40px, 140px) scale(1.1);
+  }
 }
 
 .about-v2-grid {
