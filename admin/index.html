@@ -4,6 +4,30 @@
 <head>
   <base href="/">
   <meta charset="utf-8">
+  <script>
+    (function () {
+      if (window.top !== window.self) {
+        window.top.location.href = window.location.href;
+      }
+      try {
+        var token = localStorage.getItem('omni_admin_token');
+        if (!token) {
+          window.location.replace('admin/login.html');
+          return;
+        }
+        var parts = token.split('.');
+        if (parts.length !== 3) throw new Error();
+        var payload = JSON.parse(atob(parts[1]));
+        if (!payload.exp || (payload.exp * 1000) <= Date.now()) {
+          throw new Error('Expired');
+        }
+      } catch (_) {
+        localStorage.removeItem('omni_admin_token');
+        localStorage.removeItem('omni_admin_user');
+        window.location.replace('admin/login.html');
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard & CMS — Omni Virtual Solutions</title>
   <link rel="icon" type="image/png" href="assets/img/OmniLogo2.png">
@@ -15,6 +39,17 @@
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
 
   <style>
+    /* ── Instant Auth Shield: prevent flash of admin dashboard ── */
+    html {
+      visibility: hidden;
+      opacity: 0;
+      background: #0b0e14;
+    }
+    html.auth-ready {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 0.12s ease-in;
+    }
     :root {
       --bg: #0b0e14;
       --sidebar: #0f131a;
@@ -434,8 +469,8 @@
     <div class="sidebar-footer">
       <div class="user-info">
         <div>
-          <div class="user-name">admin</div>
-          <div class="user-details">Administrator</div>
+          <div class="user-name" id="sidebarUserName">admin</div>
+          <div class="user-details" id="sidebarUserRole">Administrator</div>
         </div>
         <button class="btn-header" onclick="adminLogout()" title="Logout" style="padding:4px 8px; color:#f87171;">
           <i class="bi bi-box-arrow-right"></i>
@@ -569,7 +604,7 @@
             </div>
           </div>
           <div style="flex:1; display:flex; justify-content:center; background:#0e1217; overflow:hidden;">
-            <iframe id="liveEditorIframe" src="admin/editor.html" class="editor-iframe"></iframe>
+            <iframe id="liveEditorIframe" src="about:blank" class="editor-iframe"></iframe>
           </div>
         </div>
       </section>
@@ -666,21 +701,64 @@
     (function() {
       'use strict';
 
+      // Break out of iframe if embedded accidentally
+      if (window.top !== window.self) {
+        window.top.location.href = window.location.href;
+      }
+
       const token = localStorage.getItem('omni_admin_token');
       if (!token) {
-        window.location.href = 'admin/login.html';
+        localStorage.removeItem('omni_admin_token');
+        localStorage.removeItem('omni_admin_user');
+        window.location.replace('admin/login.html');
         return;
       }
 
-      // Verify Auth
-      fetch('/api/v1/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
-        .then(res => { if (!res.ok) window.location.href = 'admin/login.html'; })
-        .catch(() => {});
-
-      window.adminLogout = function() {
+      function handleAuthFailure() {
         localStorage.removeItem('omni_admin_token');
         localStorage.removeItem('omni_admin_user');
-        window.location.href = 'admin/login.html';
+        window.location.replace('admin/login.html');
+      }
+
+      // Populate user info from cache immediately
+      try {
+        const cachedUser = JSON.parse(localStorage.getItem('omni_admin_user') || '{}');
+        if (cachedUser.username) {
+          const uEl = document.getElementById('sidebarUserName');
+          if (uEl) uEl.textContent = cachedUser.username;
+        }
+        if (cachedUser.role) {
+          const rEl = document.getElementById('sidebarUserRole');
+          if (rEl) rEl.textContent = cachedUser.role === 'admin' ? 'Administrator' : cachedUser.role;
+        }
+      } catch (_) {}
+
+      // Verify Auth & Reveal Dashboard
+      fetch('/api/v1/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+        .then(res => {
+          if (!res.ok) {
+            handleAuthFailure();
+            return null;
+          }
+          // Authenticated! Reveal dashboard smoothly
+          document.documentElement.classList.add('auth-ready');
+          return res.json();
+        })
+        .then(data => {
+          if (data && data.admin) {
+            localStorage.setItem('omni_admin_user', JSON.stringify(data.admin));
+            const uEl = document.getElementById('sidebarUserName');
+            if (uEl) uEl.textContent = data.admin.username;
+            const rEl = document.getElementById('sidebarUserRole');
+            if (rEl) rEl.textContent = data.admin.role === 'admin' ? 'Administrator' : data.admin.role;
+          }
+        })
+        .catch(() => {
+          handleAuthFailure();
+        });
+
+      window.adminLogout = function() {
+        handleAuthFailure();
       };
 
       let allBlocks = [];
@@ -701,6 +779,15 @@
         } else {
           const matchingNav = Array.from(document.querySelectorAll('.nav-item')).find(n => n.getAttribute('onclick')?.includes(tabId));
           if (matchingNav) matchingNav.classList.add('active');
+        }
+
+        // Lazy load editor iframe on first activation
+        if (tabId === 'live-editor') {
+          const iframe = document.getElementById('liveEditorIframe');
+          if (iframe && (!iframe.src || iframe.src === 'about:blank' || iframe.src.endsWith('about:blank'))) {
+            const select = document.getElementById('editorPageSelect');
+            iframe.src = select ? select.value : 'admin/editor.html';
+          }
         }
 
         const titles = {
@@ -746,13 +833,21 @@
       async function loadDashboard() {
         try {
           const res = await fetch('/api/v1/cms/stats', { headers: { 'Authorization': 'Bearer ' + token } });
-          const data = await res.json();
-          document.getElementById('statServices').textContent = data.totalServices || 0;
-          document.getElementById('statBlocks').textContent = data.totalBlocks || 0;
-          document.getElementById('statContacts').textContent = data.totalContacts || 0;
-          document.getElementById('statNewLeads').textContent = data.newLeads || 0;
-          document.getElementById('leadsBadge').textContent = data.newLeads || 0;
-        } catch (e) {}
+          if (res.status === 401) {
+            handleAuthFailure();
+            return;
+          }
+          if (res.ok) {
+            const data = await res.json();
+            document.getElementById('statServices').textContent = data.totalServices ?? 0;
+            document.getElementById('statBlocks').textContent = data.totalBlocks ?? 0;
+            document.getElementById('statContacts').textContent = data.totalContacts ?? 0;
+            document.getElementById('statNewLeads').textContent = data.newLeads ?? 0;
+            document.getElementById('leadsBadge').textContent = data.newLeads ?? 0;
+          }
+        } catch (e) {
+          console.error('[Dashboard] Stats error:', e);
+        }
 
         loadLeads();
         loadBlocks();
@@ -764,6 +859,11 @@
       async function loadLeads() {
         try {
           const res = await fetch('/api/v1/cms/submissions', { headers: { 'Authorization': 'Bearer ' + token } });
+          if (res.status === 401) {
+            handleAuthFailure();
+            return;
+          }
+          if (!res.ok) throw new Error('HTTP ' + res.status);
           const data = await res.json();
           allLeads = data.submissions || [];
 
@@ -780,7 +880,11 @@
           `).join('') : '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--muted)">No inquiries yet.</td></tr>';
 
           renderAllLeadsTable();
-        } catch (e) {}
+        } catch (e) {
+          console.error('[Dashboard] Leads error:', e);
+          document.getElementById('recentLeadsBody').innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--muted)">No inquiries available.</td></tr>';
+          document.getElementById('allLeadsTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:var(--muted)">No inquiries available.</td></tr>';
+        }
       }
 
       window.filterLeadsByStatus = function(status, btn) {
@@ -813,22 +917,34 @@
       }
 
       window.updateLeadStatus = async function(id, status) {
-        await fetch(`/api/v1/cms/submissions/${id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify({ status })
-        });
-        loadLeads();
+        try {
+          const res = await fetch(`/api/v1/cms/submissions/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ status })
+          });
+          if (res.status === 401) {
+            handleAuthFailure();
+            return;
+          }
+          loadLeads();
+        } catch (e) {
+          console.error('[Dashboard] Update lead error:', e);
+        }
       };
 
       // ── Load Blocks Table ───────────────────────────────────────
       async function loadBlocks() {
         try {
           const res = await fetch('/api/v1/site-meta');
+          if (!res.ok) throw new Error('HTTP ' + res.status);
           const data = await res.json();
           allBlocks = data.blocks || [];
           renderBlocksTable(allBlocks);
-        } catch (e) {}
+        } catch (e) {
+          console.error('[Dashboard] Blocks error:', e);
+          document.getElementById('blocksTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--muted)">No content blocks loaded.</td></tr>';
+        }
       }
 
       function renderBlocksTable(blocks) {
@@ -860,6 +976,7 @@
       async function loadServices() {
         try {
           const res = await fetch('/api/v1/services');
+          if (!res.ok) throw new Error('HTTP ' + res.status);
           const data = await res.json();
           allServices = [];
           (data.catalog || []).forEach(cat => {
@@ -870,7 +987,10 @@
             });
           });
           renderServicesTable(allServices);
-        } catch (e) {}
+        } catch (e) {
+          console.error('[Dashboard] Services error:', e);
+          document.getElementById('servicesTableBody').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:var(--muted)">No services loaded.</td></tr>';
+        }
       }
 
       function renderServicesTable(services) {
@@ -892,12 +1012,21 @@
 
       window.saveServicePrice = async function(slug) {
         const val = document.getElementById('price-' + slug).value.trim();
-        const res = await fetch(`/api/v1/cms/services/${slug}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify({ price_display: val })
-        });
-        if (res.ok) alert('Service price updated!');
+        try {
+          const res = await fetch(`/api/v1/cms/services/${slug}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ price_display: val })
+          });
+          if (res.status === 401) {
+            handleAuthFailure();
+            return;
+          }
+          if (res.ok) alert('Service price updated!');
+          else alert('Failed to update service price');
+        } catch (e) {
+          alert('Save error: ' + e.message);
+        }
       };
 
       window.filterServicesTable = function(q) {
@@ -909,6 +1038,7 @@
       async function loadMedia() {
         try {
           const res = await fetch('/api/v1/site-meta');
+          if (!res.ok) throw new Error('HTTP ' + res.status);
           const data = await res.json();
           const assets = data.media_assets || [];
           const defaultImgs = [
@@ -926,14 +1056,17 @@
             const clean = path.startsWith('/') ? path.slice(1) : path;
             return `
               <div style="background:var(--card2); border:1px solid var(--border); border-radius:8px; overflow:hidden;">
-                <img src="${clean}" style="width:100%; aspect-ratio:4/3; object-fit:cover; display:block;">
+                <img src="${clean}" style="width:100%; aspect-ratio:4/3; object-fit:cover; display:block;" onerror="this.style.display='none'">
                 <div style="padding:8px; font-size:11px; color:var(--muted); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;" title="${clean}">
                   ${clean.split('/').pop()}
                 </div>
               </div>
             `;
           }).join('');
-        } catch (e) {}
+        } catch (e) {
+          console.error('[Dashboard] Media error:', e);
+          document.getElementById('mediaMainGrid').innerHTML = '<div style="color:var(--muted);">No media loaded.</div>';
+        }
       }
 
       window.uploadMainMedia = async function(input) {
@@ -949,6 +1082,10 @@
             headers: { 'Authorization': 'Bearer ' + token },
             body: formData
           });
+          if (res.status === 401) {
+            handleAuthFailure();
+            return;
+          }
           const data = await res.json();
           if (res.ok && data.success) {
             alert('Image uploaded successfully: ' + data.path);
@@ -968,7 +1105,12 @@
         })[m]);
       }
 
-      document.addEventListener('DOMContentLoaded', loadDashboard);
+      // Run dashboard initialization reliably
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+      } else {
+        loadDashboard();
+      }
     })();
   </script>
 

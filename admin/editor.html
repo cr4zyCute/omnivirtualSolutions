@@ -4,6 +4,29 @@
 <head>
   <base href="/">
   <meta charset="utf-8">
+  <script>
+    (function () {
+      try {
+        var token = localStorage.getItem('omni_admin_token');
+        if (!token) {
+          if (window.top !== window.self) window.top.location.replace('admin/login.html');
+          else window.location.replace('admin/login.html');
+          return;
+        }
+        var parts = token.split('.');
+        if (parts.length !== 3) throw new Error();
+        var payload = JSON.parse(atob(parts[1]));
+        if (!payload.exp || (payload.exp * 1000) <= Date.now()) {
+          throw new Error('Expired');
+        }
+      } catch (_) {
+        localStorage.removeItem('omni_admin_token');
+        localStorage.removeItem('omni_admin_user');
+        if (window.top !== window.self) window.top.location.replace('admin/login.html');
+        else window.location.replace('admin/login.html');
+      }
+    })();
+  </script>
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Omni CMS — Live Website Editor</title>
   <link rel="icon" type="image/png" href="assets/img/OmniLogo2.png">
@@ -27,6 +50,17 @@
 
   <!-- ── In-Place CMS Live Editor Styles ── -->
   <style>
+    /* ── Instant Auth Shield: prevent flash of editor ── */
+    html {
+      visibility: hidden;
+      opacity: 0;
+      background: #0b0e14;
+    }
+    html.auth-ready {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 0.12s ease-in;
+    }
     /* CRITICAL: Force all elements with animation tags to be 100% visible in the editor */
     [data-aos] {
       opacity: 1 !important;
@@ -772,7 +806,13 @@
 
       const token = localStorage.getItem('omni_admin_token');
       if (!token) {
-        window.location.href = 'admin/login.html';
+        localStorage.removeItem('omni_admin_token');
+        localStorage.removeItem('omni_admin_user');
+        if (window.top !== window.self) {
+          window.top.location.href = 'admin/login.html';
+        } else {
+          window.location.href = 'admin/login.html';
+        }
         return;
       }
 
@@ -828,6 +868,13 @@
             },
             body: JSON.stringify({ value })
           });
+          if (res.status === 401) {
+            localStorage.removeItem('omni_admin_token');
+            localStorage.removeItem('omni_admin_user');
+            if (window.top !== window.self) window.top.location.href = 'admin/login.html';
+            else window.location.href = 'admin/login.html';
+            return;
+          }
           const data = await res.json();
           if (res.ok && data.success) {
             setSaving(false);
@@ -964,6 +1011,13 @@
             headers: { 'Authorization': 'Bearer ' + token },
             body: formData
           });
+          if (res.status === 401) {
+            localStorage.removeItem('omni_admin_token');
+            localStorage.removeItem('omni_admin_user');
+            if (window.top !== window.self) window.top.location.href = 'admin/login.html';
+            else window.location.href = 'admin/login.html';
+            return;
+          }
           const data = await res.json();
           if (res.ok && data.success) {
             showToast('Uploaded!');
@@ -979,10 +1033,33 @@
         }
       };
 
-      document.addEventListener('DOMContentLoaded', () => {
-        loadContent();
-        initEditor();
-      });
+      function startEditor() {
+        fetch('/api/v1/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+          .then(res => {
+            if (!res.ok) {
+              localStorage.removeItem('omni_admin_token');
+              localStorage.removeItem('omni_admin_user');
+              if (window.top !== window.self) window.top.location.replace('admin/login.html');
+              else window.location.replace('admin/login.html');
+              return;
+            }
+            document.documentElement.classList.add('auth-ready');
+            loadContent();
+            initEditor();
+          })
+          .catch(() => {
+            localStorage.removeItem('omni_admin_token');
+            localStorage.removeItem('omni_admin_user');
+            if (window.top !== window.self) window.top.location.replace('admin/login.html');
+            else window.location.replace('admin/login.html');
+          });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startEditor);
+      } else {
+        startEditor();
+      }
     })();
   </script>
 

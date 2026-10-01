@@ -3,22 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
   <title>Admin Login — Omni Virtual Solutions</title>
+  <meta name="description" content="Omni Virtual Solutions admin login. Authorized personnel only.">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0a0a0f;
-      --surface:  #12121a;
-      --card:     #1a1a26;
-      --border:   #2a2a3d;
-      --gold:     #c9a84c;
-      --gold-lt:  #e4c97e;
-      --text:     #f0eee8;
-      --muted:    #8a8a9a;
-      --danger:   #e05252;
-      --radius:   14px;
+      --bg:        #0a0a0f;
+      --surface:   #12121a;
+      --card:      #1a1a26;
+      --border:    #2a2a3d;
+      --gold:      #c9a84c;
+      --gold-lt:   #e4c97e;
+      --text:      #f0eee8;
+      --muted:     #8a8a9a;
+      --danger:    #e05252;
+      --warn:      #e09c52;
+      --success:   #52c07a;
+      --radius:    14px;
     }
 
     body {
@@ -36,13 +40,29 @@
     body::before {
       content: '';
       position: fixed; inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%);
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(82,192,122,0.03) 0%, transparent 50%);
       pointer-events: none;
     }
 
+    /* Subtle animated mesh */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      animation: gridDrift 20s linear infinite;
+    }
+
+    @keyframes gridDrift { to { background-position: 60px 60px; } }
+
     .login-wrap {
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       padding: 24px;
       position: relative;
       z-index: 1;
@@ -54,16 +74,21 @@
       margin-bottom: 36px;
     }
     .brand-logo {
-      width: 52px;
-      height: 52px;
+      width: 56px;
+      height: 56px;
       background: linear-gradient(135deg, var(--gold), var(--gold-lt));
-      border-radius: 14px;
+      border-radius: 16px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 24px;
       margin-bottom: 16px;
-      box-shadow: 0 8px 32px rgba(201,168,76,0.3);
+      box-shadow: 0 8px 32px rgba(201,168,76,0.35), 0 0 0 1px rgba(201,168,76,0.15);
+      animation: logoGlow 3s ease-in-out infinite alternate;
+    }
+    @keyframes logoGlow {
+      from { box-shadow: 0 8px 32px rgba(201,168,76,0.3), 0 0 0 1px rgba(201,168,76,0.1); }
+      to   { box-shadow: 0 12px 48px rgba(201,168,76,0.5), 0 0 0 1px rgba(201,168,76,0.25); }
     }
     .brand h1 {
       font-size: 20px;
@@ -82,8 +107,8 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 32px;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+      padding: 36px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.03);
       backdrop-filter: blur(20px);
     }
 
@@ -94,6 +119,7 @@
       background: linear-gradient(135deg, var(--text), var(--gold-lt));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     .card .subtitle {
       font-size: 13px;
@@ -104,17 +130,27 @@
     /* Form */
     .field { margin-bottom: 18px; }
     label {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 6px;
       font-size: 12px;
       font-weight: 600;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.8px;
       margin-bottom: 8px;
+      user-select: none;
     }
-    input {
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
       width: 100%;
-      padding: 13px 16px;
+      padding: 13px 44px 13px 16px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
@@ -129,19 +165,87 @@
       box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
     }
     input::placeholder { color: var(--muted); }
+    input[disabled] { opacity: 0.5; cursor: not-allowed; }
 
-    /* Error */
-    .error-msg {
+    /* Password toggle */
+    .pw-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      padding: 4px;
+      line-height: 1;
+      transition: color 0.2s;
+      border-radius: 6px;
+    }
+    .pw-toggle:hover { color: var(--gold); }
+    .pw-toggle svg { display: block; width: 18px; height: 18px; }
+
+    /* Attempt counter */
+    .attempt-hint {
       display: none;
-      background: rgba(224, 82, 82, 0.12);
-      border: 1px solid rgba(224,82,82,0.3);
-      border-radius: 8px;
-      padding: 12px 14px;
+      font-size: 12px;
+      color: var(--warn);
+      margin-top: 6px;
+    }
+    .attempt-hint.show { display: block; }
+
+    /* Alert messages */
+    .alert {
+      display: none;
+      border-radius: 10px;
+      padding: 13px 16px;
       font-size: 13px;
+      margin-bottom: 18px;
+      line-height: 1.5;
+      animation: slideIn 0.2s ease;
+    }
+    .alert.show { display: flex; align-items: flex-start; gap: 10px; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .alert-error {
+      background: rgba(224, 82, 82, 0.1);
+      border: 1px solid rgba(224,82,82,0.3);
       color: #f08080;
+    }
+    .alert-warn {
+      background: rgba(224, 156, 82, 0.1);
+      border: 1px solid rgba(224,156,82,0.3);
+      color: #f0b880;
+    }
+    .alert-icon { flex-shrink: 0; font-size: 16px; line-height: 1.4; }
+
+    /* Cooldown bar */
+    .cooldown-wrap {
+      display: none;
       margin-bottom: 18px;
     }
-    .error-msg.show { display: block; }
+    .cooldown-wrap.show { display: block; }
+    .cooldown-label {
+      font-size: 12px;
+      color: var(--warn);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .cooldown-bar {
+      height: 4px;
+      background: rgba(224, 156, 82, 0.15);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .cooldown-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--warn), var(--gold));
+      border-radius: 4px;
+      transition: width 1s linear;
+    }
 
     /* Button */
     .btn-login {
@@ -159,10 +263,11 @@
       box-shadow: 0 4px 20px rgba(201,168,76,0.35);
       position: relative;
       overflow: hidden;
+      margin-top: 4px;
     }
-    .btn-login:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 8px 28px rgba(201,168,76,0.45); }
-    .btn-login:active { transform: translateY(0); }
-    .btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-login:hover:not(:disabled) { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 8px 28px rgba(201,168,76,0.45); }
+    .btn-login:active:not(:disabled) { transform: translateY(0); }
+    .btn-login:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
     .btn-login .spinner {
       display: none;
       width: 18px; height: 18px;
@@ -177,12 +282,36 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* Security badge */
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 20px;
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.7;
+    }
+    .security-badge svg { width: 12px; height: 12px; opacity: 0.8; }
+
     .footer-note {
       text-align: center;
       font-size: 12px;
       color: var(--muted);
       margin-top: 24px;
+      opacity: 0.6;
     }
+
+    /* Shake animation on error */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%       { transform: translateX(-6px); }
+      40%       { transform: translateX(6px); }
+      60%       { transform: translateX(-4px); }
+      80%       { transform: translateX(4px); }
+    }
+    .shake { animation: shake 0.4s ease; }
   </style>
 </head>
 <body>
@@ -193,69 +322,348 @@
       <p>Content Management System</p>
     </div>
 
-    <div class="card">
+    <div class="card" id="loginCard">
       <h2>Welcome back</h2>
       <p class="subtitle">Sign in to manage site content</p>
 
-      <div class="error-msg" id="errorMsg"></div>
+      <!-- Rate-limit cooldown bar -->
+      <div class="cooldown-wrap" id="cooldownWrap">
+        <div class="cooldown-label">
+          <span>⏱ Too many attempts — please wait</span>
+          <span id="cooldownTimer">—</span>
+        </div>
+        <div class="cooldown-bar">
+          <div class="cooldown-fill" id="cooldownFill" style="width:100%"></div>
+        </div>
+      </div>
 
-      <form id="loginForm" autocomplete="on">
+      <!-- Error / warning alerts -->
+      <div class="alert alert-error" id="errorMsg" role="alert" aria-live="assertive">
+        <span class="alert-icon">⚠</span>
+        <span id="errorText"></span>
+      </div>
+      <div class="alert alert-warn" id="warnMsg" role="alert" aria-live="polite">
+        <span class="alert-icon">⏱</span>
+        <span id="warnText"></span>
+      </div>
+
+      <form id="loginForm" autocomplete="on" novalidate>
         <div class="field">
           <label for="username">Username or Email</label>
-          <input type="text" id="username" name="username" placeholder="admin" autocomplete="username" required>
+          <div class="input-wrap">
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="admin"
+              autocomplete="username"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
+              maxlength="254"
+              required
+            >
+          </div>
         </div>
         <div class="field">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+          <div class="input-wrap">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              maxlength="1024"
+              required
+            >
+            <button type="button" class="pw-toggle" id="pwToggle" aria-label="Toggle password visibility" tabindex="-1">
+              <!-- Eye icon (shown when password is hidden) -->
+              <svg id="eyeShow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <!-- Eye-off icon (shown when password is visible) -->
+              <svg id="eyeHide" style="display:none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/>
+                <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            </button>
+          </div>
+          <div class="attempt-hint" id="attemptHint"></div>
         </div>
+
         <button type="submit" class="btn-login" id="loginBtn">
           <span class="btn-text">Sign In</span>
           <div class="spinner"></div>
         </button>
       </form>
+
+      <div class="security-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Secured · Authorized access only
+      </div>
     </div>
 
     <p class="footer-note">Omni Virtual Solutions Admin &mdash; Authorized access only</p>
   </div>
 
   <script>
-    // Redirect if already logged in
-    if (localStorage.getItem('omni_admin_token')) {
-      window.location.href = '/admin/';
+    // ── Break out of any iframe (prevents clickjacking / embedded redirect loops) ──
+    if (window.top !== window.self) {
+      window.top.location.replace(window.location.href);
     }
 
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn      = document.getElementById('loginBtn');
-      const errorEl  = document.getElementById('errorMsg');
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
+    // ── Client-side rate limiting state ───────────────────────────────────────────
+    // Mirrors the server-side limits but gives immediate feedback.
+    // The server enforces the real limits — this is UX only.
+    const RL = {
+      ATTEMPTS_BEFORE_WARN:    3,   // warn after 3 consecutive failures
+      ATTEMPTS_BEFORE_COOLDOWN: 5,  // client cooldown after 5 consecutive failures
+      COOLDOWN_SECONDS:        60,  // 1-minute client-side cooldown
+      STORAGE_KEY:             'omni_login_rl',
+    };
 
-      errorEl.classList.remove('show');
+    function getRLState() {
+      try {
+        const raw = sessionStorage.getItem(RL.STORAGE_KEY);
+        return raw ? JSON.parse(raw) : { attempts: 0, cooldownUntil: 0 };
+      } catch { return { attempts: 0, cooldownUntil: 0 }; }
+    }
+
+    function saveRLState(s) {
+      try { sessionStorage.setItem(RL.STORAGE_KEY, JSON.stringify(s)); } catch {}
+    }
+
+    function clearRLState() {
+      try { sessionStorage.removeItem(RL.STORAGE_KEY); } catch {}
+    }
+
+    // ── Elements ───────────────────────────────────────────────────────────────────
+    const form         = document.getElementById('loginForm');
+    const btn          = document.getElementById('loginBtn');
+    const usernameEl   = document.getElementById('username');
+    const passwordEl   = document.getElementById('password');
+    const errorMsg     = document.getElementById('errorMsg');
+    const errorText    = document.getElementById('errorText');
+    const warnMsg      = document.getElementById('warnMsg');
+    const warnText     = document.getElementById('warnText');
+    const attemptHint  = document.getElementById('attemptHint');
+    const cooldownWrap = document.getElementById('cooldownWrap');
+    const cooldownTimer= document.getElementById('cooldownTimer');
+    const cooldownFill = document.getElementById('cooldownFill');
+    const card         = document.getElementById('loginCard');
+    const pwToggle     = document.getElementById('pwToggle');
+    const eyeShow      = document.getElementById('eyeShow');
+    const eyeHide      = document.getElementById('eyeHide');
+
+    // ── Password show/hide toggle ─────────────────────────────────────────────────
+    pwToggle.addEventListener('click', () => {
+      const isHidden = passwordEl.type === 'password';
+      passwordEl.type = isHidden ? 'text' : 'password';
+      eyeShow.style.display = isHidden ? 'none' : '';
+      eyeHide.style.display = isHidden ? ''     : 'none';
+      pwToggle.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+    });
+
+    // ── Alert helpers ─────────────────────────────────────────────────────────────
+    function showError(msg) {
+      errorText.textContent = msg;
+      errorMsg.classList.add('show');
+      warnMsg.classList.remove('show');
+      card.classList.add('shake');
+      card.addEventListener('animationend', () => card.classList.remove('shake'), { once: true });
+    }
+
+    function showWarn(msg) {
+      warnText.textContent = msg;
+      warnMsg.classList.add('show');
+      errorMsg.classList.remove('show');
+    }
+
+    function clearAlerts() {
+      errorMsg.classList.remove('show');
+      warnMsg.classList.remove('show');
+    }
+
+    // ── Cooldown timer UI ─────────────────────────────────────────────────────────
+    let cooldownInterval = null;
+
+    function startCooldownUI(totalSeconds) {
+      cooldownWrap.classList.add('show');
+      btn.disabled = true;
+      usernameEl.disabled = true;
+      passwordEl.disabled = true;
+      let remaining = totalSeconds;
+
+      function tick() {
+        remaining = Math.max(0, remaining - 1);
+        const pct = (remaining / totalSeconds) * 100;
+        cooldownFill.style.width = pct + '%';
+        cooldownTimer.textContent = remaining + 's';
+        if (remaining <= 0) {
+          clearInterval(cooldownInterval);
+          cooldownWrap.classList.remove('show');
+          btn.disabled = false;
+          usernameEl.disabled = false;
+          passwordEl.disabled = false;
+          clearAlerts();
+          usernameEl.focus();
+        }
+      }
+      tick();
+      cooldownInterval = setInterval(tick, 1000);
+    }
+
+    // ── On page load: check for ongoing cooldown or existing valid token ──────────
+    (function init() {
+      const rlState = getRLState();
+      const now = Date.now();
+
+      if (rlState.cooldownUntil > now) {
+        const remainingSeconds = Math.ceil((rlState.cooldownUntil - now) / 1000);
+        showWarn('Too many failed attempts. Please wait before trying again.');
+        startCooldownUI(remainingSeconds);
+        return; // don't bother checking existing token during cooldown
+      }
+
+      // Redirect to admin if a valid token already exists
+      const existingToken = localStorage.getItem('omni_admin_token');
+      if (existingToken) {
+        try {
+          const parts = existingToken.split('.');
+          if (parts.length !== 3) throw new Error();
+          const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+          if (!payload.exp || (payload.exp * 1000) <= Date.now()) throw new Error('Expired');
+
+          // Verify server-side too
+          fetch('/api/v1/auth/me', {
+            headers: { 'Authorization': 'Bearer ' + existingToken },
+          })
+            .then(res => {
+              if (res.ok) {
+                window.top.location.replace('/admin/');
+              } else {
+                localStorage.removeItem('omni_admin_token');
+                localStorage.removeItem('omni_admin_user');
+              }
+            })
+            .catch(() => {
+              localStorage.removeItem('omni_admin_token');
+              localStorage.removeItem('omni_admin_user');
+            });
+        } catch (_) {
+          localStorage.removeItem('omni_admin_token');
+          localStorage.removeItem('omni_admin_user');
+        }
+      }
+    })();
+
+    // ── Form submit ───────────────────────────────────────────────────────────────
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAlerts();
+      attemptHint.classList.remove('show');
+
+      const username = usernameEl.value.trim();
+      const password = passwordEl.value;
+
+      // ── Client-side validation (UX only — server re-validates everything) ───
+      if (!username) {
+        showError('Please enter your username or email.');
+        usernameEl.focus();
+        return;
+      }
+      if (!password) {
+        showError('Please enter your password.');
+        passwordEl.focus();
+        return;
+      }
+      if (username.length > 254) {
+        showError('Username or email is too long.');
+        return;
+      }
+      if (password.length > 1024) {
+        showError('Password is too long.');
+        return;
+      }
+
+      // ── Check client-side cooldown ─────────────────────────────────────────
+      const rlState = getRLState();
+      if (rlState.cooldownUntil > Date.now()) {
+        const remaining = Math.ceil((rlState.cooldownUntil - Date.now()) / 1000);
+        showWarn(`Too many failed attempts. Please wait ${remaining}s before trying again.`);
+        startCooldownUI(remaining);
+        return;
+      }
+
+      // ── Submit ─────────────────────────────────────────────────────────────
       btn.classList.add('loading');
       btn.disabled = true;
 
       try {
         const res  = await fetch('/api/v1/auth/login', {
-          method: 'POST',
+          method:  'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password }),
+          body:    JSON.stringify({ username, password }),
         });
         const data = await res.json();
 
-        if (!res.ok) {
-          throw new Error(data.error?.message || 'Login failed.');
+        if (res.status === 429) {
+          // Server-side rate limited
+          const wait = data.error?.retryAfterSeconds || 60;
+          rlState.cooldownUntil = Date.now() + wait * 1000;
+          saveRLState(rlState);
+          showWarn(data.error?.message || 'Too many attempts. Please wait.');
+          startCooldownUI(wait);
+          return;
         }
 
+        if (!res.ok) {
+          // Failed login — increment attempt counter
+          rlState.attempts = (rlState.attempts || 0) + 1;
+          saveRLState(rlState);
+
+          const remaining = RL.ATTEMPTS_BEFORE_COOLDOWN - rlState.attempts;
+
+          if (rlState.attempts >= RL.ATTEMPTS_BEFORE_COOLDOWN) {
+            // Trigger client-side cooldown
+            rlState.cooldownUntil = Date.now() + RL.COOLDOWN_SECONDS * 1000;
+            saveRLState(rlState);
+            showError(data.error?.message || 'Invalid username or password.');
+            startCooldownUI(RL.COOLDOWN_SECONDS);
+          } else {
+            showError(data.error?.message || 'Invalid username or password.');
+            if (rlState.attempts >= RL.ATTEMPTS_BEFORE_WARN && remaining > 0) {
+              attemptHint.textContent = `${remaining} attempt${remaining !== 1 ? 's' : ''} remaining before temporary lockout.`;
+              attemptHint.classList.add('show');
+            }
+          }
+
+          // Clear password on failure — don't pre-fill it
+          passwordEl.value = '';
+          passwordEl.focus();
+          return;
+        }
+
+        // ── SUCCESS ─────────────────────────────────────────────────────────
+        clearRLState();
         localStorage.setItem('omni_admin_token', data.token);
         localStorage.setItem('omni_admin_user',  JSON.stringify(data.admin));
-        window.location.href = '/admin/';
+        window.top.location.replace('/admin/');
+
       } catch (err) {
-        errorEl.textContent = err.message;
-        errorEl.classList.add('show');
+        showError('Unable to connect to the server. Please check your connection and try again.');
+        console.error('[login] Network error:', err.message);
       } finally {
         btn.classList.remove('loading');
-        btn.disabled = false;
+        // Only re-enable button if we didn't start a cooldown
+        if (!cooldownWrap.classList.contains('show')) {
+          btn.disabled = false;
+        }
       }
     });
   </script>

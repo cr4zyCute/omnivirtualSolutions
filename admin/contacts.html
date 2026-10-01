@@ -3,6 +3,30 @@
 <head>
   <base href="/">
   <meta charset="utf-8">
+  <script>
+    (function () {
+      if (window.top !== window.self) {
+        window.top.location.href = window.location.href;
+      }
+      try {
+        var token = localStorage.getItem('omni_admin_token');
+        if (!token) {
+          window.location.replace('admin/login.html');
+          return;
+        }
+        var parts = token.split('.');
+        if (parts.length !== 3) throw new Error();
+        var payload = JSON.parse(atob(parts[1]));
+        if (!payload.exp || (payload.exp * 1000) <= Date.now()) {
+          throw new Error('Expired');
+        }
+      } catch (_) {
+        localStorage.removeItem('omni_admin_token');
+        localStorage.removeItem('omni_admin_user');
+        window.location.replace('admin/login.html');
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Messages — Omni Virtual Solutions Admin</title>
   <link rel="icon" type="image/png" href="assets/img/OmniLogo2.png">
@@ -11,6 +35,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <style>
+    /* ── Instant Auth Shield: prevent flash of admin page ── */
+    html {
+      visibility: hidden;
+      opacity: 0;
+      background: #0b0e14;
+    }
+    html.auth-ready {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 0.12s ease-in;
+    }
     :root {
       --bg:       #0b0e14;
       --sidebar:  #0f131a;
@@ -618,17 +653,39 @@
   (function () {
     'use strict';
 
+    // Break out of iframe if embedded
+    if (window.top !== window.self) {
+      window.top.location.href = window.location.href;
+    }
+
     const token = localStorage.getItem('omni_admin_token');
-    if (!token) { window.location.href = 'admin/login.html'; return; }
+    if (!token) {
+      localStorage.removeItem('omni_admin_token');
+      localStorage.removeItem('omni_admin_user');
+      window.location.replace('admin/login.html');
+      return;
+    }
 
     fetch('/api/v1/auth/me', { headers: { Authorization: 'Bearer ' + token } })
-      .then(r => { if (!r.ok) window.location.href = 'admin/login.html'; })
-      .catch(() => {});
+      .then(r => {
+        if (!r.ok) {
+          localStorage.removeItem('omni_admin_token');
+          localStorage.removeItem('omni_admin_user');
+          window.location.replace('admin/login.html');
+          return;
+        }
+        document.documentElement.classList.add('auth-ready');
+      })
+      .catch(() => {
+        localStorage.removeItem('omni_admin_token');
+        localStorage.removeItem('omni_admin_user');
+        window.location.replace('admin/login.html');
+      });
 
     window.adminLogout = () => {
       localStorage.removeItem('omni_admin_token');
       localStorage.removeItem('omni_admin_user');
-      window.location.href = 'admin/login.html';
+      window.location.replace('admin/login.html');
     };
 
     const userData = JSON.parse(localStorage.getItem('omni_admin_user') || '{}');

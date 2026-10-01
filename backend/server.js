@@ -38,6 +38,44 @@ const app  = express();
 const PORT = process.env.PORT || 3000;
 
 // ─────────────────────────────────────────────────────────────────
+// Security Headers (Login Page Security Mastery Skill §2)
+// ─────────────────────────────────────────────────────────────────
+app.use((req, res, next) => {
+  // Prevent MIME-type sniffing
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  // Block the admin from being framed (clickjacking protection)
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  // Basic XSS protection for older browsers
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  // Tell browsers to prefer HTTPS (HSTS) — 1 year, include subdomains
+  // Only send over HTTPS; no-op on localhost HTTP during dev
+  if (req.secure || req.headers["x-forwarded-proto"] === "https") {
+    res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  }
+  // Referrer: don't leak URL path info to third parties
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  // Content Security Policy for admin pages
+  // Allows: same origin scripts/styles, Google Fonts, inline scripts (admin pages use them)
+  if (req.path.startsWith("/admin")) {
+    res.setHeader(
+      "Content-Security-Policy",
+      [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-inline'",           // admin pages use inline scripts
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "font-src 'self' https://fonts.gstatic.com",
+        "img-src 'self' data: blob: https:",
+        "connect-src 'self'",
+        "frame-ancestors 'self'",                      // blocks framing from other origins
+        "base-uri 'self'",
+        "form-action 'self'",
+      ].join("; ")
+    );
+  }
+  next();
+});
+
+// ─────────────────────────────────────────────────────────────────
 // Middleware
 // ─────────────────────────────────────────────────────────────────
 app.use(cors({

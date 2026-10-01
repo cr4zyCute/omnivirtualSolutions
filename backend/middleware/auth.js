@@ -1,40 +1,76 @@
 // =================================================================
 // backend/middleware/auth.js  —  JWT authentication middleware
 // =================================================================
-// Attach this to any route that requires an authenticated admin.
+// Attach to any route that requires an authenticated admin.
 // Usage: router.patch("/...", requireAuth, handler)
+//
+// Security controls (Login Page Security Mastery Skill):
+//  • Fails fast with a loud startup warning if JWT_SECRET is the
+//    default placeholder — prevents silent production misconfiguration
+//  • Token expiry shortened to 2 h (matching signToken)
+//  • Returns distinct codes for expired vs. invalid tokens so the
+//    client can show "session expired — please log in again" vs.
+//    a generic auth error, without leaking server internals
 // =================================================================
 
 const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = process.env.JWT_SECRET || "omni-cms-secret-change-in-production";
+const JWT_SECRET = process.env.JWT_SECRET;
 
-// ── Verify JWT from Authorization: Bearer <token> header ──────────
+// ── Fail-fast: warn loudly if the secret is missing or is the demo default ──
+if (!JWT_SECRET || JWT_SECRET === "omni-cms-secret-change-in-production") {
+  if (process.env.NODE_ENV === "production") {
+    // Hard-fail in production — a weak secret in prod is a critical vulnerability
+    console.error(
+      "\n[FATAL] JWT_SECRET is not set or is the default placeholder.\n" +
+      "  Set a strong, random secret in your .env file before running in production.\n" +
+      "  Example: JWT_SECRET=$(node -e \"console.log(require('crypto').randomBytes(48).toString('hex'))\")\n"
+    );
+    process.exit(1);
+  } else {
+    // Warn loudly in development so the dev knows to fix it before shipping
+    console.warn(
+      "\n⚠️  [auth] WARNING: JWT_SECRET is using the insecure default value.\n" +
+      "   Set a strong JWT_SECRET in your .env file before deploying to production.\n"
+    );
+  }
+}
+
+// Use the env var if set, fall back to a development placeholder only
+const EFFECTIVE_SECRET = JWT_SECRET || "omni-cms-dev-secret-DO-NOT-USE-IN-PRODUCTION";
+
+// ── requireAuth middleware ─────────────────────────────────────────
 function requireAuth(req, res, next) {
   const header = req.headers["authorization"] || "";
-  const token  = header.startsWith("Bearer ") ? header.slice(7) : null;
+  const token  = header.startsWith("Bearer ") ? header.slice(7).trim() : null;
 
   if (!token) {
     return res.status(401).json({
-      error: { code: "UNAUTHORIZED", message: "Authentication required. Provide a Bearer token." }
+      error: { code: "UNAUTHORIZED", message: "Authentication required. Provide a Bearer token." },
     });
   }
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET);
+    const payload = jwt.verify(token, EFFECTIVE_SECRET);
     req.admin = payload; // { id, username, role, iat, exp }
-    next();
+    return next();
   } catch (err) {
-    const code = err.name === "TokenExpiredError" ? "TOKEN_EXPIRED" : "TOKEN_INVALID";
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({
+        error: { code: "TOKEN_EXPIRED", message: "Session expired. Please log in again." },
+      });
+    }
     return res.status(401).json({
-      error: { code, message: err.name === "TokenExpiredError" ? "Session expired. Please log in again." : "Invalid token." }
+      error: { code: "TOKEN_INVALID", message: "Invalid authentication token." },
     });
   }
 }
 
-// ── Sign a new token ──────────────────────────────────────────────
+// ── signToken ─────────────────────────────────────────────────────
+// Short-lived 2 h tokens — per skill §6: short-lived access tokens
+// reduce the window of exposure if a token is leaked.
 function signToken(payload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: "8h" });
+  return jwt.sign(payload, EFFECTIVE_SECRET, { expiresIn: "2h" });
 }
 
 module.exports = { requireAuth, signToken };
