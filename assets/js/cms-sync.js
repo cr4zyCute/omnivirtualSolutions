@@ -43,6 +43,20 @@
       // Don't overwrite if actively being edited
       if (document.activeElement === el) return;
 
+      if (key === 'home.cta.trust_tags') {
+        try {
+          const tags = typeof value === 'string' ? JSON.parse(value) : value;
+          if (Array.isArray(tags)) {
+            el.innerHTML = tags.map(t => `
+              <span class="trust-item"><i class="bi ${t.icon || 'bi-check-circle'}"></i> ${t.text || ''}</span>
+            `).join('');
+            el.classList.add('cms-live-pulsing');
+            setTimeout(() => el.classList.remove('cms-live-pulsing'), 1200);
+            return;
+          }
+        } catch (_) {}
+      }
+
       if (el.tagName.toLowerCase() === 'img') {
         const path = value.startsWith('/') ? value.slice(1) : value;
         el.src = path;

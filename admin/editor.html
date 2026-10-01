@@ -257,6 +257,60 @@
       border-color: #eba22d;
       transform: scale(1.04);
     }
+
+    /* ── Icon Picker Modal & Trust Tags Editor Controls ── */
+    #iconPickerModal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      width: 90%;
+      max-width: 480px;
+      background: #141923;
+      border: 1px solid rgba(235, 162, 45, 0.4);
+      border-radius: 14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.85);
+      z-index: 10001;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #iconPickerModal.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .icon-opt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 4px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      color: #cbd5e1;
+      transition: all 0.15s;
+    }
+    .icon-opt i {
+      font-size: 20px;
+      color: #eba22d;
+    }
+    .icon-opt span {
+      font-size: 10px;
+      color: #94a3b8;
+      max-width: 60px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .icon-opt:hover {
+      background: rgba(235, 162, 45, 0.15);
+      border-color: rgba(235, 162, 45, 0.5);
+      color: #fff;
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 
@@ -588,12 +642,16 @@
                 <span class="cta-btn-icon"><i class="bi bi-arrow-right"></i></span>
               </a>
             </div>
-            <div class="cta-trust-tags">
-              <span class="trust-item"><i class="bi bi-book-half"></i> Publishing Packages</span>
-              <span class="trust-dot">•</span>
-              <span class="trust-item"><i class="bi bi-journal-check"></i> Editorial Evaluation</span>
-              <span class="trust-dot">•</span>
-              <span class="trust-item"><i class="bi bi-megaphone"></i> Book Marketing</span>
+            <!-- Dynamic, Editable & Addable Trust Tags (Responsive) -->
+            <div class="cta-trust-tags-wrapper">
+              <div class="cta-trust-tags" id="ctaTrustTagsContainer" data-block-key="home.cta.trust_tags">
+                <!-- Dynamically rendered -->
+              </div>
+              <div class="cta-add-tag-wrap">
+                <button type="button" class="btn-add-trust-tag" id="btnAddTrustTag" onclick="addTrustTag()">
+                  <i class="bi bi-plus-circle-fill"></i> Add Highlight Tag
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -786,6 +844,21 @@
     </div>
   </div>
 
+  <!-- ── 3b. Icon Picker Modal ── -->
+  <div class="modal-backdrop-custom" id="iconPickerBackdrop" onclick="closeIconPicker()"></div>
+  <div id="iconPickerModal">
+    <div style="padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; color:#fff;">
+      <h4 style="margin:0; font-size:16px; font-weight:700; color:#eba22d;"><i class="bi bi-palette-fill me-2"></i> Choose Highlight Icon</h4>
+      <button type="button" class="btn-close btn-close-white" onclick="closeIconPicker()"></button>
+    </div>
+    <div style="padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2);">
+      <input type="text" id="iconSearchInput" placeholder="Filter icons (e.g. book, star, check, heart)..." oninput="filterIconGrid(this.value)" style="width:100%; background:#151a23; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px 12px; color:#fff; font-size:13px; outline:none;">
+    </div>
+    <div class="icon-grid" id="iconGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(70px, 1fr)); gap:10px; padding:18px 20px; max-height:340px; overflow-y:auto;">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
   <!-- ── 4. Toast ── -->
   <div id="editorToast">
     <i class="bi bi-check-circle-fill text-warning fs-5"></i>
@@ -854,7 +927,11 @@
           }
         });
 
-        showToast(edit ? 'Edit Mode active: click text or photo to edit' : 'Visitor Preview active');
+        document.querySelectorAll('.trust-item-text').forEach(el => {
+          el.contentEditable = edit ? 'true' : 'false';
+        });
+
+        showToast(edit ? 'Edit Mode active: click text, icon or photo to edit' : 'Visitor Preview active');
       };
 
       async function saveBlock(key, value) {
@@ -932,6 +1009,17 @@
           const data = await res.json();
           if (data.blockMap) {
             Object.entries(data.blockMap).forEach(([k, v]) => {
+              if (k === 'home.cta.trust_tags') {
+                try {
+                  const parsed = typeof v === 'string' ? JSON.parse(v) : v;
+                  if (Array.isArray(parsed) && parsed.length > 0) {
+                    trustTagsData = parsed;
+                  }
+                } catch(_) {}
+                renderTrustTags();
+                return;
+              }
+
               document.querySelectorAll(`[data-block-key="${k}"]`).forEach(el => {
                 if (el.tagName.toLowerCase() === 'img') {
                   el.src = v.startsWith('/') ? v.slice(1) : v;
@@ -947,6 +1035,151 @@
           }
         } catch (err) {}
       }
+
+      // ── Trust Tags Interactive System ──────────────────────────────
+      let trustTagsData = [
+        { icon: 'bi-book-half', text: 'Publishing Packages' },
+        { icon: 'bi-journal-check', text: 'Editorial Evaluation' },
+        { icon: 'bi-megaphone', text: 'Book Marketing' }
+      ];
+      let activeIconPickerTagIndex = null;
+
+      const AVAILABLE_ICONS = [
+        { name: 'Book', icon: 'bi-book-half' },
+        { name: 'Journal', icon: 'bi-journal-check' },
+        { name: 'Megaphone', icon: 'bi-megaphone' },
+        { name: 'Award', icon: 'bi-award' },
+        { name: 'Shield', icon: 'bi-shield-check' },
+        { name: 'Star', icon: 'bi-star-fill' },
+        { name: 'Check', icon: 'bi-check-circle-fill' },
+        { name: 'Gem', icon: 'bi-gem' },
+        { name: 'Headphones', icon: 'bi-headphones' },
+        { name: 'Pen', icon: 'bi-pen' },
+        { name: 'Rocket', icon: 'bi-rocket-takeoff' },
+        { name: 'Globe', icon: 'bi-globe' },
+        { name: 'Heart', icon: 'bi-heart-fill' },
+        { name: 'Sparkles', icon: 'bi-stars' },
+        { name: 'Briefcase', icon: 'bi-briefcase-fill' },
+        { name: 'Chat', icon: 'bi-chat-dots-fill' },
+        { name: 'Graph', icon: 'bi-graph-up-arrow' },
+        { name: 'Lightning', icon: 'bi-lightning-charge-fill' },
+        { name: 'Files', icon: 'bi-file-earmark-text-fill' },
+        { name: 'Palette', icon: 'bi-palette-fill' },
+        { name: 'Box', icon: 'bi-box-seam-fill' },
+        { name: 'People', icon: 'bi-people-fill' },
+        { name: 'Calendar', icon: 'bi-calendar-check' },
+        { name: 'Tags', icon: 'bi-tags-fill' }
+      ];
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>"']/g, m => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[m]);
+      }
+
+      function renderTrustTags() {
+        const container = document.getElementById('ctaTrustTagsContainer');
+        if (!container) return;
+
+        container.innerHTML = trustTagsData.map((t, idx) => `
+          <div class="trust-item" data-index="${idx}">
+            <button type="button" class="trust-icon-btn" onclick="openIconPicker(${idx})" title="Click to change icon">
+              <i class="bi ${escapeHtml(t.icon || 'bi-check-circle')}"></i>
+            </button>
+            <span class="trust-item-text" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleTagBlur(${idx}, this)" oninput="handleTagInput(${idx}, this)">${escapeHtml(t.text)}</span>
+            <button type="button" class="trust-del-btn" onclick="deleteTrustTag(${idx})" title="Remove this tag">&times;</button>
+          </div>
+        `).join('');
+      }
+
+      window.addTrustTag = function() {
+        trustTagsData.push({
+          icon: 'bi-check-circle-fill',
+          text: 'New Highlight'
+        });
+        renderTrustTags();
+        saveBlock('home.cta.trust_tags', JSON.stringify(trustTagsData));
+
+        // Focus the newly added item's text
+        setTimeout(() => {
+          const items = document.querySelectorAll('#ctaTrustTagsContainer .trust-item-text');
+          const last = items[items.length - 1];
+          if (last) {
+            last.focus();
+            const range = document.createRange();
+            range.selectNodeContents(last);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
+        }, 50);
+      };
+
+      window.deleteTrustTag = function(idx) {
+        if (trustTagsData.length <= 1) {
+          if (!confirm('Remove this tag?')) return;
+        }
+        trustTagsData.splice(idx, 1);
+        renderTrustTags();
+        saveBlock('home.cta.trust_tags', JSON.stringify(trustTagsData));
+      };
+
+      window.handleTagInput = function(idx, el) {
+        if (!isEditMode) return;
+        setSaving(true);
+        trustTagsData[idx].text = el.innerText.trim();
+        clearTimeout(debounceTimers['home.cta.trust_tags']);
+        debounceTimers['home.cta.trust_tags'] = setTimeout(() => {
+          saveBlock('home.cta.trust_tags', JSON.stringify(trustTagsData));
+        }, 900);
+      };
+
+      window.handleTagBlur = function(idx, el) {
+        if (!isEditMode) return;
+        trustTagsData[idx].text = el.innerText.trim();
+        saveBlock('home.cta.trust_tags', JSON.stringify(trustTagsData));
+      };
+
+      window.openIconPicker = function(idx) {
+        if (!isEditMode) return;
+        activeIconPickerTagIndex = idx;
+        document.getElementById('iconPickerBackdrop').classList.add('show');
+        document.getElementById('iconPickerModal').classList.add('show');
+        document.getElementById('iconSearchInput').value = '';
+        renderIconGrid(AVAILABLE_ICONS);
+      };
+
+      window.closeIconPicker = function() {
+        document.getElementById('iconPickerBackdrop').classList.remove('show');
+        document.getElementById('iconPickerModal').classList.remove('show');
+        activeIconPickerTagIndex = null;
+      };
+
+      function renderIconGrid(list) {
+        const grid = document.getElementById('iconGrid');
+        grid.innerHTML = list.map(item => `
+          <div class="icon-opt" onclick="selectIcon('${item.icon}')" title="${item.name}">
+            <i class="bi ${item.icon}"></i>
+            <span>${item.name}</span>
+          </div>
+        `).join('');
+      }
+
+      window.filterIconGrid = function(query) {
+        const q = query.toLowerCase().trim();
+        const filtered = AVAILABLE_ICONS.filter(i => i.name.toLowerCase().includes(q) || i.icon.toLowerCase().includes(q));
+        renderIconGrid(filtered);
+      };
+
+      window.selectIcon = function(iconClass) {
+        if (activeIconPickerTagIndex !== null && trustTagsData[activeIconPickerTagIndex]) {
+          trustTagsData[activeIconPickerTagIndex].icon = iconClass;
+          renderTrustTags();
+          saveBlock('home.cta.trust_tags', JSON.stringify(trustTagsData));
+        }
+        closeIconPicker();
+      };
 
       window.openMediaPicker = function(key = null) {
         targetImgKey = key;

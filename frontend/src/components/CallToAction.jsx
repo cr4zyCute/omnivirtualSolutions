@@ -39,18 +39,28 @@ export default function CallToAction() {
                 </span>
               </Link>
             </div>
-            <div className="cta-trust-tags">
-              <span className="trust-item">
-                <i className="bi bi-book-half"></i> Publishing Packages
-              </span>
-              <span className="trust-dot">•</span>
-              <span className="trust-item">
-                <i className="bi bi-journal-check"></i> Editorial Evaluation
-              </span>
-              <span className="trust-dot">•</span>
-              <span className="trust-item">
-                <i className="bi bi-megaphone"></i> Book Marketing
-              </span>
+            <div className="cta-trust-tags-wrapper">
+              <div className="cta-trust-tags" data-block-key="home.cta.trust_tags">
+                {(() => {
+                  let tags = [
+                    { icon: 'bi-book-half', text: 'Publishing Packages' },
+                    { icon: 'bi-journal-check', text: 'Editorial Evaluation' },
+                    { icon: 'bi-megaphone', text: 'Book Marketing' }
+                  ];
+                  const raw = t('home.cta.trust_tags');
+                  if (raw) {
+                    try {
+                      const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+                      if (Array.isArray(parsed) && parsed.length > 0) tags = parsed;
+                    } catch (_) {}
+                  }
+                  return tags.map((item, idx) => (
+                    <span className="trust-item" key={idx}>
+                      <i className={`bi ${item.icon || 'bi-check-circle'}`}></i> {item.text}
+                    </span>
+                  ));
+                })()}
+              </div>
             </div>
           </div>
         </div>

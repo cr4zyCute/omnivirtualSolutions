@@ -2803,34 +2803,155 @@ footer,
   color: #fae2b2;
 }
 
-/* Trust Signals / Cognitive Ease */
+/* Trust Signals / Cognitive Ease & Responsive Tags */
+.cta-trust-tags-wrapper {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+
 .cta-trust-tags {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 14px;
-  color: rgba(247, 243, 238, 0.8);
+  gap: 12px 18px;
+  color: rgba(247, 243, 238, 0.9);
   font-size: 13.5px;
   font-weight: 500;
   letter-spacing: 0.02em;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 12px;
 }
 
 .cta-trust-tags .trust-item {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(229, 190, 117, 0.25);
+  border-radius: 999px;
+  padding: 6px 14px;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+  position: relative;
+}
+
+.cta-trust-tags .trust-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(229, 190, 117, 0.5);
+  transform: translateY(-1px);
 }
 
 .cta-trust-tags .trust-item i {
-  color: #e5be75;
-  font-size: 14px;
+  color: #eba22d;
+  font-size: 14.5px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
 }
 
 .cta-trust-tags .trust-dot {
-  color: rgba(229, 190, 117, 0.5);
-  font-size: 10px;
+  display: none; /* Pill badge design handles separation cleanly & responsively */
 }
+
+/* Edit Mode Controls for Trust Tags */
+.trust-icon-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  cursor: default;
+}
+
+body.mode-edit .trust-icon-btn {
+  cursor: pointer;
+}
+
+body.mode-edit .trust-icon-btn:hover i {
+  transform: scale(1.25);
+  color: #fff;
+}
+
+.trust-item-text {
+  outline: none;
+  min-width: 20px;
+}
+
+body.mode-edit .trust-item {
+  outline: 1px dashed rgba(235, 162, 45, 0.4);
+  outline-offset: 2px;
+}
+
+body.mode-edit .trust-item:hover {
+  outline: 1px solid #eba22d;
+}
+
+.trust-del-btn {
+  display: none;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+  border-radius: 50%;
+  width: 17px;
+  height: 17px;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin-left: 2px;
+  transition: all 0.15s;
+}
+
+body.mode-edit .trust-del-btn {
+  display: inline-flex;
+}
+
+.trust-del-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+  transform: scale(1.15);
+}
+
+.cta-add-tag-wrap {
+  display: none;
+  margin-top: 4px;
+}
+
+body.mode-edit .cta-add-tag-wrap {
+  display: block;
+}
+
+.btn-add-trust-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(235, 162, 45, 0.12);
+  border: 1px dashed rgba(235, 162, 45, 0.6);
+  color: #eba22d;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-add-trust-tag:hover {
+  background: #eba22d;
+  color: #0b0e14;
+  border-style: solid;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(235, 162, 45, 0.35);
+}
+
 
 /*--------------------------------------------------------------
 # Luxury Footer Redesign
