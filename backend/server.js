@@ -61,7 +61,7 @@ app.use((req, res, next) => {
       "Content-Security-Policy",
       [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline'",           // admin pages use inline scripts
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",  // admin pages use inline scripts & Chart.js
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com",
         "img-src 'self' data: blob: https:",
@@ -113,6 +113,24 @@ app.use("/api/v1/site-meta", siteRoutes);
 app.use("/api/v1/services",  servicesRoutes);
 app.use("/api/v1/contact",   contactRoutes);
 app.use("/api/v1/live",      liveRouter);
+
+// ── Lightweight visitor tracking (privacy-preserving) ─────────────
+const crypto = require("crypto");
+const { db: appDb } = require("./db");
+app.post("/api/v1/track-visit", (req, res) => {
+  const { path: p = "/", referrer = "direct" } = req.body || {};
+  const ua = req.headers["user-agent"] || "";
+  const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket?.remoteAddress || "";
+  const ipHash = crypto.createHash("sha256").update(ip + (process.env.JWT_SECRET || "omni-salt")).digest("hex").slice(0, 16);
+  const device = /mobile/i.test(ua) ? "mobile" : /tablet|ipad/i.test(ua) ? "tablet" : "desktop";
+
+  appDb.execute({
+    sql: "INSERT INTO page_visits (path, ip_hash, device, referrer) VALUES (?, ?, ?, ?)",
+    args: [String(p).slice(0, 200), ipHash, device, String(referrer).slice(0, 200)]
+  }).catch(() => {});
+  res.json({ ok: true });
+});
+
 
 // ─────────────────────────────────────────────────────────────────
 // Admin Routes (auth + CMS)

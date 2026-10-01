@@ -23,6 +23,24 @@
   window.addEventListener('load', toggleScrolled);
 
   /**
+   * Anonymous First-Party Visit Telemetry (Data Analysis Mastery Skill)
+   */
+  try {
+    if (!window.location.pathname.startsWith('/admin')) {
+      const payload = JSON.stringify({
+        path: window.location.pathname || '/',
+        referrer: document.referrer || 'direct'
+      });
+      fetch('/api/v1/track-visit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload
+      }).catch(() => {});
+    }
+  } catch (_) {}
+
+
+  /**
    * Mobile nav toggle
    */
   const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');

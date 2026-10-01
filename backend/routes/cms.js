@@ -343,4 +343,165 @@ router.get("/submissions", requireAuth, async (req, res) => {
   }
 });
 
+// ─────────────────────────────────────────────────────────────────
+// GET /api/v1/cms/analytics  — Visits & Email Analytics
+// Aligned with Data Analysis Mastery Skill (Senior Analyst-level)
+// ─────────────────────────────────────────────────────────────────
+router.get("/analytics", requireAuth, async (req, res) => {
+  const days = Math.min(Math.max(parseInt(req.query.days) || 14, 7), 60);
+
+  try {
+    // 1. Visits metrics
+    const [
+      visitsTotal,
+      visitsUnique,
+      devices,
+      topPages,
+      contactsTotal,
+      contactsNew,
+      contactsByStatus,
+      repliesTotal,
+      dailyVisits,
+      dailyInquiries
+    ] = await Promise.all([
+      db.execute({
+        sql: "SELECT COUNT(*) AS count FROM page_visits WHERE visited_at >= datetime('now', '-' || ? || ' days')",
+        args: [days]
+      }),
+      db.execute({
+        sql: "SELECT COUNT(DISTINCT ip_hash) AS count FROM page_visits WHERE visited_at >= datetime('now', '-' || ? || ' days')",
+        args: [days]
+      }),
+      db.execute({
+        sql: "SELECT device, COUNT(*) AS count FROM page_visits WHERE visited_at >= datetime('now', '-' || ? || ' days') GROUP BY device ORDER BY count DESC",
+        args: [days]
+      }),
+      db.execute({
+        sql: "SELECT path, COUNT(*) AS count FROM page_visits WHERE visited_at >= datetime('now', '-' || ? || ' days') GROUP BY path ORDER BY count DESC LIMIT 5",
+        args: [days]
+      }),
+      db.execute({
+        sql: "SELECT COUNT(*) AS count FROM contact_submissions WHERE created_at >= datetime('now', '-' || ? || ' days')",
+        args: [days]
+      }),
+      db.execute({
+        sql: "SELECT COUNT(*) AS count FROM contact_submissions WHERE status = 'new' AND created_at >= datetime('now', '-' || ? || ' days')",
+        args: [days]
+      }),
+      db.execute({
+        sql: "SELECT status, COUNT(*) AS count FROM contact_submissions WHERE created_at >= datetime('now', '-' || ? || ' days') GROUP BY status",
+        args: [days]
+      }),
+      db.execute({
+        sql: "SELECT COUNT(*) AS count FROM contact_replies WHERE sent_at >= datetime('now', '-' || ? || ' days')",
+        args: [days]
+      }),
+      db.execute({
+        sql: `SELECT date(visited_at) AS day, COUNT(*) AS count, COUNT(DISTINCT ip_hash) AS unique_count
+              FROM page_visits
+              WHERE visited_at >= datetime('now', '-' || ? || ' days')
+              GROUP BY date(visited_at)
+              ORDER BY day ASC`,
+        args: [days]
+      }),
+      db.execute({
+        sql: `SELECT date(created_at) AS day, COUNT(*) AS count
+              FROM contact_submissions
+              WHERE created_at >= datetime('now', '-' || ? || ' days')
+              GROUP BY date(created_at)
+              ORDER BY day ASC`,
+        args: [days]
+      })
+    ]);
+
+    const totalVisitsCount = visitsTotal.rows[0]?.count || 0;
+    const uniqueVisitsCount = visitsUnique.rows[0]?.count || 0;
+    const totalInquiriesCount = contactsTotal.rows[0]?.count || 0;
+    const newInquiriesCount = contactsNew.rows[0]?.count || 0;
+    const repliesCount = repliesTotal.rows[0]?.count || 0;
+
+    // Conversion rate: Inquiries / Visits (%)
+    const conversionRate = totalVisitsCount > 0
+      ? Number(((totalInquiriesCount / totalVisitsCount) * 100).toFixed(2))
+      : 0;
+
+    // Response rate: percentage of non-new inquiries
+    const resolvedInquiries = Math.max(0, totalInquiriesCount - newInquiriesCount);
+    const responseRate = totalInquiriesCount > 0
+      ? Number(((resolvedInquiries / totalInquiriesCount) * 100).toFixed(1))
+      : 0;
+
+    // Merge daily timelines to ensure contiguous date series
+    const visitMap = {};
+    dailyVisits.rows.forEach(r => {
+      visitMap[r.day] = { visits: r.count, unique: r.unique_count };
+    });
+
+    const inquiryMap = {};
+    dailyInquiries.rows.forEach(r => {
+      inquiryMap[r.day] = r.count;
+    });
+
+    // Generate date sequence for the last N days
+    const timeline = [];
+    const now = new Date();
+    for (let i = days - 1; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 86400000);
+      const dayStr = d.toISOString().slice(0, 10);
+      const v = visitMap[dayStr] || { visits: 0, unique: 0 };
+      const inq = inquiryMap[dayStr] || 0;
+
+      const dateLabel = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      timeline.push({
+        date: dayStr,
+        label: dateLabel,
+        visits: v.visits,
+        uniqueVisitors: v.unique,
+        inquiries: inq
+      });
+    }
+
+    // Status dictionary
+    const statusMap = { new: 0, in_review: 0, contacted: 0, closed: 0 };
+    contactsByStatus.rows.forEach(r => {
+      if (r.status in statusMap) statusMap[r.status] = r.count;
+    });
+
+    // Senior Analyst Insights (Lead with the answer, diagnostic & recommendations)
+    const topPage = topPages.rows[0]?.path || "/";
+    const peakDay = [...timeline].sort((a, b) => b.visits - a.visits)[0];
+
+    const analystInsights = {
+      headline: `Conversion Efficiency: ${conversionRate}% lead rate (${totalInquiriesCount} inquiries from ${totalVisitsCount} visits in the last ${days} days).`,
+      keyFinding: `Website traffic averaged ${Math.round(totalVisitsCount / days)} visits/day, peaking on ${peakDay?.label || "peak days"} with ${peakDay?.visits || 0} visits. Most frequented entry point: ${topPage}.`,
+      actionableRecommendation: newInquiriesCount > 0
+        ? `⚠️ Action Required: ${newInquiriesCount} client inquiry${newInquiriesCount > 1 ? "s are" : " is"} currently pending in 'New' status with no reply sent yet. Target a <24h first-response time to increase inquiry close rates.`
+        : `✅ Lead hygiene is healthy: all inquiries have been acknowledged or are actively in review.`,
+      provenanceNote: `Data reflects first-party web sessions with SHA-256 IP hashing and active contact database submissions. No third-party cookie dependencies.`
+    };
+
+    res.json({
+      windowDays: days,
+      summary: {
+        totalVisits: totalVisitsCount,
+        uniqueVisitors: uniqueVisitsCount,
+        totalInquiries: totalInquiriesCount,
+        newInquiries: newInquiriesCount,
+        repliesSent: repliesCount,
+        conversionRate,
+        responseRate
+      },
+      devices: devices.rows,
+      topPages: topPages.rows,
+      statusBreakdown: statusMap,
+      timeline,
+      analystInsights
+    });
+  } catch (err) {
+    console.error("[cms/analytics] Error:", err.message);
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to generate analytics." } });
+  }
+});
+
 module.exports = router;
+
