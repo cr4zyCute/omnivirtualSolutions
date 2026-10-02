@@ -38,11 +38,19 @@ export default function Contact() {
     setStatus({ type: '', message: '' });
 
     try {
-      const res = await fetch('/api/v1/contact', {
+      const res = await fetch('/api/v1/contact/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
+          full_name: formData.name,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject || 'General Inquiry',
+          message: formData.message,
+          service_interest_id: formData.service_interest ? parseInt(formData.service_interest, 10) : null,
+          service_interest: formData.service_interest,
+          website: formData.website,
           _form_load_time: loadTime,
         }),
       });
@@ -51,7 +59,7 @@ export default function Contact() {
       if (res.ok && data.success) {
         setStatus({
           type: 'success',
-          message: 'Thank you! Your message has been sent successfully. We will get back to you shortly.',
+          message: data.message || 'Thank you! Your message has been sent successfully. We will get back to you shortly.',
         });
         setFormData({
           name: '',
@@ -62,6 +70,7 @@ export default function Contact() {
           message: '',
           website: '',
         });
+        setLoadTime(Date.now());
       } else {
         setStatus({
           type: 'danger',

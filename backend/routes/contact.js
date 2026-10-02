@@ -59,23 +59,31 @@ function isBot(body) {
 }
 
 // =================================================================
-// POST /api/v1/contact/submit  (public, rate-limited)
+// POST /api/v1/contact/submit & POST /api/v1/contact  (public, rate-limited)
 // =================================================================
-router.post("/submit", rateLimit, async (req, res) => {
+const handleContactSubmission = async (req, res) => {
   // Bot check
   if (isBot(req.body)) {
     // Silently return 200 to confuse bots
     return res.status(200).json({ success: true, message: "Thank you for your message." });
   }
 
-  const { full_name, email, subject, message, phone, service_interest_id } = req.body;
+  const full_name = (req.body.full_name || req.body.name || "").trim();
+  const email = (req.body.email || "").trim();
+  const subject = (req.body.subject || "").trim() || "General Inquiry";
+  const message = (req.body.message || "").trim();
+  const phone = (req.body.phone || "").trim();
+  const rawInterest = req.body.service_interest_id ?? req.body.service_interest;
+  const service_interest_id = (rawInterest !== null && rawInterest !== undefined && rawInterest !== "" && !isNaN(Number(rawInterest)))
+    ? parseInt(rawInterest, 10)
+    : null;
 
   // Validation
   const errors = [];
-  if (!full_name || full_name.trim().length < 2) errors.push("Full name is required (min 2 characters).");
-  if (!email || !isValidEmail(email))             errors.push("A valid email address is required.");
-  if (!message || message.trim().length < 10)     errors.push("Message is required (min 10 characters).");
-  if (phone && phone.trim().length > 0 && !/^[\d\s\+\-\(\)\.]+$/.test(phone.trim()))
+  if (!full_name || full_name.length < 2) errors.push("Full name is required (min 2 characters).");
+  if (!email || !isValidEmail(email))     errors.push("A valid email address is required.");
+  if (!message || message.length < 10)    errors.push("Message is required (min 10 characters).");
+  if (phone && phone.length > 0 && !/^[\d\s\+\-\(\)\.]+$/.test(phone))
     errors.push("Phone number format is invalid.");
 
   if (errors.length > 0) {
@@ -88,7 +96,7 @@ router.post("/submit", rateLimit, async (req, res) => {
   try {
     const dupeCheck = await db.execute({
       sql: `SELECT id FROM contact_submissions WHERE email = ? AND message = ? AND created_at > datetime('now', '-10 minutes') LIMIT 1`,
-      args: [email.trim().toLowerCase(), message.trim()],
+      args: [email.toLowerCase(), message],
     });
     if (dupeCheck.rows.length > 0) {
       return res.status(200).json({ success: true, message: "Your message has already been received. We will get back to you shortly." });
@@ -103,25 +111,25 @@ router.post("/submit", rateLimit, async (req, res) => {
               (full_name, email, phone, subject, message, service_interest_id, status, ip_address, email_notify_status)
             VALUES (?,?,?,?,?,?,'new',?,'pending')`,
       args: [
-        full_name.trim(),
-        email.trim().toLowerCase(),
-        phone ? phone.trim() : null,
-        subject ? subject.trim() : null,
-        message.trim(),
-        service_interest_id ? parseInt(service_interest_id, 10) : null,
+        full_name,
+        email.toLowerCase(),
+        phone || null,
+        subject || null,
+        message,
+        service_interest_id,
         ip,
       ],
     });
     newId = Number(result.lastInsertRowid);
-    console.log(`[contact] New submission #${newId} from: ${email.trim().toLowerCase()}`);
+    console.log(`[contact] New submission #${newId} from: ${email.toLowerCase()}`);
     // Broadcast live event to real-time dashboards
     broadcast({
       type: "new_lead",
       lead: {
         id: newId,
-        full_name: full_name.trim(),
-        email: email.trim().toLowerCase(),
-        subject: subject ? subject.trim() : 'General Inquiry',
+        full_name: full_name,
+        email: email.toLowerCase(),
+        subject: subject,
         status: 'new',
         created_at: new Date().toISOString()
       },
@@ -133,7 +141,7 @@ router.post("/submit", rateLimit, async (req, res) => {
   }
 
   // ── SEND EMAIL NOTIFICATION (async, non-blocking) ─────────────────
-  const submission = { id: newId, full_name: full_name.trim(), email: email.trim().toLowerCase(), phone: phone?.trim(), subject: subject?.trim(), message: message.trim(), ip_address: ip, created_at: new Date().toISOString() };
+  const submission = { id: newId, full_name, email: email.toLowerCase(), phone: phone || null, subject, message, ip_address: ip, created_at: new Date().toISOString() };
   
   // Don't await — respond to visitor immediately, email sends in background
   emailSvc.sendNewSubmissionNotification(submission).catch((e) => console.error("[contact] Notification error:", e.message));
@@ -143,7 +151,10 @@ router.post("/submit", rateLimit, async (req, res) => {
     success: true,
     message: "Your message has been received! We will get back to you within 1-2 business days.",
   });
-});
+};
+
+router.post("/submit", rateLimit, handleContactSubmission);
+router.post("/", rateLimit, handleContactSubmission);
 
 // =================================================================
 // GET /api/v1/contact/submissions  — Admin: list all

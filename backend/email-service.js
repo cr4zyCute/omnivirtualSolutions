@@ -144,9 +144,10 @@ async function sendNewSubmissionNotification(submission) {
         <div style="margin-top: 20px; padding: 14px 16px; background: #f3f4f6; border-radius: 6px; font-size: 13px; color: #6b7280;">
           Received: ${submission.created_at || new Date().toISOString()} &nbsp;|&nbsp; IP: ${submission.ip_address || "unknown"}
         </div>
+        ${settings.admin_url && !settings.admin_url.includes("localhost") ? `
         <div style="margin-top: 16px; text-align: center;">
-          <a href="http://localhost:3000/admin/" style="background: #eba22d; color: #0d1117; padding: 10px 22px; border-radius: 6px; font-size: 14px; font-weight: 700; text-decoration: none; display: inline-block;">View in Admin Dashboard →</a>
-        </div>
+          <a href="${settings.admin_url}" style="background: #eba22d; color: #0d1117; padding: 10px 22px; border-radius: 6px; font-size: 14px; font-weight: 700; text-decoration: none; display: inline-block;">View in Admin Dashboard →</a>
+        </div>` : ""}
       </div>
     </div>
   `;
@@ -158,6 +159,7 @@ async function sendNewSubmissionNotification(submission) {
     await transporter.sendMail({
       from: `"${senderName}" <${senderEmail}>`,
       to:   recipientEmail,
+      replyTo: submission.email,
       subject,
       html: htmlBody,
       text: `New inquiry from ${submission.full_name} (${submission.email})\n\nSubject: ${submission.subject || "General Inquiry"}\n\nMessage:\n${submission.message}`,
