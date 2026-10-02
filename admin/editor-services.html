@@ -59,6 +59,14 @@
       transition: opacity 0.12s ease-in;
     }
 
+    /* When embedded inside iframe in admin/index.html */
+    html.in-iframe #editorTopBar {
+      display: none !important;
+    }
+    html.in-iframe body {
+      padding-top: 0 !important;
+    }
+
     /* Top Floating Admin Toolbar */
     #editorTopBar {
       position: sticky;
@@ -1164,24 +1172,48 @@
 
       function setSaving(saving) {
         const el = document.getElementById('editorSaveStatus');
-        if (saving) {
-          el.className = 'editor-save-status saving';
-          el.innerHTML = '<span class="spinner-border spinner-border-sm me-1 text-warning"></span> Saving...';
-        } else {
-          el.className = 'editor-save-status saved';
-          el.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> All changes saved';
+        if (el) {
+          if (saving) {
+            el.className = 'editor-save-status saving';
+            el.innerHTML = '<span class="spinner-border spinner-border-sm me-1 text-warning"></span> Saving...';
+          } else {
+            el.className = 'editor-save-status saved';
+            el.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> All changes saved';
+          }
+        }
+        if (window.parent && window.parent !== window) {
+          try {
+            window.parent.postMessage({ type: 'CMS_STATUS', saving: saving }, '*');
+          } catch (_) {}
         }
       }
+
+      // Check if embedded inside admin dashboard iframe
+      if (window.self !== window.top) {
+        document.documentElement.classList.add('in-iframe');
+      }
+
+      window.addEventListener('message', (e) => {
+        if (!e.data) return;
+        if (e.data.type === 'SET_MODE') {
+          if (typeof window.setMode === 'function') window.setMode(e.data.edit);
+        } else if (e.data.type === 'ADD_SERVICE') {
+          if (typeof window.openAddServiceModal === 'function') window.openAddServiceModal();
+        }
+      });
 
       window.setMode = function(edit) {
         isEditMode = edit;
         document.body.className = edit ? 'mode-edit' : 'mode-preview';
-        document.getElementById('btnEditMode').classList.toggle('active', edit);
-        document.getElementById('btnPreviewMode').classList.toggle('active', !edit);
+        const bEdit = document.getElementById('btnEditMode');
+        const bPrev = document.getElementById('btnPreviewMode');
+        if (bEdit) bEdit.classList.toggle('active', edit);
+        if (bPrev) bPrev.classList.toggle('active', !edit);
         document.querySelectorAll('.editable-field').forEach(el => {
           el.contentEditable = edit ? 'true' : 'false';
         });
-        document.getElementById('dangerZoneBox').style.display = edit ? 'flex' : 'none';
+        const dz = document.getElementById('dangerZoneBox');
+        if (dz) dz.style.display = edit ? 'flex' : 'none';
         showToast(edit ? 'Edit Mode active' : 'Visitor Preview active');
       };
 

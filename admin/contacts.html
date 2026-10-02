@@ -81,6 +81,7 @@
       position: fixed;
       top: 0; bottom: 0; left: 0;
       z-index: 1000;
+      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .brand-box { padding: 22px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
     .brand-icon { width:36px;height:36px; background:var(--gold-dim); border:1px solid rgba(235,162,45,0.3); border-radius:8px; display:flex;align-items:center;justify-content:center; color:var(--gold); font-size:18px; }
@@ -104,7 +105,14 @@
     .user-name { font-weight:700; color:#fff; }
 
     /* ── Layout ──────────────────────────────────────────────────── */
-    #mainContent { margin-left:250px; flex:1; min-height:100vh; display:flex; flex-direction:column; }
+    #mainContent {
+      margin-left: 250px;
+      flex: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
     .top-header {
       height:60px; background:rgba(15,19,26,0.85); backdrop-filter:blur(12px);
       border-bottom:1px solid var(--border); display:flex; align-items:center;
@@ -359,13 +367,13 @@
 
     /* ── Responsive & Drawer Navigation Elements ── */
     .sidebar-toggle-btn {
-      display: none;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
-      min-width: 44px;
-      min-height: 44px;
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      min-height: 38px;
       background: rgba(255,255,255,0.06);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -373,34 +381,35 @@
       font-size: 20px;
       cursor: pointer;
       margin-right: 12px;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .sidebar-toggle-btn:hover {
       background: var(--gold-dim);
       border-color: rgba(235,162,45,0.4);
       color: var(--gold);
+      transform: scale(1.04);
     }
     .sidebar-close-btn {
-      display: none;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
-      min-width: 36px;
-      min-height: 36px;
-      background: transparent;
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      min-height: 30px;
+      background: rgba(255,255,255,0.05);
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--muted);
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
       margin-left: auto;
       transition: all 0.2s ease;
     }
     .sidebar-close-btn:hover {
       color: #fff;
-      border-color: rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.06);
+      border-color: var(--gold);
+      background: rgba(235,162,45,0.18);
     }
     .sidebar-backdrop {
       display: none;
@@ -416,6 +425,17 @@
     .sidebar-backdrop.active {
       display: block;
       opacity: 1;
+    }
+
+    /* Desktop Sidebar Collapsed State */
+    @media (min-width: 1025px) {
+      body.sidebar-collapsed #sidebar {
+        transform: translateX(-100%);
+      }
+      body.sidebar-collapsed #mainContent {
+        margin-left: 0 !important;
+        width: 100% !important;
+      }
     }
 
     .back-to-list-btn {
@@ -442,17 +462,11 @@
     @media (max-width: 1024px) {
       #sidebar {
         transform: translateX(-100%);
-        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 4px 0 24px rgba(0,0,0,0.5);
       }
       #sidebar.active {
         transform: translateX(0);
-      }
-      .sidebar-close-btn {
-        display: inline-flex;
-      }
-      .sidebar-toggle-btn {
-        display: inline-flex;
       }
       #mainContent {
         margin-left: 0;
@@ -992,48 +1006,116 @@
     const userData = JSON.parse(localStorage.getItem('omni_admin_user') || '{}');
     if (userData.username) document.getElementById('sidebarUserName').textContent = userData.username;
 
-    // ── Responsive Drawer Navigation (Mobile & Tablet) ──────────
+    // ── Responsive & Desktop Collapsible Sidebar Navigation ──────────
     const sidebarEl = document.getElementById('sidebar');
     const sidebarBackdrop = document.getElementById('sidebarBackdrop');
     const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
     const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
 
-    function openSidebar() {
-      if (sidebarEl) sidebarEl.classList.add('active');
-      if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
-      document.body.style.overflow = window.innerWidth <= 1024 ? 'hidden' : '';
+    function isDesktop() {
+      return window.innerWidth > 1024;
     }
 
-    function closeSidebar() {
-      if (sidebarEl) sidebarEl.classList.remove('active');
-      if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    if (sidebarToggleBtn) {
-      sidebarToggleBtn.addEventListener('click', () => {
+    window.toggleSidebar = function() {
+      if (isDesktop()) {
+        const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+        localStorage.setItem('omni_sidebar_collapsed', isCollapsed ? '1' : '0');
+        updateSidebarToggleButton();
+      } else {
         if (sidebarEl && sidebarEl.classList.contains('active')) {
           closeSidebar();
         } else {
           openSidebar();
         }
+      }
+    };
+
+    window.openSidebar = function() {
+      if (isDesktop()) {
+        document.body.classList.remove('sidebar-collapsed');
+        localStorage.setItem('omni_sidebar_collapsed', '0');
+        updateSidebarToggleButton();
+      } else {
+        if (sidebarEl) sidebarEl.classList.add('active');
+        if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        updateSidebarToggleButton();
+      }
+    };
+
+    window.closeSidebar = function() {
+      if (isDesktop()) {
+        document.body.classList.add('sidebar-collapsed');
+        localStorage.setItem('omni_sidebar_collapsed', '1');
+        updateSidebarToggleButton();
+      } else {
+        if (sidebarEl) sidebarEl.classList.remove('active');
+        if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+        document.body.style.overflow = '';
+        updateSidebarToggleButton();
+      }
+    };
+
+    function updateSidebarToggleButton() {
+      if (!sidebarToggleBtn) return;
+      const isClosed = isDesktop()
+        ? document.body.classList.contains('sidebar-collapsed')
+        : !(sidebarEl && sidebarEl.classList.contains('active'));
+
+      sidebarToggleBtn.setAttribute('title', isClosed ? 'Open Navigation Menu (Ctrl+B)' : 'Close Navigation Menu (Ctrl+B)');
+      sidebarToggleBtn.innerHTML = isClosed ? '<i class="bi bi-layout-sidebar-inset"></i>' : '<i class="bi bi-list"></i>';
+    }
+
+    // Restore collapsed state on desktop
+    if (isDesktop() && localStorage.getItem('omni_sidebar_collapsed') === '1') {
+      document.body.classList.add('sidebar-collapsed');
+    }
+    updateSidebarToggleButton();
+
+    if (sidebarToggleBtn) {
+      sidebarToggleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleSidebar();
       });
     }
     if (sidebarCloseBtn) {
-      sidebarCloseBtn.addEventListener('click', closeSidebar);
+      sidebarCloseBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeSidebar();
+      });
     }
     if (sidebarBackdrop) {
-      sidebarBackdrop.addEventListener('click', closeSidebar);
-    }
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && sidebarEl && sidebarEl.classList.contains('active')) {
+      sidebarBackdrop.addEventListener('click', (e) => {
+        e.preventDefault();
         closeSidebar();
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        e.preventDefault();
+        toggleSidebar();
+      }
+      if (e.key === 'Escape') {
+        if (!isDesktop() && sidebarEl && sidebarEl.classList.contains('active')) {
+          closeSidebar();
+        }
       }
     });
+
     window.addEventListener('resize', () => {
-      if (window.innerWidth > 1024) {
-        closeSidebar();
+      if (isDesktop()) {
+        if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+        document.body.style.overflow = '';
+        if (localStorage.getItem('omni_sidebar_collapsed') === '1') {
+          document.body.classList.add('sidebar-collapsed');
+        } else {
+          document.body.classList.remove('sidebar-collapsed');
+        }
+      } else {
+        document.body.classList.remove('sidebar-collapsed');
       }
+      updateSidebarToggleButton();
     });
 
     window.closeMessageDetail = function() {

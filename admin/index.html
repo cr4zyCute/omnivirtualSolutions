@@ -84,6 +84,7 @@
       position: fixed;
       top: 0; bottom: 0; left: 0;
       z-index: 1000;
+      transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .brand-box {
       padding: 22px 20px;
@@ -180,6 +181,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .top-header {
@@ -597,51 +599,396 @@
     .status-contacted { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
     .status-closed    { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
 
-    /* ── Live Editor Iframe Container ── */
+    /* ── Master In-Place Live Website Editor Container & Command Bar ── */
     .editor-frame-wrapper {
-      background: #000;
+      background: #090c10;
       border: 1px solid rgba(235, 162, 45, 0.3);
       border-radius: var(--radius);
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 160px);
-      min-height: 600px;
+      height: calc(100vh - 140px);
+      min-height: 640px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
     }
     .editor-frame-bar {
-      height: 44px;
-      background: #141922;
-      border-bottom: 1px solid var(--border);
+      min-height: 52px;
+      background: #141822;
+      border-bottom: 1px solid rgba(235, 162, 45, 0.25);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 6px 16px;
+      gap: 14px;
+      flex-wrap: nowrap;
+      z-index: 50;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
     }
-    .device-switcher {
+    .editor-bar-section {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .editor-bar-label {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .editor-page-select {
+      background: #161c26;
+      color: #eba22d;
+      border: 1px solid rgba(235, 162, 45, 0.4);
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .editor-page-select:focus {
+      border-color: #eba22d;
+    }
+    .vr-divider {
+      width: 1px;
+      height: 22px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 0 4px;
+      flex-shrink: 0;
+    }
+
+    /* Viewport Switcher */
+    .device-switcher {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.38);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 3px;
     }
     .device-btn {
       background: transparent;
       border: 1px solid transparent;
-      color: var(--muted);
-      padding: 4px 8px;
+      color: #94a3b8;
+      padding: 5px 11px;
       border-radius: 6px;
-      font-size: 13px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .device-btn:hover {
+      color: #f1f5f9;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .device-btn.active {
+      background: linear-gradient(135deg, rgba(235, 162, 45, 0.28), rgba(235, 162, 45, 0.12));
+      color: #eba22d;
+      border-color: rgba(235, 162, 45, 0.45);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    .device-spec-pill {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #64748b;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 3px 8px;
+      white-space: nowrap;
+    }
+
+    /* Mode Toggle */
+    .editor-mode-toggle {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .mode-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #94a3b8;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .mode-btn:hover {
+      color: #fff;
+    }
+    .mode-btn.active {
+      background: #eba22d;
+      color: #12161f;
+      font-weight: 700;
+      box-shadow: 0 2px 10px rgba(235, 162, 45, 0.35);
+    }
+    .btn-add-service-global {
+      background: rgba(235, 162, 45, 0.15);
+      border: 1px solid rgba(235, 162, 45, 0.4);
+      color: #eba22d;
+      font-weight: 600;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       cursor: pointer;
       transition: all 0.2s;
     }
-    .device-btn.active, .device-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: #fff;
+    .btn-add-service-global:hover {
+      background: #eba22d;
+      color: #11151c;
     }
+
+    /* Live status chip */
+    .live-status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #4ade80;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+    .live-status-chip .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+      animation: pulseGreen 1.8s infinite;
+    }
+    @keyframes pulseGreen {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .master-save-status {
+      font-size: 11px;
+      color: #94a3b8;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    /* ── Studio Canvas Stage & Hyper-Realistic Device Mockup ── */
+    .editor-canvas-stage {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: radial-gradient(circle at 50% 18%, #161b26 0%, #090c10 100%);
+      background-image: radial-gradient(rgba(235, 162, 45, 0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0;
+      position: relative;
+      transition: background 0.3s;
+    }
+    .editor-canvas-stage.is-device {
+      padding: 28px 16px 44px;
+    }
+
+    .mockup-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Desktop Viewport */
+    .mockup-container.mode-desktop {
+      width: 100%;
+      height: 100%;
+    }
+    .mockup-container.mode-desktop .mockup-bezel {
+      width: 100%;
+      height: 100%;
+      border: none;
+      box-shadow: none;
+      background: transparent;
+      padding: 0;
+    }
+    .mockup-container.mode-desktop .mockup-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+      box-shadow: none;
+    }
+    .mockup-container.mode-desktop .mockup-top-hardware,
+    .mockup-container.mode-desktop .mockup-bottom-hardware,
+    .mockup-container.mode-desktop .mobile-dynamic-island,
+    .mockup-container.mode-desktop .mobile-home-bar {
+      display: none !important;
+    }
+
+    /* ── Tablet Mockup (iPad Pro Style) ── */
+    .mockup-container.mode-tablet {
+      width: 808px;
+      max-width: 95vw;
+      margin: 0 auto;
+    }
+    .mockup-container.mode-tablet .mockup-bezel {
+      width: 100%;
+      height: 980px;
+      max-height: calc(100vh - 210px);
+      min-height: 640px;
+      background: #191e28;
+      border: 2.5px solid #2d3648;
+      border-radius: 36px;
+      padding: 16px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 25px 60px -10px rgba(0, 0, 0, 0.85),
+        0 12px 30px rgba(0, 0, 0, 0.6);
+    }
+    .mockup-container.mode-tablet .mockup-top-hardware {
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .mockup-container.mode-tablet .tablet-camera {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #090c10;
+      border: 1.5px solid #242c3d;
+      box-shadow: inset 0 1px 2px rgba(99, 102, 241, 0.4);
+    }
+    .mockup-container.mode-tablet .mockup-screen {
+      flex: 1;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+    }
+    .mockup-container.mode-tablet .mockup-bottom-hardware {
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .mockup-container.mode-tablet .tablet-home-bar {
+      width: 140px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 2px;
+    }
+    .mockup-container.mode-tablet .mobile-dynamic-island,
+    .mockup-container.mode-tablet .mobile-home-bar {
+      display: none !important;
+    }
+
+    /* ── Mobile Mockup (iPhone 16 Pro Style) ── */
+    .mockup-container.mode-mobile {
+      width: 418px;
+      max-width: 95vw;
+      margin: 0 auto;
+    }
+    .mockup-container.mode-mobile .mockup-bezel {
+      width: 100%;
+      height: 860px;
+      max-height: calc(100vh - 210px);
+      min-height: 640px;
+      background: #171b24;
+      border: 2.5px solid #2d3648;
+      border-radius: 52px;
+      padding: 13px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 30px 80px -10px rgba(0, 0, 0, 0.9),
+        0 15px 35px rgba(0, 0, 0, 0.65);
+    }
+    .mockup-container.mode-mobile .mockup-top-hardware,
+    .mockup-container.mode-mobile .mockup-bottom-hardware {
+      display: none !important;
+    }
+    .mockup-container.mode-mobile .mockup-screen {
+      flex: 1;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+    }
+    .mockup-container.mode-mobile .mobile-dynamic-island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 104px;
+      height: 27px;
+      background: #000000;
+      border-radius: 20px;
+      z-index: 99;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 11px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+    .mockup-container.mode-mobile .island-lens {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #0a0d14;
+      border: 1px solid #1a2233;
+      box-shadow: inset 0 1px 2px rgba(56, 189, 248, 0.4);
+    }
+    .mockup-container.mode-mobile .mobile-home-bar {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 130px;
+      height: 4.5px;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 3px;
+      z-index: 99;
+      pointer-events: none;
+    }
+
+    /* The embedded live editor iframe */
     .editor-iframe {
       width: 100%;
       height: 100%;
       border: none;
       background: #fff;
-      transition: width 0.3s ease, margin 0.3s ease;
+      display: block;
     }
 
     /* Blocks Grid for quick table */
@@ -659,15 +1006,15 @@
       border-color: var(--gold);
     }
 
-    /* ── Mobile Sidebar Drawer & Backdrop (Responsive Design Mastery Skill) ── */
+    /* ── Sidebar Toggle & Collapse Controls (Desktop & Mobile) ── */
     .sidebar-toggle-btn {
-      display: none;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 44px;
-      height: 44px;
-      min-width: 44px;
-      min-height: 44px;
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      min-height: 38px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -675,33 +1022,38 @@
       font-size: 20px;
       cursor: pointer;
       flex-shrink: 0;
-      transition: background 0.2s, border-color 0.2s;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .sidebar-toggle-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--gold);
-      color: #fff;
+      background: rgba(235, 162, 45, 0.15);
+      border-color: rgba(235, 162, 45, 0.45);
+      color: var(--gold);
+      transform: scale(1.04);
+    }
+    .sidebar-toggle-btn:active {
+      transform: scale(0.96);
     }
     .sidebar-close-btn {
-      display: none;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
-      min-width: 40px;
-      min-height: 40px;
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      min-height: 30px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 6px;
       color: var(--muted);
-      font-size: 16px;
+      font-size: 13px;
       cursor: pointer;
       margin-left: auto;
-      transition: color 0.2s, border-color 0.2s;
+      transition: all 0.2s;
     }
     .sidebar-close-btn:hover {
       color: #fff;
       border-color: var(--gold);
+      background: rgba(235, 162, 45, 0.18);
     }
     .sidebar-backdrop {
       display: none;
@@ -720,6 +1072,17 @@
       pointer-events: auto;
     }
 
+    /* Desktop Sidebar Collapsed State */
+    @media (min-width: 1025px) {
+      body.sidebar-collapsed #sidebar {
+        transform: translateX(-100%);
+      }
+      body.sidebar-collapsed #mainContent {
+        margin-left: 0 !important;
+        width: 100% !important;
+      }
+    }
+
     /* ── Responsive Media Queries (Mobile-First / Fluid Grid) ── */
     @media (max-width: 1024px) {
       #sidebar {
@@ -732,12 +1095,6 @@
       }
       #sidebar.active {
         transform: translateX(0);
-      }
-      .sidebar-toggle-btn {
-        display: inline-flex;
-      }
-      .sidebar-close-btn {
-        display: inline-flex;
       }
       .sidebar-backdrop {
         display: block;
@@ -880,8 +1237,8 @@
         <div class="brand-title">Omni Virtual</div>
         <div class="brand-sub">Management Suite</div>
       </div>
-      <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation">
-        <i class="bi bi-x-lg"></i>
+      <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation" title="Close navigation menu (Ctrl+B)">
+        <i class="bi bi-chevron-left"></i>
       </button>
     </div>
 
@@ -1131,43 +1488,106 @@
       <!-- ── SECTION 2: LIVE WEBSITE EDITOR (THE DEDICATED IN-PLACE EDITOR PAGE) ── -->
       <section id="section-live-editor" class="admin-section">
         <div class="editor-frame-wrapper">
-          <div class="editor-frame-bar">
-            <div class="d-flex align-items-center gap-3">
+          <!-- ── Master Command Bar (Fixed 100% width, never changes with viewport) ── -->
+          <div class="editor-frame-bar" id="masterEditorBar">
+            <!-- Left Group: Page & Viewport -->
+            <div class="editor-bar-section">
               <!-- Page Selector -->
               <div class="d-flex align-items-center gap-2">
-                <span style="font-size:12px; color:var(--muted); font-weight:600;"><i class="bi bi-file-earmark-richtext text-warning"></i> Page:</span>
-                <select id="editorPageSelect" onchange="switchEditorPage(this.value)" style="background:#161c26; color:#eba22d; border:1px solid rgba(235,162,45,0.4); border-radius:6px; padding:5px 12px; font-size:12px; font-weight:700; cursor:pointer;">
+                <span class="editor-bar-label"><i class="bi bi-file-earmark-richtext text-warning"></i> Page:</span>
+                <select id="editorPageSelect" onchange="switchEditorPage(this.value)" class="editor-page-select">
                   <option value="admin/editor.html">🏠 Homepage (index.html)</option>
-                  <option value="admin/editor-services.html">📄 Services Catalog (services.html)</option>
+                  <option value="admin/editor-services.html" selected>📄 Services Catalog (services.html)</option>
                 </select>
               </div>
 
+              <div class="vr-divider"></div>
+
               <!-- Viewport Switcher -->
-              <div class="device-switcher">
-                <span style="font-size:12px; color:var(--muted); margin-right:6px;">Viewport:</span>
-                <button class="device-btn active" id="btnDevDesk" onclick="setDeviceViewport('100%', this)">
-                  <i class="bi bi-display"></i> Desktop
-                </button>
-                <button class="device-btn" id="btnDevTab" onclick="setDeviceViewport('768px', this)">
-                  <i class="bi bi-tablet"></i> Tablet
-                </button>
-                <button class="device-btn" id="btnDevMob" onclick="setDeviceViewport('390px', this)">
-                  <i class="bi bi-phone"></i> Mobile
-                </button>
+              <div class="d-flex align-items-center gap-2">
+                <span class="editor-bar-label">Viewport:</span>
+                <div class="device-switcher">
+                  <button type="button" class="device-btn active" id="btnDevDesk" onclick="setDeviceViewport('desktop', this)">
+                    <i class="bi bi-display"></i> Desktop
+                  </button>
+                  <button type="button" class="device-btn" id="btnDevTab" onclick="setDeviceViewport('tablet', this)">
+                    <i class="bi bi-tablet"></i> Tablet
+                  </button>
+                  <button type="button" class="device-btn" id="btnDevMob" onclick="setDeviceViewport('mobile', this)">
+                    <i class="bi bi-phone"></i> Mobile
+                  </button>
+                </div>
+                <span class="device-spec-pill" id="deviceSpecPill">100% • Fluid Desktop</span>
               </div>
             </div>
 
-            <div class="d-flex align-items-center gap-2">
-              <button class="btn-header" onclick="reloadEditorIframe()" title="Refresh editor">
+            <!-- Center Group: Editor Mode & Context Action -->
+            <div class="editor-bar-section editor-bar-center">
+              <div class="editor-mode-toggle">
+                <button type="button" class="mode-btn active" id="btnMasterEdit" onclick="setMasterEditorMode(true)">
+                  <i class="bi bi-pencil-fill"></i> Edit Mode
+                </button>
+                <button type="button" class="mode-btn" id="btnMasterPreview" onclick="setMasterEditorMode(false)">
+                  <i class="bi bi-eye-fill"></i> Visitor Preview
+                </button>
+              </div>
+
+              <!-- Context Action: Add Service (for services catalog) -->
+              <button type="button" class="btn-add-service-global" id="btnGlobalAddService" onclick="triggerAddService()" title="Add New Service to Catalog">
+                <i class="bi bi-plus-circle-fill"></i> Add Service
+              </button>
+            </div>
+
+            <!-- Right Group: Status, Refresh, Fullscreen -->
+            <div class="editor-bar-section">
+              <div class="live-status-chip">
+                <span class="pulse-dot"></span> Live Mode
+              </div>
+
+              <div class="master-save-status" id="masterSaveStatus">
+                <i class="bi bi-check-circle-fill text-success"></i> All changes saved
+              </div>
+
+              <div class="vr-divider"></div>
+
+              <button type="button" class="btn-header" onclick="reloadEditorIframe()" title="Reload preview">
                 <i class="bi bi-arrow-clockwise"></i> Refresh
               </button>
-              <a href="admin/editor.html" target="_blank" id="btnFullscreenEditor" class="btn-header btn-primary-gold" title="Open editor in full tab">
-                <i class="bi bi-fullscreen"></i> Fullscreen Editor
+              <a href="admin/editor-services.html" target="_blank" id="btnFullscreenEditor" class="btn-header btn-primary-gold" title="Open editor in full tab">
+                <i class="bi bi-fullscreen"></i> Fullscreen
               </a>
             </div>
           </div>
-          <div style="flex:1; display:flex; justify-content:center; background:#0e1217; overflow:hidden;">
-            <iframe id="liveEditorIframe" src="about:blank" class="editor-iframe"></iframe>
+
+          <!-- ── Studio Canvas Stage with Realistic Device Mockup ── -->
+          <div class="editor-canvas-stage" id="editorCanvasStage">
+            <div class="mockup-container mode-desktop" id="mockupContainer">
+              <div class="mockup-bezel" id="mockupBezel">
+                <!-- Tablet Top Hardware (Camera) -->
+                <div class="mockup-top-hardware" id="mockupTopHardware">
+                  <div class="tablet-camera"></div>
+                </div>
+
+                <!-- Screen Area with Iframe -->
+                <div class="mockup-screen" id="mockupScreen">
+                  <!-- Mobile Dynamic Island Overlay -->
+                  <div class="mobile-dynamic-island" id="mobileDynamicIsland">
+                    <div class="island-lens"></div>
+                  </div>
+
+                  <!-- The Live Webpage Iframe -->
+                  <iframe id="liveEditorIframe" src="about:blank" class="editor-iframe" onload="onEditorIframeLoaded()"></iframe>
+
+                  <!-- Mobile Home Indicator Overlay -->
+                  <div class="mobile-home-bar" id="mobileHomeBar"></div>
+                </div>
+
+                <!-- Tablet Bottom Hardware (Home Bar) -->
+                <div class="mockup-bottom-hardware" id="mockupBottomHardware">
+                  <div class="tablet-home-bar"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1329,48 +1749,117 @@
       let allLeads = [];
       let currentLeadStatusFilter = '';
 
-      // ── Responsive Drawer Navigation (Mobile & Tablet) ──────────
+      // ── Responsive & Desktop Collapsible Sidebar Navigation ──────────
       const sidebarEl = document.getElementById('sidebar');
       const sidebarBackdrop = document.getElementById('sidebarBackdrop');
       const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
       const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
 
-      function openSidebar() {
-        if (sidebarEl) sidebarEl.classList.add('active');
-        if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
-        document.body.style.overflow = window.innerWidth <= 1024 ? 'hidden' : '';
+      function isDesktop() {
+        return window.innerWidth > 1024;
       }
 
-      function closeSidebar() {
-        if (sidebarEl) sidebarEl.classList.remove('active');
-        if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-
-      if (sidebarToggleBtn) {
-        sidebarToggleBtn.addEventListener('click', () => {
+      window.toggleSidebar = function() {
+        if (isDesktop()) {
+          const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+          localStorage.setItem('omni_sidebar_collapsed', isCollapsed ? '1' : '0');
+          updateSidebarToggleButton();
+        } else {
           if (sidebarEl && sidebarEl.classList.contains('active')) {
             closeSidebar();
           } else {
             openSidebar();
           }
+        }
+      };
+
+      window.openSidebar = function() {
+        if (isDesktop()) {
+          document.body.classList.remove('sidebar-collapsed');
+          localStorage.setItem('omni_sidebar_collapsed', '0');
+          updateSidebarToggleButton();
+        } else {
+          if (sidebarEl) sidebarEl.classList.add('active');
+          if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          updateSidebarToggleButton();
+        }
+      };
+
+      window.closeSidebar = function() {
+        if (isDesktop()) {
+          document.body.classList.add('sidebar-collapsed');
+          localStorage.setItem('omni_sidebar_collapsed', '1');
+          updateSidebarToggleButton();
+        } else {
+          if (sidebarEl) sidebarEl.classList.remove('active');
+          if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+          document.body.style.overflow = '';
+          updateSidebarToggleButton();
+        }
+      };
+
+      function updateSidebarToggleButton() {
+        if (!sidebarToggleBtn) return;
+        const isClosed = isDesktop()
+          ? document.body.classList.contains('sidebar-collapsed')
+          : !(sidebarEl && sidebarEl.classList.contains('active'));
+
+        sidebarToggleBtn.setAttribute('title', isClosed ? 'Open Navigation Menu (Ctrl+B)' : 'Close Navigation Menu (Ctrl+B)');
+        sidebarToggleBtn.innerHTML = isClosed ? '<i class="bi bi-layout-sidebar-inset"></i>' : '<i class="bi bi-list"></i>';
+      }
+
+      // Restore collapsed state on desktop
+      if (isDesktop() && localStorage.getItem('omni_sidebar_collapsed') === '1') {
+        document.body.classList.add('sidebar-collapsed');
+      }
+      updateSidebarToggleButton();
+
+      if (sidebarToggleBtn) {
+        sidebarToggleBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          toggleSidebar();
         });
       }
       if (sidebarCloseBtn) {
-        sidebarCloseBtn.addEventListener('click', closeSidebar);
+        sidebarCloseBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          closeSidebar();
+        });
       }
       if (sidebarBackdrop) {
-        sidebarBackdrop.addEventListener('click', closeSidebar);
-      }
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebarEl && sidebarEl.classList.contains('active')) {
+        sidebarBackdrop.addEventListener('click', (e) => {
+          e.preventDefault();
           closeSidebar();
+        });
+      }
+
+      // Keyboard shortcut: Ctrl+B or Cmd+B to toggle menu, Esc to close
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+          e.preventDefault();
+          toggleSidebar();
+        }
+        if (e.key === 'Escape') {
+          if (!isDesktop() && sidebarEl && sidebarEl.classList.contains('active')) {
+            closeSidebar();
+          }
         }
       });
+
       window.addEventListener('resize', () => {
-        if (window.innerWidth > 1024) {
-          closeSidebar();
+        if (isDesktop()) {
+          if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+          document.body.style.overflow = '';
+          if (localStorage.getItem('omni_sidebar_collapsed') === '1') {
+            document.body.classList.add('sidebar-collapsed');
+          } else {
+            document.body.classList.remove('sidebar-collapsed');
+          }
+        } else {
+          document.body.classList.remove('sidebar-collapsed');
         }
+        updateSidebarToggleButton();
       });
 
       // ── Tab Switching ──────────────────────────────────────────
@@ -1396,7 +1885,7 @@
           const iframe = document.getElementById('liveEditorIframe');
           if (iframe && (!iframe.src || iframe.src === 'about:blank' || iframe.src.endsWith('about:blank'))) {
             const select = document.getElementById('editorPageSelect');
-            iframe.src = select ? select.value : 'admin/editor.html';
+            iframe.src = select ? select.value : 'admin/editor-services.html';
           }
         }
 
@@ -1411,23 +1900,100 @@
         document.getElementById('topHeaderTitle').innerHTML = titles[tabId] || 'Admin Dashboard';
       };
 
-      // ── Device Viewport Switcher for Iframe ──────────────────────
-      window.setDeviceViewport = function(width, btn) {
+      // ── Device Viewport & Realistic Mockup Switcher ──────────────
+      window.setDeviceViewport = function(deviceKey, btn) {
         document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        if (btn) btn.classList.add('active');
+
+        const stage = document.getElementById('editorCanvasStage');
+        const container = document.getElementById('mockupContainer');
+        const specPill = document.getElementById('deviceSpecPill');
+
+        if (container) {
+          container.className = 'mockup-container mode-' + deviceKey;
+        }
+        if (stage) {
+          stage.classList.toggle('is-device', deviceKey !== 'desktop');
+        }
+
+        const specs = {
+          'desktop': '100% • Fluid Desktop',
+          'tablet': 'iPad Pro • 768 × 1024',
+          'mobile': 'iPhone 16 Pro • 390 × 844'
+        };
+        if (specPill) {
+          specPill.textContent = specs[deviceKey] || '100% • Fluid Desktop';
+        }
+      };
+
+      // ── Master Editor Mode Switcher (Edit vs Visitor Preview) ─────
+      let masterEditMode = true;
+      window.setMasterEditorMode = function(isEdit) {
+        masterEditMode = isEdit;
+        const btnEdit = document.getElementById('btnMasterEdit');
+        const btnPrev = document.getElementById('btnMasterPreview');
+        if (btnEdit) btnEdit.classList.toggle('active', isEdit);
+        if (btnPrev) btnPrev.classList.toggle('active', !isEdit);
+
         const iframe = document.getElementById('liveEditorIframe');
-        iframe.style.width = width;
+        if (iframe && iframe.contentWindow) {
+          try {
+            if (typeof iframe.contentWindow.setMode === 'function') {
+              iframe.contentWindow.setMode(isEdit);
+            } else if (typeof iframe.contentWindow.setEditorMode === 'function') {
+              iframe.contentWindow.setEditorMode(isEdit);
+            }
+            iframe.contentWindow.postMessage({ type: 'SET_MODE', edit: isEdit }, '*');
+          } catch (_) {}
+        }
+      };
+
+      // ── Global Context Action: Add Service ────────────────────────
+      window.triggerAddService = function() {
+        const iframe = document.getElementById('liveEditorIframe');
+        if (iframe && iframe.contentWindow) {
+          try {
+            if (typeof iframe.contentWindow.openAddServiceModal === 'function') {
+              iframe.contentWindow.openAddServiceModal();
+            }
+            iframe.contentWindow.postMessage({ type: 'ADD_SERVICE' }, '*');
+          } catch (_) {}
+        }
+      };
+
+      // ── Handle Iframe Loaded & Interop ───────────────────────────
+      window.onEditorIframeLoaded = function() {
+        const iframe = document.getElementById('liveEditorIframe');
+        if (!iframe) return;
+
+        // Apply in-iframe class to hide duplicate inside toolbar
+        try {
+          if (iframe.contentDocument && iframe.contentDocument.documentElement) {
+            iframe.contentDocument.documentElement.classList.add('in-iframe');
+          }
+        } catch (_) {}
+
+        // Sync mode to iframe
+        window.setMasterEditorMode(masterEditMode);
+
+        // Update context action button visibility
+        const isServices = (iframe.src || '').includes('editor-services.html');
+        const addBtn = document.getElementById('btnGlobalAddService');
+        if (addBtn) {
+          addBtn.style.display = isServices ? 'inline-flex' : 'none';
+        }
       };
 
       window.reloadEditorIframe = function() {
         const iframe = document.getElementById('liveEditorIframe');
-        iframe.src = iframe.src;
+        if (iframe) iframe.src = iframe.src;
       };
 
       window.switchEditorPage = function(pageUrl) {
         const iframe = document.getElementById('liveEditorIframe');
         const fullBtn = document.getElementById('btnFullscreenEditor');
         const select = document.getElementById('editorPageSelect');
+        const addBtn = document.getElementById('btnGlobalAddService');
         
         let targetUrl = pageUrl;
         if (targetUrl === 'services.html?edit=1' || targetUrl.startsWith('/services') || targetUrl.includes('services')) {
@@ -1440,13 +2006,26 @@
         if (select) {
           select.value = targetUrl.includes('editor-services.html') ? 'admin/editor-services.html' : targetUrl;
         }
-        iframe.src = targetUrl;
+        if (addBtn) {
+          addBtn.style.display = targetUrl.includes('editor-services.html') ? 'inline-flex' : 'none';
+        }
+        if (iframe) iframe.src = targetUrl;
         if (fullBtn) fullBtn.href = targetUrl;
       };
 
+      // ── Listen for save status and editor messages ────────────────
       window.addEventListener('message', (e) => {
-        if (e.data && e.data.type === 'CMS_STATUS') {
-          // Status from embedded editor
+        if (!e.data) return;
+        if (e.data.type === 'CMS_STATUS') {
+          const statusEl = document.getElementById('masterSaveStatus');
+          if (!statusEl) return;
+          if (e.data.saving) {
+            statusEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1 text-warning"></span> Saving changes...';
+            statusEl.style.color = '#eba22d';
+          } else {
+            statusEl.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> All changes saved';
+            statusEl.style.color = '#94a3b8';
+          }
         }
       });
 

@@ -61,6 +61,14 @@
       opacity: 1;
       transition: opacity 0.12s ease-in;
     }
+
+    /* When embedded inside iframe in admin/index.html */
+    html.in-iframe #editorTopBar {
+      display: none !important;
+    }
+    html.in-iframe body {
+      padding-top: 0 !important;
+    }
     /* CRITICAL: Force all elements with animation tags to be 100% visible in the editor */
     [data-aos] {
       opacity: 1 !important;
@@ -904,14 +912,35 @@
       }
 
       function setSaving(saving) {
-        if (saving) {
-          saveStatus.className = 'editor-save-status saving';
-          saveStatus.innerHTML = '<span class="spinner-border spinner-border-sm me-1 text-warning"></span> Saving...';
-        } else {
-          saveStatus.className = 'editor-save-status saved';
-          saveStatus.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> All changes saved';
+        if (saveStatus) {
+          if (saving) {
+            saveStatus.className = 'editor-save-status saving';
+            saveStatus.innerHTML = '<span class="spinner-border spinner-border-sm me-1 text-warning"></span> Saving...';
+          } else {
+            saveStatus.className = 'editor-save-status saved';
+            saveStatus.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> All changes saved';
+          }
+        }
+        if (window.parent && window.parent !== window) {
+          try {
+            window.parent.postMessage({ type: 'CMS_STATUS', saving: saving }, '*');
+          } catch (_) {}
         }
       }
+
+      // Check if embedded inside admin dashboard iframe
+      if (window.self !== window.top) {
+        document.documentElement.classList.add('in-iframe');
+      }
+
+      window.addEventListener('message', (e) => {
+        if (!e.data) return;
+        if (e.data.type === 'SET_MODE') {
+          if (typeof window.setEditorMode === 'function') window.setEditorMode(e.data.edit);
+        } else if (e.data.type === 'OPEN_MEDIA') {
+          if (typeof window.openMediaPicker === 'function') window.openMediaPicker();
+        }
+      });
 
       window.setEditorMode = function(edit) {
         isEditMode = edit;
