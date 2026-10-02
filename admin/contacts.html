@@ -714,9 +714,14 @@
                 <textarea class="reply-textarea" id="replyTextarea" placeholder="Write your reply here..."></textarea>
                 <div class="reply-footer">
                   <div class="reply-to-info">Sending to: <span id="replyToEmail" style="color:var(--gold);">—</span></div>
-                  <button class="btn btn-gold" id="sendReplyBtn" onclick="sendReply()">
-                    <i class="bi bi-send-fill"></i> Send Reply
-                  </button>
+                  <div style="display:flex; gap:8px; align-items:center;">
+                    <button class="btn btn-gold" id="replyGmailBtn" onclick="replyInGmail()">
+                      <i class="bi bi-google"></i> Reply via Gmail
+                    </button>
+                    <button class="btn btn-sm" id="sendReplyBtn" onclick="sendReply()" style="color:var(--muted); font-size:12px;">
+                      <i class="bi bi-send-fill"></i> Send via Server
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1030,6 +1035,7 @@
     let currentFilter = '';
     let currentSearch = '';
     let currentMsgId = null;
+    let currentSubmission = null;
     let searchTimer = null;
 
     window.loadInbox = loadInbox;
@@ -1114,6 +1120,7 @@
         const res = await fetch('/api/v1/contact/submissions/' + id, { headers: { Authorization: 'Bearer ' + token } });
         const data = await res.json();
         const m = data.submission;
+        currentSubmission = m;
         const replies = data.replies || [];
 
         // Fill header
@@ -1255,6 +1262,34 @@
         document.getElementById('detailEmpty').style.display = '';
         renderList();
       } catch (e) { toast('Failed to delete', 'error'); }
+    };
+
+    window.replyInGmail = async function () {
+      if (!currentMsgId || !currentSubmission) return;
+      const body = document.getElementById('replyTextarea').value.trim();
+      const clientEmail = currentSubmission.email;
+      const clientName = currentSubmission.full_name;
+      const subject = 'Re: ' + (currentSubmission.subject || 'Your Inquiry') + ' — Omni Virtual Solutions';
+
+      const template = settingsMap.reply_template || "Hello {customer_name},\n\nThank you for reaching out to Omni Virtual Solutions.\n\n{reply_body}\n\nBest regards,\nOmni Virtual Solutions Team";
+      const fullBody = body
+        ? template.replace('{customer_name}', clientName).replace('{reply_body}', body)
+        : `Hello ${clientName},\n\nThank you for reaching out to Omni Virtual Solutions.\n\n`;
+
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(clientEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(fullBody)}`;
+
+      // Update status to 'replied' in database
+      try {
+        await fetch('/api/v1/contact/submissions/' + currentMsgId, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ status: 'replied' }),
+        });
+        openMessage(currentMsgId);
+      } catch (_) {}
+
+      window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+      toast('Opening Gmail to send your reply from your logged-in account!');
     };
 
     window.sendReply = async function () {

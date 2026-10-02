@@ -13,7 +13,7 @@ const { db }  = require("../db");
 // Returns everything the homepage needs: company info, stats, books, hero images
 router.get("/", async (req, res) => {
   try {
-    const [companyResult, statsResult, booksResult, assetsResult, blocksResult] = await Promise.all([
+    const [companyResult, statsResult, booksResult, assetsResult, blocksResult, emailSettingResult] = await Promise.all([
       db.execute("SELECT * FROM company_profile ORDER BY id DESC LIMIT 1"),
       db.execute("SELECT stat_key, stat_value, stat_label FROM company_stats ORDER BY display_order"),
       db.execute(`
@@ -26,6 +26,7 @@ router.get("/", async (req, res) => {
       `),
       db.execute("SELECT asset_key, file_path, alt_text, category FROM media_assets ORDER BY category"),
       db.execute("SELECT block_key, block_type, value FROM content_blocks"),
+      db.execute("SELECT setting_value FROM email_settings WHERE setting_key = 'recipient_email' LIMIT 1").catch(() => ({ rows: [] })),
     ]);
 
     const blockMap = {};
@@ -33,8 +34,16 @@ router.get("/", async (req, res) => {
       blockMap[b.block_key] = b.value;
     }
 
+    const company = companyResult.rows[0] ? { ...companyResult.rows[0] } : {};
+    const configuredEmail = emailSettingResult.rows[0]?.setting_value?.trim();
+    if (configuredEmail) {
+      company.recipient_email = configuredEmail;
+      company.email = configuredEmail;
+    }
+
     res.json({
-      company:        companyResult.rows[0]  || null,
+      company,
+      recipient_email: configuredEmail || company.email || null,
       stats:          statsResult.rows,
       showcase_books:  booksResult.rows,
       media_assets:   assetsResult.rows,

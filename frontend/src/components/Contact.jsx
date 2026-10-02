@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useCms } from '../context/CmsContext';
 
 export default function Contact() {
-  const { t } = useCms();
+  const { company, t } = useCms();
+
+  // Business email is dynamic: pulled from database company profile or CMS, fallback to default
+  const businessEmail = company?.email || t('footer.email', 'admin@omnivirtualsolution.com');
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -10,80 +14,135 @@ export default function Contact() {
     service_interest: '',
     subject: '',
     message: '',
-    website: '', // honeypot
   });
-  const [loadTime, setLoadTime] = useState(Date.now());
-  const [status, setStatus] = useState({ type: '', message: '' });
-  const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
-    setLoadTime(Date.now());
-  }, []);
+  const [status, setStatus] = useState({ type: '', message: '', link: '' });
+  const [copied, setCopied] = useState(false);
+
+  const serviceOptions = [
+    { id: '1', label: 'Publishing Packages' },
+    { id: '2', label: 'Editorial Evaluation' },
+    { id: '3', label: 'Book Marketing' },
+    { id: '4', label: 'Custom Virtual Assistance' },
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (submitting) return;
+  const buildEmailContent = () => {
+    const selectedService = serviceOptions.find((s) => s.id === formData.service_interest)?.label || '';
+    const emailSubject =
+      formData.subject.trim() ||
+      (selectedService
+        ? `${selectedService} Inquiry — ${formData.name.trim()}`
+        : `Website Inquiry from ${formData.name.trim()}`);
 
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setStatus({ type: 'danger', message: 'Please fill in all required fields (Name, Email, Message).' });
+    const lines = [
+      `Hi Omni Virtual Solutions Team,`,
+      ``,
+      `Name: ${formData.name.trim()}`,
+      formData.email.trim() ? `Email: ${formData.email.trim()}` : null,
+      formData.phone.trim() ? `Phone: ${formData.phone.trim()}` : null,
+      selectedService ? `Service of Interest: ${selectedService}` : null,
+      ``,
+      `Message:`,
+      formData.message.trim(),
+    ].filter((l) => l !== null);
+
+    return {
+      subject: emailSubject,
+      body: lines.join('\n'),
+    };
+  };
+
+  const handleSendViaGmail = (e) => {
+    if (e) e.preventDefault();
+
+    if (!formData.name.trim() || !formData.message.trim()) {
+      setStatus({
+        type: 'danger',
+        message: 'Please provide your Name and Message before sending.',
+        link: '',
+      });
       return;
     }
 
-    setSubmitting(true);
-    setStatus({ type: '', message: '' });
+    const { subject, body } = buildEmailContent();
 
+    // Construct direct Gmail Web Compose URL
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+      businessEmail
+    )}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    // Optional background log to admin database so inquiry shows in Leads CRM
     try {
-      const res = await fetch('/api/v1/contact/submit', {
+      fetch('/api/v1/contact/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          full_name: formData.name,
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          subject: formData.subject || 'General Inquiry',
-          message: formData.message,
+          full_name: formData.name.trim(),
+          name: formData.name.trim(),
+          email: formData.email.trim() || 'visitor@direct-mail.com',
+          phone: formData.phone.trim(),
+          subject,
+          message: formData.message.trim(),
           service_interest_id: formData.service_interest ? parseInt(formData.service_interest, 10) : null,
-          service_interest: formData.service_interest,
-          website: formData.website,
-          _form_load_time: loadTime,
+          direct_mail: true,
         }),
-      });
+      }).catch(() => {});
+    } catch (_) {}
 
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setStatus({
-          type: 'success',
-          message: data.message || 'Thank you! Your message has been sent successfully. We will get back to you shortly.',
-        });
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          service_interest: '',
-          subject: '',
-          message: '',
-          website: '',
-        });
-        setLoadTime(Date.now());
-      } else {
-        setStatus({
-          type: 'danger',
-          message: data.error?.message || 'Failed to submit form. Please try again or email us directly.',
-        });
-      }
-    } catch (err) {
+    // Open Gmail web compose ONLY in a new tab
+    const newTab = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+    if (!newTab) {
+      // In case popup blocker prevents window.open, trigger via simulated link
+      const a = document.createElement('a');
+      a.href = gmailUrl;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    setStatus({
+      type: 'success',
+      message: 'Gmail opened in a new tab with your pre-filled draft! Simply click Send in Gmail.',
+      link: gmailUrl,
+    });
+  };
+
+  const handleSendDefaultMail = () => {
+    if (!formData.name.trim() || !formData.message.trim()) {
       setStatus({
         type: 'danger',
-        message: 'Network error. Please try again later or contact us at admin@omnivirtualsolution.com',
+        message: 'Please provide your Name and Message before sending.',
+        link: '',
       });
-    } finally {
-      setSubmitting(false);
+      return;
+    }
+
+    const { subject, body } = buildEmailContent();
+    const mailtoUrl = `mailto:${encodeURIComponent(businessEmail)}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailtoUrl;
+
+    setStatus({
+      type: 'success',
+      message: 'Launching your default email app with your message pre-filled.',
+      link: mailtoUrl,
+    });
+  };
+
+  const handleCopyEmail = () => {
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(businessEmail);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
     }
   };
 
@@ -121,12 +180,23 @@ export default function Contact() {
                 <h4>Email Inquiries</h4>
                 <p>
                   <a
-                    href={`mailto:${t('footer.email', 'admin@omnivirtualsolution.com')}`}
-                    style={{ color: 'inherit', textDecoration: 'none' }}
-                    data-block-key="footer.email"
+                    href={`mailto:${businessEmail}`}
+                    style={{ color: '#eba22d', textDecoration: 'none', fontWeight: 600 }}
                   >
-                    {t('footer.email', 'admin@omnivirtualsolution.com')}
+                    {businessEmail}
                   </a>
+                  <button
+                    type="button"
+                    onClick={handleCopyEmail}
+                    className="btn btn-sm btn-link p-0 ms-2 text-muted"
+                    title="Copy Email"
+                    style={{ fontSize: '13px', textDecoration: 'none' }}
+                  >
+                    <i className={copied ? 'bi bi-check-lg text-success' : 'bi bi-clipboard'}></i>
+                    <span className="ms-1" style={{ fontSize: '11px' }}>
+                      {copied ? 'Copied' : 'Copy'}
+                    </span>
+                  </button>
                 </p>
               </div>
             </div>
@@ -167,25 +237,7 @@ export default function Contact() {
           {/* Contact Form Column */}
           <div className="col-lg-7" data-aos="fade-left" data-aos-delay="200">
             <div className="contact-form-card">
-              <form onSubmit={handleSubmit} noValidate>
-                {/* Honeypot for bot protection */}
-                <input
-                  type="text"
-                  name="website"
-                  value={formData.website}
-                  onChange={handleChange}
-                  tabIndex="-1"
-                  autoComplete="off"
-                  style={{
-                    position: 'absolute',
-                    opacity: 0,
-                    pointerEvents: 'none',
-                    height: 0,
-                    width: 0,
-                  }}
-                  aria-hidden="true"
-                />
-
+              <form onSubmit={handleSendViaGmail} noValidate>
                 <div className="row gy-3">
                   <div className="col-md-6">
                     <label className="form-label">
@@ -202,17 +254,14 @@ export default function Contact() {
                     />
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label">
-                      Your Email <span className="text-warning">*</span>
-                    </label>
+                    <label className="form-label">Your Email</label>
                     <input
                       type="email"
                       name="email"
                       className="form-control"
-                      placeholder="john@example.com"
+                      placeholder="john@example.com (optional)"
                       value={formData.email}
                       onChange={handleChange}
-                      required
                     />
                   </div>
                   <div className="col-md-6">
@@ -235,10 +284,11 @@ export default function Contact() {
                       onChange={handleChange}
                     >
                       <option value="">Select a Service (Optional)</option>
-                      <option value="1">Publishing Packages</option>
-                      <option value="2">Editorial Evaluation</option>
-                      <option value="3">Book Marketing</option>
-                      <option value="4">Custom Virtual Assistance</option>
+                      {serviceOptions.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="col-12">
@@ -270,20 +320,53 @@ export default function Contact() {
                   {status.message && (
                     <div className="col-12">
                       <div className={`alert alert-${status.type}`} role="alert">
-                        {status.message}
+                        <div>{status.message}</div>
+                        {status.link && (
+                          <div className="mt-2" style={{ fontSize: '13px' }}>
+                            <a
+                              href={status.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-decoration-underline fw-bold"
+                              style={{ color: 'inherit' }}
+                            >
+                              Click here if Gmail didn't open automatically &rarr;
+                            </a>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
 
                   <div className="col-12 mt-2">
-                    <button
-                      type="submit"
-                      className="contact-btn-submit"
-                      disabled={submitting}
-                    >
-                      <span>{submitting ? 'Sending...' : 'Send Message'}</span>
-                      <i className="bi bi-arrow-right ms-2"></i>
+                    <button type="submit" className="contact-btn-submit">
+                      <i className="bi bi-google"></i>
+                      <span>Send via Gmail</span>
+                      <i className="bi bi-box-arrow-up-right ms-1" style={{ fontSize: '13px' }}></i>
                     </button>
+                  </div>
+
+                  <div className="col-12">
+                    <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={handleSendDefaultMail}
+                        className="btn btn-sm btn-outline-secondary"
+                        style={{
+                          borderRadius: '8px',
+                          fontSize: '12.5px',
+                          borderColor: 'rgba(255, 255, 255, 0.15)',
+                          color: '#a0aec0',
+                        }}
+                      >
+                        <i className="bi bi-envelope me-1"></i> Open Default Mail App
+                      </button>
+
+                      <div className="d-flex align-items-center gap-1" style={{ fontSize: '12px', color: '#718096' }}>
+                        <span>Delivering to:</span>
+                        <span className="text-warning fw-semibold">{businessEmail}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </form>

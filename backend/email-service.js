@@ -34,6 +34,12 @@ async function createTransporter(settings) {
     return null; // SMTP not configured
   }
 
+  // Prevent any sending from legacy email
+  if (user.toLowerCase().includes("nsixx631")) {
+    console.warn("[email-service] Blocked attempt to send using legacy email nsixx631@gmail.com");
+    return null;
+  }
+
   return nodemailer.createTransport({
     host,
     port: parseInt(settings.smtp_port || "587", 10),
@@ -153,7 +159,11 @@ async function sendNewSubmissionNotification(submission) {
   `;
 
   const senderName  = settings.sender_name  || "Omni Virtual Solutions";
-  const senderEmail = settings.sender_email?.trim() || settings.smtp_user?.trim();
+  const senderEmail = settings.sender_email?.trim() || settings.recipient_email?.trim() || settings.smtp_user?.trim();
+  if (senderEmail && senderEmail.toLowerCase().includes("nsixx631")) {
+    console.warn("[email-service] Notification blocked: legacy email sender detected");
+    return { success: false, reason: "legacy_sender_blocked" };
+  }
 
   try {
     await transporter.sendMail({
@@ -192,7 +202,11 @@ async function sendAutoReply(submission) {
   const bodyText = interpolate(settings.auto_reply_body || "Hello {customer_name}, thank you for contacting us!", { customer_name: submission.full_name });
 
   const senderName  = settings.sender_name  || "Omni Virtual Solutions";
-  const senderEmail = settings.sender_email?.trim() || settings.smtp_user?.trim();
+  const senderEmail = settings.sender_email?.trim() || settings.recipient_email?.trim() || settings.smtp_user?.trim();
+  if (senderEmail && senderEmail.toLowerCase().includes("nsixx631")) {
+    console.warn("[email-service] Auto-reply blocked: legacy email sender detected");
+    return { success: false, reason: "legacy_sender_blocked" };
+  }
 
   try {
     await transporter.sendMail({
@@ -218,7 +232,11 @@ async function sendReply({ submission, replyBody, replyId, sentBy }) {
   const transporter = await createTransporter(settings);
 
   const senderName  = settings.sender_name  || "Omni Virtual Solutions";
-  const senderEmail = settings.sender_email?.trim() || settings.smtp_user?.trim();
+  const senderEmail = settings.sender_email?.trim() || settings.recipient_email?.trim() || settings.smtp_user?.trim();
+  if (senderEmail && senderEmail.toLowerCase().includes("nsixx631")) {
+    console.warn("[email-service] Reply blocked: legacy email sender detected");
+    return { success: false, reason: "legacy_sender_blocked" };
+  }
   const subject     = `Re: ${submission.subject || "Your Inquiry"} — Omni Virtual Solutions`;
 
   if (!transporter) {

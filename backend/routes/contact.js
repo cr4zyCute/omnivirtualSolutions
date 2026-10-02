@@ -24,16 +24,16 @@ const { requireAuth } = require("../middleware/auth");
 const emailSvc  = require("../email-service");
 const { broadcast } = require("./live");
 
-// ── Rate limiting: max 5 submissions per IP per 15 min ────────────
+// ── Rate limiting: generous in local dev (max 100 per 15 min) ──────
 let rateLimit;
 try {
   const rl = require("express-rate-limit");
   rateLimit = rl({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5,
+    max: 100, // high threshold to prevent blocking during development / testing
     standardHeaders: true,
     legacyHeaders: false,
-    message: { error: { code: "RATE_LIMIT", message: "Too many submissions. Please wait 15 minutes before trying again." } },
+    message: { error: { code: "RATE_LIMIT", message: "Too many submissions. Please wait a few minutes before trying again." } },
     keyGenerator: (req) =>
       req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket?.remoteAddress || "unknown",
   });
@@ -50,10 +50,10 @@ function isValidEmail(email) {
 function isBot(body) {
   // If a hidden "website" field is filled, it's almost certainly a bot
   if (body.website && body.website.trim().length > 0) return true;
-  // If timestamps are impossible fast (< 2 seconds from page load)
+  // If timestamps are impossibly fast (< 300ms from load)
   if (body._form_load_time) {
     const elapsed = Date.now() - parseInt(body._form_load_time, 10);
-    if (elapsed < 2000) return true;
+    if (elapsed > 0 && elapsed < 300) return true;
   }
   return false;
 }
@@ -82,7 +82,7 @@ const handleContactSubmission = async (req, res) => {
   const errors = [];
   if (!full_name || full_name.length < 2) errors.push("Full name is required (min 2 characters).");
   if (!email || !isValidEmail(email))     errors.push("A valid email address is required.");
-  if (!message || message.length < 10)    errors.push("Message is required (min 10 characters).");
+  if (!message || message.length < 3)     errors.push("Message is required (min 3 characters).");
   if (phone && phone.length > 0 && !/^[\d\s\+\-\(\)\.]+$/.test(phone))
     errors.push("Phone number format is invalid.");
 
@@ -92,10 +92,10 @@ const handleContactSubmission = async (req, res) => {
 
   const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket?.remoteAddress || null;
 
-  // Duplicate submission guard: same email + message within last 10 minutes
+  // Duplicate submission guard (10 seconds debounce to prevent accidental double-clicks)
   try {
     const dupeCheck = await db.execute({
-      sql: `SELECT id FROM contact_submissions WHERE email = ? AND message = ? AND created_at > datetime('now', '-10 minutes') LIMIT 1`,
+      sql: `SELECT id FROM contact_submissions WHERE email = ? AND message = ? AND created_at > datetime('now', '-10 seconds') LIMIT 1`,
       args: [email.toLowerCase(), message],
     });
     if (dupeCheck.rows.length > 0) {
@@ -143,9 +143,13 @@ const handleContactSubmission = async (req, res) => {
   // ── SEND EMAIL NOTIFICATION (async, non-blocking) ─────────────────
   const submission = { id: newId, full_name, email: email.toLowerCase(), phone: phone || null, subject, message, ip_address: ip, created_at: new Date().toISOString() };
   
-  // Don't await — respond to visitor immediately, email sends in background
-  emailSvc.sendNewSubmissionNotification(submission).catch((e) => console.error("[contact] Notification error:", e.message));
-  emailSvc.sendAutoReply(submission).catch((e) => console.error("[contact] Auto-reply error:", e.message));
+  // Skip automated background emails if client used direct Gmail/mail app or direct_mail is specified
+  if (!req.body.direct_mail) {
+    emailSvc.sendNewSubmissionNotification(submission).catch((e) => console.error("[contact] Notification error:", e.message));
+    emailSvc.sendAutoReply(submission).catch((e) => console.error("[contact] Auto-reply error:", e.message));
+  } else {
+    console.log(`[contact] Submission #${newId} logged from direct mail interface — automated SMTP auto-reply skipped.`);
+  }
 
   res.status(201).json({
     success: true,
@@ -446,8 +450,23 @@ router.put("/email-settings", requireAuth, async (req, res) => {
                 updated_by = excluded.updated_by`,
         args: [key, value ?? "", editor],
       });
-      if (key === "recipient_email") {
+      if (key === "recipient_email" && value) {
         console.log(`[cms] admin changed receiving email to: ${value}`);
+        try {
+          await db.execute({
+            sql: "UPDATE company_profile SET email = ?, updated_at = CURRENT_TIMESTAMP WHERE id = (SELECT id FROM company_profile ORDER BY id DESC LIMIT 1)",
+            args: [value.trim()],
+          });
+          await db.execute({
+            sql: "UPDATE email_settings SET setting_value = ?, updated_at = CURRENT_TIMESTAMP WHERE setting_key = 'sender_email'",
+            args: [value.trim()],
+          });
+        } catch (_) {}
+        broadcast({
+          type: "email_settings_updated",
+          recipient_email: value.trim(),
+          timestamp: new Date().toISOString()
+        });
       }
     }
     res.json({ success: true, saved: pairs.length });

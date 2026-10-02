@@ -67,6 +67,8 @@ export const CmsProvider = ({ children }) => {
             setStats((prev) => ({ ...prev, [data.key]: data.value }));
           } else if (data.type === 'company_updated' && data.company) {
             setCompany(data.company);
+          } else if (data.type === 'email_settings_updated' && data.recipient_email) {
+            setCompany((prev) => ({ ...prev, email: data.recipient_email, recipient_email: data.recipient_email }));
           }
         } catch (_) {}
       };

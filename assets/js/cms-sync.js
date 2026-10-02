@@ -502,49 +502,62 @@
       const website = form.querySelector('[name="website"]')?.value; // honeypot
       const formLoadTime = form.querySelector('[name="_form_load_time"]')?.value;
 
-      if (!name || !email || !message) {
-        showAlert('Please fill in your name, email, and message.', 'danger');
+      if (!name || !message) {
+        showAlert('Please fill in your name and message.', 'danger');
         return;
       }
 
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Sending...';
-      }
+      const targetEmail = document.querySelector('[data-block-key="footer.email"]')?.textContent?.trim() || 'admin@omnivirtualsolution.com';
+      const serviceSelect = form.querySelector('[name="service_interest"]');
+      const serviceText = serviceSelect?.options[serviceSelect.selectedIndex]?.text;
+      const cleanService = serviceText && !serviceText.includes('Select a Service') ? serviceText : '';
 
+      const emailSubject = subject || (cleanService ? `${cleanService} Inquiry — ${name}` : `Website Inquiry from ${name}`);
+      const bodyLines = [
+        `Hi Omni Virtual Solutions Team,`,
+        ``,
+        `Name: ${name}`,
+        email ? `Email: ${email}` : null,
+        phone ? `Phone: ${phone}` : null,
+        cleanService ? `Service of Interest: ${cleanService}` : null,
+        ``,
+        `Message:`,
+        message,
+      ].filter(l => l !== null);
+      const emailBody = bodyLines.join('\n');
+
+      // Quietly log to backend CRM in the background
       try {
-        const res = await fetch('/api/v1/contact/submit', {
+        fetch('/api/v1/contact/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             full_name: name,
-            email,
+            name,
+            email: email || 'visitor@direct-mail.com',
             phone,
-            subject: subject || 'General Inquiry',
+            subject: emailSubject,
             message,
             service_interest_id: serviceInterest ? parseInt(serviceInterest, 10) : null,
-            website,          // honeypot (server silently drops bots)
-            _form_load_time: formLoadTime,
+            direct_mail: true,
           }),
-        });
+        }).catch(() => {});
+      } catch (_) {}
 
-        const data = await res.json();
-        if (res.ok && data.success) {
-          showAlert('Thank you! Your message has been received. Our team will contact you shortly.', 'success');
-          form.reset();
-          // Reset load time after reset
-          if (loadTimeField) loadTimeField.value = Date.now();
-        } else {
-          showAlert(data.error?.message || 'Failed to send message.', 'danger');
-        }
-      } catch (_) {
-        showAlert('Network error. Please try again.', 'danger');
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = '<span>Send Message</span> <i class="bi bi-arrow-right ms-1"></i>';
-        }
+      // Open Gmail web compose ONLY in a new tab
+      const newTab = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+      if (!newTab) {
+        const a = document.createElement('a');
+        a.href = gmailUrl;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       }
+
+      showAlert(`Gmail opened in a new tab with your pre-filled draft! Simply click Send in Gmail.<br><small class="mt-1 d-block"><a href="${gmailUrl}" target="_blank" class="text-white text-decoration-underline">Click here if Gmail didn't open automatically</a></small>`, 'success');
+      form.reset();
     });
 
     function showAlert(msg, type) {
