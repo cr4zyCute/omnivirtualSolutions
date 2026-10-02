@@ -140,16 +140,12 @@ const handleContactSubmission = async (req, res) => {
     return res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to save your submission. Please try again." } });
   }
 
-  // ── SEND EMAIL NOTIFICATION (async, non-blocking) ─────────────────
+  // ── SEND EMAIL NOTIFICATION & AUTO-REPLY (async, non-blocking) ─────
   const submission = { id: newId, full_name, email: email.toLowerCase(), phone: phone || null, subject, message, ip_address: ip, created_at: new Date().toISOString() };
   
-  // Skip automated background emails if client used direct Gmail/mail app or direct_mail is specified
-  if (!req.body.direct_mail) {
-    emailSvc.sendNewSubmissionNotification(submission).catch((e) => console.error("[contact] Notification error:", e.message));
-    emailSvc.sendAutoReply(submission).catch((e) => console.error("[contact] Auto-reply error:", e.message));
-  } else {
-    console.log(`[contact] Submission #${newId} logged from direct mail interface — automated SMTP auto-reply skipped.`);
-  }
+  // Dispatches notification and customer auto-reply if enabled in Admin Email Settings
+  emailSvc.sendNewSubmissionNotification(submission).catch((e) => console.error("[contact] Notification error:", e.message));
+  emailSvc.sendAutoReply(submission).catch((e) => console.error("[contact] Auto-reply error:", e.message));
 
   res.status(201).json({
     success: true,

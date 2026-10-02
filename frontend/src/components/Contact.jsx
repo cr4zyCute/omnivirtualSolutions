@@ -18,6 +18,44 @@ export default function Contact() {
 
   const [status, setStatus] = useState({ type: '', message: '', link: '' });
   const [copied, setCopied] = useState(false);
+  const [confirmation, setConfirmation] = useState(null);
+  const [countdown, setCountdown] = useState(5);
+
+  // Auto-close confirmation modal in 5 seconds
+  useEffect(() => {
+    if (!confirmation) return;
+    setCountdown(5);
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setConfirmation(null);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [confirmation]);
+
+  const openGmailPopup = (url) => {
+    const width = 680;
+    const height = 740;
+    const screenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+    const screenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+    const innerWidth = window.innerWidth || document.documentElement.clientWidth || screen.width;
+    const innerHeight = window.innerHeight || document.documentElement.clientHeight || screen.height;
+    const left = Math.max(0, Math.round(screenLeft + (innerWidth - width) / 2));
+    const top = Math.max(0, Math.round(screenTop + (innerHeight - height) / 2));
+
+    const features = `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes`;
+    const win = window.open(url, 'OmniGmailCompose', features);
+    if (win && win.focus) {
+      win.focus();
+    }
+    return win;
+  };
 
   const serviceOptions = [
     { id: '1', label: 'Publishing Packages' },
@@ -94,22 +132,33 @@ export default function Contact() {
       }).catch(() => {});
     } catch (_) {}
 
-    // Open Gmail web compose ONLY in a new tab
-    const newTab = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
-    if (!newTab) {
-      // In case popup blocker prevents window.open, trigger via simulated link
-      const a = document.createElement('a');
-      a.href = gmailUrl;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
+    // Open Gmail web compose as a Floating Popup Window (not a full browser tab!)
+    const popup = openGmailPopup(gmailUrl);
+
+    setConfirmation({
+      recipient: businessEmail,
+      senderName: formData.name.trim(),
+      senderEmail: formData.email.trim() || 'Not specified',
+      phone: formData.phone.trim() || '',
+      subject,
+      message: formData.message.trim(),
+      gmailUrl,
+      popupBlocked: !popup,
+    });
+
+    // Reset form fields
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      service_interest: '',
+      subject: '',
+      message: '',
+    });
 
     setStatus({
       type: 'success',
-      message: 'Gmail opened in a new tab with your pre-filled draft! Simply click Send in Gmail.',
+      message: 'Message sent! Floating Gmail popup window opened.',
       link: gmailUrl,
     });
   };
@@ -374,6 +423,296 @@ export default function Contact() {
           </div>
         </div>
       </div>
+
+      {/* ── FLOATING GMAIL POPUP CONFIRMATION MODAL ── */}
+      {confirmation && (
+        <div
+          className="confirmation-modal-backdrop"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 10500,
+            background: 'rgba(5, 7, 15, 0.82)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setConfirmation(null);
+          }}
+        >
+          <div
+            className="confirmation-modal-card"
+            style={{
+              background: '#0d111a',
+              border: '1px solid rgba(235, 162, 45, 0.35)',
+              borderRadius: '16px',
+              maxWidth: '560px',
+              width: '100%',
+              boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 35px rgba(235, 162, 45, 0.15)',
+              overflow: 'hidden',
+              position: 'relative',
+            }}
+          >
+            {/* Auto-close Progress Bar */}
+            <div
+              style={{
+                height: '3px',
+                background: 'linear-gradient(90deg, #22c55e 0%, #eba22d 100%)',
+                width: `${(countdown / 5) * 100}%`,
+                transition: 'width 1s linear',
+              }}
+            />
+
+            {/* Header */}
+            <div
+              style={{
+                padding: '18px 24px',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                background: 'linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, transparent 100%)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div
+                  style={{
+                    width: '38px',
+                    height: '38px',
+                    borderRadius: '10px',
+                    background: 'rgba(34, 197, 94, 0.2)',
+                    border: '1px solid rgba(34, 197, 94, 0.4)',
+                    color: '#22c55e',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '20px',
+                    boxShadow: '0 0 15px rgba(34, 197, 94, 0.25)',
+                  }}
+                >
+                  <i className="bi bi-check-circle-fill"></i>
+                </div>
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '17px', fontWeight: 700, color: '#f8fafc' }}>
+                    Message Sent
+                  </h4>
+                  <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>
+                    Auto-closing in <span style={{ color: '#eba22d', fontWeight: 700 }}>{countdown}s</span>...
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setConfirmation(null)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#94a3b8',
+                  fontSize: '24px',
+                  lineHeight: 1,
+                  cursor: 'pointer',
+                  padding: '4px 8px',
+                }}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Body */}
+            <div style={{ padding: '20px 24px' }}>
+              <div
+                style={{
+                  background: 'rgba(34, 197, 94, 0.1)',
+                  border: '1px solid rgba(34, 197, 94, 0.25)',
+                  borderRadius: '10px',
+                  padding: '12px 16px',
+                  marginBottom: '16px',
+                  fontSize: '13.5px',
+                  color: '#86efac',
+                  lineHeight: 1.5,
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                  <i className="bi bi-check-circle-fill" style={{ color: '#22c55e', marginTop: '2px' }}></i>
+                  <div>
+                    Your message was prepared and logged! The draft is also loaded in the <strong>floating Gmail popup window</strong>.
+                  </div>
+                </div>
+              </div>
+
+              {/* Message Details */}
+              <div
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  fontSize: '13px',
+                }}
+              >
+                <div
+                  style={{
+                    padding: '10px 14px',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <span style={{ color: '#94a3b8', fontWeight: 600 }}>Delivering to:</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <code
+                      style={{
+                        background: 'rgba(235, 162, 45, 0.15)',
+                        color: '#eba22d',
+                        padding: '2px 8px',
+                        borderRadius: '6px',
+                        fontSize: '12.5px',
+                        fontFamily: 'monospace',
+                      }}
+                    >
+                      {confirmation.recipient}
+                    </code>
+                    <button
+                      type="button"
+                      onClick={handleCopyEmail}
+                      title="Copy email"
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        color: copied ? '#22c55e' : '#a0aec0',
+                        cursor: 'pointer',
+                        padding: '2px 4px',
+                      }}
+                    >
+                      <i className={`bi ${copied ? 'bi-check2' : 'bi-clipboard'}`}></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    padding: '10px 14px',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <span style={{ color: '#94a3b8', fontWeight: 600 }}>From:</span>
+                  <span style={{ color: '#f1f5f9' }}>
+                    {confirmation.senderName} ({confirmation.senderEmail})
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    padding: '10px 14px',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <span style={{ color: '#94a3b8', fontWeight: 600 }}>Subject:</span>
+                  <span style={{ color: '#f1f5f9', fontWeight: 500, textAlign: 'right' }}>
+                    {confirmation.subject}
+                  </span>
+                </div>
+
+                <div style={{ padding: '12px 14px' }}>
+                  <div style={{ color: '#94a3b8', fontWeight: 600, marginBottom: '6px' }}>
+                    Message Content:
+                  </div>
+                  <div
+                    style={{
+                      maxHeight: '100px',
+                      overflowY: 'auto',
+                      background: 'rgba(0, 0, 0, 0.35)',
+                      padding: '10px 12px',
+                      borderRadius: '8px',
+                      color: '#cbd5e1',
+                      fontSize: '12.5px',
+                      lineHeight: 1.6,
+                      whiteSpace: 'pre-wrap',
+                      fontFamily: 'inherit',
+                    }}
+                  >
+                    {confirmation.message}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Buttons */}
+            <div
+              style={{
+                padding: '14px 24px',
+                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                background: 'rgba(255, 255, 255, 0.02)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '10px',
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => openGmailPopup(confirmation.gmailUrl)}
+                className="btn btn-sm"
+                style={{
+                  background: '#eba22d',
+                  color: '#0d1117',
+                  fontWeight: 700,
+                  borderRadius: '8px',
+                  padding: '8px 16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
+              >
+                <i className="bi bi-box-arrow-up-right"></i>
+                Re-open Gmail Popup
+              </button>
+
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  type="button"
+                  onClick={handleSendDefaultMail}
+                  className="btn btn-sm btn-outline-secondary"
+                  style={{
+                    borderRadius: '8px',
+                    fontSize: '12.5px',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                    color: '#cbd5e1',
+                  }}
+                >
+                  <i className="bi bi-envelope me-1"></i> Mail App
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmation(null)}
+                  className="btn btn-sm btn-secondary"
+                  style={{
+                    borderRadius: '8px',
+                    fontSize: '12.5px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: 'none',
+                    color: '#fff',
+                    padding: '6px 14px',
+                  }}
+                >
+                  Close ({countdown}s)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

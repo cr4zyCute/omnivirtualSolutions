@@ -7,6 +7,9 @@ node_modules/
 
 # Environment variables — NEVER commit these
 .env
+.env.*
+.env.example
+*.env
 
 # Local SQLite database — never commit local DB data
 data/omni.db

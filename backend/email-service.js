@@ -195,6 +195,10 @@ async function sendAutoReply(submission) {
   const settings = await getSettings();
   if (settings.auto_reply_enabled !== "true") return { success: false, reason: "auto_reply_disabled" };
 
+  if (!submission.email || submission.email.includes("direct-mail.com") || submission.email.includes("example.com")) {
+    return { success: false, reason: "invalid_visitor_email" };
+  }
+
   const transporter = await createTransporter(settings);
   if (!transporter) return { success: false, reason: "smtp_not_configured" };
 

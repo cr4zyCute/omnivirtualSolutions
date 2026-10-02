@@ -516,19 +516,30 @@
         }).catch(() => {});
       } catch (_) {}
 
-      // Open Gmail web compose ONLY in a new tab
-      const newTab = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
-      if (!newTab) {
-        const a = document.createElement('a');
-        a.href = gmailUrl;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      }
+      // Open Gmail web compose as a Floating Popup Window
+      const width = 680;
+      const height = 740;
+      const screenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+      const screenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+      const innerWidth = window.innerWidth || document.documentElement.clientWidth || screen.width;
+      const innerHeight = window.innerHeight || document.documentElement.clientHeight || screen.height;
+      const left = Math.max(0, Math.round(screenLeft + (innerWidth - width) / 2));
+      const top = Math.max(0, Math.round(screenTop + (innerHeight - height) / 2));
+      const features = `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes`;
+      const popupWin = window.open(gmailUrl, 'OmniGmailCompose', features);
+      if (popupWin && popupWin.focus) popupWin.focus();
 
-      showAlert(`Gmail opened in a new tab with your pre-filled draft! Simply click Send in Gmail.<br><small class="mt-1 d-block"><a href="${gmailUrl}" target="_blank" class="text-white text-decoration-underline">Click here if Gmail didn't open automatically</a></small>`, 'success');
+      showAlert(`
+        <div style="font-weight:700; font-size:14px; margin-bottom:4px;">
+          <i class="bi bi-check-circle-fill me-1"></i> Floating Gmail Popup Opened!
+        </div>
+        <div>Your message is pre-filled. Please review and click <strong>Send</strong> inside the popup window.</div>
+        <div class="mt-2" style="font-size:12.5px;">
+          Delivering to: <strong style="color:#fef08a;">${targetEmail}</strong>
+          &nbsp;|&nbsp;
+          <a href="#" onclick="window.open('${gmailUrl}','OmniGmailCompose','${features}');return false;" class="text-white text-decoration-underline fw-bold">Re-open Popup &rarr;</a>
+        </div>
+      `, 'success');
       form.reset();
     });
 
