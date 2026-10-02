@@ -55,7 +55,7 @@ export default function Footer() {
                 <i className="bi bi-telephone-fill"></i>
                 <span data-block-key="footer.phone">{t('footer.phone', '+1 315-915-4799')}</span>
               </a>
-              <a href="mailto:admin@omnivirtualsolution.com" className="footer-inline-contact">
+              <a href={`mailto:${t('footer.email', 'admin@omnivirtualsolution.com')}`} className="footer-inline-contact">
                 <i className="bi bi-envelope-fill"></i>
                 <span data-block-key="footer.email">{t('footer.email', 'admin@omnivirtualsolution.com')}</span>
               </a>

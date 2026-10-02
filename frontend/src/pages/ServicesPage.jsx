@@ -327,17 +327,25 @@ export default function ServicesPage() {
     fetch('/api/v1/site-meta')
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data && data.blockMap) {
-          if (data.blockMap['services.header.title']) setHeaderTitle(data.blockMap['services.header.title']);
-          if (data.blockMap['services.header.subtitle']) setHeaderSubtitle(data.blockMap['services.header.subtitle']);
-          if (data.blockMap['services.badge.text']) setBadgeText(data.blockMap['services.badge.text']);
-          if (data.blockMap['services.price.sub']) setPriceSubText(data.blockMap['services.price.sub']);
-          if (data.blockMap['services.overview.heading']) setOverviewHeading(data.blockMap['services.overview.heading']);
-          if (data.blockMap['services.included.heading']) setIncludedHeading(data.blockMap['services.included.heading']);
-          if (data.blockMap['services.cta.subtitle']) setCtaSubtitle(data.blockMap['services.cta.subtitle']);
-          if (data.blockMap['services.cta.btn_text']) setCtaBtnText(data.blockMap['services.cta.btn_text']);
-          if (data.blockMap['services.cta.email']) setCtaEmail(data.blockMap['services.cta.email']);
-          else if (data.company?.recipient_email) setCtaEmail(data.company.recipient_email);
+        if (data) {
+          const email =
+            data.blockMap?.['services.cta.email'] ||
+            data.blockMap?.['footer.email'] ||
+            data.company?.recipient_email ||
+            data.company?.email ||
+            data.recipient_email;
+          if (email) setCtaEmail(email);
+
+          if (data.blockMap) {
+            if (data.blockMap['services.header.title']) setHeaderTitle(data.blockMap['services.header.title']);
+            if (data.blockMap['services.header.subtitle']) setHeaderSubtitle(data.blockMap['services.header.subtitle']);
+            if (data.blockMap['services.badge.text']) setBadgeText(data.blockMap['services.badge.text']);
+            if (data.blockMap['services.price.sub']) setPriceSubText(data.blockMap['services.price.sub']);
+            if (data.blockMap['services.overview.heading']) setOverviewHeading(data.blockMap['services.overview.heading']);
+            if (data.blockMap['services.included.heading']) setIncludedHeading(data.blockMap['services.included.heading']);
+            if (data.blockMap['services.cta.subtitle']) setCtaSubtitle(data.blockMap['services.cta.subtitle']);
+            if (data.blockMap['services.cta.btn_text']) setCtaBtnText(data.blockMap['services.cta.btn_text']);
+          }
         }
       })
       .catch(() => {});
@@ -389,9 +397,22 @@ export default function ServicesPage() {
             if (Array.isArray(newCat) && newCat.length > 0) {
               setCatalog(newCat);
             }
+          } else if (payload.type === 'email_settings_updated' && payload.recipient_email) {
+            setCtaEmail(payload.recipient_email);
+          } else if (payload.type === 'company_updated' && payload.company?.email) {
+            setCtaEmail(payload.company.email);
           } else if (payload.type === 'cms_block_updated') {
+            if (payload.key === 'services.cta.email' || payload.key === 'footer.email') {
+              setCtaEmail(payload.value);
+            }
             if (payload.key === 'services.header.title') setHeaderTitle(payload.value);
             if (payload.key === 'services.header.subtitle') setHeaderSubtitle(payload.value);
+            if (payload.key === 'services.badge.text') setBadgeText(payload.value);
+            if (payload.key === 'services.price.sub') setPriceSubText(payload.value);
+            if (payload.key === 'services.overview.heading') setOverviewHeading(payload.value);
+            if (payload.key === 'services.included.heading') setIncludedHeading(payload.value);
+            if (payload.key === 'services.cta.subtitle') setCtaSubtitle(payload.value);
+            if (payload.key === 'services.cta.btn_text') setCtaBtnText(payload.value);
           }
         } catch (_) {}
       };

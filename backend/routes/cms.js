@@ -24,6 +24,7 @@ const router   = express.Router();
 const { db }   = require("../db");
 const { requireAuth }  = require("../middleware/auth");
 const { broadcast }    = require("./live");
+const { syncUniversalEmail, isEmailKey } = require("../email-sync");
 
 // ── Image upload config (multer) ──────────────────────────────────
 const UPLOADS_DIR = path.resolve(__dirname, "../../assets/uploads");
@@ -112,6 +113,16 @@ router.patch("/blocks/:key", requireAuth, async (req, res) => {
 
     const newValue = String(value).trim();
     const editor   = req.admin.username;
+
+    // ── Universal Single Source of Truth Business Email Sync ──
+    if (isEmailKey(key)) {
+      await syncUniversalEmail(newValue, editor);
+      return res.json({
+        success: true,
+        block: { block_key: key, value: newValue, block_type: 'text', updated_by: editor },
+        synced_universal_email: true,
+      });
+    }
 
     if (existing.rows.length === 0) {
       // Auto-create block if it does not exist yet

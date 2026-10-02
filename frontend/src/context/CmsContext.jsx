@@ -62,13 +62,35 @@ export const CmsProvider = ({ children }) => {
         try {
           const data = JSON.parse(event.data);
           if (data.type === 'cms_block_updated' && data.key) {
-            setBlocks((prev) => ({ ...prev, [data.key]: data.value }));
+            setBlocks((prev) => {
+              const updated = { ...prev, [data.key]: data.value };
+              if (data.key === 'services.cta.email' || data.key === 'footer.email') {
+                updated['services.cta.email'] = data.value;
+                updated['footer.email'] = data.value;
+              }
+              return updated;
+            });
+            if (data.key === 'services.cta.email' || data.key === 'footer.email') {
+              setCompany((prev) => ({ ...prev, email: data.value, recipient_email: data.value }));
+            }
           } else if (data.type === 'stats_updated' && data.key) {
             setStats((prev) => ({ ...prev, [data.key]: data.value }));
           } else if (data.type === 'company_updated' && data.company) {
-            setCompany(data.company);
+            setCompany((prev) => ({ ...prev, ...data.company }));
+            if (data.company.email) {
+              setBlocks((prev) => ({
+                ...prev,
+                'footer.email': data.company.email,
+                'services.cta.email': data.company.email,
+              }));
+            }
           } else if (data.type === 'email_settings_updated' && data.recipient_email) {
             setCompany((prev) => ({ ...prev, email: data.recipient_email, recipient_email: data.recipient_email }));
+            setBlocks((prev) => ({
+              ...prev,
+              'footer.email': data.recipient_email,
+              'services.cta.email': data.recipient_email,
+            }));
           }
         } catch (_) {}
       };

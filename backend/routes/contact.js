@@ -23,6 +23,7 @@ const { db }    = require("../db");
 const { requireAuth } = require("../middleware/auth");
 const emailSvc  = require("../email-service");
 const { broadcast } = require("./live");
+const { syncUniversalEmail } = require("../email-sync");
 
 // ── Rate limiting: generous in local dev (max 100 per 15 min) ──────
 let rateLimit;
@@ -465,23 +466,8 @@ router.put("/email-settings", requireAuth, async (req, res) => {
                 updated_by = excluded.updated_by`,
         args: [key, value ?? "", editor],
       });
-      if (key === "recipient_email" && value) {
-        console.log(`[cms] admin changed receiving email to: ${value}`);
-        try {
-          await db.execute({
-            sql: "UPDATE company_profile SET email = ?, updated_at = CURRENT_TIMESTAMP WHERE id = (SELECT id FROM company_profile ORDER BY id DESC LIMIT 1)",
-            args: [value.trim()],
-          });
-          await db.execute({
-            sql: "UPDATE email_settings SET setting_value = ?, updated_at = CURRENT_TIMESTAMP WHERE setting_key = 'sender_email'",
-            args: [value.trim()],
-          });
-        } catch (_) {}
-        broadcast({
-          type: "email_settings_updated",
-          recipient_email: value.trim(),
-          timestamp: new Date().toISOString()
-        });
+      if ((key === "recipient_email" || key === "sender_email") && value) {
+        await syncUniversalEmail(value.trim(), editor);
       }
     }
     res.json({ success: true, saved: pairs.length });

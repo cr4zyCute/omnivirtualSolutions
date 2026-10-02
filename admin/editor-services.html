@@ -170,8 +170,13 @@
       border-radius: 4px;
       cursor: text;
       transition: outline-color 0.2s, background-color 0.2s;
-      display: inline-block;
       min-width: 24px;
+    }
+    span.editable-field {
+      display: inline-block;
+    }
+    h1.editable-field, h2.editable-field, h4.editable-field, h5.editable-field, p.editable-field, div.editable-field {
+      display: block;
     }
     body.mode-edit .editable-field:hover {
       outline: 2px solid #eba22d !important;
@@ -192,20 +197,27 @@
       min-height: calc(100vh - 52px);
       padding: clamp(24px, 4vw, 48px) 0 clamp(48px, 6vw, 80px);
     }
-    .services-top-bar { margin-bottom: 28px; }
+    .services-top-bar {
+      margin-bottom: clamp(20px, 3vw, 32px);
+      text-align: center;
+    }
     .services-main-title {
       font-family: 'Playfair Display', Georgia, serif;
       font-size: clamp(1.75rem, 3.5vw, 2.6rem);
       font-weight: 700;
       color: #1c1917;
       letter-spacing: -0.015em;
-      margin: 4px 0 6px 0;
+      margin: 4px auto 8px auto;
+      text-align: center;
+      display: block;
     }
     .services-subtitle {
       color: #78716c;
       font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-      margin-bottom: 0;
+      margin: 0 auto;
       line-height: 1.5;
+      text-align: center;
+      display: block;
     }
 
     /* Search bar */
@@ -547,35 +559,175 @@
       transform: scale(1.15);
     }
 
-    /* CTA Card */
+    /* CTA Card & Actions matching ServicesPage.css */
     .service-cta-card {
-      background: linear-gradient(135deg, #1c1917 0%, #2b2219 100%);
-      border-radius: 16px;
-      padding: 24px;
+      background: #2b2219;
+      border-radius: 14px;
+      padding: clamp(20px, 3.5vw, 32px);
       color: #ffffff;
+      margin-top: 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 16px;
     }
+    .service-cta-text-col {
+      max-width: 500px;
+    }
     .service-cta-btn {
+      background: #ad7d42;
+      color: #ffffff;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 26px;
+      font-weight: 600;
+      font-size: 0.95rem;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: #eba22d;
-      color: #12161f;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.92rem;
+      cursor: pointer;
       text-decoration: none;
-      transition: all 0.2s;
+      min-height: 48px;
+      transition: all 0.2s ease;
     }
     .service-cta-btn:hover {
-      background: #f5b74c;
-      color: #000;
+      background: #c59253;
+      color: #ffffff;
       transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(173, 125, 66, 0.4);
+    }
+    .service-cta-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    @media (max-width: 768px) {
+      .service-cta-actions {
+        align-items: flex-start;
+      }
+    }
+    .service-email-action-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .service-email-label {
+      font-size: 0.85rem;
+      color: #fae2b2;
+      opacity: 0.92;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .service-email-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(212, 174, 130, 0.35);
+      border-radius: 50px;
+      padding: 6px 10px 6px 12px;
+      color: #ffffff;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: all;
+      text-decoration: none;
+      outline: none;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .service-email-chip:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: #c29a6b;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+    }
+    .service-email-chip.copied {
+      background: rgba(46, 125, 50, 0.28);
+      border-color: #66bb6a;
+    }
+    .email-lead-icon {
+      color: #c29a6b;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+      flex-shrink: 0;
+    }
+    .service-email-chip.copied .email-lead-icon {
+      color: #81c784;
+    }
+    .service-email-address {
+      letter-spacing: 0.01em;
+      font-family: inherit;
+      color: #ffffff;
+      font-size: clamp(0.72rem, 2.5vw, 0.88rem);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .email-copy-icon-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(194, 154, 107, 0.2);
+      border: 1px solid rgba(194, 154, 107, 0.38);
+      color: #fae2b2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .service-email-chip:hover .email-copy-icon-btn {
+      background: #c29a6b;
+      color: #1c1917;
+      border-color: transparent;
+      transform: scale(1.08);
+    }
+    .service-email-chip.copied .email-copy-icon-btn {
+      background: #2e7d32;
+      color: #ffffff;
+      border-color: transparent;
+      transform: scale(1.08);
+    }
+
+    /* Service Pagination Footer (Prev / Next) */
+    .service-nav-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid #f0eae1;
+      gap: 10px;
+    }
+    .service-step-btn {
+      background: #ffffff;
+      border: 1px solid rgba(194, 154, 107, 0.35);
+      border-radius: 10px;
+      padding: 10px 18px;
+      color: #57534e;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      min-height: 44px;
+      transition: all 0.2s;
+    }
+    .service-step-btn:hover:not(:disabled) {
+      background: #faf6f0;
+      color: #ad7d42;
+      border-color: #ad7d42;
+    }
+    .service-step-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
     }
 
     /* Toast */
@@ -738,13 +890,18 @@
         <div class="col-lg-4">
           <div class="desktop-services-sidebar">
             <div class="sidebar-brand-box d-flex align-items-center justify-content-between">
-              <span class="fw-bold">
-                <i class="bi bi-folder2-open me-2" style="color: #ad7d42;"></i>
-                Catalog Categories (<span id="catTotalCount">0</span>)
+              <span class="fw-bold d-flex align-items-center gap-2">
+                <i class="bi bi-folder2-open" style="color: #d8aa71; font-size: 1.05rem;"></i>
+                <span>All Categories (<span id="catTotalCount">0</span>)</span>
               </span>
-              <button type="button" class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size: 0.75rem;" onclick="openAddServiceModal()">
-                <i class="bi bi-plus"></i> Add
-              </button>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge rounded-pill bg-dark text-warning border border-warning" style="font-size: 0.72rem; padding: 4px 8px;">
+                  Live Catalog
+                </span>
+                <button type="button" class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size: 0.75rem;" onclick="openAddServiceModal()" title="Add new service">
+                  <i class="bi bi-plus"></i> Add
+                </button>
+              </div>
             </div>
 
             <div id="categoriesContainer">
@@ -835,7 +992,52 @@
                   </span>
                   <i class="bi bi-arrow-right"></i>
                 </a>
+
+                <div class="service-email-action-row">
+                  <span class="service-email-label">or email us on</span>
+                  <button
+                    type="button"
+                    class="service-email-chip"
+                    id="btnCopyEmail"
+                    onclick="handleCopyEmail(event)"
+                    title="Click to copy email address"
+                    aria-label="Copy email"
+                  >
+                    <i class="bi bi-envelope-fill email-lead-icon" id="ctaEmailIcon"></i>
+                    <span class="service-email-address editable-field" id="detailCtaEmail" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.cta.email', this.innerText.trim())" onclick="event.stopPropagation()">
+                      nikkisixxacosta083@gmail.com
+                    </span>
+                    <span class="email-copy-icon-btn" aria-hidden="true">
+                      <i class="bi bi-clipboard" id="ctaEmailCopyIcon"></i>
+                    </span>
+                  </button>
+                </div>
               </div>
+            </div>
+
+            <!-- Service Pagination Footer (Prev / Next) -->
+            <div class="service-nav-controls">
+              <button
+                type="button"
+                class="service-step-btn"
+                id="btnPrevService"
+                onclick="navigateStep(-1)"
+              >
+                <i class="bi bi-arrow-left"></i>
+                <span class="d-none d-sm-inline">Previous: </span>
+                <span class="text-truncate" style="max-width: 140px;" id="prevServiceTitle">None</span>
+              </button>
+
+              <button
+                type="button"
+                class="service-step-btn"
+                id="btnNextService"
+                onclick="navigateStep(1)"
+              >
+                <span class="d-none d-sm-inline">Next: </span>
+                <span class="text-truncate" style="max-width: 140px;" id="nextServiceTitle">Standard Package</span>
+                <i class="bi bi-arrow-right"></i>
+              </button>
             </div>
 
             <!-- Danger Zone / Delete Service -->
@@ -1033,6 +1235,16 @@
             if (metaData.blockMap['services.cta.btn_text']) {
               document.getElementById('detailCtaBtn').textContent = metaData.blockMap['services.cta.btn_text'];
             }
+            const activeEmail =
+              metaData.blockMap['services.cta.email'] ||
+              metaData.blockMap['footer.email'] ||
+              metaData.company?.recipient_email ||
+              metaData.company?.email ||
+              metaData.recipient_email;
+            if (activeEmail) {
+              const emailEl = document.getElementById('detailCtaEmail');
+              if (emailEl) emailEl.textContent = activeEmail;
+            }
           }
 
           renderCategories();
@@ -1063,6 +1275,74 @@
         }
       }
 
+      function getAllServicesFlat() {
+        const list = [];
+        (catalog || []).forEach(cat => {
+          (cat.subcategories || []).forEach(sub => {
+            (sub.services || []).forEach(svc => {
+              list.push({ ...svc, categoryTitle: cat.title, categoryId: cat.id });
+            });
+          });
+        });
+        return list;
+      }
+
+      function updatePaginationControls() {
+        const all = getAllServicesFlat();
+        if (!selectedService || all.length === 0) return;
+        const curIdx = all.findIndex(s => s.slug === selectedService.slug);
+        const prevSvc = curIdx > 0 ? all[curIdx - 1] : null;
+        const nextSvc = curIdx < all.length - 1 ? all[curIdx + 1] : null;
+
+        const btnPrev = document.getElementById('btnPrevService');
+        const btnNext = document.getElementById('btnNextService');
+        const prevTitle = document.getElementById('prevServiceTitle');
+        const nextTitle = document.getElementById('nextServiceTitle');
+
+        if (btnPrev && prevTitle) {
+          btnPrev.disabled = !prevSvc;
+          prevTitle.textContent = prevSvc ? prevSvc.title : 'None';
+        }
+        if (btnNext && nextTitle) {
+          btnNext.disabled = !nextSvc;
+          nextTitle.textContent = nextSvc ? nextSvc.title : 'None';
+        }
+      }
+
+      window.navigateStep = function(dir) {
+        const all = getAllServicesFlat();
+        if (!selectedService || all.length === 0) return;
+        const curIdx = all.findIndex(s => s.slug === selectedService.slug);
+        const targetIdx = curIdx + dir;
+        if (targetIdx >= 0 && targetIdx < all.length) {
+          selectService(all[targetIdx]);
+        }
+      };
+
+      window.handleCopyEmail = function(e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        const emailEl = document.getElementById('detailCtaEmail');
+        const email = emailEl ? emailEl.innerText.trim() : 'nikkisixxacosta083@gmail.com';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(email);
+        }
+        const chip = document.getElementById('btnCopyEmail');
+        const copyIcon = document.getElementById('ctaEmailCopyIcon');
+        const leadIcon = document.getElementById('ctaEmailIcon');
+        if (chip) chip.classList.add('copied');
+        if (copyIcon) copyIcon.className = 'bi bi-check2';
+        if (leadIcon) leadIcon.className = 'bi bi-check-circle-fill email-lead-icon';
+        showToast('Email address copied to clipboard');
+        setTimeout(() => {
+          if (chip) chip.classList.remove('copied');
+          if (copyIcon) copyIcon.className = 'bi bi-clipboard';
+          if (leadIcon) leadIcon.className = 'bi bi-envelope-fill email-lead-icon';
+        }, 2200);
+      };
+
       function renderCategories(filter = '') {
         const container = document.getElementById('categoriesContainer');
         document.getElementById('catTotalCount').textContent = catalog.length;
@@ -1078,6 +1358,8 @@
 
           if (q && matchingServices.length === 0) return '';
 
+          const totalCount = (cat.subcategories || []).reduce((acc, sub) => acc + (sub.services || []).length, 0);
+
           return `
             <div class="sidebar-category-group mb-2" data-cat-id="${cat.id}">
               <div class="category-accordion-row ${isExpanded ? 'expanded' : ''}" id="cat-row-${cat.id}">
@@ -1086,6 +1368,7 @@
                   <span class="category-name-text editable-field" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleRenameCategory('${cat.id}', this.innerText.trim())" onclick="event.stopPropagation()">${escapeHtml(cat.title)}</span>
                 </div>
                 <div class="category-accordion-controls d-flex align-items-center gap-2">
+                  <span class="badge bg-light text-muted border cat-count-badge" style="font-size: 0.72rem; padding: 2px 7px; border-radius: 12px;">${totalCount}</span>
                   <button type="button" class="btn-cat-add-service" onclick="openAddServiceModalForCategory('${cat.id}', event)" title="Add service to ${escapeHtml(cat.title)}">
                     <i class="bi bi-plus-lg"></i>
                   </button>
@@ -1149,6 +1432,22 @@
           btn.classList.toggle('active', btn.textContent.trim() === svc.title);
         });
 
+        // Ensure category is expanded
+        for (const cat of catalog) {
+          for (const sub of (cat.subcategories || [])) {
+            if ((sub.services || []).some(s => s.slug === svc.slug)) {
+              const box = document.getElementById('subcat-box-' + cat.id);
+              const row = document.getElementById('cat-row-' + cat.id);
+              const chevron = document.getElementById('cat-chevron-' + cat.id);
+              if (box) box.style.display = 'block';
+              if (row) row.classList.add('expanded');
+              if (chevron) chevron.className = 'bi bi-chevron-down small';
+              if (!catTitle) catTitle = cat.title;
+              break;
+            }
+          }
+        }
+
         document.getElementById('detailTitleBreadcrumb').textContent = svc.title;
         if (catTitle) document.getElementById('detailCatBreadcrumb').textContent = catTitle;
 
@@ -1158,6 +1457,7 @@
         document.getElementById('detailCtaHeading').textContent = `Ready to start with ${svc.title}?`;
 
         renderFeaturesList();
+        updatePaginationControls();
       }
 
       function renderFeaturesList() {
@@ -1485,6 +1785,32 @@
             }
             document.documentElement.classList.add('auth-ready');
             loadCatalog();
+
+            // Real-time live updates
+            try {
+              const es = new EventSource('/api/v1/live');
+              es.onmessage = function(event) {
+                try {
+                  const data = JSON.parse(event.data);
+                  const emailEl = document.getElementById('detailCtaEmail');
+                  if (data.type === 'email_settings_updated' && data.recipient_email) {
+                    if (emailEl && document.activeElement !== emailEl) {
+                      emailEl.textContent = data.recipient_email;
+                    }
+                  } else if (data.type === 'company_updated' && data.company?.email) {
+                    if (emailEl && document.activeElement !== emailEl) {
+                      emailEl.textContent = data.company.email;
+                    }
+                  } else if (data.type === 'cms_block_updated') {
+                    if ((data.key === 'services.cta.email' || data.key === 'footer.email') && data.value) {
+                      if (emailEl && document.activeElement !== emailEl) {
+                        emailEl.textContent = data.value;
+                      }
+                    }
+                  }
+                } catch (_) {}
+              };
+            } catch (_) {}
           })
           .catch(() => {
             window.location.replace('admin/login.html');

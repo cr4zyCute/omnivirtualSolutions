@@ -36,9 +36,12 @@ router.get("/", async (req, res) => {
 
     const company = companyResult.rows[0] ? { ...companyResult.rows[0] } : {};
     const configuredEmail = emailSettingResult.rows[0]?.setting_value?.trim();
-    if (configuredEmail) {
-      company.recipient_email = configuredEmail;
-      company.email = configuredEmail;
+    const activeEmail = configuredEmail || company.email || blockMap['services.cta.email'] || blockMap['footer.email'];
+    if (activeEmail) {
+      company.recipient_email = activeEmail;
+      company.email = activeEmail;
+      if (!blockMap['services.cta.email']) blockMap['services.cta.email'] = activeEmail;
+      if (!blockMap['footer.email']) blockMap['footer.email'] = activeEmail;
     }
 
     res.json({
