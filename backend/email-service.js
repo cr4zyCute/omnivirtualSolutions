@@ -81,6 +81,285 @@ async function updateNotifyStatus(submissionId, status) {
   } catch (_) {}
 }
 
+// ── Visual Design Template Builders (Compliant with Email Visual Design Skill) ──
+
+function buildEmailShell({ title, heroPill, heroTitle, heroSubtitle, bodyContent, ctaText, ctaUrl, footerNote, supportEmail }) {
+  const brandGold = "#eba22d";
+  const darkNavy  = "#0d1117";
+  const footerBg  = "#0f172a";
+  const emailTo   = supportEmail || "nikkisixxacosta083@gmail.com";
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>${title || "Omni Virtual Solutions"}</title>
+  <style type="text/css">
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+    body { margin: 0; padding: 0; width: 100% !important; min-width: 100%; background-color: #f3f4f6; }
+    @media only screen and (max-width: 620px) {
+      .email-container { width: 100% !important; max-width: 100% !important; }
+      .mobile-p { padding: 20px 16px !important; }
+      .mobile-h1 { font-size: 22px !important; line-height: 28px !important; }
+      .mobile-btn { display: block !important; width: 100% !important; box-sizing: border-box !important; text-align: center !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <div style="display: none; max-height: 0px; overflow: hidden; mso-hide: all;">
+    ${heroTitle} — Omni Virtual Solutions
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f3f4f6">
+    <tr>
+      <td align="center" style="padding: 28px 12px 36px 12px;">
+        <table role="presentation" class="email-container" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06); border: 1px solid #e5e7eb;">
+          
+          <!-- 1. Header -->
+          <tr>
+            <td bgcolor="${darkNavy}" style="padding: 24px 32px; border-bottom: 3px solid ${brandGold};">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    <span style="font-size: 20px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; display: inline-block;">
+                      <span style="color: ${brandGold};">✦</span> Omni Virtual Solutions
+                    </span>
+                    <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; letter-spacing: 0.3px; text-transform: uppercase;">
+                      Empowering Individuals &amp; Businesses
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- 2. Hero Headline -->
+          <tr>
+            <td class="mobile-p" style="padding: 32px 32px 18px 32px; background-color: #ffffff;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    ${heroPill || ""}
+                    <h1 class="mobile-h1" style="margin: 0 0 10px 0; font-size: 25px; line-height: 32px; font-weight: 800; color: #0f172a;">
+                      ${heroTitle}
+                    </h1>
+                    ${heroSubtitle ? `<p style="margin: 0; font-size: 15px; line-height: 24px; color: #475569;">${heroSubtitle}</p>` : ""}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- 3. Body Content -->
+          <tr>
+            <td class="mobile-p" style="padding: 0 32px 24px 32px;">
+              ${bodyContent}
+            </td>
+          </tr>
+
+          <!-- 4. Primary CTA -->
+          ${ctaText && ctaUrl ? `
+          <tr>
+            <td class="mobile-p" align="center" style="padding: 6px 32px 32px 32px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" bgcolor="${brandGold}" style="border-radius: 8px;">
+                    <a href="${ctaUrl}" target="_blank" class="mobile-btn" style="background-color: ${brandGold}; color: #0d1117; font-size: 14.5px; font-weight: 700; text-decoration: none; padding: 13px 32px; border-radius: 8px; display: inline-block; letter-spacing: 0.2px;">
+                      ${ctaText} &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>` : ""}
+
+          <!-- 5. Footer -->
+          <tr>
+            <td bgcolor="${footerBg}" style="padding: 24px 32px; color: #94a3b8; font-size: 12px; line-height: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+              <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; color: #f1f5f9;">
+                Omni Virtual Solutions
+              </p>
+              <p style="margin: 0 0 8px 0; color: #94a3b8;">
+                1350 Ave of the Americas, Fl 2 -1100, New York, NY 10019<br>
+                Phone: <a href="tel:+13159154799" style="color: ${brandGold}; text-decoration: none;">+1 315-915-4799</a> &nbsp;|&nbsp; Email: <a href="mailto:${emailTo}" style="color: ${brandGold}; text-decoration: none;">${emailTo}</a>
+              </p>
+              <p style="margin: 0; color: #64748b; font-size: 11px;">
+                ${footerNote || "© 2026 Omni Virtual Solutions. All rights reserved."}
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
+function buildAutoReplyHtml({ submission, settings, bodyText, senderEmail }) {
+  const customerName = submission.full_name || "Valued Client";
+  const inquirySubject = submission.subject || "General Inquiry";
+  const submissionDate = submission.created_at || new Date().toLocaleString("en-US", { timeZoneName: "short" });
+  const rawMessage = (submission.message || "").trim();
+  const messageExcerpt = rawMessage.length > 320 ? rawMessage.substring(0, 320) + "..." : rawMessage;
+  const siteUrl = "https://omnivirtualsolution.com";
+
+  const heroPill = `
+    <div style="display: inline-block; background-color: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #15803d; margin-bottom: 14px;">
+      ✓ Inquiry Received
+    </div>`;
+
+  const bodyContent = `
+    <div style="background-color: #f8fafc; border-left: 4px solid #eba22d; padding: 14px 16px; border-radius: 0 8px 8px 0; margin-bottom: 24px;">
+      <p style="margin: 0; font-size: 14px; line-height: 22px; color: #334155;">
+        <strong>Expected turnaround:</strong> We typically respond within <strong>1–2 business days</strong>. If your request is time-sensitive, you can also reach our desk at <a href="tel:+13159154799" style="color: #d97706; text-decoration: none; font-weight: 600;">+1 315-915-4799</a>.
+      </p>
+    </div>
+
+    <!-- Message Summary Card -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 8px;">
+      <tr>
+        <td style="padding: 12px 16px; background-color: #f1f5f9; border-bottom: 1px solid #e2e8f0; font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">
+          Inquiry Summary
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 16px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 13.5px; color: #334155;">
+            <tr>
+              <td width="115" style="padding: 6px 0; font-weight: 600; color: #64748b; vertical-align: top;">Subject:</td>
+              <td style="padding: 6px 0; color: #0f172a; font-weight: 600;">${inquirySubject}</td>
+            </tr>
+            <tr>
+              <td width="115" style="padding: 6px 0; font-weight: 600; color: #64748b; vertical-align: top;">Submitted At:</td>
+              <td style="padding: 6px 0; color: #0f172a;">${submissionDate}</td>
+            </tr>
+            ${messageExcerpt ? `
+            <tr>
+              <td width="115" style="padding: 6px 0; font-weight: 600; color: #64748b; vertical-align: top;">Your Message:</td>
+              <td style="padding: 6px 0; color: #334155; line-height: 1.6; font-style: italic;">
+                "${messageExcerpt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}"
+              </td>
+            </tr>` : ""}
+          </table>
+        </td>
+      </tr>
+    </table>
+  `;
+
+  return buildEmailShell({
+    title: "We received your message — Omni Virtual Solutions",
+    heroPill,
+    heroTitle: "We received your message!",
+    heroSubtitle: `Hello <strong style="color: #0f172a;">${customerName}</strong>, thank you for contacting Omni Virtual Solutions. Our team is already reviewing your inquiry.`,
+    bodyContent,
+    ctaText: "Visit Omni Virtual Solutions",
+    ctaUrl: siteUrl,
+    footerNote: "You are receiving this confirmation because an inquiry was submitted with your email on omnivirtualsolution.com.",
+    supportEmail: senderEmail
+  });
+}
+
+function buildReplyHtml({ submission, settings, fullBody, senderEmail }) {
+  const customerName = submission.full_name || "Valued Client";
+  const inquirySubject = submission.subject || "Your Inquiry";
+  const siteUrl = "https://omnivirtualsolution.com";
+
+  const heroPill = `
+    <div style="display: inline-block; background-color: rgba(235, 162, 45, 0.15); border: 1px solid rgba(235, 162, 45, 0.3); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #b45309; margin-bottom: 14px;">
+      ● Team Response
+    </div>`;
+
+  const bodyContent = `
+    <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 22px; font-size: 15px; line-height: 1.7; color: #1f2937; margin-bottom: 20px;">
+      ${fullBody.replace(/\n/g, "<br>")}
+    </div>
+
+    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #64748b;">
+      <strong>Regarding:</strong> ${inquirySubject} &nbsp;|&nbsp; Submitted by ${customerName}
+    </div>
+  `;
+
+  return buildEmailShell({
+    title: `Re: ${inquirySubject} — Omni Virtual Solutions`,
+    heroPill,
+    heroTitle: `Response to: ${inquirySubject}`,
+    heroSubtitle: `A message from the team at Omni Virtual Solutions for ${customerName}.`,
+    bodyContent,
+    ctaText: "Visit Our Website",
+    ctaUrl: siteUrl,
+    footerNote: "This message was sent in direct response to your inquiry submitted at omnivirtualsolution.com.",
+    supportEmail: senderEmail
+  });
+}
+
+function buildNotificationHtml({ submission, settings, senderEmail, recipientEmail }) {
+  const adminUrl = settings.admin_url && !settings.admin_url.includes("localhost") ? settings.admin_url : "https://omnivirtualsolution.com/admin";
+
+  const heroPill = `
+    <div style="display: inline-block; background-color: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #1d4ed8; margin-bottom: 14px;">
+      ● New Website Lead
+    </div>`;
+
+  const bodyContent = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 16px;">
+      <tr>
+        <td style="padding: 12px 16px; background-color: #f1f5f9; border-bottom: 1px solid #e2e8f0; font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">
+          Lead Details
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 16px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 14px; color: #334155;">
+            <tr>
+              <td width="110" style="padding: 8px 0; font-weight: 700; color: #64748b;">From:</td>
+              <td style="padding: 8px 0; color: #0f172a; font-weight: 600;">${submission.full_name}</td>
+            </tr>
+            <tr>
+              <td width="110" style="padding: 8px 0; font-weight: 700; color: #64748b;">Email:</td>
+              <td style="padding: 8px 0;"><a href="mailto:${submission.email}" style="color: #eba22d; font-weight: 600; text-decoration: none;">${submission.email}</a></td>
+            </tr>
+            ${submission.phone ? `
+            <tr>
+              <td width="110" style="padding: 8px 0; font-weight: 700; color: #64748b;">Phone:</td>
+              <td style="padding: 8px 0; color: #0f172a;">${submission.phone}</td>
+            </tr>` : ""}
+            <tr>
+              <td width="110" style="padding: 8px 0; font-weight: 700; color: #64748b;">Subject:</td>
+              <td style="padding: 8px 0; color: #0f172a; font-weight: 600;">${submission.subject || "General Inquiry"}</td>
+            </tr>
+            <tr>
+              <td width="110" style="padding: 8px 0; font-weight: 700; color: #64748b; vertical-align: top;">Message:</td>
+              <td style="padding: 8px 0; color: #1e293b; line-height: 1.6;">${(submission.message || "").replace(/\n/g, "<br>")}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <div style="background-color: #f8fafc; border-radius: 6px; padding: 12px 16px; font-size: 12.5px; color: #64748b;">
+      Received: ${submission.created_at || new Date().toISOString()} &nbsp;|&nbsp; IP: ${submission.ip_address || "unknown"}
+    </div>
+  `;
+
+  return buildEmailShell({
+    title: `New Inquiry from ${submission.full_name}`,
+    heroPill,
+    heroTitle: "New Website Contact Inquiry",
+    heroSubtitle: `You have received a new inquiry submitted via the website contact form.`,
+    bodyContent,
+    ctaText: "Open Admin Leads Dashboard",
+    ctaUrl: adminUrl,
+    footerNote: "Automated administrative notification dispatched by Omni Virtual Solutions CMS.",
+    supportEmail: senderEmail
+  });
+}
+
 // =================================================================
 // MAIN: Send notification to admin when a new contact form is submitted
 // =================================================================
@@ -121,49 +400,14 @@ async function sendNewSubmissionNotification(submission) {
   const subjectTemplate = settings.notification_subject || "New Website Inquiry — {customer_name}";
   const subject = interpolate(subjectTemplate, { customer_name: submission.full_name });
 
-  const htmlBody = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f9fafb; padding: 20px;">
-      <div style="background: #0d1117; padding: 20px 24px; border-radius: 8px 8px 0 0;">
-        <h1 style="color: #eba22d; font-size: 20px; margin: 0;">✦ New Website Inquiry</h1>
-        <p style="color: #8a9cb8; font-size: 13px; margin: 6px 0 0 0;">Omni Virtual Solutions — Contact Form Submission</p>
-      </div>
-      <div style="background: #ffffff; padding: 24px; border: 1px solid #e5e7eb; border-top: none;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-          <tr>
-            <td style="padding: 8px 12px; font-weight: 700; color: #374151; width: 140px; border-bottom: 1px solid #f3f4f6;">From</td>
-            <td style="padding: 8px 12px; color: #111827; border-bottom: 1px solid #f3f4f6;">${submission.full_name}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 12px; font-weight: 700; color: #374151; border-bottom: 1px solid #f3f4f6;">Email</td>
-            <td style="padding: 8px 12px; border-bottom: 1px solid #f3f4f6;"><a href="mailto:${submission.email}" style="color: #eba22d;">${submission.email}</a></td>
-          </tr>
-          ${submission.phone ? `<tr><td style="padding: 8px 12px; font-weight: 700; color: #374151; border-bottom: 1px solid #f3f4f6;">Phone</td><td style="padding: 8px 12px; border-bottom: 1px solid #f3f4f6;">${submission.phone}</td></tr>` : ""}
-          <tr>
-            <td style="padding: 8px 12px; font-weight: 700; color: #374151; border-bottom: 1px solid #f3f4f6;">Subject</td>
-            <td style="padding: 8px 12px; border-bottom: 1px solid #f3f4f6;">${submission.subject || "General Inquiry"}</td>
-          </tr>
-          <tr>
-            <td style="padding: 8px 12px; font-weight: 700; color: #374151; vertical-align: top;">Message</td>
-            <td style="padding: 8px 12px; color: #1f2937; line-height: 1.6;">${(submission.message || "").replace(/\n/g, "<br>")}</td>
-          </tr>
-        </table>
-        <div style="margin-top: 20px; padding: 14px 16px; background: #f3f4f6; border-radius: 6px; font-size: 13px; color: #6b7280;">
-          Received: ${submission.created_at || new Date().toISOString()} &nbsp;|&nbsp; IP: ${submission.ip_address || "unknown"}
-        </div>
-        ${settings.admin_url && !settings.admin_url.includes("localhost") ? `
-        <div style="margin-top: 16px; text-align: center;">
-          <a href="${settings.admin_url}" style="background: #eba22d; color: #0d1117; padding: 10px 22px; border-radius: 6px; font-size: 14px; font-weight: 700; text-decoration: none; display: inline-block;">View in Admin Dashboard →</a>
-        </div>` : ""}
-      </div>
-    </div>
-  `;
-
   const senderName  = settings.sender_name  || "Omni Virtual Solutions";
   const senderEmail = settings.sender_email?.trim() || settings.recipient_email?.trim() || settings.smtp_user?.trim();
   if (senderEmail && senderEmail.toLowerCase().includes("nsixx631")) {
     console.warn("[email-service] Notification blocked: legacy email sender detected");
     return { success: false, reason: "legacy_sender_blocked" };
   }
+
+  const htmlBody = buildNotificationHtml({ submission, settings, senderEmail, recipientEmail });
 
   try {
     await transporter.sendMail({
@@ -212,13 +456,15 @@ async function sendAutoReply(submission) {
     return { success: false, reason: "legacy_sender_blocked" };
   }
 
+  const htmlBody = buildAutoReplyHtml({ submission, settings, bodyText, senderEmail });
+
   try {
     await transporter.sendMail({
       from: `"${senderName}" <${senderEmail}>`,
       to: submission.email,
       subject,
       text: bodyText,
-      html: `<div style="font-family: Arial, sans-serif; line-height: 1.6;">${bodyText.replace(/\n/g, "<br>")}</div>`,
+      html: htmlBody,
     });
     await logEmail({ eventType: "auto_reply", submissionId: submission.id, recipientEmail: submission.email, subject, status: "sent" });
     return { success: true };
@@ -256,19 +502,7 @@ async function sendReply({ submission, replyBody, replyId, sentBy }) {
   const template = settings.reply_template || "Hello {customer_name},\n\n{reply_body}\n\nBest regards,\nOmni Virtual Solutions";
   const fullBody = interpolate(template, { customer_name: submission.full_name, reply_body: replyBody });
 
-  const htmlBody = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <div style="background: #0d1117; padding: 20px 24px; border-radius: 8px 8px 0 0;">
-        <h2 style="color: #eba22d; margin: 0; font-size: 18px;">✦ Omni Virtual Solutions</h2>
-      </div>
-      <div style="background: #fff; padding: 24px; border: 1px solid #e5e7eb; border-top: none; line-height: 1.7; color: #1f2937;">
-        ${fullBody.replace(/\n/g, "<br>")}
-      </div>
-      <div style="padding: 12px 16px; background: #f9fafb; border: 1px solid #e5e7eb; border-top: none; font-size: 12px; color: #9ca3af; border-radius: 0 0 8px 8px;">
-        This message is in response to your inquiry submitted at omnivirtualsolution.com
-      </div>
-    </div>
-  `;
+  const htmlBody = buildReplyHtml({ submission, settings, fullBody, senderEmail });
 
   try {
     await transporter.sendMail({
