@@ -32,7 +32,7 @@ const servicesRoutes   = require("./routes/services");
 const contactRoutes    = require("./routes/contact");
 const authRoutes       = require("./routes/auth");
 const cmsRoutes        = require("./routes/cms");
-const { router: liveRouter } = require("./routes/live");
+const { router: liveRouter, broadcast } = require("./routes/live");
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -127,6 +127,13 @@ app.post("/api/v1/track-visit", (req, res) => {
   appDb.execute({
     sql: "INSERT INTO page_visits (path, ip_hash, device, referrer) VALUES (?, ?, ?, ?)",
     args: [String(p).slice(0, 200), ipHash, device, String(referrer).slice(0, 200)]
+  }).then(() => {
+    broadcast({
+      type: "page_visit",
+      path: String(p).slice(0, 200),
+      device,
+      timestamp: new Date().toISOString()
+    });
   }).catch(() => {});
   res.json({ ok: true });
 });

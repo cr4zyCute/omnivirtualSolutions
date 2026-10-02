@@ -296,6 +296,164 @@
     .stat-badge.red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
     .stat-badge.blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
 
+    /* ── Real-Time Live Status & Telemetry Pill ── */
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 10px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.28);
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #34d399;
+    }
+    .live-pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      display: inline-block;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulseGreen 1.8s infinite cubic-bezier(0.66, 0, 0, 1);
+    }
+    .live-pulse-dot.reconnecting {
+      background: #f59e0b;
+      box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+      animation: pulseYellow 1.8s infinite;
+    }
+    @keyframes pulseGreen {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8); }
+      70% { box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    @keyframes pulseYellow {
+      0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.8); }
+      70% { box-shadow: 0 0 0 7px rgba(245, 158, 11, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    }
+    .last-sync-tag {
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    /* Live Event Toast Banner */
+    .live-event-toast {
+      display: none;
+      align-items: center;
+      background: linear-gradient(90deg, rgba(235, 162, 45, 0.15), rgba(16, 185, 129, 0.1));
+      border: 1px solid rgba(235, 162, 45, 0.35);
+      border-radius: 8px;
+      padding: 9px 15px;
+      margin-bottom: 18px;
+      font-size: 12.5px;
+      color: #f0f4f8;
+      animation: slideInDown 0.25s ease;
+    }
+    .live-event-toast.show {
+      display: flex;
+    }
+    @keyframes slideInDown {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .pulse-number {
+      animation: numGlow 0.8s ease;
+    }
+    @keyframes numGlow {
+      0% { transform: scale(1); color: var(--gold); }
+      50% { transform: scale(1.1); color: #34d399; }
+      100% { transform: scale(1); }
+    }
+
+    /* Senior Executive Analyst Card */
+    .intelligence-card {
+      background: linear-gradient(135deg, rgba(26, 32, 44, 0.85) 0%, rgba(15, 19, 26, 0.95) 100%);
+      border: 1px solid rgba(235, 162, 45, 0.25);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-top: 20px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .intelligence-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), #38bdf8, #34d399);
+    }
+    .intel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .intel-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .intel-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      background: rgba(235, 162, 45, 0.12);
+      border: 1px solid rgba(235, 162, 45, 0.3);
+      border-radius: 4px;
+      color: var(--gold);
+    }
+    .intel-headline {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .intel-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    @media (max-width: 768px) {
+      .intel-grid { grid-template-columns: 1fr; }
+    }
+    .intel-item-lbl {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .intel-item-val {
+      font-size: 12.5px;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+    .intel-provenance {
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      opacity: 0.8;
+    }
+
     /* ── Senior Analyst Intelligence Card & Charts (Data Analysis Skill) ── */
     .dashboard-toolbar {
       display: flex;
@@ -500,6 +658,213 @@
       outline: none;
       border-color: var(--gold);
     }
+
+    /* ── Mobile Sidebar Drawer & Backdrop (Responsive Design Mastery Skill) ── */
+    .sidebar-toggle-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .sidebar-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--gold);
+      color: #fff;
+    }
+    .sidebar-close-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 16px;
+      cursor: pointer;
+      margin-left: auto;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .sidebar-close-btn:hover {
+      color: #fff;
+      border-color: var(--gold);
+    }
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1040;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+    .sidebar-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ── Responsive Media Queries (Mobile-First / Fluid Grid) ── */
+    @media (max-width: 1024px) {
+      #sidebar {
+        width: min(290px, 86vw);
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1050;
+        box-shadow: 6px 0 36px rgba(0, 0, 0, 0.65);
+        padding-bottom: env(safe-area-inset-bottom, 16px);
+      }
+      #sidebar.active {
+        transform: translateX(0);
+      }
+      .sidebar-toggle-btn {
+        display: inline-flex;
+      }
+      .sidebar-close-btn {
+        display: inline-flex;
+      }
+      .sidebar-backdrop {
+        display: block;
+      }
+      #mainContent {
+        margin-left: 0 !important;
+        width: 100% !important;
+        min-width: 0;
+      }
+      .top-header {
+        padding: 0 16px;
+      }
+      .content-area {
+        padding: clamp(14px, 2.8vw, 24px);
+      }
+      .charts-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .top-header {
+        padding: 0 12px;
+        height: 56px;
+      }
+      .page-title {
+        font-size: 14.5px;
+      }
+      .header-btn-text {
+        display: none;
+      }
+      .btn-header {
+        padding: 6px 10px;
+        min-height: 40px;
+      }
+      .dashboard-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .dashboard-toolbar > div {
+        width: 100%;
+      }
+      .time-selector {
+        width: 100%;
+        display: flex;
+        justify-content: stretch;
+      }
+      .time-pill {
+        flex: 1;
+        text-align: center;
+        padding: 8px 4px;
+        min-height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+      }
+      .stat-card {
+        padding: 14px;
+        gap: 12px;
+      }
+      .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+      .stat-val {
+        font-size: 22px;
+      }
+      .editor-promo-card {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: left;
+        gap: 16px;
+      }
+      .editor-promo-card .btn-primary-gold {
+        width: 100%;
+        justify-content: center;
+      }
+      .editor-frame-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .editor-frame-bar > div {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .panel-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .search-input {
+        width: 100%;
+      }
+      .intel-headline {
+        font-size: 13.5px;
+      }
+      .intel-item-val {
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .content-area {
+        padding: 12px;
+      }
+      .stat-card {
+        padding: 12px;
+      }
+      .chart-container {
+        height: 230px;
+      }
+      .data-table th,
+      .data-table td {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+    }
   </style>
 </head>
 
@@ -508,11 +873,16 @@
   <!-- ── 1. Sidebar ── -->
   <aside id="sidebar">
     <div class="brand-box">
-      <div class="brand-icon">✦</div>
+      <div class="brand-icon" style="padding:4px; overflow:hidden;">
+        <img src="/assets/img/OmniLogo2.png" alt="Omni Logo" style="width:100%; height:100%; border-radius:50%; object-fit:contain; display:block;">
+      </div>
       <div>
         <div class="brand-title">Omni Virtual</div>
         <div class="brand-sub">Management Suite</div>
       </div>
+      <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close navigation">
+        <i class="bi bi-x-lg"></i>
+      </button>
     </div>
 
     <ul class="nav-list">
@@ -562,27 +932,35 @@
           <div class="user-name" id="sidebarUserName">admin</div>
           <div class="user-details" id="sidebarUserRole">Administrator</div>
         </div>
-        <button class="btn-header" onclick="adminLogout()" title="Logout" style="padding:4px 8px; color:#f87171;">
+        <button class="btn-header" onclick="adminLogout()" title="Logout" style="padding:4px 8px; color:#f87171; min-height:36px; min-width:36px;">
           <i class="bi bi-box-arrow-right"></i>
         </button>
       </div>
     </div>
   </aside>
 
+  <!-- Sidebar Backdrop for Mobile/Tablet -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
   <!-- ── 2. Main Content ── -->
   <main id="mainContent">
 
     <!-- Top Header -->
     <header class="top-header">
-      <div class="page-title" id="topHeaderTitle">
-        <i class="bi bi-grid-1x2-fill text-warning"></i> Overview Dashboard
+      <div class="d-flex align-items-center gap-2">
+        <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle navigation menu">
+          <i class="bi bi-list"></i>
+        </button>
+        <div class="page-title" id="topHeaderTitle">
+          <i class="bi bi-grid-1x2-fill text-warning"></i> <span>Overview Dashboard</span>
+        </div>
       </div>
       <div class="header-actions">
         <button class="btn-header btn-primary-gold" onclick="switchTab('live-editor')">
-          <i class="bi bi-pencil-square"></i> Open Live Editor
+          <i class="bi bi-pencil-square"></i> <span class="header-btn-text">Open Live Editor</span>
         </button>
         <a href="index.html" target="_blank" class="btn-header">
-          <i class="bi bi-box-arrow-up-right"></i> Live Website
+          <i class="bi bi-box-arrow-up-right"></i> <span class="header-btn-text">Live Website</span>
         </a>
       </div>
     </header>
@@ -594,14 +972,18 @@
 
         <!-- Toolbar: Analysis Scope & Time Selector -->
         <div class="dashboard-toolbar">
-          <!-- <div>
+          <div>
             <h2 style="font-size:18px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
-              <i class="bi bi-graph-up-arrow text-warning"></i> Email Inquiries & Website Traffic Intelligence
+              <i class="bi bi-graph-up-arrow text-warning"></i> Website & Inquiries Real-time Telemetry
             </h2>
-            <div style="font-size:12px; color:var(--muted); margin-top:2px;">
-              Real-time conversion performance, session tracking, and decision telemetry.
+            <div class="d-flex align-items-center gap-2" style="margin-top:4px;">
+              <div class="live-status-pill">
+                <span class="live-pulse-dot" id="livePulseDot"></span>
+                <span id="realtimeStatusText">Real-Time DB Sync Active</span>
+              </div>
+              <span class="last-sync-tag" id="lastUpdatedTime">Synced just now</span>
             </div>
-          </div> -->
+          </div>
 
           <div class="d-flex align-items-center gap-2">
             <span style="font-size:11px; color:var(--muted); font-weight:600;">Time Window:</span>
@@ -610,11 +992,14 @@
               <button class="time-pill active" onclick="setTimeWindow(14, this)">14 Days</button>
               <button class="time-pill" onclick="setTimeWindow(30, this)">30 Days</button>
             </div>
-            <button class="btn-header" onclick="loadAnalytics(currentTimeWindow)" title="Refresh data" style="padding:5px 9px;">
+            <button class="btn-header" onclick="loadDashboard()" title="Refresh All Data from Database" style="padding:6px 10px;">
               <i class="bi bi-arrow-clockwise"></i>
             </button>
           </div>
         </div>
+
+        <!-- Real-Time Event Notification Toast Ticker -->
+        <div class="live-event-toast" id="liveEventToast"></div>
 
         <!-- 4 Focused Executive Stat Cards: Visits & Emails -->
         <div class="stats-grid">
@@ -679,6 +1064,30 @@
           </div>
         </div>
 
+        <!-- Senior Executive Analyst Intelligence Card -->
+        <div class="intelligence-card" id="analystInsightsCard">
+          <div class="intel-header">
+            <div class="intel-title">
+              <i class="bi bi-lightning-charge-fill"></i> Real-Time Database Telemetry & Decision Intelligence
+            </div>
+            <span class="intel-badge"><i class="bi bi-database-check me-1"></i> Live SQLite / Turso</span>
+          </div>
+          <div class="intel-headline" id="insightsHeadline">Connecting to database telemetry...</div>
+          <div class="intel-grid">
+            <div>
+              <div class="intel-item-lbl"><i class="bi bi-search text-warning me-1"></i> Key Observation</div>
+              <div class="intel-item-val" id="insightsFinding">Loading analytics summary...</div>
+            </div>
+            <div>
+              <div class="intel-item-lbl"><i class="bi bi-shield-check text-success me-1"></i> Action Recommendation</div>
+              <div class="intel-item-val" id="insightsRecommendation">Evaluating lead response rates...</div>
+            </div>
+          </div>
+          <div class="intel-provenance">
+            <i class="bi bi-info-circle"></i> <span id="insightsProvenance">First-party sessions with SHA-256 IP hashing & live contact database records.</span>
+          </div>
+        </div>
+
         <!-- Visualizations (One Chart, One Idea — Data Analysis Mastery Skill §6) -->
         <div class="charts-row">
           <!-- Chart 1: Traffic & Engagement Over Time (Line Chart) -->
@@ -704,7 +1113,7 @@
               <div class="panel-title">
                 <i class="bi bi-pie-chart-fill text-warning"></i> Inquiries Status Funnel
               </div>
-              <span class="nav-badge" id="leadsStatusTotalBadge" style="background:var(--gold); color:#0b0e14;">7 Total</span>
+              <span class="nav-badge" id="leadsStatusTotalBadge" style="background:var(--gold); color:#0b0e14;">—</span>
             </div>
             <div class="panel-body">
               <div style="height:170px; position:relative;">
@@ -954,8 +1363,55 @@
       let allLeads = [];
       let currentLeadStatusFilter = '';
 
+      // ── Responsive Drawer Navigation (Mobile & Tablet) ──────────
+      const sidebarEl = document.getElementById('sidebar');
+      const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+      const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+      const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+
+      function openSidebar() {
+        if (sidebarEl) sidebarEl.classList.add('active');
+        if (sidebarBackdrop) sidebarBackdrop.classList.add('active');
+        document.body.style.overflow = window.innerWidth <= 1024 ? 'hidden' : '';
+      }
+
+      function closeSidebar() {
+        if (sidebarEl) sidebarEl.classList.remove('active');
+        if (sidebarBackdrop) sidebarBackdrop.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      if (sidebarToggleBtn) {
+        sidebarToggleBtn.addEventListener('click', () => {
+          if (sidebarEl && sidebarEl.classList.contains('active')) {
+            closeSidebar();
+          } else {
+            openSidebar();
+          }
+        });
+      }
+      if (sidebarCloseBtn) {
+        sidebarCloseBtn.addEventListener('click', closeSidebar);
+      }
+      if (sidebarBackdrop) {
+        sidebarBackdrop.addEventListener('click', closeSidebar);
+      }
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sidebarEl && sidebarEl.classList.contains('active')) {
+          closeSidebar();
+        }
+      });
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 1024) {
+          closeSidebar();
+        }
+      });
+
       // ── Tab Switching ──────────────────────────────────────────
       window.switchTab = function(tabId, clickedEl = null) {
+        if (window.innerWidth <= 1024) {
+          closeSidebar();
+        }
         document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
@@ -1021,6 +1477,101 @@
       let currentTimeWindow = 14;
       let chartVisits = null;
       let chartStatus = null;
+      let liveEventSource = null;
+      let lastUpdateTimestamp = Date.now();
+      let refreshDebounceTimer = null;
+
+      function scheduleAnalyticsRefresh() {
+        if (refreshDebounceTimer) clearTimeout(refreshDebounceTimer);
+        refreshDebounceTimer = setTimeout(() => {
+          loadAnalytics(currentTimeWindow);
+        }, 1200);
+      }
+
+      function showLiveToast(msg, type = 'info') {
+        const toast = document.getElementById('liveEventToast');
+        if (!toast) return;
+        const icon = type === 'success' ? '📬' : type === 'visit' ? '⚡' : '🔄';
+        toast.innerHTML = `<span style="font-size:14px; margin-right:8px;">${icon}</span> <span>${msg}</span>`;
+        toast.classList.add('show');
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 5000);
+      }
+
+      function updateLastSyncedLabel() {
+        const el = document.getElementById('lastUpdatedTime');
+        if (!el) return;
+        const diffSec = Math.max(0, Math.floor((Date.now() - lastUpdateTimestamp) / 1000));
+        if (diffSec < 5) {
+          el.textContent = 'Synced just now';
+        } else if (diffSec < 60) {
+          el.textContent = `Synced ${diffSec}s ago`;
+        } else {
+          const min = Math.floor(diffSec / 60);
+          el.textContent = `Synced ${min}m ago`;
+        }
+      }
+
+      setInterval(updateLastSyncedLabel, 2000);
+
+      function initRealtimeStream() {
+        if (liveEventSource) {
+          try { liveEventSource.close(); } catch(_) {}
+        }
+
+        const statusEl = document.getElementById('realtimeStatusText');
+        const pulseEl = document.getElementById('livePulseDot');
+
+        try {
+          liveEventSource = new EventSource('/api/v1/live');
+
+          liveEventSource.onopen = () => {
+            if (statusEl) statusEl.textContent = 'Real-Time Database Connected';
+            if (pulseEl) pulseEl.className = 'live-pulse-dot';
+          };
+
+          liveEventSource.onmessage = (e) => {
+            try {
+              const event = JSON.parse(e.data);
+              if (!event || !event.type) return;
+
+              if (event.type === 'page_visit') {
+                showLiveToast(`Live Visit: <strong>${escapeHtml(event.path)}</strong> (${escapeHtml(event.device || 'web')})`, 'visit');
+                const vEl = document.getElementById('statVisits');
+                if (vEl && vEl.textContent !== '—') {
+                  const curr = parseInt(vEl.textContent.replace(/,/g, ''), 10) || 0;
+                  vEl.textContent = (curr + 1).toLocaleString();
+                  vEl.classList.add('pulse-number');
+                  setTimeout(() => vEl.classList.remove('pulse-number'), 900);
+                }
+                scheduleAnalyticsRefresh();
+              } else if (event.type === 'new_lead') {
+                showLiveToast(`New Inquiry: <strong>${escapeHtml(event.lead?.full_name || 'Client Lead')}</strong> — "${escapeHtml(event.lead?.subject || '')}"`, 'success');
+                loadAnalytics(currentTimeWindow);
+                loadLeads();
+              } else if (event.type === 'lead_updated' || event.type === 'reply_sent' || event.type === 'lead_deleted') {
+                showLiveToast(`Inquiry records updated in database`, 'info');
+                loadAnalytics(currentTimeWindow);
+                loadLeads();
+              } else if (event.table === 'content_blocks' || event.table === 'services') {
+                showLiveToast(`Content block updated: ${escapeHtml(event.key || '')}`, 'info');
+                loadBlocks();
+              }
+            } catch (err) {
+              console.warn('[SSE Parse error]', err);
+            }
+          };
+
+          liveEventSource.onerror = () => {
+            if (statusEl) statusEl.textContent = 'Reconnecting real-time stream...';
+            if (pulseEl) pulseEl.className = 'live-pulse-dot reconnecting';
+          };
+        } catch (e) {
+          console.error('[SSE Init error]', e);
+        }
+      }
 
       window.setTimeWindow = function(days, btn) {
         currentTimeWindow = days;
@@ -1055,7 +1606,7 @@
           document.getElementById('leadsBadge').textContent = s.newInquiries ?? 0;
           const actionBadge = document.getElementById('statActionBadge');
           if (s.newInquiries > 0) {
-            actionBadge.textContent = 'Immediate Action';
+            actionBadge.textContent = `${s.newInquiries} Awaiting Action`;
             actionBadge.className = 'stat-badge red';
           } else {
             actionBadge.textContent = 'All Caught Up';
@@ -1066,7 +1617,22 @@
           document.getElementById('statResponseRate').textContent = `${s.responseRate ?? 0}%`;
           document.getElementById('leadsStatusTotalBadge').textContent = `${s.totalInquiries ?? 0} Total`;
 
-          // 2. Render Top Visited Pages
+          // 2. Render Executive Analyst Insights
+          if (data.analystInsights) {
+            const ins = data.analystInsights;
+            const hEl = document.getElementById('insightsHeadline');
+            if (hEl) hEl.textContent = ins.headline || '';
+            const fEl = document.getElementById('insightsFinding');
+            if (fEl) fEl.textContent = ins.keyFinding || '';
+            const rEl = document.getElementById('insightsRecommendation');
+            if (rEl) rEl.textContent = ins.actionableRecommendation || '';
+            const pEl = document.getElementById('insightsProvenance');
+            if (pEl) pEl.textContent = ins.provenanceNote || '';
+          }
+          lastUpdateTimestamp = Date.now();
+          updateLastSyncedLabel();
+
+          // 3. Render Top Visited Pages
           const topPages = data.topPages || [];
           document.getElementById('topPagesList').innerHTML = topPages.length ? topPages.map(p => `
             <div class="top-pages-item">
@@ -1256,7 +1822,16 @@
         loadBlocks();
         loadServices();
         loadMedia();
+        if (!liveEventSource) {
+          initRealtimeStream();
+        }
       }
+
+      // Periodic parity sync every 30s
+      setInterval(() => {
+        loadAnalytics(currentTimeWindow);
+        loadLeads();
+      }, 30000);
 
       // ── Load Leads ──────────────────────────────────────────────
       async function loadLeads() {

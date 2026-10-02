@@ -8,7 +8,7 @@ import Home from './pages/Home';
 import ServicesPage from './pages/ServicesPage';
 import './App.css';
 
-// Automatically scrolls to top on route change
+// Automatically scrolls to top on route change & logs real visits to SQLite
 function ScrollToTopOnNavigate() {
   const { pathname, hash } = useLocation();
 
@@ -16,6 +16,17 @@ function ScrollToTopOnNavigate() {
     if (!hash) {
       window.scrollTo(0, 0);
     }
+    // Record real visitor telemetry to SQLite database
+    try {
+      fetch('/api/v1/track-visit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          path: pathname,
+          referrer: document.referrer || 'direct',
+        }),
+      }).catch(() => {});
+    } catch (_) {}
   }, [pathname, hash]);
 
   return null;

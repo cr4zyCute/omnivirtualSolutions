@@ -35,6 +35,20 @@
   const debounceTimers = {};
   const boundElements = new WeakSet();
 
+  // ── Track Page Visit Telemetry (Real-time to SQLite) ───────────
+  if (!isInsideIframe && !window.location.pathname.startsWith('/admin')) {
+    try {
+      fetch('/api/v1/track-visit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          path: window.location.pathname,
+          referrer: document.referrer || 'direct'
+        })
+      }).catch(function(){});
+    } catch (_) {}
+  }
+
   // ── 2. Apply content block to DOM element ────────────────────────
   function applyBlock(key, value, type) {
     if (value === undefined || value === null) return;

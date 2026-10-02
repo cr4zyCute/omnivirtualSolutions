@@ -48,7 +48,7 @@ router.get("/", (req, res) => {
 // event shape: { key, value, blockType, updatedBy, table }
 function broadcast(event) {
   if (clients.size === 0) return;
-  const payload = `data: ${JSON.stringify(event)}\n\n`;
+  const payload = `data: ${JSON.stringify(event, (_, v) => typeof v === 'bigint' ? Number(v) : v)}\n\n`;
   let dead = [];
   for (const res of clients) {
     if (res.writableEnded) {

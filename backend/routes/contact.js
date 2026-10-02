@@ -22,6 +22,7 @@ const router    = express.Router();
 const { db }    = require("../db");
 const { requireAuth } = require("../middleware/auth");
 const emailSvc  = require("../email-service");
+const { broadcast } = require("./live");
 
 // ── Rate limiting: max 5 submissions per IP per 15 min ────────────
 let rateLimit;
@@ -111,8 +112,21 @@ router.post("/submit", rateLimit, async (req, res) => {
         ip,
       ],
     });
-    newId = result.lastInsertRowid;
+    newId = Number(result.lastInsertRowid);
     console.log(`[contact] New submission #${newId} from: ${email.trim().toLowerCase()}`);
+    // Broadcast live event to real-time dashboards
+    broadcast({
+      type: "new_lead",
+      lead: {
+        id: newId,
+        full_name: full_name.trim(),
+        email: email.trim().toLowerCase(),
+        subject: subject ? subject.trim() : 'General Inquiry',
+        status: 'new',
+        created_at: new Date().toISOString()
+      },
+      timestamp: new Date().toISOString()
+    });
   } catch (err) {
     console.error("[contact] Insert error:", err.message);
     return res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to save your submission. Please try again." } });
@@ -256,6 +270,12 @@ router.patch("/submissions/:id", requireAuth, async (req, res) => {
   try {
     await db.execute({ sql: `UPDATE contact_submissions SET ${updates.join(", ")} WHERE id = ?`, args });
     console.log(`[cms] admin updated submission #${id}`);
+    broadcast({
+      type: "lead_updated",
+      id,
+      status: status || null,
+      timestamp: new Date().toISOString()
+    });
     res.json({ success: true, id, status });
   } catch (err) {
     res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to update submission." } });
@@ -270,6 +290,11 @@ router.delete("/submissions/:id", requireAuth, async (req, res) => {
   try {
     await db.execute({ sql: "DELETE FROM contact_submissions WHERE id = ?", args: [id] });
     console.log(`[cms] admin deleted submission #${id}`);
+    broadcast({
+      type: "lead_deleted",
+      id,
+      timestamp: new Date().toISOString()
+    });
     res.json({ success: true, id });
   } catch (err) {
     res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to delete submission." } });
@@ -306,9 +331,14 @@ router.post("/submissions/:id/reply", requireAuth, async (req, res) => {
             VALUES (?, 'outbound', ?, ?, 0)`,
       args: [id, reply_body.trim(), req.admin.username],
     });
-    replyId = r.lastInsertRowid;
+    replyId = Number(r.lastInsertRowid);
     // Auto-update status to 'replied'
     await db.execute({ sql: "UPDATE contact_submissions SET status = 'replied' WHERE id = ?", args: [id] });
+    broadcast({
+      type: "reply_sent",
+      submissionId: id,
+      timestamp: new Date().toISOString()
+    });
   } catch (err) {
     return res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to save reply." } });
   }
