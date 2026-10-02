@@ -26,32 +26,39 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
-
-
+  <link href="assets/css/navbar-luxury.css" rel="stylesheet">
+  <link href="assets/css/about-v2.css" rel="stylesheet">
 </head>
 
 <body class="index-page">
 
   <header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+    <div class="header-container">
+      <button type="button" class="navbar-hamburger-btn d-xl-none" id="mobileNavToggleBtn" aria-label="Toggle navigation">
+        <span class="hamburger-icon-lines">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </span>
+      </button>
 
-      <a href="index.html" class="logo d-flex align-items-center me-auto">
+      <a href="index.html" class="logo header-center-brand">
         <img src="./assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo">
         <span class="sitename">Omni Virtual Solutions</span>
       </a>
 
-      <nav id="navmenu" class="navmenu">
+      <nav class="desktop-navmenu">
         <ul>
           <li><a href="#hero" class="active">Home</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="#services">Services</a></li>
+          <li><a href="services.html">Services</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
 
-      <a class="btn-getstarted" href="#services" data-block-key="home.hero.cta_label">Get Started</a>
-
+      <div class="header-right-actions">
+        <a class="header-btn-getstarted" href="#services" data-block-key="home.hero.cta_label">Get Started</a>
+      </div>
     </div>
   </header>
 
@@ -152,82 +159,123 @@
 
 
 
-    <!-- About Section -->
-    <section id="about" class="about section about-redesign">
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        
-        <div class="about-header text-center">
-          <div class="about-pill-badge">
-            <span data-block-key="home.about.badge">✦ WHO WE ARE & WHAT WE BELIEVE</span>
-          </div>
-          <h2 class="about-section-heading" data-block-key="home.about.heading">About Us</h2>
-          <div class="about-heading-divider"></div>
+    <!-- About Section (About v2 Design) -->
+    <section id="about" class="about-v2">
+      <!-- Background decoration -->
+      <div class="about-v2-bg" aria-hidden="true">
+        <div class="about-v2-glow glow-1"></div>
+        <div class="about-v2-glow glow-2"></div>
+        <div class="about-v2-grid"></div>
+      </div>
+
+      <div class="container about-v2-inner">
+        <!-- TOP: Eyebrow + Headline + Lead -->
+        <div class="about-v2-head" data-aos="fade-up" data-aos-delay="100">
+          <span class="about-v2-eyebrow" data-block-key="home.about.badge">
+            <i class="bi bi-stars"></i> Who We Are
+          </span>
+          <h2 class="about-v2-title" data-block-key="home.about.heading">
+            Built on Trust, Driven by Excellence.
+          </h2>
+          <p class="about-v2-lead" data-block-key="home.about.lead">
+            Omni Virtual Solutions pairs world-class virtual talent with robust management systems &mdash; so your business runs smoothly while you stay focused on growth.
+          </p>
         </div>
 
-        <div class="row gy-5 align-items-center mt-3">
-          <!-- Visual Column -->
-          <div class="col-lg-6" data-aos="fade-right" data-aos-delay="150">
-            <div class="about-visual-card">
-              <div class="about-image-wrapper">
-                <img src="assets/img/about_team.jpg" alt="Omni Virtual Solutions Professional Team" class="img-fluid about-primary-img" data-block-key="home.about.image">
-              </div>
+        <!-- MIDDLE: Image + Pillars -->
+        <div class="about-v2-body">
+          <!-- Image Stack -->
+          <div class="about-v2-visual" data-aos="fade-right" data-aos-delay="150">
+            <div class="about-v2-img-frame">
+              <img
+                src="assets/img/about_team.jpg"
+                alt="Omni Virtual Solutions professional team"
+                class="about-v2-img"
+                data-block-key="home.about.image"
+              >
+              <div class="about-v2-img-overlay"></div>
+            </div>
 
-              <!-- Floating badge 1: Autonomy & Oversight -->
-              <div class="about-floating-stat">
-                <div class="stat-icon-wrap">
-                  <i class="bi bi-shield-check"></i>
-                </div>
-                <div class="stat-text-wrap">
-                  <span class="stat-num" data-block-key="home.about.badge_stat">Balanced</span>
-                  <span class="stat-lbl" data-block-key="home.about.badge_lbl">Autonomy & Oversight</span>
-                </div>
+            <!-- Floating badge -->
+            <div class="about-v2-float-badge">
+              <div class="float-badge-icon">
+                <i class="bi bi-patch-check-fill"></i>
               </div>
+              <div class="float-badge-text">
+                <strong data-block-key="home.about.float_title">Balanced</strong>
+                <span data-block-key="home.about.float_sub">Autonomy &amp; Oversight</span>
+              </div>
+            </div>
 
-              <!-- Floating badge 2: 24/7 Coverage -->
-              <div class="about-floating-chip">
-                <i class="bi bi-clock-history"></i>
-                <span>24/7 Operations</span>
-              </div>
+            <!-- Corner accent tag -->
+            <div class="about-v2-corner-tag">
+              <i class="bi bi-clock-history"></i>
+              <span data-block-key="home.about.corner_val">24 / 7</span>
+              <small data-block-key="home.about.corner_lbl">Operations</small>
             </div>
           </div>
 
-          <!-- Content Column -->
-          <div class="col-lg-6 content about-content-block" data-aos="fade-left" data-aos-delay="200">
-            <p class="about-lead-text" data-block-key="home.about.lead">
-              We at Omni Virtual Solutions believe in employee autonomy as a pivotal component of corporate success. On the other hand, delicately balancing it w/ proper oversight w/o crossing over to the realm of micro management is something that every business needs to consider.
-            </p>
-
-            <div class="about-callout-card">
-              <div class="callout-tag" data-block-key="home.about.callout_tag">That's where we come in.</div>
-              <p class="callout-body" data-block-key="home.about.callout">
-                We hire only the most qualified Virtual specialists to get the job done for you so you can focus on the essentials that contribute to your organization's sustainability and industry superiority.
-              </p>
-            </div>
-
-            <div class="about-points-list">
-              <div class="about-point-card">
-                <div class="point-icon-box">
-                  <i class="bi bi-person-check-fill"></i>
-                </div>
-                <div class="point-text">
-                  <p data-block-key="home.about.point1">
-                    We're staffed with the most experienced and competent managers and supervisors who take care in monitoring the performance, attendance, and general demeanor of your virtual specialists on-site.
-                  </p>
-                </div>
+          <!-- Pillar cards -->
+          <div class="about-v2-pillars">
+            <div class="about-pillar-card" data-aos="fade-left" data-aos-delay="200">
+              <div class="pillar-icon">
+                <i class="bi bi-shield-fill-check"></i>
               </div>
-
-              <div class="about-point-card">
-                <div class="point-icon-box">
-                  <i class="bi bi-headset"></i>
-                </div>
-                <div class="point-text">
-                  <p data-block-key="home.about.point2">
-                    From Sales (from Lead generation to Closer) to Customer Service (phone, chat, email) and everything else in between, we got your operational needs covered 24/7.
-                  </p>
-                </div>
+              <div class="pillar-body">
+                <h3 class="pillar-title" data-block-key="home.about.pillar1.title">Autonomy with Oversight</h3>
+                <p class="pillar-text" data-block-key="home.about.pillar1.body">
+                  We believe in employee autonomy as a pivotal component of corporate success — carefully balanced with the right level of oversight, without crossing into micro-management.
+                </p>
               </div>
             </div>
 
+            <div class="about-pillar-card" data-aos="fade-left" data-aos-delay="300">
+              <div class="pillar-icon">
+                <i class="bi bi-people-fill"></i>
+              </div>
+              <div class="pillar-body">
+                <h3 class="pillar-title" data-block-key="home.about.pillar2.title">Elite Virtual Specialists</h3>
+                <p class="pillar-text" data-block-key="home.about.pillar2.body">
+                  We hire only the most qualified virtual professionals so you can focus on what matters — the essentials that drive your organization's sustainability and industry superiority.
+                </p>
+              </div>
+            </div>
+
+            <div class="about-pillar-card" data-aos="fade-left" data-aos-delay="400">
+              <div class="pillar-icon">
+                <i class="bi bi-headset"></i>
+              </div>
+              <div class="pillar-body">
+                <h3 class="pillar-title" data-block-key="home.about.pillar3.title">Full-Spectrum Coverage</h3>
+                <p class="pillar-text" data-block-key="home.about.pillar3.body">
+                  From lead generation to customer service — phone, chat, and email — we cover every operational touchpoint, 24 hours a day, 7 days a week.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM: Stats strip -->
+        <div class="about-v2-stats" data-aos="fade-up" data-aos-delay="250">
+          <div class="about-stat-item">
+            <div class="stat-icon-ring"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-value" data-block-key="home.about.stat1.val">200+</div>
+            <div class="stat-label" data-block-key="home.about.stat1.lbl">Clients Served</div>
+          </div>
+          <div class="about-stat-item">
+            <div class="stat-icon-ring"><i class="bi bi-clock-fill"></i></div>
+            <div class="stat-value" data-block-key="home.about.stat2.val">24/7</div>
+            <div class="stat-label" data-block-key="home.about.stat2.lbl">Operations</div>
+          </div>
+          <div class="about-stat-item">
+            <div class="stat-icon-ring"><i class="bi bi-star-fill"></i></div>
+            <div class="stat-value" data-block-key="home.about.stat3.val">5★</div>
+            <div class="stat-label" data-block-key="home.about.stat3.lbl">Satisfaction Rate</div>
+          </div>
+          <div class="about-stat-item">
+            <div class="stat-icon-ring"><i class="bi bi-globe2"></i></div>
+            <div class="stat-value" data-block-key="home.about.stat4.val">10+</div>
+            <div class="stat-label" data-block-key="home.about.stat4.lbl">Industries Served</div>
           </div>
         </div>
 

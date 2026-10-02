@@ -792,30 +792,70 @@
       white-space: nowrap;
     }
 
+    /* ── Single-Screen Immersive Layout for Live Website Editor ── */
+    body.tab-live-editor {
+      overflow: hidden !important;
+    }
+    body.tab-live-editor #mainContent {
+      height: 100vh !important;
+      min-height: 100vh !important;
+      max-height: 100vh !important;
+      overflow: hidden !important;
+    }
+    body.tab-live-editor .content-area {
+      padding: 0 !important;
+      height: calc(100vh - 60px) !important;
+      min-height: calc(100vh - 60px) !important;
+      max-height: calc(100vh - 60px) !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    body.tab-live-editor #section-live-editor {
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    body.tab-live-editor .editor-frame-wrapper {
+      height: 100% !important;
+      min-height: 0 !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
     /* ── Studio Canvas Stage & Hyper-Realistic Device Mockup ── */
     .editor-canvas-stage {
       flex: 1;
+      height: calc(100% - 52px);
+      min-height: 0;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      background: radial-gradient(circle at 50% 18%, #161b26 0%, #090c10 100%);
-      background-image: radial-gradient(rgba(235, 162, 45, 0.06) 1px, transparent 1px);
+      align-items: center;
+      background: #141416;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
       background-size: 24px 24px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 0;
+      overflow: hidden;
+      padding: 14px 20px;
       position: relative;
-      transition: background 0.3s;
     }
     .editor-canvas-stage.is-device {
-      padding: 28px 16px 44px;
+      padding: 14px 20px;
     }
 
     .mockup-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
     }
 
     /* Desktop Viewport */
@@ -830,49 +870,49 @@
       box-shadow: none;
       background: transparent;
       padding: 0;
+      border-radius: 0;
     }
     .mockup-container.mode-desktop .mockup-screen {
       width: 100%;
       height: 100%;
       border-radius: 0;
       box-shadow: none;
+      display: flex;
+      flex-direction: column;
     }
     .mockup-container.mode-desktop .mockup-top-hardware,
     .mockup-container.mode-desktop .mockup-bottom-hardware,
-    .mockup-container.mode-desktop .mobile-dynamic-island,
-    .mockup-container.mode-desktop .mobile-home-bar {
+    .mockup-container.mode-desktop .mobile-status-bar,
+    .mockup-container.mode-desktop .mobile-safari-bar {
       display: none !important;
     }
 
     /* ── Tablet Mockup (iPad Pro Style) ── */
     .mockup-container.mode-tablet {
-      width: 808px;
-      max-width: 95vw;
-      margin: 0 auto;
+      height: 100%;
+      max-height: min(880px, calc(100vh - 142px));
+      aspect-ratio: 768 / 1024;
+      width: auto;
     }
     .mockup-container.mode-tablet .mockup-bezel {
       width: 100%;
-      height: 980px;
-      max-height: calc(100vh - 210px);
-      min-height: 640px;
-      background: #191e28;
-      border: 2.5px solid #2d3648;
+      height: 100%;
+      background: #181c24;
+      border: 3px solid #2b3345;
       border-radius: 36px;
-      padding: 16px;
+      padding: 14px;
       position: relative;
       display: flex;
       flex-direction: column;
       box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.08),
-        0 25px 60px -10px rgba(0, 0, 0, 0.85),
-        0 12px 30px rgba(0, 0, 0, 0.6);
+        0 25px 65px -10px rgba(0, 0, 0, 0.85);
     }
     .mockup-container.mode-tablet .mockup-top-hardware {
-      height: 18px;
+      height: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
     }
     .mockup-container.mode-tablet .tablet-camera {
       width: 8px;
@@ -886,50 +926,78 @@
       flex: 1;
       width: 100%;
       background: #ffffff;
-      border-radius: 20px;
+      border-radius: 22px;
       overflow: hidden;
       position: relative;
+      display: flex;
+      flex-direction: column;
       box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
     }
     .mockup-container.mode-tablet .mockup-bottom-hardware {
-      height: 18px;
+      height: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .mockup-container.mode-tablet .tablet-home-bar {
-      width: 140px;
+      width: 120px;
       height: 4px;
       background: rgba(255, 255, 255, 0.25);
       border-radius: 2px;
     }
-    .mockup-container.mode-tablet .mobile-dynamic-island,
-    .mockup-container.mode-tablet .mobile-home-bar {
+    .mockup-container.mode-tablet .mobile-status-bar,
+    .mockup-container.mode-tablet .mobile-safari-bar {
       display: none !important;
     }
 
-    /* ── Mobile Mockup (iPhone 16 Pro Style) ── */
+    /* ── Mobile Mockup (iPhone 16 Pro Deep Titanium Purple - Exact 2nd Image Style) ── */
     .mockup-container.mode-mobile {
-      width: 418px;
-      max-width: 95vw;
-      margin: 0 auto;
+      height: 100%;
+      max-height: min(840px, calc(100vh - 142px));
+      aspect-ratio: 395 / 830;
+      width: auto;
     }
     .mockup-container.mode-mobile .mockup-bezel {
       width: 100%;
-      height: 860px;
-      max-height: calc(100vh - 210px);
-      min-height: 640px;
-      background: #171b24;
-      border: 2.5px solid #2d3648;
+      height: 100%;
+      background: #17141f; /* Deep Titanium finish */
+      border: 3.5px solid #3c334b; /* Metallic rail border */
       border-radius: 52px;
-      padding: 13px;
+      padding: 10px;
       position: relative;
       display: flex;
       flex-direction: column;
       box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.12),
-        0 30px 80px -10px rgba(0, 0, 0, 0.9),
-        0 15px 35px rgba(0, 0, 0, 0.65);
+        0 0 0 1.5px rgba(255, 255, 255, 0.12),
+        0 0 0 3px #1a1722,
+        0 30px 80px -10px rgba(0, 0, 0, 0.95),
+        0 15px 40px rgba(0, 0, 0, 0.7);
+    }
+    /* Side buttons (Left: Action + Volume; Right: Power) */
+    .mockup-container.mode-mobile .mockup-bezel::before {
+      content: '';
+      position: absolute;
+      left: -6.5px;
+      top: 105px;
+      width: 3.5px;
+      height: 24px;
+      background: #3c334b;
+      border-radius: 2px 0 0 2px;
+      box-shadow:
+        0 38px 0 0 #3c334b,
+        0 38px 0 16px #3c334b,
+        0 92px 0 0 #3c334b,
+        0 92px 0 16px #3c334b;
+    }
+    .mockup-container.mode-mobile .mockup-bezel::after {
+      content: '';
+      position: absolute;
+      right: -6.5px;
+      top: 145px;
+      width: 3.5px;
+      height: 64px;
+      background: #3c334b;
+      border-radius: 0 2px 2px 0;
     }
     .mockup-container.mode-mobile .mockup-top-hardware,
     .mockup-container.mode-mobile .mockup-bottom-hardware {
@@ -938,57 +1006,173 @@
     .mockup-container.mode-mobile .mockup-screen {
       flex: 1;
       width: 100%;
-      background: #ffffff;
-      border-radius: 40px;
+      height: 100%;
+      background: #000000;
+      border-radius: 44px;
       overflow: hidden;
       position: relative;
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
-    .mockup-container.mode-mobile .mobile-dynamic-island {
-      position: absolute;
-      top: 11px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 104px;
-      height: 27px;
+
+    /* iPhone Status Bar (Top) */
+    .mobile-status-bar {
+      display: none;
+      height: 42px;
       background: #000000;
+      color: #ffffff;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      flex-shrink: 0;
+      z-index: 10;
+      user-select: none;
+    }
+    .mockup-container.mode-mobile .mobile-status-bar {
+      display: flex !important;
+    }
+    .status-time {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: -0.2px;
+      width: 75px;
+    }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      width: 75px;
+      justify-content: flex-end;
+    }
+    .status-icons i { font-size: 13px; line-height: 1; }
+    .status-cellular { font-size: 11.5px; }
+    .status-battery { font-size: 14.5px; }
+
+    /* Dynamic Island in Status Bar */
+    .mockup-container.mode-mobile .mobile-dynamic-island {
+      width: 96px;
+      height: 26px;
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 20px;
-      z-index: 99;
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      padding: 0 11px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-      pointer-events: none;
+      padding: 0 9px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+      margin: 0 auto;
     }
     .mockup-container.mode-mobile .island-lens {
       width: 9px;
       height: 9px;
       border-radius: 50%;
-      background: #0a0d14;
+      background: #080c14;
       border: 1px solid #1a2233;
-      box-shadow: inset 0 1px 2px rgba(56, 189, 248, 0.4);
-    }
-    .mockup-container.mode-mobile .mobile-home-bar {
-      position: absolute;
-      bottom: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 130px;
-      height: 4.5px;
-      background: rgba(0, 0, 0, 0.35);
-      border-radius: 3px;
-      z-index: 99;
-      pointer-events: none;
+      box-shadow: inset 0 1px 2px rgba(56, 189, 248, 0.45);
     }
 
-    /* The embedded live editor iframe */
+    /* Embedded Webpage Iframe */
     .editor-iframe {
       width: 100%;
-      height: 100%;
+      flex: 1;
+      min-height: 0;
       border: none;
-      background: #fff;
+      background: #ffffff;
       display: block;
+    }
+
+    /* Mobile Safari iOS Browser Bottom Bar */
+    .mobile-safari-bar {
+      display: none;
+      background: #1c1c1e;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+      flex-direction: column;
+      padding: 6px 12px 6px;
+      z-index: 10;
+      user-select: none;
+    }
+    .mockup-container.mode-mobile .mobile-safari-bar {
+      display: flex !important;
+    }
+    .safari-url-pill {
+      background: #2c2c2e;
+      border-radius: 10px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      margin-bottom: 5px;
+      color: #ffffff;
+    }
+    .safari-url-aa {
+      font-size: 13px;
+      font-weight: 600;
+      color: #98989f;
+    }
+    .safari-url-domain {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .safari-url-domain i {
+      font-size: 10.5px;
+      color: #8e8e93;
+    }
+    .safari-url-reload {
+      background: none;
+      border: none;
+      color: #98989f;
+      cursor: pointer;
+      padding: 0;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s;
+    }
+    .safari-url-reload:hover {
+      color: #ffffff;
+    }
+    .safari-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 2px 4px 4px;
+    }
+    .safari-action-btn {
+      background: none;
+      border: none;
+      color: #0a84ff;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 3px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.15s;
+    }
+    .safari-action-btn.disabled {
+      color: #48484a;
+      cursor: default;
+    }
+    .safari-action-btn:not(.disabled):hover {
+      opacity: 0.7;
+    }
+    .mobile-home-indicator {
+      width: 120px;
+      height: 4px;
+      background: #ffffff;
+      border-radius: 2px;
+      margin: 3px auto 1px auto;
+      opacity: 0.55;
     }
 
     /* Blocks Grid for quick table */
@@ -1570,16 +1754,40 @@
 
                 <!-- Screen Area with Iframe -->
                 <div class="mockup-screen" id="mockupScreen">
-                  <!-- Mobile Dynamic Island Overlay -->
-                  <div class="mobile-dynamic-island" id="mobileDynamicIsland">
-                    <div class="island-lens"></div>
+                  <!-- iPhone Status Bar (Clock, Dynamic Island, Signal / Wifi / Battery) -->
+                  <div class="mobile-status-bar" id="mobileStatusBar">
+                    <div class="status-time" id="statusClock">10:36 PM</div>
+                    <div class="mobile-dynamic-island" id="mobileDynamicIsland">
+                      <div class="island-lens"></div>
+                    </div>
+                    <div class="status-icons">
+                      <span class="status-cellular"><i class="bi bi-reception-4"></i></span>
+                      <span class="status-wifi"><i class="bi bi-wifi"></i></span>
+                      <span class="status-battery"><i class="bi bi-battery-full"></i></span>
+                    </div>
                   </div>
 
                   <!-- The Live Webpage Iframe -->
                   <iframe id="liveEditorIframe" src="about:blank" class="editor-iframe" onload="onEditorIframeLoaded()"></iframe>
 
-                  <!-- Mobile Home Indicator Overlay -->
-                  <div class="mobile-home-bar" id="mobileHomeBar"></div>
+                  <!-- Mobile Safari Browser Bottom Bar -->
+                  <div class="mobile-safari-bar" id="mobileSafariBar">
+                    <div class="safari-url-pill">
+                      <span class="safari-url-aa">Aa</span>
+                      <span class="safari-url-domain" id="safariUrlDomain"><i class="bi bi-lock-fill"></i> localhost</span>
+                      <button type="button" class="safari-url-reload" onclick="reloadEditorIframe()" title="Refresh Page">
+                        <i class="bi bi-arrow-clockwise"></i>
+                      </button>
+                    </div>
+                    <div class="safari-actions-row">
+                      <button type="button" class="safari-action-btn disabled" title="Back"><i class="bi bi-chevron-left"></i></button>
+                      <button type="button" class="safari-action-btn disabled" title="Forward"><i class="bi bi-chevron-right"></i></button>
+                      <button type="button" class="safari-action-btn" title="Open in new window" onclick="window.open((document.getElementById('liveEditorIframe')||{}).src||'index.html','_blank')"><i class="bi bi-box-arrow-up"></i></button>
+                      <button type="button" class="safari-action-btn" title="Bookmarks"><i class="bi bi-book"></i></button>
+                      <button type="button" class="safari-action-btn" title="Tabs"><i class="bi bi-square-stack"></i></button>
+                    </div>
+                    <div class="mobile-home-indicator"></div>
+                  </div>
                 </div>
 
                 <!-- Tablet Bottom Hardware (Home Bar) -->
@@ -1880,12 +2088,19 @@
           if (matchingNav) matchingNav.classList.add('active');
         }
 
+        // Single screen fit toggle: removes body scrolling and fills 100vh
+        if (tabId === 'live-editor') {
+          document.body.classList.add('tab-live-editor');
+        } else {
+          document.body.classList.remove('tab-live-editor');
+        }
+
         // Lazy load editor iframe on first activation
         if (tabId === 'live-editor') {
           const iframe = document.getElementById('liveEditorIframe');
           if (iframe && (!iframe.src || iframe.src === 'about:blank' || iframe.src.endsWith('about:blank'))) {
             const select = document.getElementById('editorPageSelect');
-            iframe.src = select ? select.value : 'admin/editor-services.html';
+            iframe.src = select ? select.value : 'admin/editor.html';
           }
         }
 
@@ -2011,7 +2226,27 @@
         }
         if (iframe) iframe.src = targetUrl;
         if (fullBtn) fullBtn.href = targetUrl;
+
+        const safariDomain = document.getElementById('safariUrlDomain');
+        if (safariDomain) {
+          const isSvc = targetUrl.includes('services');
+          safariDomain.innerHTML = `<i class="bi bi-lock-fill"></i> localhost${isSvc ? '/services' : ''}`;
+        }
       };
+
+      // Synchronize realistic iPhone status bar clock
+      function updateMockupClock() {
+        const clockEl = document.getElementById('statusClock');
+        if (!clockEl) return;
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        clockEl.textContent = `${hours}:${minutes} ${ampm}`;
+      }
+      setInterval(updateMockupClock, 30000);
+      updateMockupClock();
 
       // ── Listen for save status and editor messages ────────────────
       window.addEventListener('message', (e) => {

@@ -2,33 +2,39 @@ import React from 'react';
 import { useCms } from '../context/CmsContext';
 import './About.css';
 
-const stats = [
-  { icon: 'bi-people-fill',     value: '200+',  label: 'Clients Served'    },
-  { icon: 'bi-clock-fill',      value: '24/7',  label: 'Operations'        },
-  { icon: 'bi-star-fill',       value: '5★',    label: 'Satisfaction Rate' },
-  { icon: 'bi-globe2',          value: '10+',   label: 'Industries Served' },
-];
-
-const pillars = [
-  {
-    icon: 'bi-shield-fill-check',
-    title: 'Autonomy with Oversight',
-    body: 'We believe in employee autonomy as a pivotal component of corporate success — carefully balanced with the right level of oversight, without crossing into micro-management.',
-  },
-  {
-    icon: 'bi-people-fill',
-    title: 'Elite Virtual Specialists',
-    body: 'We hire only the most qualified virtual professionals so you can focus on what matters — the essentials that drive your organization\'s sustainability and industry superiority.',
-  },
-  {
-    icon: 'bi-headset',
-    title: 'Full-Spectrum Coverage',
-    body: 'From lead generation to customer service — phone, chat, and email — we cover every operational touchpoint, 24 hours a day, 7 days a week.',
-  },
-];
-
 export default function About() {
   const { t } = useCms();
+
+  const pillars = [
+    {
+      icon: 'bi-shield-fill-check',
+      titleKey: 'home.about.pillar1.title',
+      bodyKey: 'home.about.pillar1.body',
+      defaultTitle: 'Autonomy with Oversight',
+      defaultBody: 'We believe in employee autonomy as a pivotal component of corporate success — carefully balanced with the right level of oversight, without crossing into micro-management.',
+    },
+    {
+      icon: 'bi-people-fill',
+      titleKey: 'home.about.pillar2.title',
+      bodyKey: 'home.about.pillar2.body',
+      defaultTitle: 'Elite Virtual Specialists',
+      defaultBody: "We hire only the most qualified virtual professionals so you can focus on what matters — the essentials that drive your organization's sustainability and industry superiority.",
+    },
+    {
+      icon: 'bi-headset',
+      titleKey: 'home.about.pillar3.title',
+      bodyKey: 'home.about.pillar3.body',
+      defaultTitle: 'Full-Spectrum Coverage',
+      defaultBody: 'From lead generation to customer service — phone, chat, and email — we cover every operational touchpoint, 24 hours a day, 7 days a week.',
+    },
+  ];
+
+  const statsList = [
+    { icon: 'bi-people-fill', valKey: 'home.about.stat1.val', lblKey: 'home.about.stat1.lbl', defaultVal: '200+', defaultLbl: 'Clients Served' },
+    { icon: 'bi-clock-fill',  valKey: 'home.about.stat2.val', lblKey: 'home.about.stat2.lbl', defaultVal: '24/7', defaultLbl: 'Operations' },
+    { icon: 'bi-star-fill',   valKey: 'home.about.stat3.val', lblKey: 'home.about.stat3.lbl', defaultVal: '5★',   defaultLbl: 'Satisfaction Rate' },
+    { icon: 'bi-globe2',      valKey: 'home.about.stat4.val', lblKey: 'home.about.stat4.lbl', defaultVal: '10+',  defaultLbl: 'Industries Served' },
+  ];
 
   React.useEffect(() => {
     if (window.AOS) {
@@ -49,14 +55,12 @@ export default function About() {
 
         {/* ════ TOP: Eyebrow + Headline ════ */}
         <div className="about-v2-head" data-aos="fade-up" data-aos-delay="100">
-          <span className="about-v2-eyebrow">
+          <span className="about-v2-eyebrow" data-block-key="home.about.badge">
             <i className="bi bi-stars" />
             {t('home.about.badge', 'Who We Are')}
           </span>
           <h2 className="about-v2-title" data-block-key="home.about.heading">
-            {t('home.about.heading',
-              <>Built on Trust,<br /><em>Driven by Excellence.</em></>
-            )}
+            {t('home.about.heading', 'Built on Trust, Driven by Excellence.')}
           </h2>
           <p className="about-v2-lead" data-block-key="home.about.lead">
             {t(
@@ -87,16 +91,16 @@ export default function About() {
                 <i className="bi bi-patch-check-fill" />
               </div>
               <div className="float-badge-text">
-                <strong>Balanced</strong>
-                <span>Autonomy &amp; Oversight</span>
+                <strong data-block-key="home.about.float_title">{t('home.about.float_title', 'Balanced')}</strong>
+                <span data-block-key="home.about.float_sub">{t('home.about.float_sub', 'Autonomy & Oversight')}</span>
               </div>
             </div>
 
             {/* Corner accent tag */}
             <div className="about-v2-corner-tag">
               <i className="bi bi-clock-history" />
-              <span>24 / 7</span>
-              <small>Operations</small>
+              <span data-block-key="home.about.corner_val">{t('home.about.corner_val', '24 / 7')}</span>
+              <small data-block-key="home.about.corner_lbl">{t('home.about.corner_lbl', 'Operations')}</small>
             </div>
           </div>
 
@@ -114,8 +118,8 @@ export default function About() {
                   <i className={`bi ${p.icon}`} />
                 </div>
                 <div className="pillar-body">
-                  <h3 className="pillar-title">{p.title}</h3>
-                  <p className="pillar-text">{p.body}</p>
+                  <h3 className="pillar-title" data-block-key={p.titleKey}>{t(p.titleKey, p.defaultTitle)}</h3>
+                  <p className="pillar-text" data-block-key={p.bodyKey}>{t(p.bodyKey, p.defaultBody)}</p>
                 </div>
               </div>
             ))}
@@ -124,7 +128,7 @@ export default function About() {
 
         {/* ════ BOTTOM: Stats strip ════ */}
         <div className="about-v2-stats" data-aos="fade-up" data-aos-delay="250">
-          {stats.map((s, i) => (
+          {statsList.map((s, i) => (
             <div
               className="about-stat-item"
               key={i}
@@ -134,8 +138,8 @@ export default function About() {
               <div className="stat-icon-ring">
                 <i className={`bi ${s.icon}`} />
               </div>
-              <div className="stat-value">{s.value}</div>
-              <div className="stat-label">{s.label}</div>
+              <div className="stat-value" data-block-key={s.valKey}>{t(s.valKey, s.defaultVal)}</div>
+              <div className="stat-label" data-block-key={s.lblKey}>{t(s.lblKey, s.defaultLbl)}</div>
             </div>
           ))}
         </div>

@@ -47,6 +47,8 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
+  <link href="assets/css/navbar-luxury.css" rel="stylesheet">
+  <link href="assets/css/about-v2.css" rel="stylesheet">
 
   <!-- ── In-Place CMS Live Editor Styles ── -->
   <style>
@@ -319,6 +321,216 @@
       color: #fff;
       transform: translateY(-2px);
     }
+
+    /* ── Critical Header & Responsive Mobile Navigation Rules ── */
+    .header {
+      height: 68px;
+      min-height: 68px;
+      background-color: rgba(255, 255, 255, 0.98);
+      border-bottom: 1px solid rgba(225, 218, 206, 0.6);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex !important;
+      align-items: center !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    .header-container {
+      width: 100%;
+      max-width: 1320px;
+      height: 100%;
+      margin: 0 auto;
+      padding: 0 clamp(12px, 3vw, 24px);
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+    .header-center-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .header-center-brand img {
+      height: 34px;
+      width: auto;
+      object-fit: contain;
+    }
+    .header-center-brand .sitename {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #1c1917;
+      white-space: nowrap;
+    }
+    .desktop-navmenu ul {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .desktop-navmenu a {
+      color: #4a453e;
+      text-decoration: none;
+      font-size: 14.5px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .desktop-navmenu a:hover,
+    .desktop-navmenu a.active {
+      color: #eba22d;
+    }
+    .header-right-actions {
+      margin-left: auto;
+    }
+    .header-btn-getstarted {
+      background: #eba22d;
+      color: #0b0e14 !important;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 13.5px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .header-btn-getstarted:hover {
+      background: #df9524;
+      box-shadow: 0 4px 14px rgba(235, 162, 45, 0.35);
+    }
+    .navbar-hamburger-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 6px;
+      width: 38px;
+      height: 38px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+    }
+    .hamburger-icon-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 18px;
+    }
+    .hamburger-line {
+      display: block;
+      height: 2px;
+      width: 100%;
+      background: #1c1917;
+      border-radius: 2px;
+    }
+
+    /* ── Mobile / Tablet Viewport (< 1200px) ── */
+    @media (max-width: 1199px) {
+      .header-container {
+        justify-content: center;
+      }
+      .navbar-hamburger-btn {
+        display: inline-flex !important;
+        position: absolute !important;
+        left: 14px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+      }
+      .header-center-brand {
+        margin: 0 auto !important;
+      }
+      .desktop-navmenu {
+        display: none !important;
+      }
+      .header-right-actions {
+        display: none !important;
+      }
+    }
+
+    /* Mobile Drawer */
+    .mobile-nav-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1998;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .mobile-nav-backdrop.open {
+      display: block;
+      opacity: 1;
+    }
+    .mobile-nav-drawer {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: min(320px, 85vw);
+      background: #ffffff;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+      z-index: 1999;
+      transform: translateX(-100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    .mobile-nav-drawer.open {
+      transform: translateX(0);
+    }
+    .mobile-drawer-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid #f0ece1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mobile-drawer-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mobile-drawer-brand img {
+      height: 28px;
+    }
+    .drawer-sitename {
+      font-weight: 700;
+      font-size: 14px;
+      color: #1c1917;
+    }
+    .mobile-drawer-close {
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      color: #64748b;
+      cursor: pointer;
+    }
+    .mobile-nav-list {
+      list-style: none;
+      padding: 16px 20px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mobile-nav-link {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: #334155;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .mobile-nav-link:hover {
+      background: #f8fafc;
+      color: #c29a6b;
+    }
   </style>
 </head>
 
@@ -359,27 +571,54 @@
 
   <!-- ── 2. The Entire Website (Exact Verbatim Layout) ── -->
   <header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+    <div class="header-container">
+      <button type="button" class="navbar-hamburger-btn d-xl-none" id="mobileNavToggleBtn" aria-label="Toggle navigation">
+        <span class="hamburger-icon-lines">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </span>
+      </button>
 
-      <a href="index.html" class="logo d-flex align-items-center me-auto">
+      <a href="index.html" class="logo header-center-brand">
         <img src="assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo">
         <span class="sitename">Omni Virtual Solutions</span>
       </a>
 
-      <nav id="navmenu" class="navmenu">
+      <nav class="desktop-navmenu">
         <ul>
           <li><a href="#hero" class="active">Home</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="#services">Services</a></li>
+          <li><a href="services.html">Services</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
 
-      <a class="btn-getstarted" href="#services" data-block-key="home.hero.cta_label">Get Started</a>
-
+      <div class="header-right-actions">
+        <a class="header-btn-getstarted" href="#services" data-block-key="home.hero.cta_label">Get Started</a>
+      </div>
     </div>
   </header>
+
+  <!-- Mobile Navigation Backdrop & Drawer -->
+  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" onclick="toggleMobileNav(false)"></div>
+  <div class="mobile-nav-drawer" id="mobileNavDrawer" role="dialog" aria-modal="true">
+    <div class="mobile-drawer-header">
+      <div class="mobile-drawer-brand">
+        <img src="assets/img/OmniLogo2.png" alt="Omni Logo" style="height:28px;">
+        <span class="drawer-sitename">Omni Virtual Solutions</span>
+      </div>
+      <button type="button" class="mobile-drawer-close" onclick="toggleMobileNav(false)" aria-label="Close menu">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <ul class="mobile-nav-list">
+      <li><a href="#hero" class="mobile-nav-link" onclick="toggleMobileNav(false)"><i class="bi bi-house-door me-2" style="color:#c29a6b;"></i> Home</a></li>
+      <li><a href="#about" class="mobile-nav-link" onclick="toggleMobileNav(false)"><i class="bi bi-info-circle me-2" style="color:#c29a6b;"></i> About</a></li>
+      <li><a href="services.html" class="mobile-nav-link" onclick="toggleMobileNav(false)"><i class="bi bi-briefcase me-2" style="color:#c29a6b;"></i> Services</a></li>
+      <li><a href="#contact" class="mobile-nav-link" onclick="toggleMobileNav(false)"><i class="bi bi-envelope me-2" style="color:#c29a6b;"></i> Contact</a></li>
+    </ul>
+  </div>
 
   <main class="main">
     <!-- Hero Section -->
@@ -404,7 +643,7 @@
               <script type="application/json" class="swiper-config">
                 {
                   "loop": true,
-                  "initialSlide": 8,
+                  "initialSlide": 13,
                   "speed": 750,
                   "autoplay": {
                     "delay": 2000,
@@ -428,7 +667,7 @@
                 }
               </script>
               <div class="swiper-wrapper align-items-center">
-                <!-- Cycle 1 -->
+                <!-- Cycle 1 (Books 1 to 13) -->
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book1.png" alt="Book 1" class="book-cover-img"></div></div>
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book2.png" alt="Book 2" class="book-cover-img"></div></div>
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book3.png" alt="Book 3" class="book-cover-img"></div></div>
@@ -437,7 +676,12 @@
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book6.png" alt="Book 6" class="book-cover-img"></div></div>
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book7.png" alt="Book 7" class="book-cover-img"></div></div>
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book8.png" alt="Book 8" class="book-cover-img"></div></div>
-                <!-- Cycle 2 -->
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book9.png" alt="Book 9" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book10.png" alt="Book 10" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book11.png" alt="Book 11" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book12.png" alt="Book 12" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book13.png" alt="Book 13" class="book-cover-img"></div></div>
+                <!-- Cycle 2 (Books 1 to 13) -->
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book1.png" alt="Book 1" class="book-cover-img"></div></div>
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book2.png" alt="Book 2" class="book-cover-img"></div></div>
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book3.png" alt="Book 3" class="book-cover-img"></div></div>
@@ -446,6 +690,11 @@
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book6.png" alt="Book 6" class="book-cover-img"></div></div>
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book7.png" alt="Book 7" class="book-cover-img"></div></div>
                 <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book8.png" alt="Book 8" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book9.png" alt="Book 9" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book10.png" alt="Book 10" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book11.png" alt="Book 11" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book12.png" alt="Book 12" class="book-cover-img"></div></div>
+                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book13.png" alt="Book 13" class="book-cover-img"></div></div>
               </div>
               <div class="swiper-pagination hero-books-pagination"></div>
             </div>
@@ -454,82 +703,123 @@
       </div>
     </section><!-- /Hero Section -->
 
-    <!-- About Section -->
-    <section id="about" class="about section about-redesign">
-      <div class="container">
-        
-        <div class="about-header text-center">
-          <div class="about-pill-badge">
-            <span data-block-key="home.about.badge">✦ WHO WE ARE & WHAT WE BELIEVE</span>
-          </div>
-          <h2 class="about-section-heading" data-block-key="home.about.heading">About Us</h2>
-          <div class="about-heading-divider"></div>
+    <!-- About Section (About v2 Design) -->
+    <section id="about" class="about-v2">
+      <!-- Background decoration -->
+      <div class="about-v2-bg" aria-hidden="true">
+        <div class="about-v2-glow glow-1"></div>
+        <div class="about-v2-glow glow-2"></div>
+        <div class="about-v2-grid"></div>
+      </div>
+
+      <div class="container about-v2-inner">
+        <!-- TOP: Eyebrow + Headline + Lead -->
+        <div class="about-v2-head">
+          <span class="about-v2-eyebrow" data-block-key="home.about.badge">
+            <i class="bi bi-stars"></i> Who We Are
+          </span>
+          <h2 class="about-v2-title" data-block-key="home.about.heading">
+            Built on Trust, Driven by Excellence.
+          </h2>
+          <p class="about-v2-lead" data-block-key="home.about.lead">
+            Omni Virtual Solutions pairs world-class virtual talent with robust management systems &mdash; so your business runs smoothly while you stay focused on growth.
+          </p>
         </div>
 
-        <div class="row gy-5 align-items-center mt-3">
-          <!-- Visual Column -->
-          <div class="col-lg-6">
-            <div class="about-visual-card position-relative">
-              <div class="about-image-wrapper">
-                <img src="assets/img/about_team.jpg" alt="Omni Virtual Solutions Professional Team" class="img-fluid about-primary-img" data-block-key="home.about.image">
-              </div>
+        <!-- MIDDLE: Image + Pillars -->
+        <div class="about-v2-body">
+          <!-- Image Stack -->
+          <div class="about-v2-visual">
+            <div class="about-v2-img-frame">
+              <img
+                src="assets/img/about_team.jpg"
+                alt="Omni Virtual Solutions professional team"
+                class="about-v2-img"
+                data-block-key="home.about.image"
+              >
+              <div class="about-v2-img-overlay"></div>
+            </div>
 
-              <!-- Floating badge 1: Autonomy & Oversight -->
-              <div class="about-floating-stat">
-                <div class="stat-icon-wrap">
-                  <i class="bi bi-shield-check"></i>
-                </div>
-                <div class="stat-text-wrap">
-                  <span class="stat-num" data-block-key="home.about.badge_stat">Balanced</span>
-                  <span class="stat-lbl" data-block-key="home.about.badge_lbl">Autonomy & Oversight</span>
-                </div>
+            <!-- Floating badge -->
+            <div class="about-v2-float-badge">
+              <div class="float-badge-icon">
+                <i class="bi bi-patch-check-fill"></i>
               </div>
+              <div class="float-badge-text">
+                <strong data-block-key="home.about.float_title">Balanced</strong>
+                <span data-block-key="home.about.float_sub">Autonomy &amp; Oversight</span>
+              </div>
+            </div>
 
-              <!-- Floating badge 2: 24/7 Coverage -->
-              <div class="about-floating-chip">
-                <i class="bi bi-clock-history"></i>
-                <span>24/7 Operations</span>
-              </div>
+            <!-- Corner accent tag -->
+            <div class="about-v2-corner-tag">
+              <i class="bi bi-clock-history"></i>
+              <span data-block-key="home.about.corner_val">24 / 7</span>
+              <small data-block-key="home.about.corner_lbl">Operations</small>
             </div>
           </div>
 
-          <!-- Content Column -->
-          <div class="col-lg-6 content about-content-block">
-            <p class="about-lead-text" data-block-key="home.about.lead">
-              We at Omni Virtual Solutions believe in employee autonomy as a pivotal component of corporate success. On the other hand, delicately balancing it w/ proper oversight w/o crossing over to the realm of micro management is something that every business needs to consider.
-            </p>
-
-            <div class="about-callout-card">
-              <div class="callout-tag" data-block-key="home.about.callout_tag">That's where we come in.</div>
-              <p class="callout-body" data-block-key="home.about.callout">
-                We hire only the most qualified Virtual specialists to get the job done for you so you can focus on the essentials that contribute to your organization's sustainability and industry superiority.
-              </p>
-            </div>
-
-            <div class="about-points-list">
-              <div class="about-point-card">
-                <div class="point-icon-box">
-                  <i class="bi bi-person-check-fill"></i>
-                </div>
-                <div class="point-text">
-                  <p data-block-key="home.about.point1">
-                    We're staffed with the most experienced and competent managers and supervisors who take care in monitoring the performance, attendance, and general demeanor of your virtual specialists on-site.
-                  </p>
-                </div>
+          <!-- Pillar cards -->
+          <div class="about-v2-pillars">
+            <div class="about-pillar-card">
+              <div class="pillar-icon">
+                <i class="bi bi-shield-fill-check"></i>
               </div>
-
-              <div class="about-point-card">
-                <div class="point-icon-box">
-                  <i class="bi bi-headset"></i>
-                </div>
-                <div class="point-text">
-                  <p data-block-key="home.about.point2">
-                    From Sales (from Lead generation to Closer) to Customer Service (phone, chat, email) and everything else in between, we got your operational needs covered 24/7.
-                  </p>
-                </div>
+              <div class="pillar-body">
+                <h3 class="pillar-title" data-block-key="home.about.pillar1.title">Autonomy with Oversight</h3>
+                <p class="pillar-text" data-block-key="home.about.pillar1.body">
+                  We believe in employee autonomy as a pivotal component of corporate success — carefully balanced with the right level of oversight, without crossing into micro-management.
+                </p>
               </div>
             </div>
 
+            <div class="about-pillar-card">
+              <div class="pillar-icon">
+                <i class="bi bi-people-fill"></i>
+              </div>
+              <div class="pillar-body">
+                <h3 class="pillar-title" data-block-key="home.about.pillar2.title">Elite Virtual Specialists</h3>
+                <p class="pillar-text" data-block-key="home.about.pillar2.body">
+                  We hire only the most qualified virtual professionals so you can focus on what matters — the essentials that drive your organization's sustainability and industry superiority.
+                </p>
+              </div>
+            </div>
+
+            <div class="about-pillar-card">
+              <div class="pillar-icon">
+                <i class="bi bi-headset"></i>
+              </div>
+              <div class="pillar-body">
+                <h3 class="pillar-title" data-block-key="home.about.pillar3.title">Full-Spectrum Coverage</h3>
+                <p class="pillar-text" data-block-key="home.about.pillar3.body">
+                  From lead generation to customer service — phone, chat, and email — we cover every operational touchpoint, 24 hours a day, 7 days a week.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTTOM: Stats strip -->
+        <div class="about-v2-stats">
+          <div class="about-stat-item">
+            <div class="stat-icon-ring"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-value" data-block-key="home.about.stat1.val">200+</div>
+            <div class="stat-label" data-block-key="home.about.stat1.lbl">Clients Served</div>
+          </div>
+          <div class="about-stat-item">
+            <div class="stat-icon-ring"><i class="bi bi-clock-fill"></i></div>
+            <div class="stat-value" data-block-key="home.about.stat2.val">24/7</div>
+            <div class="stat-label" data-block-key="home.about.stat2.lbl">Operations</div>
+          </div>
+          <div class="about-stat-item">
+            <div class="stat-icon-ring"><i class="bi bi-star-fill"></i></div>
+            <div class="stat-value" data-block-key="home.about.stat3.val">5★</div>
+            <div class="stat-label" data-block-key="home.about.stat3.lbl">Satisfaction Rate</div>
+          </div>
+          <div class="about-stat-item">
+            <div class="stat-icon-ring"><i class="bi bi-globe2"></i></div>
+            <div class="stat-value" data-block-key="home.about.stat4.val">10+</div>
+            <div class="stat-label" data-block-key="home.about.stat4.lbl">Industries Served</div>
           </div>
         </div>
 
@@ -1294,6 +1584,29 @@
           alert('Upload failed: ' + e.message);
         }
       };
+
+      // ── Mobile Navigation Drawer Toggle ──
+      window.toggleMobileNav = function(open) {
+        const drawer = document.getElementById('mobileNavDrawer');
+        const backdrop = document.getElementById('mobileNavBackdrop');
+        const btn = document.getElementById('mobileNavToggleBtn');
+        const isOpen = open !== undefined ? open : (drawer && !drawer.classList.contains('open'));
+        if (drawer) drawer.classList.toggle('open', isOpen);
+        if (backdrop) backdrop.classList.toggle('open', isOpen);
+        if (btn) btn.classList.toggle('is-active', isOpen);
+      };
+
+      const mobBtn = document.getElementById('mobileNavToggleBtn');
+      if (mobBtn) {
+        mobBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.toggleMobileNav();
+        });
+      }
+
+      if (window.self !== window.top) {
+        document.documentElement.classList.add('in-iframe');
+      }
 
       function startEditor() {
         fetch('/api/v1/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
