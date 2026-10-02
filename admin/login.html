@@ -6,6 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Admin Login — Omni Virtual Solutions</title>
   <meta name="description" content="Omni Virtual Solutions admin login. Authorized personnel only.">
+  <link rel="icon" type="image/png" href="/assets/img/OmniLogo2.png">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,6 +24,7 @@
       --warn:      #e09c52;
       --success:   #52c07a;
       --radius:    14px;
+      --logo-size: 76px;
     }
 
     body {
@@ -33,7 +35,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow-y: auto;
+      padding: 32px 16px;
     }
 
     /* Ambient background glow */
@@ -71,24 +74,30 @@
     /* Logo / Brand */
     .brand {
       text-align: center;
-      margin-bottom: 36px;
+      margin-bottom: 24px;
     }
     .brand-logo {
-      width: 56px;
-      height: 56px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-lt));
-      border-radius: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 32px rgba(201,168,76,0.35), 0 0 0 1px rgba(201,168,76,0.15);
-      animation: logoGlow 3s ease-in-out infinite alternate;
+      display: inline-block;
+      width: var(--logo-size, 76px);
+      height: var(--logo-size, 76px);
+      margin-bottom: 14px;
+      background: none;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      line-height: 0;
     }
-    @keyframes logoGlow {
-      from { box-shadow: 0 8px 32px rgba(201,168,76,0.3), 0 0 0 1px rgba(201,168,76,0.1); }
-      to   { box-shadow: 0 12px 48px rgba(201,168,76,0.5), 0 0 0 1px rgba(201,168,76,0.25); }
+    .brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 50%;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s ease;
+    }
+    .brand-logo img:hover {
+      transform: scale(1.05);
     }
     .brand h1 {
       font-size: 20px;
@@ -317,7 +326,9 @@
 <body>
   <div class="login-wrap">
     <div class="brand">
-      <div class="brand-logo">✦</div>
+      <div class="brand-logo">
+        <img src="/assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo">
+      </div>
       <h1>Omni Virtual Solutions</h1>
       <p>Content Management System</p>
     </div>
