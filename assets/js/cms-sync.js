@@ -526,9 +526,16 @@
       ].filter(l => l !== null);
       const emailBody = bodyLines.join('\n');
 
-      // Quietly log to backend CRM in the background
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const origBtnContent = submitBtn ? submitBtn.innerHTML : 'Send Message';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Sending...';
+      }
+
+      let resData = null;
       try {
-        fetch('/api/v1/contact/submit', {
+        const response = await fetch('/api/v1/contact/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -539,42 +546,189 @@
             subject: emailSubject,
             message,
             service_interest_id: serviceInterest ? parseInt(serviceInterest, 10) : null,
-            direct_mail: true,
+            form_load_time: formLoadTime,
+            website,
           }),
-        }).catch(() => {});
-      } catch (_) {}
+        });
+        resData = await response.json();
+      } catch (err) {
+        console.error('[contact] Submit network error:', err);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origBtnContent;
+        }
+      }
 
-      // Open Gmail web compose as a Floating Popup Window
-      const width = 680;
-      const height = 740;
-      const screenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
-      const screenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
-      const innerWidth = window.innerWidth || document.documentElement.clientWidth || screen.width;
-      const innerHeight = window.innerHeight || document.documentElement.clientHeight || screen.height;
-      const left = Math.max(0, Math.round(screenLeft + (innerWidth - width) / 2));
-      const top = Math.max(0, Math.round(screenTop + (innerHeight - height) / 2));
-      const features = `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes`;
-      const popupWin = window.open(gmailUrl, 'OmniGmailCompose', features);
-      if (popupWin && popupWin.focus) popupWin.focus();
+      if (resData && resData.success) {
+        form.reset();
 
-      showAlert(`
-        <div style="font-weight:700; font-size:14px; margin-bottom:4px;">
-          <i class="bi bi-check-circle-fill me-1"></i> Floating Gmail Popup Opened!
-        </div>
-        <div>Your message is pre-filled. Please review and click <strong>Send</strong> inside the popup window.</div>
-        <div class="mt-2" style="font-size:12.5px;">
-          Delivering to: <strong style="color:#fef08a;">${targetEmail}</strong>
-          &nbsp;|&nbsp;
-          <a href="#" onclick="window.open('${gmailUrl}','OmniGmailCompose','${features}');return false;" class="text-white text-decoration-underline fw-bold">Re-open Popup &rarr;</a>
-        </div>
-      `, 'success');
-      form.reset();
+        if (resData.mode === 'popup_fallback') {
+          // Quota reached or admin forced popup mode: open Gmail popup fallback
+          const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(targetEmail)}&su=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+          const width = 680;
+          const height = 740;
+          const screenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+          const screenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+          const innerWidth = window.innerWidth || document.documentElement.clientWidth || screen.width;
+          const innerHeight = window.innerHeight || document.documentElement.clientHeight || screen.height;
+          const left = Math.max(0, Math.round(screenLeft + (innerWidth - width) / 2));
+          const top = Math.max(0, Math.round(screenTop + (innerHeight - height) / 2));
+          const features = `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes`;
+          const popupWin = window.open(gmailUrl, 'OmniGmailCompose', features);
+          if (popupWin && popupWin.focus) popupWin.focus();
+
+          showAlert(`
+            <div style="font-weight:700; font-size:14px; margin-bottom:4px;">
+              <i class="bi bi-info-circle-fill me-1"></i> Direct Gmail Compose Fallback Opened
+            </div>
+            <div>${resData.message || 'Daily automated limit reached. Please review and click <strong>Send</strong> inside the popup.'}</div>
+            <div class="mt-2" style="font-size:12.5px;">
+              Delivering to: <strong style="color:#fef08a;">${targetEmail}</strong>
+              &nbsp;|&nbsp;
+              <a href="#" onclick="window.open('${gmailUrl}','OmniGmailCompose','${features}');return false;" class="text-white text-decoration-underline fw-bold">Re-open Popup &rarr;</a>
+            </div>
+          `, 'warning');
+        } else {
+          // Standard Background Mode: show modern 5s auto-closing modal
+          showSuccessModal(name, email);
+        }
+      } else {
+        showAlert(resData?.error?.message || 'Failed to send your message. Please try again.', 'danger');
+      }
     });
+
+    function showSuccessModal(clientName, clientEmail) {
+      const existing = document.getElementById('omniSuccessModal');
+      if (existing) existing.remove();
+
+      const modalEl = document.createElement('div');
+      modalEl.id = 'omniSuccessModal';
+      modalEl.style.cssText = `
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(10, 15, 29, 0.78);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        padding: 16px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      `;
+
+      modalEl.innerHTML = `
+        <div style="
+          background: #0d1117;
+          border: 1px solid rgba(235, 162, 45, 0.45);
+          box-shadow: 0 20px 45px rgba(0, 0, 0, 0.65), 0 0 35px rgba(235, 162, 45, 0.18);
+          border-radius: 16px;
+          max-width: 480px;
+          width: 100%;
+          padding: 34px 28px;
+          text-align: center;
+          position: relative;
+          color: #f1f5f9;
+          transform: scale(0.92);
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        ">
+          <!-- Animated Checkmark Icon -->
+          <div style="
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 18px;
+            background: rgba(34, 197, 94, 0.15);
+            border: 2px solid #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #22c55e;
+            font-size: 32px;
+            font-weight: 800;
+          ">
+            ✓
+          </div>
+
+          <h3 style="margin: 0 0 8px; font-size: 23px; font-weight: 800; color: #ffffff; letter-spacing: 0.2px;">
+            Message Sent Successfully!
+          </h3>
+
+          <p style="margin: 0 0 16px; font-size: 14.5px; line-height: 23px; color: #94a3b8;">
+            Thank you, <strong style="color: #eba22d;">${clientName || 'Valued Client'}</strong>! We have received your inquiry and sent an automated confirmation to <strong style="color: #ffffff;">${clientEmail || 'your email'}</strong>.
+          </p>
+
+          <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 10px 14px; font-size: 12.5px; color: #cbd5e1; margin-bottom: 22px;">
+            ⏱ Our team typically responds within <strong>1–2 business days</strong>.
+          </div>
+
+          <!-- Countdown and Progress bar -->
+          <div style="margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 6px;">
+              <span>Auto-closing in <strong id="modalCountdown" style="color: #eba22d;">5</strong>s</span>
+              <span style="font-weight: 600;">Omni Virtual Solutions</span>
+            </div>
+            <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+              <div id="modalProgressBar" style="height: 100%; width: 100%; background: #eba22d; transition: width 5s linear;"></div>
+            </div>
+          </div>
+
+          <button id="modalCloseBtn" style="
+            background: #eba22d;
+            color: #0d1117;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 28px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+          " onmouseover="this.style.background='#f59e0b'" onmouseout="this.style.background='#eba22d'">
+            Close Window
+          </button>
+        </div>
+      `;
+
+      document.body.appendChild(modalEl);
+
+      requestAnimationFrame(() => {
+        modalEl.style.opacity = '1';
+        modalEl.querySelector('div').style.transform = 'scale(1)';
+        const bar = document.getElementById('modalProgressBar');
+        if (bar) setTimeout(() => { bar.style.width = '0%'; }, 50);
+      });
+
+      let secondsLeft = 5;
+      const countEl = document.getElementById('modalCountdown');
+      const interval = setInterval(() => {
+        secondsLeft -= 1;
+        if (countEl) countEl.textContent = Math.max(0, secondsLeft);
+        if (secondsLeft <= 0) {
+          clearInterval(interval);
+          closeModal();
+        }
+      }, 1000);
+
+      function closeModal() {
+        clearInterval(interval);
+        modalEl.style.opacity = '0';
+        modalEl.querySelector('div').style.transform = 'scale(0.92)';
+        setTimeout(() => modalEl.remove(), 300);
+      }
+
+      document.getElementById('modalCloseBtn')?.addEventListener('click', closeModal);
+      modalEl.addEventListener('click', (e) => {
+        if (e.target === modalEl) closeModal();
+      });
+    }
 
     function showAlert(msg, type) {
       if (!alertBox) { alert(msg); return; }
       alertBox.className = `alert alert-${type} mt-3 mb-0`;
-      alertBox.textContent = msg;
+      alertBox.innerHTML = msg;
       alertBox.classList.remove('d-none');
       if (type === 'success') setTimeout(() => alertBox.classList.add('d-none'), 8000);
     }

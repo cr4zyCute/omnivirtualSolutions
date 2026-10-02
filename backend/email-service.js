@@ -566,12 +566,76 @@ async function getEmailStats() {
   }
 }
 
+// =================================================================
+// 24-Hour Quota & Delivery Strategy Engine
+// =================================================================
+async function getQuotaStatus() {
+  try {
+    const settings = await getSettings();
+    const strategy = settings.delivery_strategy || "smart_auto"; // 'smart_auto' | 'force_smtp' | 'force_popup'
+    const limit = parseInt(settings.daily_quota_limit || "500", 10);
+
+    // Count sent emails in rolling 24 hours
+    const resCount = await db.execute({
+      sql: `SELECT COUNT(*) AS n FROM email_log 
+            WHERE status = 'sent' 
+            AND datetime(sent_at) >= datetime('now', '-24 hours')`,
+    });
+    const sent24h = Number(resCount.rows?.[0]?.n || 0);
+
+    // Check if Google rejected recently due to quota/daily limit
+    const resLimitErr = await db.execute({
+      sql: `SELECT id, error_message FROM email_log 
+            WHERE status = 'failed' 
+            AND datetime(sent_at) >= datetime('now', '-4 hours')
+            AND (
+              lower(error_message) LIKE '%daily%limit%' 
+              OR lower(error_message) LIKE '%quota%' 
+              OR lower(error_message) LIKE '%550%5.4.5%'
+              OR lower(error_message) LIKE '%user-sending limit%'
+            )
+            ORDER BY id DESC LIMIT 1`,
+    });
+    const googleLimitHit = Boolean(resLimitErr.rows && resLimitErr.rows.length > 0);
+
+    const isExceeded = sent24h >= limit || googleLimitHit;
+    const remaining = Math.max(0, limit - sent24h);
+
+    const shouldUsePopupFallback = strategy === "force_popup" || (strategy === "smart_auto" && isExceeded);
+    const canSendSmtp = strategy !== "force_popup" && (!isExceeded || strategy === "force_smtp");
+
+    return {
+      strategy,
+      limit,
+      sent24h,
+      remaining,
+      isExceeded,
+      googleLimitHit,
+      canSendSmtp,
+      shouldUsePopupFallback,
+    };
+  } catch (err) {
+    console.error("[email-service] getQuotaStatus error:", err.message);
+    return {
+      strategy: "smart_auto",
+      limit: 500,
+      sent24h: 0,
+      remaining: 500,
+      isExceeded: false,
+      googleLimitHit: false,
+      canSendSmtp: true,
+      shouldUsePopupFallback: false,
+    };
+  }
+}
+
 module.exports = {
   sendNewSubmissionNotification,
   sendAutoReply,
   sendReply,
   testSmtpConnection,
   getEmailStats,
+  getQuotaStatus,
   getSettings,
   interpolate,
 };

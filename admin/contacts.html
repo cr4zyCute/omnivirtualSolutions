@@ -770,6 +770,72 @@
             </div>
           </div>
 
+          <!-- Delivery Strategy & 24h Quota Engine -->
+          <div class="settings-card">
+            <div class="settings-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <i class="bi bi-shield-check" style="color:var(--gold)"></i> Delivery Strategy &amp; 24h Quota Engine
+              </div>
+              <span id="quotaStatusBadge" class="badge" style="font-size:11px; padding:4px 10px; font-weight:700; background:rgba(34,197,94,0.2); color:#22c55e; border:1px solid rgba(34,197,94,0.3); border-radius:12px;">🟢 Healthy</span>
+            </div>
+            <div class="settings-card-body">
+              <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:16px; margin-bottom:18px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                  <span style="font-size:13px; font-weight:700; color:var(--text);">Rolling 24h Sending Quota</span>
+                  <span id="quotaCountText" style="font-size:13px; font-weight:800; color:var(--gold);">Checking...</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.08); border-radius:6px; height:10px; overflow:hidden; margin-bottom:8px;">
+                  <div id="quotaProgressBar" style="width:0%; height:100%; background:linear-gradient(90deg, #22c55e, #eba22d); border-radius:6px; transition:width 0.4s ease;"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-muted);">
+                  <span>Daily Free Google Limit: <strong>500 emails/24h</strong></span>
+                  <span id="quotaRemainingText">Calculating remaining...</span>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom:18px;">
+                <label class="form-label" style="font-weight:700; margin-bottom:8px;">Delivery Mode Strategy</label>
+                
+                <div style="display:grid; gap:10px;">
+                  <label style="display:flex; align-items:flex-start; gap:10px; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); cursor:pointer;">
+                    <input type="radio" name="deliveryStrategy" value="smart_auto" id="stratAuto" checked style="margin-top:3px;">
+                    <div>
+                      <strong style="color:var(--text); font-size:13.5px;">🟢 Smart Auto (Recommended)</strong>
+                      <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+                        Sends silently in background with auto-reply &amp; 5s modal. Automatically switches to Gmail Compose Popup if the 500/day quota is ever reached.
+                      </div>
+                    </div>
+                  </label>
+
+                  <label style="display:flex; align-items:flex-start; gap:10px; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); cursor:pointer;">
+                    <input type="radio" name="deliveryStrategy" value="force_smtp" id="stratForceSmtp" style="margin-top:3px;">
+                    <div>
+                      <strong style="color:var(--text); font-size:13.5px;">🔵 Force Background SMTP Only</strong>
+                      <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+                        Always send through server SMTP (never opens a client-side popup under any circumstance).
+                      </div>
+                    </div>
+                  </label>
+
+                  <label style="display:flex; align-items:flex-start; gap:10px; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); cursor:pointer;">
+                    <input type="radio" name="deliveryStrategy" value="force_popup" id="stratForcePopup" style="margin-top:3px;">
+                    <div>
+                      <strong style="color:var(--text); font-size:13.5px;">🟡 Force Direct Gmail Popup Only</strong>
+                      <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+                        Always open floating Gmail compose window directly from visitor's screen (0 quota used on your server).
+                      </div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div style="display:flex; gap:10px;">
+                <button class="btn btn-gold" onclick="saveStrategySettings()"><i class="bi bi-floppy2-fill"></i> Save Delivery Strategy</button>
+                <button class="btn" onclick="refreshQuota()"><i class="bi bi-arrow-repeat"></i> Refresh Quota Meter</button>
+              </div>
+            </div>
+          </div>
+
           <!-- SMTP Config -->
           <div class="settings-card">
             <div class="settings-card-header">
@@ -1356,10 +1422,72 @@
         document.getElementById('autoReplyEnabled').checked = settingsMap.auto_reply_enabled === 'true';
         document.getElementById('autoReplySubject').value   = settingsMap.auto_reply_subject || '';
         document.getElementById('autoReplyBody').value      = settingsMap.auto_reply_body || '';
+
+        // Strategy & Quota
+        const strat = settingsMap.delivery_strategy || 'smart_auto';
+        if (document.getElementById('stratAuto')) document.getElementById('stratAuto').checked = strat === 'smart_auto';
+        if (document.getElementById('stratForceSmtp')) document.getElementById('stratForceSmtp').checked = strat === 'force_smtp';
+        if (document.getElementById('stratForcePopup')) document.getElementById('stratForcePopup').checked = strat === 'force_popup';
+        refreshQuota();
       } catch (e) {
         toast('Failed to load email settings', 'error');
       }
     }
+
+    window.refreshQuota = async function () {
+      try {
+        const res = await fetch('/api/v1/contact/email-settings/quota', { headers: { Authorization: 'Bearer ' + token } });
+        const data = await res.json();
+        if (!data.success || !data.quota) return;
+        const q = data.quota;
+        const pct = Math.min(100, Math.round((q.sent24h / (q.limit || 500)) * 100));
+        
+        const countEl = document.getElementById('quotaCountText');
+        const barEl = document.getElementById('quotaProgressBar');
+        const remEl = document.getElementById('quotaRemainingText');
+        const badgeEl = document.getElementById('quotaStatusBadge');
+
+        if (countEl) countEl.textContent = `${q.sent24h} / ${q.limit} sent (last 24h)`;
+        if (barEl) {
+          barEl.style.width = pct + '%';
+          barEl.style.background = pct >= 95 ? '#ef4444' : pct >= 75 ? '#f59e0b' : 'linear-gradient(90deg, #22c55e, #eba22d)';
+        }
+        if (remEl) remEl.textContent = `${q.remaining} remaining before fallback triggers`;
+        if (badgeEl) {
+          if (q.googleLimitHit || q.isExceeded) {
+            badgeEl.style.background = 'rgba(239,68,68,0.2)';
+            badgeEl.style.color = '#ef4444';
+            badgeEl.style.borderColor = 'rgba(239,68,68,0.3)';
+            badgeEl.textContent = '⚠️ 500 Quota Reached (Popup Fallback Active)';
+          } else if (q.strategy === 'force_popup') {
+            badgeEl.style.background = 'rgba(245,158,11,0.2)';
+            badgeEl.style.color = '#f59e0b';
+            badgeEl.style.borderColor = 'rgba(245,158,11,0.3)';
+            badgeEl.textContent = '🟡 Force Popup Active';
+          } else {
+            badgeEl.style.background = 'rgba(34,197,94,0.2)';
+            badgeEl.style.color = '#22c55e';
+            badgeEl.style.borderColor = 'rgba(34,197,94,0.3)';
+            badgeEl.textContent = '🟢 Healthy (Background SMTP Active)';
+          }
+        }
+      } catch (e) {
+        console.error('Error refreshing quota:', e);
+      }
+    };
+
+    window.saveStrategySettings = async function () {
+      const selectedStrat = document.querySelector('input[name="deliveryStrategy"]:checked')?.value || 'smart_auto';
+      const ok = await saveSettings([
+        { key: 'delivery_strategy', value: selectedStrat },
+      ]);
+      if (ok) {
+        toast('Delivery strategy updated successfully!');
+        await refreshQuota();
+      } else {
+        toast('Failed to save strategy', 'error');
+      }
+    };
 
     async function saveSettings(pairs) {
       const res = await fetch('/api/v1/contact/email-settings', {

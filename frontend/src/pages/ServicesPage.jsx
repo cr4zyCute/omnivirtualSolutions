@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import './ServicesPage.css';
 
-// Comprehensive catalog with rich data matching services.html
+// Comprehensive fallback catalog matching services catalog
 const DEFAULT_CATALOG = [
   {
     id: 'publishing-packages',
@@ -311,58 +311,95 @@ export default function ServicesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [emailCopied, setEmailCopied] = useState(false);
 
-  const handleCopyEmail = (e) => {
-    e?.preventDefault?.();
-    const email = 'admin@omnivirtualsolution.com';
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(email);
-    } else {
-      const textarea = document.createElement('textarea');
-      textarea.value = email;
-      textarea.style.position = 'fixed';
-      textarea.style.opacity = '0';
-      document.body.appendChild(textarea);
-      textarea.select();
-      try {
-        document.execCommand('copy');
-      } catch (err) {}
-      document.body.removeChild(textarea);
-    }
-    setEmailCopied(true);
-    setTimeout(() => setEmailCopied(false), 2200);
-  };
+  // Headers loaded from CMS
+  const [headerTitle, setHeaderTitle] = useState('Omni Services Catalog');
+  const [headerSubtitle, setHeaderSubtitle] = useState('Explore our full spectrum of publishing, editorial, and author marketing solutions.');
+  const [badgeText, setBadgeText] = useState('Omni Specialist Service');
+  const [priceSubText, setPriceSubText] = useState('Transparent Pricing');
+  const [overviewHeading, setOverviewHeading] = useState('Service Overview');
+  const [includedHeading, setIncludedHeading] = useState("What's Included:");
+  const [ctaSubtitle, setCtaSubtitle] = useState('Get a free consultation, custom quote, and turnaround timeline today.');
+  const [ctaBtnText, setCtaBtnText] = useState('Inquire About This Service');
+  const [ctaEmail, setCtaEmail] = useState('admin@omnivirtualsolution.com');
 
-  // 1. Fetch live services from backend API if available
+  // Load site-meta text overrides
+  useEffect(() => {
+    fetch('/api/v1/site-meta')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && data.blockMap) {
+          if (data.blockMap['services.header.title']) setHeaderTitle(data.blockMap['services.header.title']);
+          if (data.blockMap['services.header.subtitle']) setHeaderSubtitle(data.blockMap['services.header.subtitle']);
+          if (data.blockMap['services.badge.text']) setBadgeText(data.blockMap['services.badge.text']);
+          if (data.blockMap['services.price.sub']) setPriceSubText(data.blockMap['services.price.sub']);
+          if (data.blockMap['services.overview.heading']) setOverviewHeading(data.blockMap['services.overview.heading']);
+          if (data.blockMap['services.included.heading']) setIncludedHeading(data.blockMap['services.included.heading']);
+          if (data.blockMap['services.cta.subtitle']) setCtaSubtitle(data.blockMap['services.cta.subtitle']);
+          if (data.blockMap['services.cta.btn_text']) setCtaBtnText(data.blockMap['services.cta.btn_text']);
+          if (data.blockMap['services.cta.email']) setCtaEmail(data.blockMap['services.cta.email']);
+          else if (data.company?.recipient_email) setCtaEmail(data.company.recipient_email);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  // 1. Fetch live services catalog from backend API
   useEffect(() => {
     fetch('/api/v1/services')
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data && data.catalog && data.catalog.length > 0) {
-          const dynamicCat = data.catalog.map((cat) => ({
-            id: cat.slug || `cat-${cat.id}`,
+          const formatted = data.catalog.map((cat) => ({
+            id: cat.id || cat.slug,
             title: cat.title,
-            tag: cat.slug,
-            icon: cat.icon_class || 'bi-bookmark-star',
+            tag: cat.tag || cat.slug,
+            icon: cat.icon || cat.icon_class || 'bi-bookmark-star',
             subcategories: (cat.subcategories || []).map((sub) => ({
-              id: sub.slug || `sub-${sub.id}`,
+              id: sub.id || sub.slug,
               title: sub.title,
               services: (sub.services || []).map((s) => ({
                 slug: s.slug,
                 title: s.title,
-                price: s.price_display || 'Inquire for Quote',
-                lead: s.lead_paragraph || '',
-                features: s.features || [
-                  'Dedicated project manager',
-                  'Satisfaction guaranteed',
-                  'Comprehensive delivery',
+                price: s.price || s.price_display || 'Inquire for Quote',
+                lead: s.lead || s.lead_paragraph || '',
+                features: Array.isArray(s.features) && s.features.length > 0 ? s.features : [
+                  'Full editorial and publishing consultation',
+                  'Dedicated project manager assignment',
+                  '100% author rights and royalty retention',
                 ],
               })),
             })),
           }));
-          setCatalog(dynamicCat);
+          setCatalog(formatted);
         }
       })
       .catch(() => {});
+  }, []);
+
+  // Real-time SSE updates from CMS editor
+  useEffect(() => {
+    let es = null;
+    try {
+      es = new EventSource('/api/v1/live');
+      es.onmessage = (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+          if (payload.type === 'cms_block_updated' && payload.key === 'services.catalog.data') {
+            const newCat = JSON.parse(payload.value);
+            if (Array.isArray(newCat) && newCat.length > 0) {
+              setCatalog(newCat);
+            }
+          } else if (payload.type === 'cms_block_updated') {
+            if (payload.key === 'services.header.title') setHeaderTitle(payload.value);
+            if (payload.key === 'services.header.subtitle') setHeaderSubtitle(payload.value);
+          }
+        } catch (_) {}
+      };
+    } catch (_) {}
+
+    return () => {
+      if (es) es.close();
+    };
   }, []);
 
   // Flatten all services for quick lookup and navigation
@@ -371,14 +408,14 @@ export default function ServicesPage() {
     catalog.forEach((cat) => {
       cat.subcategories.forEach((sub) => {
         sub.services.forEach((s) => {
-          list.push({ ...s, categoryTitle: cat.title, subcategoryTitle: sub.title, categoryTag: cat.tag });
+          list.push({ ...s, categoryId: cat.id, categoryTitle: cat.title, subcategoryId: sub.id, subcategoryTitle: sub.title, categoryTag: cat.tag });
         });
       });
     });
     return list;
   }, [catalog]);
 
-  // Handle URL deep-linking
+  // Handle URL deep-linking or initial selection
   useEffect(() => {
     if (serviceParam && allServicesList.length > 0) {
       const found = allServicesList.find((s) => s.slug === serviceParam);
@@ -397,7 +434,9 @@ export default function ServicesPage() {
       if (catMatch && catMatch.subcategories[0]?.services[0]) {
         setSelectedService({
           ...catMatch.subcategories[0].services[0],
+          categoryId: catMatch.id,
           categoryTitle: catMatch.title,
+          subcategoryId: catMatch.subcategories[0].id,
           subcategoryTitle: catMatch.subcategories[0].title,
           categoryTag: catMatch.tag,
         });
@@ -407,6 +446,11 @@ export default function ServicesPage() {
 
     if (!selectedService && allServicesList.length > 0) {
       setSelectedService(allServicesList[0]);
+    } else if (selectedService) {
+      const refreshed = allServicesList.find((s) => s.slug === selectedService.slug);
+      if (refreshed) {
+        setSelectedService(refreshed);
+      }
     }
   }, [openParam, serviceParam, allServicesList, catalog]);
 
@@ -414,6 +458,28 @@ export default function ServicesPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Copy email
+  const handleCopyEmail = (e) => {
+    e?.preventDefault?.();
+    const email = ctaEmail || 'admin@omnivirtualsolution.com';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(email);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = email;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+      } catch (err) {}
+      document.body.removeChild(textarea);
+    }
+    setEmailCopied(true);
+    setTimeout(() => setEmailCopied(false), 2200);
+  };
 
   // Toggle category expansion
   const toggleCategoryAccordion = (tag) => {
@@ -423,7 +489,9 @@ export default function ServicesPage() {
   const handleSelectService = (service, cat, sub) => {
     setSelectedService({
       ...service,
+      categoryId: cat?.id || service.categoryId,
       categoryTitle: cat?.title || service.categoryTitle,
+      subcategoryId: sub?.id || service.subcategoryId,
       subcategoryTitle: sub?.title || service.subcategoryTitle,
       categoryTag: cat?.tag || service.categoryTag,
     });
@@ -461,339 +529,360 @@ export default function ServicesPage() {
   }, [catalog, activeCategoryTag, searchQuery]);
 
   return (
-    <main className="main services-catalog-page">
-      <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 24px)' }}>
-        
-        {/* Top Header Bar (Centered) */}
-        <div className="services-top-bar text-center">
-          <h1 className="services-main-title text-center">Omni Services Catalog</h1>
-          <p className="services-subtitle text-center mx-auto" style={{ maxWidth: '640px' }}>
-            Explore our full spectrum of publishing, editorial, and author marketing solutions.
-          </p>
-
-          {/* Search & Mobile Drawer Trigger Bar */}
-          <div className="services-control-bar">
-            <div className="services-search-wrap">
-              <i className="bi bi-search services-search-icon"></i>
-              <input
-                type="text"
-                className="services-search-input"
-                placeholder="Search all services, packages, editorial..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                aria-label="Search services"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery('')}
-                  style={{
-                    position: 'absolute',
-                    right: '12px',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#8a827a',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <i className="bi bi-x-circle-fill"></i>
-                </button>
-              )}
-            </div>
-
-            {/* Mobile Categories Button (Replaces bad floating hamburger) */}
-            <button
-              type="button"
-              className="drawer-trigger-btn d-lg-none"
-              onClick={() => setDrawerOpen(true)}
-              aria-label="Open categories menu"
-            >
-              <i className="bi bi-grid-fill"></i>
-              <span>Categories</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Main Grid: Desktop Sidebar + Right Detail Card */}
-        <div className="row g-4">
+    <div className="services-page-wrapper">
+      <main className="main services-catalog-page">
+        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 24px)' }}>
           
-          {/* Desktop Persistent Sidebar (Only on large screens) */}
-          <div className="col-lg-4 d-none d-lg-block">
-            <div className="desktop-services-sidebar">
-              <div className="sidebar-brand-box d-flex align-items-center justify-content-between">
-                <span className="fw-bold">
-                  <i className="bi bi-folder2-open me-2" style={{ color: '#d8aa71' }}></i>
-                  All Categories ({catalog.length})
-                </span>
-                <span className="badge rounded-pill bg-dark text-warning border border-warning" style={{ fontSize: '0.72rem' }}>
-                  Live Catalog
-                </span>
+          {/* Top Header Bar (Centered) */}
+          <div className="services-top-bar text-center">
+            <h1 className="services-main-title text-center">
+              {headerTitle}
+            </h1>
+            <p className="services-subtitle text-center mx-auto" style={{ maxWidth: '640px' }}>
+              {headerSubtitle}
+            </p>
+
+            {/* Search & Mobile Drawer Trigger Bar */}
+            <div className="services-control-bar">
+              <div className="services-search-wrap">
+                <i className="bi bi-search services-search-icon"></i>
+                <input
+                  type="text"
+                  className="services-search-input"
+                  placeholder="Search all services, packages, editorial..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  aria-label="Search services"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    style={{
+                      position: 'absolute',
+                      right: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#8a827a',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <i className="bi bi-x-circle-fill"></i>
+                  </button>
+                )}
               </div>
 
-              <div>
-                {catalog.map((cat) => {
-                  const isExpanded = expandedCategories[cat.tag] || activeCategoryTag === cat.tag || searchQuery.length > 0;
-                  const totalCount = cat.subcategories.reduce((acc, sub) => acc + sub.services.length, 0);
-
-                  return (
-                    <div key={cat.id} className="sidebar-category-group">
-                      <button
-                        type="button"
-                        className={`category-accordion-btn ${isExpanded ? 'expanded' : ''}`}
-                        onClick={() => toggleCategoryAccordion(cat.tag)}
-                      >
-                        <span className="d-flex align-items-center gap-2">
-                          <i className={`bi ${cat.icon}`} style={{ color: '#ad7d42' }}></i>
-                          {cat.title}
-                        </span>
-                        <span className="d-flex align-items-center gap-2">
-                          <span className="badge bg-light text-muted border" style={{ fontSize: '0.7rem' }}>
-                            {totalCount}
-                          </span>
-                          <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} small`}></i>
-                        </span>
-                      </button>
-
-                      {isExpanded && (
-                        <div className="subcategories-list">
-                          {cat.subcategories.map((sub) => (
-                            <div key={sub.id} className="mb-2">
-                              <div className="subcategory-label">{sub.title}</div>
-                              {sub.services.map((svc) => {
-                                const isSelected = selectedService?.slug === svc.slug;
-                                return (
-                                  <button
-                                    key={svc.slug}
-                                    type="button"
-                                    className={`service-nav-item ${isSelected ? 'active' : ''}`}
-                                    onClick={() => handleSelectService(svc, cat, sub)}
-                                  >
-                                    <span className="text-truncate">{svc.title}</span>
-                                    {isSelected && <i className="bi bi-check2"></i>}
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+              {/* Mobile Categories Button */}
+              <button
+                type="button"
+                className="drawer-trigger-btn d-lg-none"
+                onClick={() => setDrawerOpen(true)}
+                aria-label="Open categories menu"
+              >
+                <i className="bi bi-grid-fill"></i>
+                <span>Categories</span>
+              </button>
             </div>
           </div>
 
-          {/* Right Presentation Detail Column */}
-          <div className="col-lg-8">
-            {selectedService ? (
-              <div className="service-detail-card">
-                {/* Breadcrumbs */}
-                <div className="service-breadcrumb">
-                  <span>Services</span>
-                  <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }}></i>
-                  <span>{selectedService.categoryTitle || 'Publishing'}</span>
-                  <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }}></i>
-                  <span className="text-dark fw-semibold">{selectedService.title}</span>
+          {/* Main Grid: Desktop Sidebar + Right Detail Card */}
+          <div className="row g-4">
+            
+            {/* Desktop Persistent Sidebar */}
+            <div className="col-lg-4 d-none d-lg-block">
+              <div className="desktop-services-sidebar">
+                <div className="sidebar-brand-box d-flex align-items-center justify-content-between">
+                  <span className="fw-bold">
+                    <i className="bi bi-folder2-open me-2" style={{ color: '#d8aa71' }}></i>
+                    All Categories ({catalog.length})
+                  </span>
+                  <span className="badge rounded-pill bg-dark text-warning border border-warning" style={{ fontSize: '0.72rem' }}>
+                    Live Catalog
+                  </span>
                 </div>
 
-                {/* Header row: Badge, Title, Price */}
-                <div className="d-flex align-items-start justify-content-between flex-wrap gap-2">
-                  <div style={{ maxWidth: '620px' }}>
-                    <div className="service-tag-badge">
-                      <i className="bi bi-award-fill"></i>
-                      <span>Omni Specialist Service</span>
-                    </div>
-                    <h2 className="service-title">{selectedService.title}</h2>
-                  </div>
-
-                  <div className="service-price-block">
-                    <span className="service-price-amount">{selectedService.price}</span>
-                    <span className="service-price-sub">Transparent Pricing</span>
-                  </div>
-                </div>
-
-                <hr className="service-divider" />
-
-                {/* Service Overview Box */}
-                <div className="service-lead-box">
-                  <h5>Service Overview</h5>
-                  <p className="service-lead-text">{selectedService.lead}</p>
-                </div>
-
-                {/* What's Included Feature Checklist */}
                 <div>
-                  <h5 className="fw-bold" style={{ color: '#2b2219', fontSize: '1.1rem' }}>
-                    What's Included:
-                  </h5>
-                  <div className="service-features-list">
-                    {selectedService.features?.map((feat, idx) => (
-                      <div className="feature-checkpoint-item" key={idx}>
-                        <i className="bi bi-patch-check-fill"></i>
-                        <span>{feat}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                  {catalog.map((cat) => {
+                    const isExpanded = expandedCategories[cat.tag] || activeCategoryTag === cat.tag || searchQuery.length > 0;
+                    const totalCount = cat.subcategories.reduce((acc, sub) => acc + sub.services.length, 0);
 
-                {/* Direct Action Card (Book / Consult) */}
-                <div className="service-cta-card">
-                  <div className="service-cta-text-col">
-                    <h4 className="fw-bold mb-1" style={{ color: '#ffffff', fontSize: '1.25rem' }}>
-                      Ready to start with {selectedService.title}?
-                    </h4>
-                    <p className="small mb-0" style={{ color: '#fae2b2' }}>
-                      Get a free consultation, custom quote, and turnaround timeline today.
+                    return (
+                      <div key={cat.id} className="sidebar-category-group">
+                        <div className="d-flex align-items-center justify-content-between category-header-row">
+                          <button
+                            type="button"
+                            className={`category-accordion-btn ${isExpanded ? 'expanded' : ''}`}
+                            onClick={() => toggleCategoryAccordion(cat.tag)}
+                          >
+                            <span className="d-flex align-items-center gap-2">
+                              <i className={`bi ${cat.icon}`} style={{ color: '#ad7d42' }}></i>
+                              <span className="cat-title-text">
+                                {cat.title}
+                              </span>
+                            </span>
+                            <span className="d-flex align-items-center gap-2">
+                              <span className="badge bg-light text-muted border" style={{ fontSize: '0.7rem' }}>
+                                {totalCount}
+                              </span>
+                              <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} small`}></i>
+                            </span>
+                          </button>
+                        </div>
+
+                        {isExpanded && (
+                          <div className="subcategories-list">
+                            {cat.subcategories.map((sub) => (
+                              <div key={sub.id} className="mb-2">
+                                <div className="subcategory-label">
+                                  {sub.title}
+                                </div>
+                                {sub.services.map((svc) => {
+                                  const isSelected = selectedService?.slug === svc.slug;
+                                  return (
+                                    <button
+                                      key={svc.slug}
+                                      type="button"
+                                      className={`service-nav-item ${isSelected ? 'active' : ''}`}
+                                      onClick={() => handleSelectService(svc, cat, sub)}
+                                    >
+                                      <span className="text-truncate">{svc.title}</span>
+                                      {isSelected && <i className="bi bi-check2"></i>}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Presentation Detail Column */}
+            <div className="col-lg-8">
+              {selectedService ? (
+                <div className="service-detail-card">
+                  {/* Breadcrumbs */}
+                  <div className="service-breadcrumb">
+                    <span>Services</span>
+                    <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }}></i>
+                    <span>{selectedService.categoryTitle || 'Publishing'}</span>
+                    <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }}></i>
+                    <span className="text-dark fw-semibold">{selectedService.title}</span>
+                  </div>
+
+                  {/* Header row: Badge, Title, Price */}
+                  <div className="d-flex align-items-start justify-content-between flex-wrap gap-2">
+                    <div style={{ maxWidth: '620px' }}>
+                      <div className="service-tag-badge">
+                        <i className="bi bi-award-fill"></i>
+                        <span>{badgeText}</span>
+                      </div>
+                      <h2 className="service-title">
+                        {selectedService.title}
+                      </h2>
+                    </div>
+
+                    <div className="service-price-block">
+                      <span className="service-price-amount">
+                        {selectedService.price}
+                      </span>
+                      <span className="service-price-sub">
+                        {priceSubText}
+                      </span>
+                    </div>
+                  </div>
+
+                  <hr className="service-divider" />
+
+                  {/* Service Overview Box */}
+                  <div className="service-lead-box">
+                    <h5>{overviewHeading}</h5>
+                    <p className="service-lead-text">
+                      {selectedService.lead}
                     </p>
                   </div>
 
-                  <div className="service-cta-actions">
-                    <Link to="/#contact" className="service-cta-btn">
-                      <span>Inquire About This Service</span>
-                      <i className="bi bi-arrow-right"></i>
-                    </Link>
+                  {/* What's Included Feature Checklist */}
+                  <div className="features-checklist-section">
+                    <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }}>
+                      {includedHeading}
+                    </h5>
 
-                    <div className="service-email-action-row">
-                      <span className="service-email-label">or email us on</span>
-                      <button
-                        type="button"
-                        className={`service-email-chip ${emailCopied ? 'copied' : ''}`}
-                        onClick={handleCopyEmail}
-                        title={emailCopied ? "Copied to clipboard!" : "Click to copy email address"}
-                        aria-label="Copy email: admin@omnivirtualsolution.com"
-                      >
-                        <i className={`bi ${emailCopied ? 'bi-check-circle-fill' : 'bi-envelope-fill'} email-lead-icon`}></i>
-                        <span className="service-email-address">admin@omnivirtualsolution.com</span>
-                        <span className="email-copy-icon-btn" aria-hidden="true">
-                          <i className={`bi ${emailCopied ? 'bi-check2' : 'bi-clipboard'}`}></i>
-                        </span>
-                      </button>
+                    <div className="service-features-list">
+                      {selectedService.features?.map((feat, idx) => (
+                        <div className="feature-checkpoint-item" key={idx}>
+                          <i className="bi bi-patch-check-fill feature-check-icon"></i>
+                          <span>{feat}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </div>
 
-                {/* Mobile Next / Previous Controls */}
-                <div className="service-nav-controls">
+                  {/* Direct Action Card (Book / Consult) */}
+                  <div className="service-cta-card">
+                    <div className="service-cta-text-col">
+                      <h4 className="fw-bold mb-1" style={{ color: '#ffffff', fontSize: '1.25rem' }}>
+                        Ready to start with {selectedService.title}?
+                      </h4>
+                      <p className="small mb-0" style={{ color: '#fae2b2' }}>
+                        {ctaSubtitle}
+                      </p>
+                    </div>
+
+                    <div className="service-cta-actions">
+                      <Link to="/#contact" className="service-cta-btn">
+                        <span>{ctaBtnText}</span>
+                        <i className="bi bi-arrow-right"></i>
+                      </Link>
+
+                      <div className="service-email-action-row">
+                        <span className="service-email-label">or email us on</span>
+                        <button
+                          type="button"
+                          className={`service-email-chip ${emailCopied ? 'copied' : ''}`}
+                          onClick={handleCopyEmail}
+                          title={emailCopied ? "Copied to clipboard!" : "Click to copy email address"}
+                          aria-label={`Copy email: ${ctaEmail}`}
+                        >
+                          <i className={`bi ${emailCopied ? 'bi-check-circle-fill' : 'bi-envelope-fill'} email-lead-icon`}></i>
+                          <span className="service-email-address">
+                            {ctaEmail}
+                          </span>
+                          <span className="email-copy-icon-btn" aria-hidden="true">
+                            <i className={`bi ${emailCopied ? 'bi-check2' : 'bi-clipboard'}`}></i>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Mobile Next / Previous Controls */}
+                  <div className="service-nav-controls">
+                    <button
+                      type="button"
+                      className="service-step-btn"
+                      disabled={!prevService}
+                      onClick={() => prevService && handleSelectService(prevService)}
+                    >
+                      <i className="bi bi-arrow-left"></i>
+                      <span className="d-none d-sm-inline">Previous: </span>
+                      <span className="text-truncate" style={{ maxWidth: '140px' }}>
+                        {prevService?.title || 'None'}
+                      </span>
+                    </button>
+
+                    <button
+                      type="button"
+                      className="service-step-btn"
+                      disabled={!nextService}
+                      onClick={() => nextService && handleSelectService(nextService)}
+                    >
+                      <span className="d-none d-sm-inline">Next: </span>
+                      <span className="text-truncate" style={{ maxWidth: '140px' }}>
+                        {nextService?.title || 'None'}
+                      </span>
+                      <i className="bi bi-arrow-right"></i>
+                    </button>
+                  </div>
+
+                </div>
+              ) : (
+                <div className="text-center p-5 bg-white rounded-3 shadow-sm">
+                  <i className="bi bi-search fs-1 text-muted"></i>
+                  <h4 className="mt-3">No matching services found</h4>
+                  <p className="text-muted">Try clearing your search query or selecting another category.</p>
                   <button
                     type="button"
-                    className="service-step-btn"
-                    disabled={!prevService}
-                    onClick={() => prevService && handleSelectService(prevService)}
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={() => {
+                      setSearchQuery('');
+                      setActiveCategoryTag('all');
+                    }}
                   >
-                    <i className="bi bi-arrow-left"></i>
-                    <span className="d-none d-sm-inline">Previous: </span>
-                    <span className="text-truncate" style={{ maxWidth: '140px' }}>
-                      {prevService?.title || 'None'}
-                    </span>
-                  </button>
-
-                  <button
-                    type="button"
-                    className="service-step-btn"
-                    disabled={!nextService}
-                    onClick={() => nextService && handleSelectService(nextService)}
-                  >
-                    <span className="d-none d-sm-inline">Next: </span>
-                    <span className="text-truncate" style={{ maxWidth: '140px' }}>
-                      {nextService?.title || 'None'}
-                    </span>
-                    <i className="bi bi-arrow-right"></i>
+                    Reset Filters
                   </button>
                 </div>
+              )}
+            </div>
+          </div>
 
-              </div>
-            ) : (
-              <div className="text-center p-5 bg-white rounded-3 shadow-sm">
-                <i className="bi bi-search fs-1 text-muted"></i>
-                <h4 className="mt-3">No matching services found</h4>
-                <p className="text-muted">Try clearing your search query or selecting another category.</p>
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary btn-sm"
-                  onClick={() => {
-                    setSearchQuery('');
-                    setActiveCategoryTag('all');
-                  }}
-                >
-                  Reset Filters
-                </button>
-              </div>
-            )}
+        </div>
+
+        {/* Modern Slide-Over Off-Canvas Drawer for Mobile */}
+        <div
+          className={`mobile-drawer-overlay ${drawerOpen ? 'open' : ''}`}
+          onClick={() => setDrawerOpen(false)}
+          aria-hidden="true"
+        />
+        <div className={`mobile-drawer ${drawerOpen ? 'open' : ''}`} role="dialog" aria-modal="true">
+          <div className="drawer-header">
+            <h3 className="drawer-title">
+              <i className="bi bi-grid-fill" style={{ color: '#d8aa71' }}></i>
+              Service Categories
+            </h3>
+            <button
+              type="button"
+              className="drawer-close-btn"
+              onClick={() => setDrawerOpen(false)}
+              aria-label="Close categories menu"
+            >
+              <i className="bi bi-x-lg"></i>
+            </button>
+          </div>
+
+          <div className="drawer-body">
+            {catalog.map((cat) => {
+              const isExpanded = expandedCategories[cat.tag] || searchQuery.length > 0;
+              return (
+                <div key={cat.id} className="sidebar-category-group mb-2">
+                  <button
+                    type="button"
+                    className={`category-accordion-btn ${isExpanded ? 'expanded' : ''}`}
+                    onClick={() => toggleCategoryAccordion(cat.tag)}
+                  >
+                    <span className="d-flex align-items-center gap-2">
+                      <i className={`bi ${cat.icon}`} style={{ color: '#ad7d42' }}></i>
+                      {cat.title}
+                    </span>
+                    <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} small`}></i>
+                  </button>
+
+                  {isExpanded && (
+                    <div className="subcategories-list">
+                      {cat.subcategories.map((sub) => (
+                        <div key={sub.id} className="mb-2">
+                          <div className="subcategory-label">{sub.title}</div>
+                          {sub.services.map((svc) => {
+                            const isSelected = selectedService?.slug === svc.slug;
+                            return (
+                              <button
+                                key={svc.slug}
+                                type="button"
+                                className={`service-nav-item ${isSelected ? 'active' : ''}`}
+                                onClick={() => handleSelectService(svc, cat, sub)}
+                              >
+                                <span className="text-truncate">{svc.title}</span>
+                                {isSelected && <i className="bi bi-check2"></i>}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
-      </div>
-
-      {/* Modern Slide-Over Off-Canvas Drawer for Mobile */}
-      <div
-        className={`mobile-drawer-overlay ${drawerOpen ? 'open' : ''}`}
-        onClick={() => setDrawerOpen(false)}
-        aria-hidden="true"
-      />
-      <div className={`mobile-drawer ${drawerOpen ? 'open' : ''}`} role="dialog" aria-modal="true">
-        <div className="drawer-header">
-          <h3 className="drawer-title">
-            <i className="bi bi-grid-fill" style={{ color: '#d8aa71' }}></i>
-            Service Categories
-          </h3>
-          <button
-            type="button"
-            className="drawer-close-btn"
-            onClick={() => setDrawerOpen(false)}
-            aria-label="Close categories menu"
-          >
-            <i className="bi bi-x-lg"></i>
-          </button>
-        </div>
-
-        <div className="drawer-body">
-          {catalog.map((cat) => {
-            const isExpanded = expandedCategories[cat.tag] || searchQuery.length > 0;
-            return (
-              <div key={cat.id} className="sidebar-category-group mb-2">
-                <button
-                  type="button"
-                  className={`category-accordion-btn ${isExpanded ? 'expanded' : ''}`}
-                  onClick={() => toggleCategoryAccordion(cat.tag)}
-                >
-                  <span className="d-flex align-items-center gap-2">
-                    <i className={`bi ${cat.icon}`} style={{ color: '#ad7d42' }}></i>
-                    {cat.title}
-                  </span>
-                  <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} small`}></i>
-                </button>
-
-                {isExpanded && (
-                  <div className="subcategories-list">
-                    {cat.subcategories.map((sub) => (
-                      <div key={sub.id} className="mb-2">
-                        <div className="subcategory-label">{sub.title}</div>
-                        {sub.services.map((svc) => {
-                          const isSelected = selectedService?.slug === svc.slug;
-                          return (
-                            <button
-                              key={svc.slug}
-                              type="button"
-                              className={`service-nav-item ${isSelected ? 'active' : ''}`}
-                              onClick={() => handleSelectService(svc, cat, sub)}
-                            >
-                              <span className="text-truncate">{svc.title}</span>
-                              {isSelected && <i className="bi bi-check2"></i>}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-    </main>
+      </main>
+    </div>
   );
 }

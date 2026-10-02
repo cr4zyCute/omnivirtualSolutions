@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <script>
+    (function () {
+      try {
+        var token = localStorage.getItem('omni_admin_token');
+        if (!token) {
+          if (window.top !== window.self) window.top.location.replace('admin/login.html');
+          else window.location.replace('admin/login.html');
+          return;
+        }
+        var parts = token.split('.');
+        if (parts.length !== 3) throw new Error();
+        var payload = JSON.parse(atob(parts[1]));
+        if (!payload.exp || (payload.exp * 1000) <= Date.now()) {
+          throw new Error('Expired');
+        }
+      } catch (_) {
+        localStorage.removeItem('omni_admin_token');
+        localStorage.removeItem('omni_admin_user');
+        if (window.top !== window.self) window.top.location.replace('admin/login.html');
+        else window.location.replace('admin/login.html');
+      }
+    })();
+  </script>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Omni CMS — Live Services Editor</title>
+  <link rel="icon" type="image/png" href="assets/img/OmniLogo2.png">
+
+  <!-- Favicons -->
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Raleway:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    /* ── Instant Auth Shield: prevent flash of editor ── */
+    html {
+      visibility: hidden;
+      opacity: 0;
+      background: #0b0e14;
+    }
+    html.auth-ready {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 0.12s ease-in;
+    }
+
+    /* Top Floating Admin Toolbar */
+    #editorTopBar {
+      position: sticky;
+      top: 0; left: 0; right: 0;
+      height: 52px;
+      background: rgba(14, 18, 23, 0.96);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(235, 162, 45, 0.35);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      color: #f7f3ee;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .editor-bar-left, .editor-bar-right, .editor-bar-center {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .editor-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #eba22d;
+      background: rgba(235, 162, 45, 0.12);
+      border: 1px solid rgba(235, 162, 45, 0.25);
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .editor-live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #48bb78;
+      background: rgba(72, 187, 120, 0.12);
+      border: 1px solid rgba(72, 187, 120, 0.25);
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+    .editor-live-badge .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #48bb78;
+      box-shadow: 0 0 8px #48bb78;
+      animation: editorPulse 1.8s infinite;
+    }
+    @keyframes editorPulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .editor-save-status {
+      font-size: 12px;
+      color: #a0aec0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .editor-save-status.saving { color: #eba22d; }
+    .editor-save-status.saved { color: #48bb78; }
+
+    .editor-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.06);
+      color: #e2e8f0;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .editor-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(235, 162, 45, 0.5);
+      color: #ffffff;
+    }
+    .editor-btn.active {
+      background: #eba22d;
+      color: #0d1117;
+      border-color: #eba22d;
+    }
+    .editor-btn-gold {
+      background: rgba(235, 162, 45, 0.18);
+      border-color: rgba(235, 162, 45, 0.5);
+      color: #eba22d;
+    }
+    .editor-btn-gold:hover {
+      background: #eba22d;
+      color: #0d1117;
+    }
+
+    /* Editable highlights */
+    body.mode-edit .editable-field {
+      outline: 2px dashed rgba(235, 162, 45, 0.45);
+      outline-offset: 3px;
+      border-radius: 4px;
+      cursor: text;
+      transition: outline-color 0.2s, background-color 0.2s;
+      display: inline-block;
+      min-width: 24px;
+    }
+    body.mode-edit .editable-field:hover {
+      outline: 2px solid #eba22d !important;
+      background-color: rgba(235, 162, 45, 0.1) !important;
+    }
+    body.mode-edit .editable-field:focus {
+      outline: 2px solid #eba22d !important;
+      background-color: rgba(235, 162, 45, 0.15) !important;
+    }
+    body.mode-preview .editable-field {
+      outline: none !important;
+      cursor: default;
+    }
+
+    /* Page Layout matching services view */
+    .services-catalog-page {
+      background: linear-gradient(180deg, #fbf9f6 0%, #f4ede2 100%);
+      min-height: calc(100vh - 52px);
+      padding: clamp(24px, 4vw, 48px) 0 clamp(48px, 6vw, 80px);
+    }
+    .services-top-bar { margin-bottom: 28px; }
+    .services-main-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      color: #1c1917;
+      letter-spacing: -0.015em;
+      margin: 4px 0 6px 0;
+    }
+    .services-subtitle {
+      color: #78716c;
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+
+    /* Search bar */
+    .services-control-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .services-search-wrap {
+      flex: 1;
+      position: relative;
+    }
+    .services-search-input {
+      width: 100%;
+      height: 46px;
+      border-radius: 12px;
+      border: 1px solid rgba(194, 154, 107, 0.3);
+      padding: 0 16px 0 42px;
+      background: #ffffff;
+      color: #1c1917;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+    .services-search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #a8a29e;
+    }
+
+    /* Sidebar */
+    .desktop-services-sidebar {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid rgba(194, 154, 107, 0.25);
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+    .sidebar-brand-box {
+      padding: 12px 14px;
+      background: #faf6f0;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      font-size: 0.92rem;
+      color: #2b2219;
+    }
+    .category-accordion-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      background: #ffffff;
+      border: 1px solid rgba(173, 125, 66, 0.2);
+      border-radius: 9px;
+      margin-bottom: 6px;
+      transition: all 0.18s ease;
+    }
+    .category-accordion-row:hover {
+      background: #faf6f0;
+      border-color: rgba(235, 162, 45, 0.5);
+    }
+    .category-accordion-row.expanded {
+      background: #fdf9f2;
+      border-color: #eba22d;
+    }
+
+    .category-accordion-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+      cursor: pointer;
+      user-select: none;
+    }
+    .category-name-text {
+      font-weight: 700;
+      font-size: 0.94rem;
+      color: #2b2219;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .category-accordion-row.expanded .category-name-text {
+      color: #ad7d42;
+    }
+
+    .category-accordion-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-cat-add-service {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: #fff8eb;
+      border: 1.5px solid #eba22d;
+      color: #ba7918;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      padding: 0;
+    }
+    .btn-cat-add-service:hover {
+      background: #eba22d;
+      color: #ffffff;
+      border-color: #eba22d;
+      transform: scale(1.15);
+      box-shadow: 0 3px 10px rgba(235, 162, 45, 0.4);
+    }
+    .btn-cat-add-service:active {
+      transform: scale(0.96);
+    }
+
+    .btn-cat-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: transparent;
+      border: none;
+      color: #8c827a;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s ease;
+    }
+    .btn-cat-toggle:hover {
+      color: #2b2219;
+    }
+
+    .btn-sub-add-service {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      background: rgba(235, 162, 45, 0.08);
+      border: 1px solid rgba(235, 162, 45, 0.3);
+      color: #ad7d42;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-sub-add-service:hover {
+      background: #eba22d;
+      color: #0d1117;
+      border-color: #eba22d;
+    }
+
+    .subcategories-list {
+      padding: 6px 8px 12px 16px;
+      border-left: 2px solid rgba(173, 125, 66, 0.25);
+      margin: 4px 0 12px 14px;
+    }
+    .subcategory-label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #8c827a;
+      margin: 8px 0 4px 6px;
+    }
+    .service-nav-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.86rem;
+      color: #57534e;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .service-nav-item:hover {
+      background: #f7f3ec;
+      color: #ad7d42;
+    }
+    .service-nav-item.active {
+      background: #ad7d42;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Detail Card */
+    .service-detail-card {
+      background: #ffffff;
+      border-radius: 20px;
+      border: 1px solid rgba(194, 154, 107, 0.25);
+      padding: clamp(24px, 4vw, 40px);
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.04);
+    }
+    .service-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: #8c827a;
+      margin-bottom: 14px;
+    }
+    .service-tag-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #faf2e6;
+      color: #ad7d42;
+      border: 1px solid rgba(173, 125, 66, 0.25);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .service-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      color: #1c1917;
+      margin-bottom: 0;
+    }
+    .service-price-block {
+      text-align: right;
+    }
+    .service-price-amount {
+      display: block;
+      font-size: clamp(1.5rem, 2.8vw, 2rem);
+      font-weight: 800;
+      color: #ad7d42;
+      letter-spacing: -0.02em;
+    }
+    .service-price-sub {
+      display: block;
+      font-size: 0.75rem;
+      color: #8c827a;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .service-divider {
+      margin: 20px 0;
+      border-color: rgba(194, 154, 107, 0.2);
+    }
+
+    .service-lead-box {
+      background: #faf6f0;
+      border-left: 4px solid #ad7d42;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+    }
+    .service-lead-box h5 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #2b2219;
+      margin-bottom: 6px;
+    }
+    .service-lead-text {
+      color: #57534e;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* Features List */
+    .features-checklist-section { margin-bottom: 28px; }
+    .service-features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .feature-checkpoint-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 14px;
+      background: #fdfbf7;
+      border-radius: 10px;
+      border: 1px solid rgba(194, 154, 107, 0.18);
+      font-size: 0.92rem;
+      color: #2b2219;
+      position: relative;
+    }
+    .feature-check-icon {
+      color: #ad7d42;
+      font-size: 1.05rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .btn-add-feature {
+      background: rgba(235, 162, 45, 0.12);
+      border: 1px solid rgba(235, 162, 45, 0.4);
+      color: #ad7d42;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-add-feature:hover {
+      background: #eba22d;
+      color: #0d1117;
+      border-color: #eba22d;
+    }
+    .feature-delete-btn {
+      background: transparent;
+      border: none;
+      color: #ef4444;
+      font-size: 0.95rem;
+      padding: 2px 6px;
+      cursor: pointer;
+      opacity: 0.6;
+      margin-left: auto;
+      transition: all 0.2s;
+    }
+    .feature-delete-btn:hover {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+
+    /* CTA Card */
+    .service-cta-card {
+      background: linear-gradient(135deg, #1c1917 0%, #2b2219 100%);
+      border-radius: 16px;
+      padding: 24px;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .service-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #eba22d;
+      color: #12161f;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .service-cta-btn:hover {
+      background: #f5b74c;
+      color: #000;
+      transform: translateY(-2px);
+    }
+
+    /* Toast */
+    #editorToast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: #141922;
+      border: 1px solid rgba(235, 162, 45, 0.4);
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      z-index: 999999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #editorToast.show { transform: translateY(0); opacity: 1; }
+
+    /* Modals */
+    .modal-backdrop-custom {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 999998;
+      display: none;
+    }
+    .modal-backdrop-custom.show { display: block; }
+
+    .editor-modal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      width: min(520px, 92vw);
+      background: #141923;
+      border: 1px solid rgba(235, 162, 45, 0.4);
+      border-radius: 14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.85);
+      z-index: 999999;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+      color: #f7f3ee;
+      transition: all 0.2s ease;
+    }
+    .editor-modal.show { display: flex; transform: translate(-50%, -50%) scale(1); }
+    .editor-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+      font-weight: 700;
+      color: #eba22d;
+    }
+    .editor-icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 10px;
+      padding: 16px;
+      max-height: 340px;
+      overflow-y: auto;
+    }
+    .icon-opt {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 4px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      color: #cbd5e1;
+      font-size: 0.75rem;
+      transition: all 0.15s;
+    }
+    .icon-opt:hover {
+      border-color: #eba22d;
+      background: rgba(235, 162, 45, 0.1);
+      color: #fff;
+    }
+    .icon-opt i { font-size: 1.25rem; color: #eba22d; }
+  </style>
+</head>
+
+<body class="mode-edit">
+
+  <!-- ── Top Floating Admin Live Editor Bar ── -->
+  <header id="editorTopBar">
+    <div class="editor-bar-left">
+      <span class="editor-brand">
+        <i class="bi bi-pencil-square"></i>
+        Omni CMS — Live Services Editor
+      </span>
+      <span class="editor-live-badge">
+        <span class="dot"></span>
+        Live Mode
+      </span>
+    </div>
+
+    <div class="editor-bar-center">
+      <div class="btn-group">
+        <button type="button" class="editor-btn active" id="btnEditMode" onclick="setMode(true)">
+          <i class="bi bi-pencil"></i> Edit Mode
+        </button>
+        <button type="button" class="editor-btn" id="btnPreviewMode" onclick="setMode(false)">
+          <i class="bi bi-eye"></i> Visitor Preview
+        </button>
+      </div>
+
+      <button type="button" class="editor-btn editor-btn-gold" onclick="openAddServiceModal()">
+        <i class="bi bi-plus-circle-fill"></i> Add Service
+      </button>
+    </div>
+
+    <div class="editor-bar-right">
+      <div class="editor-save-status saved" id="editorSaveStatus">
+        <i class="bi bi-check-circle-fill text-success"></i>
+        All changes saved
+      </div>
+
+      <button type="button" class="editor-btn" onclick="returnToDashboard()" title="Return to Admin Dashboard">
+        <i class="bi bi-speedometer2"></i> Dashboard
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Main Editor Canvas ── -->
+  <main class="services-catalog-page">
+    <div class="container" style="max-width: 1240px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 24px);">
+
+      <!-- Top Header Bar (Centered) -->
+      <div class="services-top-bar text-center">
+        <h1 class="services-main-title editable-field" id="editableHeaderTitle" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.header.title', this.innerText.trim())">
+          Omni Services Catalog
+        </h1>
+        <p class="services-subtitle editable-field mx-auto" style="max-width: 640px;" id="editableHeaderSubtitle" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.header.subtitle', this.innerText.trim())">
+          Explore our full spectrum of publishing, editorial, and author marketing solutions.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="services-control-bar">
+          <div class="services-search-wrap">
+            <i class="bi bi-search services-search-icon"></i>
+            <input type="text" class="services-search-input" id="catalogSearchInput" placeholder="Search services..." oninput="handleSearch(this.value)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Layout: Sidebar + Detail View -->
+      <div class="row g-4">
+        
+        <!-- Left Sidebar: Categories & Services -->
+        <div class="col-lg-4">
+          <div class="desktop-services-sidebar">
+            <div class="sidebar-brand-box d-flex align-items-center justify-content-between">
+              <span class="fw-bold">
+                <i class="bi bi-folder2-open me-2" style="color: #ad7d42;"></i>
+                Catalog Categories (<span id="catTotalCount">0</span>)
+              </span>
+              <button type="button" class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size: 0.75rem;" onclick="openAddServiceModal()">
+                <i class="bi bi-plus"></i> Add
+              </button>
+            </div>
+
+            <div id="categoriesContainer">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Detail Presentation -->
+        <div class="col-lg-8">
+          <div class="service-detail-card" id="serviceDetailCard">
+            <!-- Breadcrumbs -->
+            <div class="service-breadcrumb">
+              <span>Services</span>
+              <i class="bi bi-chevron-right" style="font-size: 0.65rem;"></i>
+              <span id="detailCatBreadcrumb">Publishing Packages</span>
+              <i class="bi bi-chevron-right" style="font-size: 0.65rem;"></i>
+              <span class="text-dark fw-semibold" id="detailTitleBreadcrumb">Basic Package</span>
+            </div>
+
+            <!-- Header Row: Badge, Title, Price -->
+            <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+              <div style="max-width: 620px;">
+                <div class="service-tag-badge">
+                  <i class="bi bi-award-fill"></i>
+                  <span class="editable-field" id="detailBadge" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.badge.text', this.innerText.trim())">
+                    Omni Specialist Service
+                  </span>
+                </div>
+                <h2 class="service-title editable-field" id="detailTitle" contenteditable="true" spellcheck="false" onblur="handleServiceFieldSave('title', this.innerText.trim())">
+                  Basic Package
+                </h2>
+              </div>
+
+              <div class="service-price-block">
+                <span class="service-price-amount editable-field" id="detailPrice" contenteditable="true" spellcheck="false" onblur="handleServiceFieldSave('price', this.innerText.trim())">
+                  $1,499
+                </span>
+                <span class="service-price-sub editable-field" id="detailPriceSub" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.price.sub', this.innerText.trim())">
+                  Transparent Pricing
+                </span>
+              </div>
+            </div>
+
+            <hr class="service-divider">
+
+            <!-- Service Overview Box -->
+            <div class="service-lead-box">
+              <h5 class="editable-field" id="detailOverviewHeading" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.overview.heading', this.innerText.trim())">
+                Service Overview
+              </h5>
+              <p class="service-lead-text editable-field" id="detailLead" contenteditable="true" spellcheck="false" onblur="handleServiceFieldSave('lead', this.innerText.trim())">
+                The Basic package is designed for authors seeking core publishing needs.
+              </p>
+            </div>
+
+            <!-- What's Included Feature Checklist -->
+            <div class="features-checklist-section">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h5 class="fw-bold editable-field m-0" style="color: #2b2219; font-size: 1.1rem;" id="detailIncludedHeading" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.included.heading', this.innerText.trim())">
+                  What's Included:
+                </h5>
+                <button type="button" class="btn-add-feature" onclick="addFeatureBullet()">
+                  <i class="bi bi-plus-circle-fill"></i> Add Feature
+                </button>
+              </div>
+
+              <div class="service-features-list" id="detailFeaturesList">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- CTA Card -->
+            <div class="service-cta-card">
+              <div class="service-cta-text-col">
+                <h4 class="fw-bold mb-1 editable-field" style="color: #ffffff; font-size: 1.25rem;" id="detailCtaHeading" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.cta.heading', this.innerText.trim())">
+                  Ready to start with this package?
+                </h4>
+                <p class="small mb-0 editable-field" style="color: #fae2b2;" id="detailCtaSubtitle" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.cta.subtitle', this.innerText.trim())">
+                  Get a free consultation, custom quote, and turnaround timeline today.
+                </p>
+              </div>
+
+              <div class="service-cta-actions">
+                <a href="#contact" class="service-cta-btn" onclick="event.preventDefault()">
+                  <span class="editable-field" id="detailCtaBtn" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.cta.btn_text', this.innerText.trim())">
+                    Inquire About This Service
+                  </span>
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- Danger Zone / Delete Service -->
+            <div class="d-flex align-items-center justify-content-between p-3 mt-4 rounded-3 border border-danger border-opacity-25 bg-danger bg-opacity-10" id="dangerZoneBox">
+              <div>
+                <span class="text-danger fw-bold small"><i class="bi bi-exclamation-triangle-fill me-1"></i> Admin Action:</span>
+                <span class="text-muted small ms-1">Delete this service from the catalog</span>
+              </div>
+              <button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteCurrentService()">
+                <i class="bi bi-trash3"></i> Delete Service
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ── Floating Toast ── -->
+  <div id="editorToast">
+    <i class="bi bi-check-circle-fill text-warning"></i>
+    <span id="toastMsg">All changes saved</span>
+  </div>
+
+  <!-- ── Modal Backdrop ── -->
+  <div class="modal-backdrop-custom" id="modalBackdrop" onclick="closeAllModals()"></div>
+
+  <!-- ── Icon Picker Modal ── -->
+  <div class="editor-modal" id="iconModal">
+    <div class="editor-modal-header">
+      <span><i class="bi bi-palette text-warning me-2"></i> Choose Category Icon</span>
+      <button type="button" class="btn-close btn-close-white" onclick="closeAllModals()"></button>
+    </div>
+    <div class="editor-icon-grid" id="iconGrid">
+      <!-- Icons populated dynamically -->
+    </div>
+  </div>
+
+  <!-- ── Add Service Modal ── -->
+  <div class="editor-modal" id="addServiceModal">
+    <div class="editor-modal-header">
+      <span id="modalAddServiceHeading"><i class="bi bi-plus-circle-fill text-warning me-2"></i> Add New Service to Catalog</span>
+      <button type="button" class="btn-close btn-close-white" onclick="closeAllModals()"></button>
+    </div>
+    <div class="p-3">
+      <div class="mb-3">
+        <label class="form-label text-light small fw-bold">Parent Category</label>
+        <select class="form-select bg-dark text-light border-secondary" id="modalCatSelect" onchange="updateSubcatOptions()">
+          <!-- Categories populated -->
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label text-light small fw-bold">Subcategory</label>
+        <select class="form-select bg-dark text-light border-secondary" id="modalSubcatSelect">
+          <!-- Subcategories populated -->
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label text-light small fw-bold">Service Title</label>
+        <input type="text" class="form-control bg-dark text-light border-secondary" id="modalServiceTitle" placeholder="e.g. Masterclass Package">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label text-light small fw-bold">Price Display</label>
+        <input type="text" class="form-control bg-dark text-light border-secondary" id="modalServicePrice" placeholder="e.g. $1,499">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label text-light small fw-bold">Service Overview / Lead</label>
+        <textarea class="form-control bg-dark text-light border-secondary" id="modalServiceLead" rows="3" placeholder="Briefly describe what this service includes..."></textarea>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="closeAllModals()">Cancel</button>
+        <button type="button" class="btn btn-warning btn-sm fw-bold" onclick="submitCreateService()">
+          <i class="bi bi-check-lg"></i> Create Service
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Scripts ── -->
+  <script>
+    (function () {
+      'use strict';
+
+      const token = localStorage.getItem('omni_admin_token');
+      let catalog = [];
+      let selectedService = null;
+      let isEditMode = true;
+      let activeIconCatId = null;
+      let debounceTimer = null;
+      let toastTimer = null;
+
+      const AVAILABLE_ICONS = [
+        { name: 'Book', icon: 'bi-book-half' },
+        { name: 'Journal', icon: 'bi-journal-check' },
+        { name: 'Pencil', icon: 'bi-pencil-square' },
+        { name: 'Megaphone', icon: 'bi-megaphone-fill' },
+        { name: 'Layers', icon: 'bi-layers-fill' },
+        { name: 'Award', icon: 'bi-award-fill' },
+        { name: 'Shield', icon: 'bi-shield-check' },
+        { name: 'Star', icon: 'bi-star-fill' },
+        { name: 'Headphones', icon: 'bi-headphones' },
+        { name: 'Globe', icon: 'bi-globe' },
+        { name: 'Briefcase', icon: 'bi-briefcase-fill' },
+        { name: 'Stars', icon: 'bi-stars' },
+        { name: 'Graph', icon: 'bi-graph-up-arrow' },
+        { name: 'Lightning', icon: 'bi-lightning-charge-fill' },
+        { name: 'Palette', icon: 'bi-palette-fill' },
+      ];
+
+      function showToast(msg) {
+        const el = document.getElementById('editorToast');
+        document.getElementById('toastMsg').textContent = msg;
+        el.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+      }
+
+      function setSaving(saving) {
+        const el = document.getElementById('editorSaveStatus');
+        if (saving) {
+          el.className = 'editor-save-status saving';
+          el.innerHTML = '<span class="spinner-border spinner-border-sm me-1 text-warning"></span> Saving...';
+        } else {
+          el.className = 'editor-save-status saved';
+          el.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> All changes saved';
+        }
+      }
+
+      window.setMode = function(edit) {
+        isEditMode = edit;
+        document.body.className = edit ? 'mode-edit' : 'mode-preview';
+        document.getElementById('btnEditMode').classList.toggle('active', edit);
+        document.getElementById('btnPreviewMode').classList.toggle('active', !edit);
+        document.querySelectorAll('.editable-field').forEach(el => {
+          el.contentEditable = edit ? 'true' : 'false';
+        });
+        document.getElementById('dangerZoneBox').style.display = edit ? 'flex' : 'none';
+        showToast(edit ? 'Edit Mode active' : 'Visitor Preview active');
+      };
+
+      window.returnToDashboard = function() {
+        if (window.top !== window.self) {
+          try {
+            window.top.switchTab('overview');
+            return;
+          } catch (_) {}
+        }
+        window.location.href = 'admin/index.html';
+      };
+
+      // ── Load Catalog from API ──
+      async function loadCatalog() {
+        try {
+          const res = await fetch('/api/v1/services');
+          const data = await res.json();
+          if (data && data.catalog && data.catalog.length > 0) {
+            catalog = data.catalog;
+          }
+
+          // Also check header overrides from site-meta
+          const metaRes = await fetch('/api/v1/site-meta');
+          const metaData = await metaRes.json();
+          if (metaData && metaData.blockMap) {
+            if (metaData.blockMap['services.header.title']) {
+              document.getElementById('editableHeaderTitle').textContent = metaData.blockMap['services.header.title'];
+            }
+            if (metaData.blockMap['services.header.subtitle']) {
+              document.getElementById('editableHeaderSubtitle').textContent = metaData.blockMap['services.header.subtitle'];
+            }
+            if (metaData.blockMap['services.badge.text']) {
+              document.getElementById('detailBadge').textContent = metaData.blockMap['services.badge.text'];
+            }
+            if (metaData.blockMap['services.price.sub']) {
+              document.getElementById('detailPriceSub').textContent = metaData.blockMap['services.price.sub'];
+            }
+            if (metaData.blockMap['services.overview.heading']) {
+              document.getElementById('detailOverviewHeading').textContent = metaData.blockMap['services.overview.heading'];
+            }
+            if (metaData.blockMap['services.included.heading']) {
+              document.getElementById('detailIncludedHeading').textContent = metaData.blockMap['services.included.heading'];
+            }
+            if (metaData.blockMap['services.cta.heading']) {
+              document.getElementById('detailCtaHeading').textContent = metaData.blockMap['services.cta.heading'];
+            }
+            if (metaData.blockMap['services.cta.subtitle']) {
+              document.getElementById('detailCtaSubtitle').textContent = metaData.blockMap['services.cta.subtitle'];
+            }
+            if (metaData.blockMap['services.cta.btn_text']) {
+              document.getElementById('detailCtaBtn').textContent = metaData.blockMap['services.cta.btn_text'];
+            }
+          }
+
+          renderCategories();
+          
+          // Select service from URL param or first service
+          const params = new URLSearchParams(window.location.search);
+          const svcSlug = params.get('service');
+          let targetSvc = null;
+          if (svcSlug) {
+            for (const cat of catalog) {
+              for (const sub of (cat.subcategories || [])) {
+                const found = (sub.services || []).find(s => s.slug === svcSlug);
+                if (found) { targetSvc = found; break; }
+              }
+              if (targetSvc) break;
+            }
+          }
+
+          if (!targetSvc && catalog[0]?.subcategories[0]?.services[0]) {
+            targetSvc = catalog[0].subcategories[0].services[0];
+          }
+
+          if (targetSvc) {
+            selectService(targetSvc);
+          }
+        } catch (e) {
+          console.error('[ServicesEditor] Load error:', e);
+        }
+      }
+
+      function renderCategories(filter = '') {
+        const container = document.getElementById('categoriesContainer');
+        document.getElementById('catTotalCount').textContent = catalog.length;
+
+        const q = filter.toLowerCase().trim();
+
+        container.innerHTML = catalog.map((cat, catIdx) => {
+          const isExpanded = catIdx === 0 || q.length > 0;
+          const matchingServices = (cat.subcategories || []).map(sub => ({
+            ...sub,
+            services: (sub.services || []).filter(s => !q || s.title.toLowerCase().includes(q) || (s.lead || '').toLowerCase().includes(q))
+          })).filter(sub => sub.services.length > 0);
+
+          if (q && matchingServices.length === 0) return '';
+
+          return `
+            <div class="sidebar-category-group mb-2" data-cat-id="${cat.id}">
+              <div class="category-accordion-row ${isExpanded ? 'expanded' : ''}" id="cat-row-${cat.id}">
+                <div class="category-accordion-label" onclick="toggleCatAccordion('${cat.id}')">
+                  <i class="bi ${cat.icon || cat.icon_class || 'bi-bookmark-star'} text-warning cat-icon" onclick="openIconPicker('${cat.id}', event)" title="Click to change icon"></i>
+                  <span class="category-name-text editable-field" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleRenameCategory('${cat.id}', this.innerText.trim())" onclick="event.stopPropagation()">${escapeHtml(cat.title)}</span>
+                </div>
+                <div class="category-accordion-controls d-flex align-items-center gap-2">
+                  <button type="button" class="btn-cat-add-service" onclick="openAddServiceModalForCategory('${cat.id}', event)" title="Add service to ${escapeHtml(cat.title)}">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
+                  <button type="button" class="btn-cat-toggle" onclick="toggleCatAccordion('${cat.id}')" title="Toggle category">
+                    <i class="bi bi-chevron-${isExpanded ? 'down' : 'right'} small" id="cat-chevron-${cat.id}"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="subcategories-list" id="subcat-box-${cat.id}" style="display: ${isExpanded ? 'block' : 'none'};">
+                ${(q ? matchingServices : (cat.subcategories || [])).map(sub => `
+                  <div class="mb-2">
+                    <div class="d-flex align-items-center justify-content-between mb-1 pe-2">
+                      <div class="subcategory-label editable-field m-0" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleRenameSubcat('${cat.id}', '${sub.id}', this.innerText.trim())">${escapeHtml(sub.title)}</div>
+                      <button type="button" class="btn-sub-add-service" onclick="openAddServiceModalForSubcat('${cat.id}', '${sub.id}', event)" title="Add service to ${escapeHtml(sub.title)}">
+                        <i class="bi bi-plus"></i>
+                      </button>
+                    </div>
+                    ${(sub.services || []).map(svc => `
+                      <button type="button" class="service-nav-item ${selectedService?.slug === svc.slug ? 'active' : ''}" onclick="selectServiceBySlug('${svc.slug}')">
+                        <span class="text-truncate">${escapeHtml(svc.title)}</span>
+                        ${selectedService?.slug === svc.slug ? '<i class="bi bi-check2"></i>' : ''}
+                      </button>
+                    `).join('')}
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      window.toggleCatAccordion = function(catId) {
+        const box = document.getElementById('subcat-box-' + catId);
+        const row = document.getElementById('cat-row-' + catId);
+        const chevron = document.getElementById('cat-chevron-' + catId);
+        if (!box) return;
+        const isOpen = box.style.display !== 'none';
+        box.style.display = isOpen ? 'none' : 'block';
+        if (row) row.classList.toggle('expanded', !isOpen);
+        if (chevron) {
+          chevron.className = `bi bi-chevron-${isOpen ? 'right' : 'down'} small`;
+        }
+      };
+
+      window.selectServiceBySlug = function(slug) {
+        for (const cat of catalog) {
+          for (const sub of (cat.subcategories || [])) {
+            const found = (sub.services || []).find(s => s.slug === slug);
+            if (found) {
+              selectService(found, cat.title);
+              return;
+            }
+          }
+        }
+      };
+
+      function selectService(svc, catTitle = '') {
+        selectedService = svc;
+        document.querySelectorAll('.service-nav-item').forEach(btn => {
+          btn.classList.toggle('active', btn.textContent.trim() === svc.title);
+        });
+
+        document.getElementById('detailTitleBreadcrumb').textContent = svc.title;
+        if (catTitle) document.getElementById('detailCatBreadcrumb').textContent = catTitle;
+
+        document.getElementById('detailTitle').textContent = svc.title;
+        document.getElementById('detailPrice').textContent = svc.price || svc.price_display || '$1,299';
+        document.getElementById('detailLead').textContent = svc.lead || svc.lead_paragraph || '';
+        document.getElementById('detailCtaHeading').textContent = `Ready to start with ${svc.title}?`;
+
+        renderFeaturesList();
+      }
+
+      function renderFeaturesList() {
+        const list = document.getElementById('detailFeaturesList');
+        const feats = selectedService?.features || [
+          'Full dedicated publishing consultation',
+          'Professional design and formatting',
+          '100% author rights and royalty retention'
+        ];
+
+        list.innerHTML = feats.map((feat, idx) => `
+          <div class="feature-checkpoint-item">
+            <i class="bi bi-patch-check-fill feature-check-icon"></i>
+            <span class="editable-field flex-grow-1" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleFeatureSave(${idx}, this.innerText.trim())">${escapeHtml(feat)}</span>
+            <button type="button" class="feature-delete-btn" onclick="deleteFeature(${idx})" title="Delete bullet point">
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </div>
+        `).join('');
+      }
+
+      // ── Debounced Server Persist ──
+      function persistCatalog(specificNote = '') {
+        setSaving(true);
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(async () => {
+          try {
+            const res = await fetch('/api/v1/cms/services/catalog', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              },
+              body: JSON.stringify({ catalog })
+            });
+            if (res.ok) {
+              setSaving(false);
+              showToast(specificNote ? `Saved: ${specificNote}` : 'All changes saved live');
+            } else {
+              setSaving(false);
+              showToast('Save failed');
+            }
+          } catch (e) {
+            setSaving(false);
+            console.error(e);
+          }
+        }, 700);
+      }
+
+      window.handleServiceFieldSave = function(field, val) {
+        if (!selectedService) return;
+        selectedService[field] = val;
+        // Update in catalog tree
+        for (const cat of catalog) {
+          for (const sub of (cat.subcategories || [])) {
+            for (const s of (sub.services || [])) {
+              if (s.slug === selectedService.slug) {
+                s[field] = val;
+                if (field === 'price') s.price_display = val;
+                if (field === 'lead') s.lead_paragraph = val;
+              }
+            }
+          }
+        }
+        renderCategories();
+        persistCatalog(selectedService.title);
+      };
+
+      window.handleFeatureSave = function(idx, val) {
+        if (!selectedService) return;
+        if (!selectedService.features) selectedService.features = [];
+        selectedService.features[idx] = val;
+        persistCatalog('Feature bullet');
+      };
+
+      window.addFeatureBullet = function() {
+        if (!selectedService) return;
+        if (!selectedService.features) selectedService.features = [];
+        selectedService.features.push('New Feature Included');
+        renderFeaturesList();
+        persistCatalog('New feature bullet');
+      };
+
+      window.deleteFeature = function(idx) {
+        if (!selectedService || !selectedService.features) return;
+        selectedService.features.splice(idx, 1);
+        renderFeaturesList();
+        persistCatalog('Removed feature');
+      };
+
+      window.handleRenameCategory = function(catId, val) {
+        const cat = catalog.find(c => String(c.id) === String(catId));
+        if (cat) {
+          cat.title = val;
+          persistCatalog(`Category ${val}`);
+        }
+      };
+
+      window.handleRenameSubcat = function(catId, subId, val) {
+        const cat = catalog.find(c => String(c.id) === String(catId));
+        if (cat) {
+          const sub = (cat.subcategories || []).find(s => String(s.id) === String(subId));
+          if (sub) {
+            sub.title = val;
+            persistCatalog(`Subcategory ${val}`);
+          }
+        }
+      };
+
+      window.handleHeaderSave = async function(blockKey, val) {
+        setSaving(true);
+        try {
+          await fetch(`/api/v1/cms/blocks/${encodeURIComponent(blockKey)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ value: val })
+          });
+          setSaving(false);
+          showToast(`Saved: ${blockKey}`);
+        } catch (_) {
+          setSaving(false);
+        }
+      };
+
+      window.deleteCurrentService = function() {
+        if (!selectedService) return;
+        if (!confirm(`Delete "${selectedService.title}" from the catalog?`)) return;
+
+        const slugToDelete = selectedService.slug;
+        for (const cat of catalog) {
+          for (const sub of (cat.subcategories || [])) {
+            sub.services = (sub.services || []).filter(s => s.slug !== slugToDelete);
+          }
+        }
+
+        // Delete from backend API
+        fetch(`/api/v1/cms/services/${encodeURIComponent(slugToDelete)}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        }).catch(() => {});
+
+        persistCatalog(`Deleted ${selectedService.title}`);
+
+        // Select next remaining service
+        let nextSvc = null;
+        for (const cat of catalog) {
+          for (const sub of (cat.subcategories || [])) {
+            if (sub.services?.length > 0) { nextSvc = sub.services[0]; break; }
+          }
+          if (nextSvc) break;
+        }
+
+        renderCategories();
+        if (nextSvc) selectService(nextSvc);
+      };
+
+      // ── Icon Picker ──
+      window.openIconPicker = function(catId, e) {
+        e.stopPropagation();
+        activeIconCatId = catId;
+        document.getElementById('modalBackdrop').classList.add('show');
+        document.getElementById('iconModal').classList.add('show');
+        const grid = document.getElementById('iconGrid');
+        grid.innerHTML = AVAILABLE_ICONS.map(i => `
+          <div class="icon-opt" onclick="selectCatIcon('${i.icon}')">
+            <i class="bi ${i.icon}"></i>
+            <span>${i.name}</span>
+          </div>
+        `).join('');
+      };
+
+      window.selectCatIcon = function(iconClass) {
+        if (activeIconCatId) {
+          const cat = catalog.find(c => String(c.id) === String(activeIconCatId));
+          if (cat) {
+            cat.icon = iconClass;
+            cat.icon_class = iconClass;
+            renderCategories();
+            persistCatalog('Category Icon');
+          }
+        }
+        closeAllModals();
+      };
+
+      // ── Add Service Modal ──
+      window.openAddServiceModalForCategory = function(catId, e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        openAddServiceModal(catId);
+      };
+
+      window.openAddServiceModalForSubcat = function(catId, subId, e) {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        openAddServiceModal(catId, subId);
+      };
+
+      window.openAddServiceModal = function(preferredCatId = null, preferredSubId = null) {
+        document.getElementById('modalBackdrop').classList.add('show');
+        document.getElementById('addServiceModal').classList.add('show');
+        
+        const catSelect = document.getElementById('modalCatSelect');
+        catSelect.innerHTML = catalog.map(c => `<option value="${c.id}">${escapeHtml(c.title)}</option>`).join('');
+        
+        const modalHeading = document.getElementById('modalAddServiceHeading');
+        if (preferredCatId) {
+          catSelect.value = preferredCatId;
+          const preferredCat = catalog.find(c => String(c.id) === String(preferredCatId));
+          if (modalHeading && preferredCat) {
+            modalHeading.innerHTML = `<i class="bi bi-plus-circle-fill text-warning me-2"></i> Add Service to <span style="color:#eba22d;">${escapeHtml(preferredCat.title)}</span>`;
+          }
+        } else {
+          if (modalHeading) {
+            modalHeading.innerHTML = `<i class="bi bi-plus-circle-fill text-warning me-2"></i> Add New Service to Catalog`;
+          }
+        }
+        updateSubcatOptions();
+
+        if (preferredSubId) {
+          document.getElementById('modalSubcatSelect').value = preferredSubId;
+        }
+
+        setTimeout(() => {
+          const titleInput = document.getElementById('modalServiceTitle');
+          if (titleInput) {
+            titleInput.value = '';
+            titleInput.focus();
+          }
+        }, 120);
+      };
+
+      window.updateSubcatOptions = function() {
+        const catId = document.getElementById('modalCatSelect').value;
+        const cat = catalog.find(c => String(c.id) === String(catId));
+        const subSelect = document.getElementById('modalSubcatSelect');
+        if (cat && cat.subcategories) {
+          subSelect.innerHTML = cat.subcategories.map(s => `<option value="${s.id}">${escapeHtml(s.title)}</option>`).join('');
+        }
+      };
+
+      window.submitCreateService = function() {
+        const catId = document.getElementById('modalCatSelect').value;
+        const subId = document.getElementById('modalSubcatSelect').value;
+        const title = document.getElementById('modalServiceTitle').value.trim();
+        const price = document.getElementById('modalServicePrice').value.trim() || '$1,299';
+        const lead = document.getElementById('modalServiceLead').value.trim() || 'Comprehensive specialist service tailored to your requirements.';
+
+        if (!title) {
+          alert('Please enter a service title');
+          return;
+        }
+
+        const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        const newSvc = {
+          slug,
+          title,
+          price,
+          price_display: price,
+          lead,
+          lead_paragraph: lead,
+          features: [
+            'Dedicated publishing specialist',
+            'Full commercial rights and royalty retention',
+            'Priority production support'
+          ]
+        };
+
+        const cat = catalog.find(c => String(c.id) === String(catId));
+        if (cat) {
+          const sub = (cat.subcategories || []).find(s => String(s.id) === String(subId)) || cat.subcategories[0];
+          if (sub) {
+            if (!sub.services) sub.services = [];
+            sub.services.push(newSvc);
+          }
+        }
+
+        closeAllModals();
+        renderCategories();
+
+        // Ensure newly modified category accordion is expanded so author sees new service immediately
+        const subcatBox = document.getElementById('subcat-box-' + catId);
+        const catRow = document.getElementById('cat-row-' + catId);
+        const catChevron = document.getElementById('cat-chevron-' + catId);
+        if (subcatBox) subcatBox.style.display = 'block';
+        if (catRow) catRow.classList.add('expanded');
+        if (catChevron) catChevron.className = 'bi bi-chevron-down small';
+
+        selectService(newSvc);
+        persistCatalog(`Created ${newSvc.title}`);
+        
+        document.getElementById('modalServiceTitle').value = '';
+        document.getElementById('modalServiceLead').value = '';
+      };
+
+      window.closeAllModals = function() {
+        document.getElementById('modalBackdrop').classList.remove('show');
+        document.getElementById('iconModal').classList.remove('show');
+        document.getElementById('addServiceModal').classList.remove('show');
+      };
+
+      window.handleSearch = function(q) {
+        renderCategories(q);
+      };
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>"']/g, m => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[m]);
+      }
+
+      // ── Start Editor ──
+      function startEditor() {
+        fetch('/api/v1/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+          .then(res => {
+            if (!res.ok) {
+              localStorage.removeItem('omni_admin_token');
+              localStorage.removeItem('omni_admin_user');
+              window.location.replace('admin/login.html');
+              return;
+            }
+            document.documentElement.classList.add('auth-ready');
+            loadCatalog();
+          })
+          .catch(() => {
+            window.location.replace('admin/login.html');
+          });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startEditor);
+      } else {
+        startEditor();
+      }
+
+    })();
+  </script>
+
+</body>
+
+</html>

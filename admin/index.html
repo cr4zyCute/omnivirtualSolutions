@@ -1012,7 +1012,7 @@
               <div class="stat-val" id="statVisits">—</div>
               <div class="stat-lbl">Total Website Visits</div>
               <div class="stat-sub">
-                <i class="bi bi-people"></i> <span id="statUniqueVisits">—</span> unique visitors
+                <i class="bi bi-activity"></i> Active web traffic
               </div>
               <div class="stat-badge blue" id="statVisitsPace">~0 visits / day</div>
             </div>
@@ -1033,58 +1033,24 @@
             </div>
           </div>
 
-          <!-- Card 3: Unhandled Leads (Action Required) -->
-          <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(239, 68, 68, 0.12); color:#f87171;">
-              <i class="bi bi-exclamation-diamond-fill"></i>
+          <!-- Card 5: 24h Outbound Email Quota & Engine -->
+          <div class="stat-card" style="cursor:pointer;" onclick="location.href='admin/contacts.html'" title="Click to view Contact Inbox &amp; Email Settings">
+            <div class="stat-icon" style="background:rgba(235, 162, 45, 0.12); color:#eba22d;">
+              <i class="bi bi-send-fill"></i>
             </div>
-            <div>
-              <div class="stat-val" id="statNewInquiries" style="color:#f87171;">—</div>
-              <div class="stat-lbl">Actionable New Leads</div>
-              <div class="stat-sub">
-                <i class="bi bi-clock-history"></i> Awaiting first response
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div class="stat-val" id="statEmailsSentToday">—</div>
+                <span id="statEmailQuotaBadge" class="stat-badge green" style="margin-top:0;">🟢 Healthy</span>
               </div>
-              <div class="stat-badge red" id="statActionBadge">Immediate Action</div>
-            </div>
-          </div>
-
-          <!-- Card 4: Conversion Funnel Rate -->
-          <div class="stat-card">
-            <div class="stat-icon" style="background:var(--gold-dim); color:var(--gold);">
-              <i class="bi bi-funnel-fill"></i>
-            </div>
-            <div>
-              <div class="stat-val" id="statConversionRate" style="color:var(--gold);">—%</div>
-              <div class="stat-lbl">Visit-to-Lead Funnel</div>
+              <div class="stat-lbl">Emails Sent Today (24h)</div>
               <div class="stat-sub">
-                <i class="bi bi-check-circle"></i> <span id="statResponseRate">0%</span> processed
+                <i class="bi bi-speedometer2"></i> <span id="statEmailQuotaRatio">0 / 500</span> daily Google limit
               </div>
-              <div class="stat-badge gold">Benchmark: 1.5% - 2.5%</div>
+              <div style="margin-top:6px; background:rgba(255,255,255,0.08); height:6px; border-radius:3px; overflow:hidden;">
+                <div id="statEmailQuotaBar" style="height:100%; width:0%; background:linear-gradient(90deg, #22c55e, #eba22d); border-radius:3px; transition:width 0.4s ease;"></div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <!-- Senior Executive Analyst Intelligence Card -->
-        <div class="intelligence-card" id="analystInsightsCard">
-          <div class="intel-header">
-            <div class="intel-title">
-              <i class="bi bi-lightning-charge-fill"></i> Real-Time Database Telemetry & Decision Intelligence
-            </div>
-            <span class="intel-badge"><i class="bi bi-database-check me-1"></i> Live SQLite / Turso</span>
-          </div>
-          <div class="intel-headline" id="insightsHeadline">Connecting to database telemetry...</div>
-          <div class="intel-grid">
-            <div>
-              <div class="intel-item-lbl"><i class="bi bi-search text-warning me-1"></i> Key Observation</div>
-              <div class="intel-item-val" id="insightsFinding">Loading analytics summary...</div>
-            </div>
-            <div>
-              <div class="intel-item-lbl"><i class="bi bi-shield-check text-success me-1"></i> Action Recommendation</div>
-              <div class="intel-item-val" id="insightsRecommendation">Evaluating lead response rates...</div>
-            </div>
-          </div>
-          <div class="intel-provenance">
-            <i class="bi bi-info-circle"></i> <span id="insightsProvenance">First-party sessions with SHA-256 IP hashing & live contact database records.</span>
           </div>
         </div>
 
@@ -1097,7 +1063,7 @@
                 <i class="bi bi-activity text-warning"></i> Traffic & Lead Generation Over Time
               </div>
               <div style="font-size:11px; color:var(--muted);">
-                Visits vs. Unique Visitors vs. Inquiries
+                Website Visits vs. Inquiries vs. Emails Sent
               </div>
             </div>
             <div class="panel-body">
@@ -1172,7 +1138,7 @@
                 <span style="font-size:12px; color:var(--muted); font-weight:600;"><i class="bi bi-file-earmark-richtext text-warning"></i> Page:</span>
                 <select id="editorPageSelect" onchange="switchEditorPage(this.value)" style="background:#161c26; color:#eba22d; border:1px solid rgba(235,162,45,0.4); border-radius:6px; padding:5px 12px; font-size:12px; font-weight:700; cursor:pointer;">
                   <option value="admin/editor.html">🏠 Homepage (index.html)</option>
-                  <option value="services.html?edit=1">📄 Services & Packages (services.html)</option>
+                  <option value="admin/editor-services.html">📄 Services Catalog (services.html)</option>
                 </select>
               </div>
 
@@ -1462,9 +1428,20 @@
         const iframe = document.getElementById('liveEditorIframe');
         const fullBtn = document.getElementById('btnFullscreenEditor');
         const select = document.getElementById('editorPageSelect');
-        if (select) select.value = pageUrl;
-        iframe.src = pageUrl;
-        if (fullBtn) fullBtn.href = pageUrl;
+        
+        let targetUrl = pageUrl;
+        if (targetUrl === 'services.html?edit=1' || targetUrl.startsWith('/services') || targetUrl.includes('services')) {
+          if (!targetUrl.includes('editor-services.html')) {
+            const svcParam = pageUrl.includes('service=') ? pageUrl.slice(pageUrl.indexOf('service=')) : '';
+            targetUrl = 'admin/editor-services.html' + (svcParam ? '?' + svcParam : '');
+          }
+        }
+
+        if (select) {
+          select.value = targetUrl.includes('editor-services.html') ? 'admin/editor-services.html' : targetUrl;
+        }
+        iframe.src = targetUrl;
+        if (fullBtn) fullBtn.href = targetUrl;
       };
 
       window.addEventListener('message', (e) => {
@@ -1594,28 +1571,83 @@
 
           // 1. Update Stat Cards
           const s = data.summary || {};
-          document.getElementById('statVisits').textContent = (s.totalVisits ?? 0).toLocaleString();
-          document.getElementById('statUniqueVisits').textContent = (s.uniqueVisitors ?? 0).toLocaleString();
-          document.getElementById('statVisitsPace').textContent = `~${Math.round((s.totalVisits || 0) / days)} visits / day`;
-
-          document.getElementById('statTotalInquiries').textContent = s.totalInquiries ?? 0;
-          document.getElementById('statRepliesSent').textContent = s.repliesSent ?? 0;
-          document.getElementById('statConversionBadge').textContent = `${s.conversionRate ?? 0}% Conversion`;
-
-          document.getElementById('statNewInquiries').textContent = s.newInquiries ?? 0;
-          document.getElementById('leadsBadge').textContent = s.newInquiries ?? 0;
-          const actionBadge = document.getElementById('statActionBadge');
-          if (s.newInquiries > 0) {
-            actionBadge.textContent = `${s.newInquiries} Awaiting Action`;
-            actionBadge.className = 'stat-badge red';
-          } else {
-            actionBadge.textContent = 'All Caught Up';
-            actionBadge.className = 'stat-badge green';
+          if (document.getElementById('statVisits')) {
+            document.getElementById('statVisits').textContent = (s.totalVisits ?? 0).toLocaleString();
+          }
+          if (document.getElementById('statUniqueVisits')) {
+            document.getElementById('statUniqueVisits').textContent = (s.uniqueVisitors ?? 0).toLocaleString();
+          }
+          if (document.getElementById('statVisitsPace')) {
+            document.getElementById('statVisitsPace').textContent = `~${Math.round((s.totalVisits || 0) / days)} visits / day`;
           }
 
-          document.getElementById('statConversionRate').textContent = `${s.conversionRate ?? 0}%`;
-          document.getElementById('statResponseRate').textContent = `${s.responseRate ?? 0}%`;
-          document.getElementById('leadsStatusTotalBadge').textContent = `${s.totalInquiries ?? 0} Total`;
+          if (document.getElementById('statTotalInquiries')) {
+            document.getElementById('statTotalInquiries').textContent = s.totalInquiries ?? 0;
+          }
+          if (document.getElementById('statRepliesSent')) {
+            document.getElementById('statRepliesSent').textContent = s.repliesSent ?? 0;
+          }
+          if (document.getElementById('statConversionBadge')) {
+            document.getElementById('statConversionBadge').textContent = `${s.conversionRate ?? 0}% Conversion`;
+          }
+
+          if (document.getElementById('statNewInquiries')) document.getElementById('statNewInquiries').textContent = s.newInquiries ?? 0;
+          if (document.getElementById('leadsBadge')) document.getElementById('leadsBadge').textContent = s.newInquiries ?? 0;
+          const actionBadge = document.getElementById('statActionBadge');
+          if (actionBadge) {
+            if (s.newInquiries > 0) {
+              actionBadge.textContent = `${s.newInquiries} Awaiting Action`;
+              actionBadge.className = 'stat-badge red';
+            } else {
+              actionBadge.textContent = 'All Caught Up';
+              actionBadge.className = 'stat-badge green';
+            }
+          }
+
+          if (document.getElementById('statConversionRate')) document.getElementById('statConversionRate').textContent = `${s.conversionRate ?? 0}%`;
+          if (document.getElementById('statResponseRate')) document.getElementById('statResponseRate').textContent = `${s.responseRate ?? 0}%`;
+          if (document.getElementById('leadsStatusTotalBadge')) document.getElementById('leadsStatusTotalBadge').textContent = `${s.totalInquiries ?? 0} Total`;
+
+          // Fetch Email Quota Telemetry for Dashboard
+          try {
+            const quotaRes = await fetch('/api/v1/contact/email-settings/quota', {
+              headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (quotaRes.ok) {
+              const qData = await quotaRes.json();
+              if (qData.success && qData.quota) {
+                const q = qData.quota;
+                const sentEl = document.getElementById('statEmailsSentToday');
+                const ratioEl = document.getElementById('statEmailQuotaRatio');
+                const badgeEl = document.getElementById('statEmailQuotaBadge');
+                const barEl = document.getElementById('statEmailQuotaBar');
+
+                if (sentEl) sentEl.textContent = q.sent24h ?? 0;
+                if (ratioEl) ratioEl.textContent = `${q.sent24h ?? 0} / ${q.limit ?? 500}`;
+                
+                const pct = Math.min(100, Math.round(((q.sent24h || 0) / (q.limit || 500)) * 100));
+                if (barEl) {
+                  barEl.style.width = pct + '%';
+                  barEl.style.background = pct >= 95 ? '#ef4444' : pct >= 75 ? '#f59e0b' : 'linear-gradient(90deg, #22c55e, #eba22d)';
+                }
+
+                if (badgeEl) {
+                  if (q.googleLimitHit || q.isExceeded) {
+                    badgeEl.className = 'stat-badge red';
+                    badgeEl.textContent = '⚠️ 500 Limit Hit';
+                  } else if (q.strategy === 'force_popup') {
+                    badgeEl.className = 'stat-badge gold';
+                    badgeEl.textContent = '🟡 Popup Mode';
+                  } else {
+                    badgeEl.className = 'stat-badge green';
+                    badgeEl.textContent = `${q.remaining} Left Today`;
+                  }
+                }
+              }
+            }
+          } catch (errQuota) {
+            console.warn('[Dashboard Quota fetch failed]', errQuota);
+          }
 
           // 2. Render Executive Analyst Insights
           if (data.analystInsights) {
@@ -1634,12 +1666,15 @@
 
           // 3. Render Top Visited Pages
           const topPages = data.topPages || [];
-          document.getElementById('topPagesList').innerHTML = topPages.length ? topPages.map(p => `
-            <div class="top-pages-item">
-              <span class="top-pages-path" title="${escapeHtml(p.path)}">${escapeHtml(p.path)}</span>
-              <span style="font-weight:700; color:#fff;">${p.count} <span style="font-weight:400; color:var(--muted); font-size:10px;">views</span></span>
-            </div>
-          `).join('') : '<div style="color:var(--muted); font-size:11px; padding:6px 0;">No pages recorded.</div>';
+          const topPagesEl = document.getElementById('topPagesList');
+          if (topPagesEl) {
+            topPagesEl.innerHTML = topPages.length ? topPages.map(p => `
+              <div class="top-pages-item">
+                <span class="top-pages-path" title="${escapeHtml(p.path)}">${escapeHtml(p.path)}</span>
+                <span style="font-weight:700; color:#fff;">${p.count} <span style="font-weight:400; color:var(--muted); font-size:10px;">views</span></span>
+              </div>
+            `).join('') : '<div style="color:var(--muted); font-size:11px; padding:6px 0;">No pages recorded.</div>';
+          }
 
           // 4. Render Chart 1: Traffic & Engagement Over Time
           renderTimelineChart(data.timeline || []);
@@ -1658,7 +1693,7 @@
 
         const labels = timeline.map(t => t.label);
         const visits = timeline.map(t => t.visits);
-        const unique = timeline.map(t => t.uniqueVisitors);
+        const emails = timeline.map(t => t.emailsSent ?? 0);
         const inquiries = timeline.map(t => t.inquiries);
 
         if (chartVisits) {
@@ -1683,17 +1718,17 @@
                 yAxisID: 'y',
               },
               {
-                label: 'Unique Visitors',
-                data: unique,
+                label: 'Emails Dispatched',
+                data: emails,
                 borderColor: '#38bdf8',
                 backgroundColor: 'transparent',
                 borderWidth: 2,
                 borderDash: [4, 4],
                 fill: false,
                 tension: 0.35,
-                pointRadius: 2,
+                pointRadius: 3,
                 pointBackgroundColor: '#38bdf8',
-                yAxisID: 'y',
+                yAxisID: 'y1',
               },
               {
                 label: 'Inquiries (Leads)',
@@ -1753,8 +1788,8 @@
                 display: true,
                 position: 'right',
                 grid: { drawOnChartArea: false },
-                ticks: { color: '#34d399', font: { size: 10.5 }, precision: 0 },
-                title: { display: true, text: 'Inquiries', color: '#34d399', font: { size: 10 } }
+                ticks: { color: '#38bdf8', font: { size: 10.5 }, precision: 0 },
+                title: { display: true, text: 'Inquiries & Emails', color: '#38bdf8', font: { size: 10 } }
               }
             }
           }
@@ -1927,8 +1962,8 @@
 
       function renderBlocksTable(blocks) {
         document.getElementById('blocksTableBody').innerHTML = blocks.map(b => {
-          const isService = b.block_key.startsWith('service.');
-          const targetUrl = isService ? 'services.html?edit=1' : 'admin/editor.html';
+          const isService = b.block_key.startsWith('service.') || b.block_key.startsWith('services.');
+          const targetUrl = isService ? 'admin/editor-services.html' : 'admin/editor.html';
           return `
             <tr>
               <td><code style="color:var(--gold); font-family:'JetBrains Mono';">${b.block_key}</code></td>
@@ -1977,16 +2012,24 @@
             <td><strong>${escapeHtml(s.title)}</strong></td>
             <td><span class="status-badge" style="background:rgba(255,255,255,0.06); color:var(--muted);">${escapeHtml(s.categoryTitle)}</span></td>
             <td>
-              <input type="text" value="${escapeHtml(s.price_display || '')}" id="price-${s.slug}" style="background:#1a202c; color:#fff; border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:12px; width:130px;">
+              <input type="text" value="${escapeHtml(s.price || s.price_display || '')}" id="price-${s.slug}" style="background:#1a202c; color:#fff; border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:12px; width:130px;">
             </td>
             <td>
               <button class="btn-header btn-primary-gold" style="padding:3px 8px; font-size:11px;" onclick="saveServicePrice('${s.slug}')">
-                Save
+                Save Price
+              </button>
+              <button class="btn-header" style="padding:3px 8px; font-size:11px; margin-left:6px; border-color:rgba(235,162,45,0.4);" onclick="openServiceInLiveEditor('${s.slug}')" title="Edit title, price, overview, and features in Live Editor">
+                <i class="bi bi-browser-chrome text-warning"></i> Live Editor
               </button>
             </td>
           </tr>
         `).join('');
       }
+
+      window.openServiceInLiveEditor = function(slug) {
+        switchTab('live-editor');
+        switchEditorPage('admin/editor-services.html?service=' + encodeURIComponent(slug));
+      };
 
       window.saveServicePrice = async function(slug) {
         const val = document.getElementById('price-' + slug).value.trim();

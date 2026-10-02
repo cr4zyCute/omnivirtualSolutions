@@ -140,15 +140,34 @@ const handleContactSubmission = async (req, res) => {
     return res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to save your submission. Please try again." } });
   }
 
-  // ── SEND EMAIL NOTIFICATION & AUTO-REPLY (async, non-blocking) ─────
+  // ── DELIVERY STRATEGY & QUOTA ENGINE ────────────────────────────
   const submission = { id: newId, full_name, email: email.toLowerCase(), phone: phone || null, subject, message, ip_address: ip, created_at: new Date().toISOString() };
   
-  // Dispatches notification and customer auto-reply if enabled in Admin Email Settings
+  const quota = await emailSvc.getQuotaStatus();
+
+  if (quota.shouldUsePopupFallback) {
+    console.log(`[contact] Fallback active (strategy: ${quota.strategy}, sent24h: ${quota.sent24h}/${quota.limit}). Prompting frontend popup.`);
+    return res.status(201).json({
+      success: true,
+      mode: "popup_fallback",
+      reason: quota.strategy === "force_popup" ? "admin_forced_popup" : "quota_exceeded",
+      sent24h: quota.sent24h,
+      limit: quota.limit,
+      message: quota.strategy === "force_popup"
+        ? "Submission saved to CRM. Opening direct Gmail compose window..."
+        : "Daily automated email quota reached. Opening direct Gmail compose fallback...",
+    });
+  }
+
+  // Under quota & background sending active:
   emailSvc.sendNewSubmissionNotification(submission).catch((e) => console.error("[contact] Notification error:", e.message));
   emailSvc.sendAutoReply(submission).catch((e) => console.error("[contact] Auto-reply error:", e.message));
 
   res.status(201).json({
     success: true,
+    mode: "background_sent",
+    sent24h: quota.sent24h + 1,
+    limit: quota.limit,
     message: "Your message has been received! We will get back to you within 1-2 business days.",
   });
 };
@@ -487,6 +506,18 @@ router.post("/email-settings/test", requireAuth, async (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, reason: err.message });
+  }
+});
+
+// =================================================================
+// GET /api/v1/contact/email-settings/quota  — Admin: check 24h quota & strategy
+// =================================================================
+router.get("/email-settings/quota", requireAuth, async (req, res) => {
+  try {
+    const quota = await emailSvc.getQuotaStatus();
+    res.json({ success: true, quota });
+  } catch (err) {
+    res.status(500).json({ success: false, error: { code: "INTERNAL_ERROR", message: err.message } });
   }
 });
 

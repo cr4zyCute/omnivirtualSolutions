@@ -174,46 +174,282 @@ router.get("/blocks/:key/history", requireAuth, async (req, res) => {
 });
 
 // ─────────────────────────────────────────────────────────────────
+// GET /api/v1/cms/services/catalog
+// Get the live editable services catalog from CMS storage
+// ─────────────────────────────────────────────────────────────────
+router.get("/services/catalog", requireAuth, async (req, res) => {
+  try {
+    const catalogBlock = await db.execute({
+      sql: "SELECT value FROM content_blocks WHERE block_key = 'services.catalog.data' LIMIT 1",
+      args: [],
+    });
+    if (catalogBlock.rows.length > 0 && catalogBlock.rows[0].value) {
+      try {
+        const parsed = JSON.parse(catalogBlock.rows[0].value);
+        return res.json({ catalog: parsed });
+      } catch (_) {}
+    }
+    res.json({ catalog: null });
+  } catch (err) {
+    console.error("[cms/services/catalog GET] Error:", err.message);
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to get catalog." } });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────
+// PUT /api/v1/cms/services/catalog
+// Saves the full live services catalog tree from the Live Website Editor.
+// Synchronizes into content_blocks, revisions, and relational tables.
+// ─────────────────────────────────────────────────────────────────
+router.put("/services/catalog", requireAuth, async (req, res) => {
+  const { catalog } = req.body;
+  const editor = req.admin.username;
+
+  if (!catalog || !Array.isArray(catalog)) {
+    return res.status(400).json({ error: { code: "VALIDATION_ERROR", message: "catalog array is required." } });
+  }
+
+  try {
+    const key = "services.catalog.data";
+    const catalogJson = JSON.stringify(catalog);
+
+    // 1. Fetch old value for revision history
+    const existing = await db.execute({
+      sql: "SELECT value FROM content_blocks WHERE block_key = ? LIMIT 1",
+      args: [key],
+    });
+
+    const oldValue = existing.rows.length > 0 ? existing.rows[0].value : "";
+
+    // 2. Insert or update block
+    if (existing.rows.length === 0) {
+      await db.execute({
+        sql: "INSERT INTO content_blocks (block_key, block_type, label, value, updated_by) VALUES (?, 'json', 'Live Services Catalog', ?, ?)",
+        args: [key, catalogJson, editor],
+      });
+    } else {
+      await db.execute({
+        sql: "UPDATE content_blocks SET value = ?, updated_at = CURRENT_TIMESTAMP, updated_by = ? WHERE block_key = ?",
+        args: [catalogJson, editor, key],
+      });
+    }
+
+    // 3. Record revision
+    await db.execute({
+      sql: "INSERT INTO content_block_revisions (block_key, old_value, new_value, changed_by) VALUES (?, ?, ?, ?)",
+      args: [key, oldValue.slice(0, 5000), catalogJson.slice(0, 5000), editor],
+    });
+
+    // 4. Synchronize changed service prices & leads into services table if matching slugs exist
+    let syncedCount = 0;
+    for (const cat of catalog) {
+      for (const sub of (cat.subcategories || [])) {
+        for (const svc of (sub.services || [])) {
+          if (!svc.slug) continue;
+          syncedCount++;
+          try {
+            const svcExists = await db.execute({
+              sql: "SELECT id FROM services WHERE slug = ? LIMIT 1",
+              args: [svc.slug],
+            });
+            if (svcExists.rows.length > 0) {
+              const svcId = svcExists.rows[0].id;
+              await db.execute({
+                sql: "UPDATE services SET title = ?, price_display = ?, lead_paragraph = ? WHERE id = ?",
+                args: [svc.title || '', svc.price || svc.price_display || '', svc.lead || svc.lead_paragraph || '', svcId],
+              });
+
+              // Also sync features if provided
+              if (Array.isArray(svc.features) && svc.features.length > 0) {
+                await db.execute({ sql: "DELETE FROM service_features WHERE service_id = ?", args: [svcId] });
+                for (let i = 0; i < svc.features.length; i++) {
+                  await db.execute({
+                    sql: "INSERT INTO service_features (service_id, feature_text, display_order) VALUES (?, ?, ?)",
+                    args: [svcId, String(svc.features[i]), i + 1],
+                  });
+                }
+              }
+            }
+          } catch (syncErr) {
+            console.warn(`[cms/services/catalog] Sync error for slug ${svc.slug}:`, syncErr.message);
+          }
+        }
+      }
+    }
+
+    console.log(`[cms] ${editor} updated full services catalog (${syncedCount} services synced)`);
+
+    // 5. Broadcast live SSE event to all open visitor tabs and editors
+    broadcast({
+      type: "cms_block_updated",
+      key,
+      value: catalogJson,
+      blockType: "json",
+      updatedBy: editor,
+      table: "content_blocks",
+    });
+
+    res.json({ success: true, count: syncedCount, message: "Catalog updated successfully." });
+  } catch (err) {
+    console.error("[cms/services/catalog PUT] Error:", err.message);
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to update catalog." } });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────
 // PATCH /api/v1/cms/services/:slug
-// Update a service's price, description, or lead paragraph
-// Body: { price_display?, price_cents?, lead_paragraph?, full_description? }
+// Update a service's title, price, description, lead paragraph, or features
 // ─────────────────────────────────────────────────────────────────
 router.patch("/services/:slug", requireAuth, async (req, res) => {
   const { slug } = req.params;
-  const { price_display, price_cents, lead_paragraph, full_description } = req.body;
+  const { title, price_display, price_cents, lead_paragraph, full_description, features } = req.body;
   const editor = req.admin.username;
 
   const updates  = [];
   const args     = [];
 
+  if (title !== undefined) { updates.push("title = ?"); args.push(String(title).trim()); }
   if (price_display !== undefined) { updates.push("price_display = ?"); args.push(String(price_display).trim()); }
   if (price_cents   !== undefined) { updates.push("price_cents = ?");   args.push(parseInt(price_cents, 10) || null); }
   if (lead_paragraph !== undefined) { updates.push("lead_paragraph = ?"); args.push(String(lead_paragraph).trim()); }
   if (full_description !== undefined) { updates.push("full_description = ?"); args.push(String(full_description).trim()); }
 
-  if (updates.length === 0) {
-    return res.status(400).json({ error: { code: "VALIDATION_ERROR", message: "No fields to update." } });
-  }
-
-  args.push(slug);
-
   try {
     const existing = await db.execute({ sql: "SELECT id, title FROM services WHERE slug = ? LIMIT 1", args: [slug] });
-    if (existing.rows.length === 0) {
-      return res.status(404).json({ error: { code: "NOT_FOUND", message: `Service not found: ${slug}` } });
+    let svcId = null;
+
+    if (existing.rows.length > 0) {
+      svcId = existing.rows[0].id;
+      if (updates.length > 0) {
+        args.push(slug);
+        await db.execute({ sql: `UPDATE services SET ${updates.join(", ")} WHERE slug = ?`, args });
+      }
+
+      if (Array.isArray(features)) {
+        await db.execute({ sql: "DELETE FROM service_features WHERE service_id = ?", args: [svcId] });
+        for (let i = 0; i < features.length; i++) {
+          await db.execute({
+            sql: "INSERT INTO service_features (service_id, feature_text, display_order) VALUES (?, ?, ?)",
+            args: [svcId, String(features[i]), i + 1],
+          });
+        }
+      }
     }
 
-    await db.execute({ sql: `UPDATE services SET ${updates.join(", ")} WHERE slug = ?`, args });
+    // Also sync the change into services.catalog.data JSON block if it exists
+    const catalogBlock = await db.execute({
+      sql: "SELECT value FROM content_blocks WHERE block_key = 'services.catalog.data' LIMIT 1",
+      args: [],
+    });
 
-    console.log(`[cms] ${editor} updated service: ${slug} (${updates.join(", ")})`);
+    if (catalogBlock.rows.length > 0 && catalogBlock.rows[0].value) {
+      try {
+        const catList = JSON.parse(catalogBlock.rows[0].value);
+        let foundInBlock = false;
+        for (const cat of catList) {
+          for (const sub of (cat.subcategories || [])) {
+            for (const s of (sub.services || [])) {
+              if (s.slug === slug) {
+                if (title !== undefined) s.title = title;
+                if (price_display !== undefined) s.price = price_display;
+                if (lead_paragraph !== undefined) s.lead = lead_paragraph;
+                if (features !== undefined) s.features = features;
+                foundInBlock = true;
+                break;
+              }
+            }
+          }
+        }
+        if (foundInBlock) {
+          const newJson = JSON.stringify(catList);
+          await db.execute({
+            sql: "UPDATE content_blocks SET value = ?, updated_at = CURRENT_TIMESTAMP, updated_by = ? WHERE block_key = 'services.catalog.data'",
+            args: [newJson, editor],
+          });
+          broadcast({
+            type: "cms_block_updated",
+            key: "services.catalog.data",
+            value: newJson,
+            blockType: "json",
+            updatedBy: editor,
+            table: "content_blocks",
+          });
+        }
+      } catch (e) {
+        console.warn("[cms/services PATCH] Block sync warning:", e.message);
+      }
+    }
 
-    // Broadcast so any open service page refreshes its price/desc live
-    broadcast({ key: `service.${slug}`, value: { price_display, lead_paragraph }, blockType: "service", updatedBy: editor, table: "services" });
+    console.log(`[cms] ${editor} updated service: ${slug}`);
+
+    // Broadcast so any open service page refreshes live
+    broadcast({
+      type: "service_updated",
+      key: `service.${slug}`,
+      value: { title, price_display, lead_paragraph, features },
+      blockType: "service",
+      updatedBy: editor,
+      table: "services",
+    });
 
     res.json({ success: true, slug, updatedFields: updates.map((u) => u.split(" ")[0]) });
   } catch (err) {
     console.error("[cms/services PATCH] Error:", err.message);
     res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to update service." } });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────
+// DELETE /api/v1/cms/services/:slug
+// Delete a service from catalog and database
+// ─────────────────────────────────────────────────────────────────
+router.delete("/services/:slug", requireAuth, async (req, res) => {
+  const { slug } = req.params;
+  const editor = req.admin.username;
+
+  try {
+    const existing = await db.execute({ sql: "SELECT id FROM services WHERE slug = ? LIMIT 1", args: [slug] });
+    if (existing.rows.length > 0) {
+      const svcId = existing.rows[0].id;
+      await db.execute({ sql: "DELETE FROM service_features WHERE service_id = ?", args: [svcId] });
+      await db.execute({ sql: "DELETE FROM services WHERE id = ?", args: [svcId] });
+    }
+
+    // Sync out of services.catalog.data JSON block
+    const catalogBlock = await db.execute({
+      sql: "SELECT value FROM content_blocks WHERE block_key = 'services.catalog.data' LIMIT 1",
+      args: [],
+    });
+
+    if (catalogBlock.rows.length > 0 && catalogBlock.rows[0].value) {
+      try {
+        const catList = JSON.parse(catalogBlock.rows[0].value);
+        for (const cat of catList) {
+          for (const sub of (cat.subcategories || [])) {
+            sub.services = (sub.services || []).filter((s) => s.slug !== slug);
+          }
+        }
+        const newJson = JSON.stringify(catList);
+        await db.execute({
+          sql: "UPDATE content_blocks SET value = ?, updated_at = CURRENT_TIMESTAMP, updated_by = ? WHERE block_key = 'services.catalog.data'",
+          args: [newJson, editor],
+        });
+        broadcast({
+          type: "cms_block_updated",
+          key: "services.catalog.data",
+          value: newJson,
+          blockType: "json",
+          updatedBy: editor,
+          table: "content_blocks",
+        });
+      } catch (_) {}
+    }
+
+    console.log(`[cms] ${editor} deleted service: ${slug}`);
+    res.json({ success: true, slug });
+  } catch (err) {
+    console.error("[cms/services DELETE] Error:", err.message);
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to delete service." } });
   }
 });
 
@@ -362,7 +598,8 @@ router.get("/analytics", requireAuth, async (req, res) => {
       contactsByStatus,
       repliesTotal,
       dailyVisits,
-      dailyInquiries
+      dailyInquiries,
+      dailyEmails
     ] = await Promise.all([
       db.execute({
         sql: "SELECT COUNT(*) AS count FROM page_visits WHERE visited_at >= datetime('now', '-' || ? || ' days')",
@@ -411,6 +648,14 @@ router.get("/analytics", requireAuth, async (req, res) => {
               GROUP BY date(created_at)
               ORDER BY day ASC`,
         args: [days]
+      }),
+      db.execute({
+        sql: `SELECT date(sent_at) AS day, COUNT(*) AS count
+              FROM email_log
+              WHERE status = 'sent' AND sent_at >= datetime('now', '-' || ? || ' days')
+              GROUP BY date(sent_at)
+              ORDER BY day ASC`,
+        args: [days]
       })
     ]);
 
@@ -442,6 +687,11 @@ router.get("/analytics", requireAuth, async (req, res) => {
       inquiryMap[r.day] = r.count;
     });
 
+    const emailMap = {};
+    dailyEmails.rows.forEach(r => {
+      emailMap[r.day] = r.count;
+    });
+
     // Generate date sequence for the last N days
     const timeline = [];
     const now = new Date();
@@ -450,6 +700,7 @@ router.get("/analytics", requireAuth, async (req, res) => {
       const dayStr = d.toISOString().slice(0, 10);
       const v = visitMap[dayStr] || { visits: 0, unique: 0 };
       const inq = inquiryMap[dayStr] || 0;
+      const em = emailMap[dayStr] || 0;
 
       const dateLabel = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
       timeline.push({
@@ -457,7 +708,8 @@ router.get("/analytics", requireAuth, async (req, res) => {
         label: dateLabel,
         visits: v.visits,
         uniqueVisitors: v.unique,
-        inquiries: inq
+        inquiries: inq,
+        emailsSent: em
       });
     }
 
