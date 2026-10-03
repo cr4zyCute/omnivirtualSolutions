@@ -36,12 +36,28 @@ router.get("/", async (req, res) => {
 
     const company = companyResult.rows[0] ? { ...companyResult.rows[0] } : {};
     const configuredEmail = emailSettingResult.rows[0]?.setting_value?.trim();
-    const activeEmail = configuredEmail || company.email || blockMap['services.cta.email'] || blockMap['footer.email'];
-    if (activeEmail) {
-      company.recipient_email = activeEmail;
-      company.email = activeEmail;
-      if (!blockMap['services.cta.email']) blockMap['services.cta.email'] = activeEmail;
-      if (!blockMap['footer.email']) blockMap['footer.email'] = activeEmail;
+    const activeEmail = configuredEmail || company.email || blockMap['services.cta.email'] || blockMap['footer.email'] || "admin@omnivirtualsolution.com";
+    company.recipient_email = activeEmail;
+    company.email = activeEmail;
+    blockMap['services.cta.email'] = activeEmail;
+    blockMap['footer.email'] = activeEmail;
+
+    if (company.phone) {
+      blockMap['footer.phone'] = company.phone;
+    } else if (blockMap['footer.phone']) {
+      company.phone = blockMap['footer.phone'];
+    }
+
+    const addressParts = [
+      company.address_line1 || "1350 Ave of the Americas",
+      company.address_line2,
+      company.city_state_zip || "New York, NY 10019"
+    ].filter(Boolean);
+    company.full_address = blockMap['footer.address'] || addressParts.join(', ');
+    blockMap['footer.address'] = company.full_address;
+
+    if (company.company_name) {
+      blockMap['site.name'] = company.company_name;
     }
 
     res.json({

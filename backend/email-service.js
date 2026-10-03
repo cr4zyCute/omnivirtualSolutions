@@ -8,8 +8,8 @@
 
 const nodemailer = require("nodemailer");
 const path = require("path");
-const fs = require("fs");
 const { db } = require("./db");
+const { getFullBusinessProfile } = require("./business-profile-sync");
 
 // ── Load all email settings from DB ──────────────────────────────
 async function getSettings() {
@@ -111,8 +111,15 @@ function buildEmailShell({
   supportEmail,
   templateStyle = "luxury_gold",
   isWebPreview = false,
+  company = null,
 }) {
-  const emailTo = supportEmail || "nikkisixxacosta083@gmail.com";
+  const brandName = company?.company_name || "Omni Virtual Solutions";
+  const brandTagline = company?.tagline || "Empowering Individuals & Businesses";
+  const brandPhone = company?.phone || "+1 315-915-4799";
+  const cleanPhone = brandPhone.replace(/[^\d+]/g, "");
+  const brandAddress = company?.full_address || "1350 Ave of the Americas, Fl 2 -1100, New York, NY 10019";
+  const emailTo = supportEmail || company?.email || "admin@omnivirtualsolution.com";
+  const copyrightLine = company?.copyright_text || `© ${new Date().getFullYear()} ${brandName}. All rights reserved.`;
   const logoSrc = isWebPreview ? "/assets/img/OmniLogo2.png" : "cid:omnilogo";
   const brandGold = "#eba22d";
 
@@ -160,10 +167,10 @@ function buildEmailShell({
                   </td>
                   <td style="vertical-align: middle;">
                     <span style="font-size: 21px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; display: inline-block;">
-                      Omni Virtual Solutions
+                      ${brandName}
                     </span>
                     <div style="font-size: 11px; color: ${brandGold}; margin-top: 3px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 700;">
-                      Empowering Individuals &amp; Businesses
+                      ${brandTagline}
                     </div>
                   </td>
                 </tr>
@@ -215,14 +222,14 @@ function buildEmailShell({
           <tr>
             <td bgcolor="#080b11" style="padding: 24px 32px; color: #64748b; font-size: 12px; line-height: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
               <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; color: #f1f5f9;">
-                Omni Virtual Solutions
+                ${brandName}
               </p>
               <p style="margin: 0 0 8px 0; color: #94a3b8;">
-                1350 Ave of the Americas, Fl 2 -1100, New York, NY 10019<br>
-                Phone: <a href="tel:+13159154799" style="color: ${brandGold}; text-decoration: none; font-weight: 600;">+1 315-915-4799</a> &nbsp;|&nbsp; Email: <a href="mailto:${emailTo}" style="color: ${brandGold}; text-decoration: none; font-weight: 600;">${emailTo}</a>
+                ${brandAddress}<br>
+                Phone: <a href="tel:${cleanPhone}" style="color: ${brandGold}; text-decoration: none; font-weight: 600;">${brandPhone}</a> &nbsp;|&nbsp; Email: <a href="mailto:${emailTo}" style="color: ${brandGold}; text-decoration: none; font-weight: 600;">${emailTo}</a>
               </p>
               <p style="margin: 0; color: #475569; font-size: 11px;">
-                ${footerNote || "© 2026 Omni Virtual Solutions. All rights reserved."}
+                ${footerNote || copyrightLine}
               </p>
             </td>
           </tr>
@@ -286,10 +293,10 @@ function buildEmailShell({
                   </td>
                   <td style="vertical-align: middle;">
                     <span style="font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: 0.2px; display: inline-block;">
-                      Omni Virtual Solutions
+                      ${brandName}
                     </span>
                     <div style="font-size: 11px; color: #64748b; margin-top: 3px; letter-spacing: 0.4px; text-transform: uppercase; font-weight: 600;">
-                      Executive Business &amp; Publishing Services
+                      ${brandTagline}
                     </div>
                   </td>
                 </tr>
@@ -341,14 +348,14 @@ function buildEmailShell({
           <tr>
             <td bgcolor="#f8fafc" style="padding: 24px 32px; color: #64748b; font-size: 12px; line-height: 20px; border-top: 1px solid #e2e8f0;">
               <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; color: #0f172a;">
-                Omni Virtual Solutions
+                ${brandName}
               </p>
               <p style="margin: 0 0 8px 0; color: #64748b;">
-                1350 Ave of the Americas, Fl 2 -1100, New York, NY 10019<br>
-                Phone: <a href="tel:+13159154799" style="color: #0f172a; text-decoration: none; font-weight: 600;">+1 315-915-4799</a> &nbsp;|&nbsp; Email: <a href="mailto:${emailTo}" style="color: #0f172a; text-decoration: none; font-weight: 600;">${emailTo}</a>
+                ${brandAddress}<br>
+                Phone: <a href="tel:${cleanPhone}" style="color: #0f172a; text-decoration: none; font-weight: 600;">${brandPhone}</a> &nbsp;|&nbsp; Email: <a href="mailto:${emailTo}" style="color: #0f172a; text-decoration: none; font-weight: 600;">${emailTo}</a>
               </p>
               <p style="margin: 0; color: #94a3b8; font-size: 11px;">
-                ${footerNote || "© 2026 Omni Virtual Solutions. All rights reserved."}
+                ${footerNote || copyrightLine}
               </p>
             </td>
           </tr>
@@ -411,10 +418,10 @@ function buildEmailShell({
                   </td>
                   <td style="vertical-align: middle;">
                     <span style="font-family: 'Georgia', 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1c1917; letter-spacing: -0.2px; display: inline-block;">
-                      Omni Virtual Solutions
+                      ${brandName}
                     </span>
                     <div style="font-family: -apple-system, sans-serif; font-size: 10.5px; color: #8c7355; margin-top: 3px; letter-spacing: 0.8px; text-transform: uppercase; font-weight: 700;">
-                      Executive Advisory &amp; Publishing Press
+                      ${brandTagline}
                     </div>
                   </td>
                 </tr>
@@ -469,14 +476,14 @@ function buildEmailShell({
                 <tr>
                   <td>
                     <p style="margin: 0 0 6px 0; font-family: 'Georgia', serif; font-size: 14px; font-weight: 700; color: #1c1917;">
-                      Omni Virtual Solutions
+                      ${brandName}
                     </p>
                     <p style="margin: 0 0 8px 0; color: #78716c; font-family: -apple-system, sans-serif;">
-                      1350 Ave of the Americas, Fl 2 -1100, New York, NY 10019<br>
-                      Telephone: <a href="tel:+13159154799" style="color: #9a6724; text-decoration: none; font-weight: 600;">+1 315-915-4799</a> &nbsp;|&nbsp; Desk: <a href="mailto:${emailTo}" style="color: #9a6724; text-decoration: none; font-weight: 600;">${emailTo}</a>
+                      ${brandAddress}<br>
+                      Telephone: <a href="tel:${cleanPhone}" style="color: #9a6724; text-decoration: none; font-weight: 600;">${brandPhone}</a> &nbsp;|&nbsp; Desk: <a href="mailto:${emailTo}" style="color: #9a6724; text-decoration: none; font-weight: 600;">${emailTo}</a>
                     </p>
                     <p style="margin: 0; color: #a8a29e; font-size: 11px;">
-                      ${footerNote || "© 2026 Omni Virtual Solutions. Executive Business & Publishing Services."}
+                      ${footerNote || copyrightLine}
                     </p>
                   </td>
                 </tr>
@@ -492,7 +499,7 @@ function buildEmailShell({
 </html>`;
 }
 
-function buildAutoReplyHtml({ submission, settings, bodyText, senderEmail, isWebPreview = false }) {
+function buildAutoReplyHtml({ submission, settings, bodyText, senderEmail, isWebPreview = false, company = null }) {
   const customerName = submission.full_name || "Valued Client";
   const inquirySubject = submission.subject || "General Inquiry";
   const submissionDate = submission.created_at || new Date().toLocaleString("en-US", { timeZoneName: "short" });
@@ -502,6 +509,10 @@ function buildAutoReplyHtml({ submission, settings, bodyText, senderEmail, isWeb
   const templateStyle = settings.email_template_style || "luxury_gold";
   const isLight = templateStyle === "clean_minimal";
   const isEditorial = templateStyle === "warm_editorial" || templateStyle === "gradient_glass";
+
+  const brandName = company?.company_name || "Omni Virtual Solutions";
+  const brandPhone = company?.phone || "+1 315-915-4799";
+  const cleanPhone = brandPhone.replace(/[^\d+]/g, "");
 
   const heroPill = isEditorial ? `
     <div style="display: inline-block; background-color: #f4efe6; border: 1px solid #ded4c3; border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 700; color: #855f2d; margin-bottom: 14px; letter-spacing: 0.5px;">
@@ -529,7 +540,7 @@ function buildAutoReplyHtml({ submission, settings, bodyText, senderEmail, isWeb
   const bodyContent = `
     <div style="background-color: ${bannerBg}; border-left: 4px solid ${bannerBorder}; padding: 14px 16px; border-radius: 0 8px 8px 0; margin-bottom: 24px;">
       <p style="margin: 0; font-size: 14px; line-height: 22px; color: ${bannerText};">
-        <strong>Expected turnaround:</strong> We typically respond within <strong>1–2 business days</strong>. If your request is time-sensitive, you can also reach our desk at <a href="tel:+13159154799" style="color: #eba22d; text-decoration: none; font-weight: 600;">+1 315-915-4799</a>.
+        <strong>Expected turnaround:</strong> We typically respond within <strong>1–2 business days</strong>. If your request is time-sensitive, you can also reach our desk at <a href="tel:${cleanPhone}" style="color: #eba22d; text-decoration: none; font-weight: 600;">${brandPhone}</a>.
       </p>
     </div>
 
@@ -565,27 +576,29 @@ function buildAutoReplyHtml({ submission, settings, bodyText, senderEmail, isWeb
   `;
 
   return buildEmailShell({
-    title: "We received your message — Omni Virtual Solutions",
+    title: `We received your message — ${brandName}`,
     heroPill,
     heroTitle: "We received your message!",
-    heroSubtitle: `Hello <strong style="color: ${valColor};">${customerName}</strong>, thank you for contacting Omni Virtual Solutions. Our team is already reviewing your inquiry.`,
+    heroSubtitle: `Hello <strong style="color: ${valColor};">${customerName}</strong>, thank you for contacting ${brandName}. Our team is already reviewing your inquiry.`,
     bodyContent,
-    ctaText: "Visit Omni Virtual Solutions",
+    ctaText: `Visit ${brandName}`,
     ctaUrl: siteUrl,
-    footerNote: "You are receiving this confirmation because an inquiry was submitted with your email on omnivirtualsolution.com.",
+    footerNote: `You are receiving this confirmation because an inquiry was submitted with your email on ${brandName}.`,
     supportEmail: senderEmail,
     templateStyle,
     isWebPreview,
+    company,
   });
 }
 
-function buildReplyHtml({ submission, settings, fullBody, senderEmail, isWebPreview = false }) {
+function buildReplyHtml({ submission, settings, fullBody, senderEmail, isWebPreview = false, company = null }) {
   const customerName = submission.full_name || "Valued Client";
   const inquirySubject = submission.subject || "Your Inquiry";
   const siteUrl = "https://omnivirtualsolution.com";
   const templateStyle = settings.email_template_style || "luxury_gold";
   const isLight = templateStyle === "clean_minimal";
   const isEditorial = templateStyle === "warm_editorial" || templateStyle === "gradient_glass";
+  const brandName = company?.company_name || "Omni Virtual Solutions";
 
   const heroPill = isEditorial ? `
     <div style="display: inline-block; background-color: #f4efe6; border: 1px solid #ded4c3; border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 700; color: #855f2d; margin-bottom: 14px; letter-spacing: 0.5px;">
@@ -615,21 +628,23 @@ function buildReplyHtml({ submission, settings, fullBody, senderEmail, isWebPrev
   `;
 
   return buildEmailShell({
-    title: `Re: ${inquirySubject} — Omni Virtual Solutions`,
+    title: `Re: ${inquirySubject} — ${brandName}`,
     heroPill,
     heroTitle: `Response to: ${inquirySubject}`,
-    heroSubtitle: `A message from the team at Omni Virtual Solutions for ${customerName}.`,
+    heroSubtitle: `A message from the team at ${brandName} for ${customerName}.`,
     bodyContent,
-    ctaText: "Visit Our Website",
+    ctaText: `Visit ${brandName}`,
     ctaUrl: siteUrl,
-    footerNote: "This message was sent in direct response to your inquiry submitted at omnivirtualsolution.com.",
+    footerNote: `This message was sent in direct response to your inquiry submitted at ${brandName}.`,
     supportEmail: senderEmail,
     templateStyle,
     isWebPreview,
+    company,
   });
 }
 
-function buildNotificationHtml({ submission, settings, senderEmail, recipientEmail, isWebPreview = false }) {
+function buildNotificationHtml({ submission, settings, senderEmail, recipientEmail, isWebPreview = false, company = null }) {
+  const brandName = company?.company_name || "Omni Virtual Solutions";
   const adminUrl = settings.admin_url && !settings.admin_url.includes("localhost") ? settings.admin_url : "https://omnivirtualsolution.com/admin";
   const templateStyle = settings.email_template_style || "luxury_gold";
   const isLight = templateStyle === "clean_minimal";
@@ -705,10 +720,11 @@ function buildNotificationHtml({ submission, settings, senderEmail, recipientEma
     bodyContent,
     ctaText: "Open Admin Leads Dashboard",
     ctaUrl: adminUrl,
-    footerNote: "Automated administrative notification dispatched by Omni Virtual Solutions CMS.",
+    footerNote: `Automated administrative notification dispatched by ${brandName} CMS.`,
     supportEmail: senderEmail,
     templateStyle,
     isWebPreview,
+    company,
   });
 }
 
@@ -716,7 +732,7 @@ function buildNotificationHtml({ submission, settings, senderEmail, recipientEma
 // MAIN: Send notification to admin when a new contact form is submitted
 // =================================================================
 async function sendNewSubmissionNotification(submission) {
-  const settings = await getSettings();
+  const [settings, company] = await Promise.all([getSettings(), getFullBusinessProfile()]);
 
   // Check if notifications are enabled
   if (settings.email_notifications_enabled !== "true") {
@@ -752,14 +768,14 @@ async function sendNewSubmissionNotification(submission) {
   const subjectTemplate = settings.notification_subject || "New Website Inquiry — {customer_name}";
   const subject = interpolate(subjectTemplate, { customer_name: submission.full_name });
 
-  const senderName  = settings.sender_name  || "Omni Virtual Solutions";
-  const senderEmail = settings.sender_email?.trim() || settings.recipient_email?.trim() || settings.smtp_user?.trim();
+  const senderName  = company.company_name || settings.sender_name  || "Omni Virtual Solutions";
+  const senderEmail = company.email || settings.sender_email?.trim() || settings.recipient_email?.trim() || settings.smtp_user?.trim();
   if (senderEmail && senderEmail.toLowerCase().includes("nsixx631")) {
     console.warn("[email-service] Notification blocked: legacy email sender detected");
     return { success: false, reason: "legacy_sender_blocked" };
   }
 
-  const htmlBody = buildNotificationHtml({ submission, settings, senderEmail, recipientEmail });
+  const htmlBody = buildNotificationHtml({ submission, settings, senderEmail, recipientEmail, company });
 
   try {
     await transporter.sendMail({
@@ -789,7 +805,7 @@ async function sendNewSubmissionNotification(submission) {
 // Send auto-reply acknowledgment to visitor after form submission
 // =================================================================
 async function sendAutoReply(submission) {
-  const settings = await getSettings();
+  const [settings, company] = await Promise.all([getSettings(), getFullBusinessProfile()]);
   if (settings.auto_reply_enabled !== "true") return { success: false, reason: "auto_reply_disabled" };
 
   if (!submission.email || submission.email.includes("direct-mail.com") || submission.email.includes("example.com")) {
@@ -799,17 +815,18 @@ async function sendAutoReply(submission) {
   const transporter = await createTransporter(settings);
   if (!transporter) return { success: false, reason: "smtp_not_configured" };
 
-  const subject = interpolate(settings.auto_reply_subject || "We received your message", { customer_name: submission.full_name });
+  const brandName = company.company_name || "Omni Virtual Solutions";
+  const subject = interpolate(settings.auto_reply_subject || `We received your message — ${brandName}`, { customer_name: submission.full_name });
   const bodyText = interpolate(settings.auto_reply_body || "Hello {customer_name}, thank you for contacting us!", { customer_name: submission.full_name });
 
-  const senderName  = settings.sender_name  || "Omni Virtual Solutions";
-  const senderEmail = settings.sender_email?.trim() || settings.recipient_email?.trim() || settings.smtp_user?.trim();
+  const senderName  = company.company_name || settings.sender_name || "Omni Virtual Solutions";
+  const senderEmail = company.email || settings.sender_email?.trim() || settings.recipient_email?.trim() || settings.smtp_user?.trim();
   if (senderEmail && senderEmail.toLowerCase().includes("nsixx631")) {
     console.warn("[email-service] Auto-reply blocked: legacy email sender detected");
     return { success: false, reason: "legacy_sender_blocked" };
   }
 
-  const htmlBody = buildAutoReplyHtml({ submission, settings, bodyText, senderEmail });
+  const htmlBody = buildAutoReplyHtml({ submission, settings, bodyText, senderEmail, company });
 
   try {
     await transporter.sendMail({
@@ -832,16 +849,16 @@ async function sendAutoReply(submission) {
 // Send admin reply to visitor
 // =================================================================
 async function sendReply({ submission, replyBody, replyId, sentBy }) {
-  const settings = await getSettings();
+  const [settings, company] = await Promise.all([getSettings(), getFullBusinessProfile()]);
   const transporter = await createTransporter(settings);
 
-  const senderName  = settings.sender_name  || "Omni Virtual Solutions";
-  const senderEmail = settings.sender_email?.trim() || settings.recipient_email?.trim() || settings.smtp_user?.trim();
+  const senderName  = company.company_name || settings.sender_name  || "Omni Virtual Solutions";
+  const senderEmail = company.email || settings.sender_email?.trim() || settings.recipient_email?.trim() || settings.smtp_user?.trim();
   if (senderEmail && senderEmail.toLowerCase().includes("nsixx631")) {
     console.warn("[email-service] Reply blocked: legacy email sender detected");
     return { success: false, reason: "legacy_sender_blocked" };
   }
-  const subject     = `Re: ${submission.subject || "Your Inquiry"} — Omni Virtual Solutions`;
+  const subject     = `Re: ${submission.subject || "Your Inquiry"} — ${company.company_name || "Omni Virtual Solutions"}`;
 
   if (!transporter) {
     await db.execute({
@@ -853,10 +870,10 @@ async function sendReply({ submission, replyBody, replyId, sentBy }) {
   }
 
   // Apply reply template
-  const template = settings.reply_template || "Hello {customer_name},\n\n{reply_body}\n\nBest regards,\nOmni Virtual Solutions";
+  const template = settings.reply_template || `Hello {customer_name},\n\n{reply_body}\n\nBest regards,\n${senderName}`;
   const fullBody = interpolate(template, { customer_name: submission.full_name, reply_body: replyBody });
 
-  const htmlBody = buildReplyHtml({ submission, settings, fullBody, senderEmail });
+  const htmlBody = buildReplyHtml({ submission, settings, fullBody, senderEmail, company });
 
   try {
     await transporter.sendMail({
@@ -1000,7 +1017,9 @@ async function getQuotaStatus({ tzOffsetMinutes = 480 } = {}) {
 // =================================================================
 // Live Preview Generator for Email Templates
 // =================================================================
-function previewEmail({ style = "luxury_gold", type = "auto_reply" }) {
+function previewEmail({ style = "luxury_gold", type = "auto_reply", company = null }) {
+  const brandName = company?.company_name || "Omni Virtual Solutions";
+  const emailAddr = company?.email || "admin@omnivirtualsolution.com";
   const sampleSubmission = {
     id: 101,
     full_name: "Alexander Vance",
@@ -1014,35 +1033,38 @@ function previewEmail({ style = "luxury_gold", type = "auto_reply" }) {
 
   const sampleSettings = {
     email_template_style: style,
-    recipient_email: "nikkisixxacosta083@gmail.com",
-    sender_name: "Omni Virtual Solutions",
-    sender_email: "nikkisixxacosta083@gmail.com",
+    recipient_email: emailAddr,
+    sender_name: brandName,
+    sender_email: emailAddr,
   };
 
   if (type === "notification") {
     return buildNotificationHtml({
       submission: sampleSubmission,
       settings: sampleSettings,
-      senderEmail: "nikkisixxacosta083@gmail.com",
-      recipientEmail: "nikkisixxacosta083@gmail.com",
+      senderEmail: emailAddr,
+      recipientEmail: emailAddr,
       isWebPreview: true,
+      company,
     });
   } else if (type === "reply") {
     return buildReplyHtml({
       submission: sampleSubmission,
       settings: sampleSettings,
-      fullBody: "Hello Alexander,\n\nThank you for reaching out to Omni Virtual Solutions!\n\nWe have reviewed your project requirements and would be delighted to partner on your upcoming book release. Our senior consultant has prepared a customized publishing roadmap and timeline for your review.\n\nPlease let us know if you are available for a brief discovery session this Thursday at 2:00 PM EST.\n\nWarm regards,\nOmni Virtual Solutions Executive Team",
-      senderEmail: "nikkisixxacosta083@gmail.com",
+      fullBody: `Hello Alexander,\n\nThank you for reaching out to ${brandName}!\n\nWe have reviewed your project requirements and would be delighted to partner on your upcoming book release. Our senior consultant has prepared a customized publishing roadmap and timeline for your review.\n\nPlease let us know if you are available for a brief discovery session this Thursday at 2:00 PM EST.\n\nWarm regards,\n${brandName} Executive Team`,
+      senderEmail: emailAddr,
       isWebPreview: true,
+      company,
     });
   } else {
     // auto_reply
     return buildAutoReplyHtml({
       submission: sampleSubmission,
       settings: sampleSettings,
-      bodyText: "Hello {customer_name}, thank you for contacting Omni Virtual Solutions! We have received your inquiry and our team is already reviewing your details.",
-      senderEmail: "nikkisixxacosta083@gmail.com",
+      bodyText: `Hello {customer_name}, thank you for contacting ${brandName}! We have received your inquiry and our team is already reviewing your details.`,
+      senderEmail: emailAddr,
       isWebPreview: true,
+      company,
     });
   }
 }

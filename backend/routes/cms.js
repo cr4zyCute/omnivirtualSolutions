@@ -25,6 +25,7 @@ const { db }   = require("../db");
 const { requireAuth }  = require("../middleware/auth");
 const { broadcast }    = require("./live");
 const { syncUniversalEmail, isEmailKey } = require("../email-sync");
+const { getFullBusinessProfile, updateBusinessProfile } = require("../business-profile-sync");
 
 // ── Image upload config (multer) ──────────────────────────────────
 const UPLOADS_DIR = path.resolve(__dirname, "../../assets/uploads");
@@ -92,6 +93,36 @@ router.get("/blocks/:key", requireAuth, async (req, res) => {
 });
 
 // ─────────────────────────────────────────────────────────────────
+// GET /api/v1/cms/business-profile
+// Retrieve full unified business identity & contact information
+// ─────────────────────────────────────────────────────────────────
+router.get("/business-profile", requireAuth, async (_req, res) => {
+  try {
+    const profile = await getFullBusinessProfile();
+    res.json({ success: true, profile });
+  } catch (err) {
+    console.error("[cms/business-profile GET] Error:", err.message);
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to load business profile." } });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────
+// PATCH /api/v1/cms/business-profile
+// Update unified business identity, synchronizing company_profile, email_settings,
+// and content_blocks, then broadcasting SSE events site-wide.
+// ─────────────────────────────────────────────────────────────────
+router.patch("/business-profile", requireAuth, async (req, res) => {
+  try {
+    const editor = req.admin?.username || "admin";
+    const profile = await updateBusinessProfile(req.body, editor);
+    res.json({ success: true, profile });
+  } catch (err) {
+    console.error("[cms/business-profile PATCH] Error:", err.message);
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to update business profile: " + err.message } });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────
 // PATCH /api/v1/cms/blocks/:key
 // Update a content block — saves to DB, writes revision, broadcasts live
 // Body: { value: "new content" }
@@ -122,6 +153,27 @@ router.patch("/blocks/:key", requireAuth, async (req, res) => {
         block: { block_key: key, value: newValue, block_type: 'text', updated_by: editor },
         synced_universal_email: true,
       });
+    }
+
+    // ── Universal Phone, Address, and Brand Name Sync ──
+    if (key === 'footer.phone' || key === 'company.phone') {
+      await db.execute({
+        sql: "UPDATE company_profile SET phone = ?, updated_at = CURRENT_TIMESTAMP WHERE id = (SELECT id FROM company_profile ORDER BY id DESC LIMIT 1)",
+        args: [newValue],
+      }).catch(() => {});
+      broadcast({ type: "company_updated", company: { phone: newValue } });
+    } else if (key === 'footer.address' || key === 'company.address') {
+      await db.execute({
+        sql: "UPDATE company_profile SET address_line1 = ?, updated_at = CURRENT_TIMESTAMP WHERE id = (SELECT id FROM company_profile ORDER BY id DESC LIMIT 1)",
+        args: [newValue],
+      }).catch(() => {});
+      broadcast({ type: "company_updated", company: { full_address: newValue, address_line1: newValue } });
+    } else if (key === 'site.name' || key === 'company.name') {
+      await db.execute({
+        sql: "UPDATE company_profile SET company_name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = (SELECT id FROM company_profile ORDER BY id DESC LIMIT 1)",
+        args: [newValue],
+      }).catch(() => {});
+      broadcast({ type: "company_updated", company: { company_name: newValue } });
     }
 
     if (existing.rows.length === 0) {

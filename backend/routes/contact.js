@@ -546,7 +546,9 @@ router.get("/email-stats", requireAuth, async (req, res) => {
 router.get("/email-templates/preview", requireAuth, async (req, res) => {
   const { style = "luxury_gold", type = "auto_reply" } = req.query;
   try {
-    const html = emailSvc.previewEmail({ style, type });
+    const { getFullBusinessProfile } = require("../business-profile-sync");
+    const company = await getFullBusinessProfile();
+    const html = emailSvc.previewEmail({ style, type, company });
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.send(html);
   } catch (err) {

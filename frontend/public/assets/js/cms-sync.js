@@ -86,6 +86,107 @@
       el.classList.add('cms-live-pulsing');
       setTimeout(() => el.classList.remove('cms-live-pulsing'), 1200);
     });
+
+    // Side-effects for global keys across anchors & brand tags
+    if (key === 'footer.email' || key === 'services.cta.email') {
+      document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
+        a.setAttribute('href', `mailto:${value}`);
+        if (a.textContent.includes('@') && document.activeElement !== a) a.textContent = value;
+      });
+    } else if (key === 'footer.phone') {
+      const cleanPhone = value.replace(/[^0-9+]/g, '');
+      document.querySelectorAll('a[href^="tel:"]').forEach(a => {
+        a.setAttribute('href', `tel:${cleanPhone}`);
+        if (document.activeElement !== a && (/\d{3}/.test(a.textContent) || a.textContent.trim().startsWith('+'))) a.textContent = value;
+      });
+    } else if (key === 'site.name') {
+      document.querySelectorAll('.sitename, [data-company-name]').forEach(el => {
+        if (document.activeElement !== el) el.textContent = value;
+      });
+      if (document.title && document.title.includes('Omni Virtual Solutions') && value !== 'Omni Virtual Solutions') {
+        document.title = document.title.replace(/Omni Virtual Solutions/g, value);
+      }
+    }
+  }
+
+  // ── 2b. Apply Universal Business Profile (Name, Email, Phone, Address, Copyright) ────
+  function applyBusinessProfile(company) {
+    if (!company) return;
+
+    // 1. Company Name / Brand
+    if (company.company_name) {
+      document.querySelectorAll('.sitename, [data-company-name]').forEach((el) => {
+        if (document.activeElement !== el) el.textContent = company.company_name;
+      });
+      if (document.title && document.title.includes('Omni Virtual Solutions') && company.company_name !== 'Omni Virtual Solutions') {
+        document.title = document.title.replace(/Omni Virtual Solutions/g, company.company_name);
+      }
+    }
+
+    // 2. Email Address
+    const activeEmail = company.email || company.recipient_email;
+    if (activeEmail) {
+      document.querySelectorAll('[data-block-key="footer.email"], [data-block-key="services.cta.email"], [data-company-email]').forEach((el) => {
+        if (document.activeElement !== el) {
+          el.textContent = activeEmail;
+          if (el.tagName.toLowerCase() === 'a') {
+            el.setAttribute('href', `mailto:${activeEmail}`);
+          }
+        }
+      });
+      document.querySelectorAll('a[href^="mailto:"]').forEach((a) => {
+        a.setAttribute('href', `mailto:${activeEmail}`);
+        if (a.textContent.includes('@') && document.activeElement !== a) {
+          a.textContent = activeEmail;
+        }
+      });
+    }
+
+    // 3. Phone Number
+    if (company.phone) {
+      const cleanPhone = company.phone.replace(/[^0-9+]/g, '');
+      document.querySelectorAll('[data-block-key="footer.phone"], [data-company-phone]').forEach((el) => {
+        if (document.activeElement !== el) {
+          el.textContent = company.phone;
+          if (el.tagName.toLowerCase() === 'a') {
+            el.setAttribute('href', `tel:${cleanPhone}`);
+          }
+        }
+      });
+      document.querySelectorAll('a[href^="tel:"]').forEach((a) => {
+        a.setAttribute('href', `tel:${cleanPhone}`);
+        if (document.activeElement !== a && (/\d{3}/.test(a.textContent) || a.textContent.trim().startsWith('+'))) {
+          a.textContent = company.phone;
+        }
+      });
+    }
+
+    // 4. Address & HQ
+    const fullAddress = company.full_address || [company.address_line1, company.address_line2, company.city_state_zip].filter(Boolean).join(', ');
+    if (fullAddress) {
+      document.querySelectorAll('[data-block-key="footer.address"], [data-company-address]').forEach((el) => {
+        if (document.activeElement !== el) {
+          if (fullAddress.includes('\n') || fullAddress.includes('<br')) {
+            el.innerHTML = fullAddress.replace(/\n/g, '<br>');
+          } else {
+            el.textContent = fullAddress;
+          }
+        }
+      });
+    }
+
+    if (company.hq_caption) {
+      document.querySelectorAll('[data-block-key="footer.hq.caption"]').forEach((el) => {
+        if (document.activeElement !== el) el.textContent = company.hq_caption;
+      });
+    }
+
+    // 5. Copyright
+    if (company.copyright_text) {
+      document.querySelectorAll('[data-block-key="footer.copyright"]').forEach((el) => {
+        if (document.activeElement !== el) el.textContent = company.copyright_text;
+      });
+    }
   }
 
   // ── 3. Auto-assign data-block-key to service sections ────────────
@@ -142,6 +243,10 @@
         Object.entries(data.blockMap).forEach(([key, val]) => {
           applyBlock(key, val);
         });
+      }
+
+      if (data.company) {
+        applyBusinessProfile(data.company);
       }
     } catch (err) {
       console.warn('[cms-sync] Could not load initial DB content:', err.message);
@@ -503,17 +608,40 @@
     if (!window.EventSource) return;
 
     let sse;
+    function handleLivePayload(raw) {
+      try {
+        const data = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        if (!data) return;
+
+        // Content block updates
+        if ((data.table === 'content_blocks' || data.type === 'cms_block_updated') && data.key) {
+          applyBlock(data.key, data.value, data.blockType);
+        }
+
+        // Global business profile updates
+        if (data.type === 'business_profile_updated' || data.type === 'company_updated') {
+          const comp = data.profile || data.company;
+          if (comp) applyBusinessProfile(comp);
+        }
+
+        // Email settings updates
+        if (data.type === 'email_settings_updated') {
+          applyBusinessProfile({
+            email: data.sender_email,
+            recipient_email: data.recipient_email,
+            company_name: data.sender_name,
+          });
+        }
+      } catch (_) {}
+    }
+
     function initSSE() {
       try {
         sse = new EventSource('/api/v1/live');
-        sse.addEventListener('change', (e) => {
-          try {
-            const data = JSON.parse(e.data);
-            if (data.table === 'content_blocks' && data.key) {
-              applyBlock(data.key, data.value, data.blockType);
-            }
-          } catch (_) {}
-        });
+        sse.onmessage = (e) => handleLivePayload(e.data);
+        sse.addEventListener('change', (e) => handleLivePayload(e.data));
+        sse.addEventListener('business_profile_updated', (e) => handleLivePayload(e.data));
+        sse.addEventListener('company_updated', (e) => handleLivePayload(e.data));
         sse.onerror = () => {
           sse.close();
           setTimeout(initSSE, 5000);
