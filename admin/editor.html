@@ -37,18 +37,11 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-
-  <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
-  <link href="assets/css/navbar-luxury.css" rel="stylesheet">
-  <link href="assets/css/about-v2.css" rel="stylesheet">
 
   <!-- ── In-Place CMS Live Editor Styles ── -->
   <style>
@@ -64,36 +57,29 @@
       transition: opacity 0.12s ease-in;
     }
 
-    /* When embedded inside iframe in admin/index.html */
-    html.in-iframe #editorTopBar {
-      display: none !important;
-    }
-    html.in-iframe body {
-      padding-top: 0 !important;
-    }
-    /* CRITICAL: Force all elements with animation tags to be 100% visible in the editor */
-    [data-aos] {
-      opacity: 1 !important;
-      transform: none !important;
-      visibility: visible !important;
-      transition: none !important;
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #0b0e14;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     /* Top Floating Admin Toolbar */
     #editorTopBar {
-      position: sticky;
-      top: 0; left: 0; right: 0;
+      position: relative;
       height: 52px;
       background: rgba(14, 18, 23, 0.96);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid rgba(235, 162, 45, 0.35);
-      z-index: 99999;
+      z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 16px;
       color: #f7f3ee;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
     .editor-bar-left, .editor-bar-right, .editor-bar-center {
@@ -113,6 +99,10 @@
       padding: 4px 10px;
       border-radius: 6px;
       text-decoration: none;
+    }
+    .editor-brand:hover {
+      color: #ffd074;
+      background: rgba(235, 162, 45, 0.2);
     }
     .editor-live-badge {
       display: inline-flex;
@@ -174,29 +164,21 @@
       border-color: #eba22d;
     }
 
-    /* Editable highlights */
-    body.mode-edit [data-block-key] {
-      outline: 2px dashed rgba(235, 162, 45, 0.45);
-      outline-offset: 3px;
-      border-radius: 4px;
-      cursor: text;
-      transition: outline-color 0.2s, background-color 0.2s;
+    /* Live Website Iframe (Single Source of Truth) */
+    #editorIframe {
+      width: 100%;
+      height: calc(100vh - 52px);
+      border: none;
+      display: block;
+      background: #ffffff;
     }
-    body.mode-edit [data-block-key]:hover {
-      outline: 2px solid #eba22d;
-      background-color: rgba(235, 162, 45, 0.1) !important;
+
+    /* When embedded inside iframe in admin/index.html */
+    html.in-iframe #editorTopBar {
+      display: none !important;
     }
-    body.mode-edit [data-block-key]:focus {
-      outline: 2px solid #eba22d !important;
-      background-color: rgba(235, 162, 45, 0.15) !important;
-    }
-    body.mode-edit img[data-block-key] {
-      cursor: pointer !important;
-      position: relative;
-    }
-    body.mode-preview [data-block-key] {
-      outline: none !important;
-      cursor: default;
+    html.in-iframe #editorIframe {
+      height: 100vh !important;
     }
 
     /* Toast */
@@ -225,7 +207,7 @@
       position: fixed;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%) scale(0.95);
-      width: min(620px, 92vw);
+      width: min(640px, 92vw);
       max-height: 85vh;
       background: #12161f;
       border: 1px solid rgba(235, 162, 45, 0.35);
@@ -250,7 +232,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
       gap: 12px;
-      max-height: 360px;
+      max-height: 380px;
       overflow-y: auto;
       padding: 16px;
     }
@@ -268,7 +250,7 @@
       transform: scale(1.04);
     }
 
-    /* ── Icon Picker Modal & Trust Tags Editor Controls ── */
+    /* Icon Picker Modal */
     #iconPickerModal {
       position: fixed;
       top: 50%; left: 50%;
@@ -321,220 +303,10 @@
       color: #fff;
       transform: translateY(-2px);
     }
-
-    /* ── Critical Header & Responsive Mobile Navigation Rules ── */
-    .header {
-      height: 68px;
-      min-height: 68px;
-      background-color: rgba(255, 255, 255, 0.98);
-      border-bottom: 1px solid rgba(225, 218, 206, 0.6);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      display: flex !important;
-      align-items: center !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-    .header-container {
-      width: 100%;
-      max-width: 1320px;
-      height: 100%;
-      margin: 0 auto;
-      padding: 0 clamp(12px, 3vw, 24px);
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-    .header-center-brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-    .header-center-brand img {
-      height: 34px;
-      width: auto;
-      object-fit: contain;
-    }
-    .header-center-brand .sitename {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #1c1917;
-      white-space: nowrap;
-    }
-    .desktop-navmenu ul {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .desktop-navmenu a {
-      color: #4a453e;
-      text-decoration: none;
-      font-size: 14.5px;
-      font-weight: 600;
-      transition: color 0.2s;
-    }
-    .desktop-navmenu a:hover,
-    .desktop-navmenu a.active {
-      color: #eba22d;
-    }
-    .header-right-actions {
-      margin-left: auto;
-    }
-    .header-btn-getstarted {
-      background: #eba22d;
-      color: #0b0e14 !important;
-      padding: 8px 18px;
-      border-radius: 6px;
-      font-size: 13.5px;
-      font-weight: 700;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .header-btn-getstarted:hover {
-      background: #df9524;
-      box-shadow: 0 4px 14px rgba(235, 162, 45, 0.35);
-    }
-    .navbar-hamburger-btn {
-      display: none;
-      background: transparent;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: 6px;
-      width: 38px;
-      height: 38px;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      padding: 0;
-    }
-    .hamburger-icon-lines {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      width: 18px;
-    }
-    .hamburger-line {
-      display: block;
-      height: 2px;
-      width: 100%;
-      background: #1c1917;
-      border-radius: 2px;
-    }
-
-    /* ── Mobile / Tablet Viewport (< 1200px) ── */
-    @media (max-width: 1199px) {
-      .header-container {
-        justify-content: center;
-      }
-      .navbar-hamburger-btn {
-        display: inline-flex !important;
-        position: absolute !important;
-        left: 14px !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-      }
-      .header-center-brand {
-        margin: 0 auto !important;
-      }
-      .desktop-navmenu {
-        display: none !important;
-      }
-      .header-right-actions {
-        display: none !important;
-      }
-    }
-
-    /* Mobile Drawer */
-    .mobile-nav-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      z-index: 1998;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .mobile-nav-backdrop.open {
-      display: block;
-      opacity: 1;
-    }
-    .mobile-nav-drawer {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      width: min(320px, 85vw);
-      background: #ffffff;
-      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
-      z-index: 1999;
-      transform: translateX(-100%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      flex-direction: column;
-    }
-    .mobile-nav-drawer.open {
-      transform: translateX(0);
-    }
-    .mobile-drawer-header {
-      padding: 18px 20px;
-      border-bottom: 1px solid #f0ece1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .mobile-drawer-brand {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .mobile-drawer-brand img {
-      height: 28px;
-    }
-    .drawer-sitename {
-      font-weight: 700;
-      font-size: 14px;
-      color: #1c1917;
-    }
-    .mobile-drawer-close {
-      background: transparent;
-      border: none;
-      font-size: 18px;
-      color: #64748b;
-      cursor: pointer;
-    }
-    .mobile-nav-list {
-      list-style: none;
-      padding: 16px 20px;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .mobile-nav-link {
-      display: flex;
-      align-items: center;
-      padding: 10px 14px;
-      border-radius: 8px;
-      color: #334155;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-    .mobile-nav-link:hover {
-      background: #f8fafc;
-      color: #c29a6b;
-    }
   </style>
 </head>
 
-<body class="index-page mode-edit">
+<body class="mode-edit">
 
   <!-- ── 1. Floating Top Bar ── -->
   <div id="editorTopBar">
@@ -569,559 +341,8 @@
     </div>
   </div>
 
-  <!-- ── 2. The Entire Website (Exact Verbatim Layout) ── -->
-  <header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="header-container">
-      <button type="button" class="navbar-hamburger-btn d-xl-none" id="mobileNavToggleBtn" aria-label="Toggle navigation">
-        <span class="hamburger-icon-lines">
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
-        </span>
-      </button>
-
-      <a href="index.html" class="logo header-center-brand">
-        <img src="assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo">
-        <span class="sitename">Omni Virtual Solutions</span>
-      </a>
-
-      <nav class="desktop-navmenu">
-        <ul>
-          <li><a href="#hero" class="active">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-
-      <div class="header-right-actions">
-        <a class="header-btn-getstarted" href="#services" data-block-key="home.hero.cta_label">Get Started</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- Mobile Navigation Backdrop & Drawer -->
-  <div class="mobile-nav-backdrop" id="mobileNavBackdrop" onclick="toggleMobileNav(false)"></div>
-  <div class="mobile-nav-drawer" id="mobileNavDrawer" role="dialog" aria-modal="true">
-    <div class="mobile-drawer-header">
-      <div class="mobile-drawer-brand">
-        <img src="assets/img/OmniLogo2.png" alt="Omni Logo" style="height:28px;">
-        <span class="drawer-sitename">Omni Virtual Solutions</span>
-      </div>
-      <button type="button" class="mobile-drawer-close" onclick="toggleMobileNav(false)" aria-label="Close menu">
-        <i class="bi bi-x-lg"></i>
-      </button>
-    </div>
-    <ul class="mobile-nav-list">
-      <li><a href="#hero" class="mobile-nav-link" onclick="toggleMobileNav(false)"><i class="bi bi-house-door me-2" style="color:#c29a6b;"></i> Home</a></li>
-      <li><a href="#about" class="mobile-nav-link" onclick="toggleMobileNav(false)"><i class="bi bi-info-circle me-2" style="color:#c29a6b;"></i> About</a></li>
-      <li><a href="services.html" class="mobile-nav-link" onclick="toggleMobileNav(false)"><i class="bi bi-briefcase me-2" style="color:#c29a6b;"></i> Services</a></li>
-      <li><a href="#contact" class="mobile-nav-link" onclick="toggleMobileNav(false)"><i class="bi bi-envelope me-2" style="color:#c29a6b;"></i> Contact</a></li>
-    </ul>
-  </div>
-
-  <main class="main">
-    <!-- Hero Section -->
-    <section id="hero" class="hero section hero-redesign">
-      <div class="hero-inner-container">
-        <div class="hero-content">
-          <h1 class="hero-main-title" data-block-key="home.hero.title">
-            Empowering Individuals<br>and Businesses
-          </h1>
-          <p class="hero-main-subtitle" data-block-key="home.hero.subtitle">
-            Balancing employee autonomy with expert oversight &mdash; providing qualified virtual specialists to power your sustainability and industry superiority.
-          </p>
-        </div>
-
-        <div class="hero-showcase-wrapper">
-          <div class="hero-watermark-text" aria-hidden="true" data-block-key="home.hero.watermark">
-            OMNI VIRTUAL SOLUTIONS
-          </div>
-
-          <div class="hero-books-swiper-container">
-            <div class="swiper hero-books-swiper init-swiper">
-              <script type="application/json" class="swiper-config">
-                {
-                  "loop": true,
-                  "initialSlide": 13,
-                  "speed": 750,
-                  "autoplay": {
-                    "delay": 2000,
-                    "disableOnInteraction": false,
-                    "pauseOnMouseEnter": false
-                  },
-                  "slidesPerView": "auto",
-                  "centeredSlides": true,
-                  "effect": "coverflow",
-                  "coverflowEffect": {
-                    "rotate": 0,
-                    "stretch": -14,
-                    "depth": 110,
-                    "modifier": 1.15,
-                    "slideShadows": false
-                  },
-                  "pagination": {
-                    "el": ".hero-books-pagination",
-                    "clickable": true
-                  }
-                }
-              </script>
-              <div class="swiper-wrapper align-items-center">
-                <!-- Cycle 1 (Books 1 to 13) -->
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book1.png" alt="Book 1" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book2.png" alt="Book 2" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book3.png" alt="Book 3" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book4.png" alt="Book 4" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book5.png" alt="Book 5" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book6.png" alt="Book 6" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book7.png" alt="Book 7" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book8.png" alt="Book 8" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book9.png" alt="Book 9" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book10.png" alt="Book 10" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book11.png" alt="Book 11" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book12.png" alt="Book 12" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book13.png" alt="Book 13" class="book-cover-img"></div></div>
-                <!-- Cycle 2 (Books 1 to 13) -->
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book1.png" alt="Book 1" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book2.png" alt="Book 2" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book3.png" alt="Book 3" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book4.png" alt="Book 4" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book5.png" alt="Book 5" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book6.png" alt="Book 6" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book7.png" alt="Book 7" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book8.png" alt="Book 8" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book9.png" alt="Book 9" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book10.png" alt="Book 10" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book11.png" alt="Book 11" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book12.png" alt="Book 12" class="book-cover-img"></div></div>
-                <div class="swiper-slide"><div class="book-card-wrap"><img src="assets/img/books/book13.png" alt="Book 13" class="book-cover-img"></div></div>
-              </div>
-              <div class="swiper-pagination hero-books-pagination"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section><!-- /Hero Section -->
-
-    <!-- About Section (About v2 Design) -->
-    <section id="about" class="about-v2">
-      <!-- Background decoration -->
-      <div class="about-v2-bg" aria-hidden="true">
-        <div class="about-v2-glow glow-1"></div>
-        <div class="about-v2-glow glow-2"></div>
-        <div class="about-v2-grid"></div>
-      </div>
-
-      <div class="container about-v2-inner">
-        <!-- TOP: Eyebrow + Headline + Lead -->
-        <div class="about-v2-head">
-          <span class="about-v2-eyebrow" data-block-key="home.about.badge">
-            <i class="bi bi-stars"></i> Who We Are
-          </span>
-          <h2 class="about-v2-title" data-block-key="home.about.heading">
-            Built on Trust, Driven by Excellence.
-          </h2>
-          <p class="about-v2-lead" data-block-key="home.about.lead">
-            Omni Virtual Solutions pairs world-class virtual talent with robust management systems &mdash; so your business runs smoothly while you stay focused on growth.
-          </p>
-        </div>
-
-        <!-- MIDDLE: Image + Pillars -->
-        <div class="about-v2-body">
-          <!-- Image Stack -->
-          <div class="about-v2-visual">
-            <div class="about-v2-img-frame">
-              <img
-                src="assets/img/about_team.jpg"
-                alt="Omni Virtual Solutions professional team"
-                class="about-v2-img"
-                data-block-key="home.about.image"
-              >
-              <div class="about-v2-img-overlay"></div>
-            </div>
-
-            <!-- Floating badge -->
-            <div class="about-v2-float-badge">
-              <div class="float-badge-icon">
-                <i class="bi bi-patch-check-fill"></i>
-              </div>
-              <div class="float-badge-text">
-                <strong data-block-key="home.about.float_title">Balanced</strong>
-                <span data-block-key="home.about.float_sub">Autonomy &amp; Oversight</span>
-              </div>
-            </div>
-
-            <!-- Corner accent tag -->
-            <div class="about-v2-corner-tag">
-              <i class="bi bi-clock-history"></i>
-              <span data-block-key="home.about.corner_val">24 / 7</span>
-              <small data-block-key="home.about.corner_lbl">Operations</small>
-            </div>
-          </div>
-
-          <!-- Pillar cards -->
-          <div class="about-v2-pillars">
-            <div class="about-pillar-card">
-              <div class="pillar-icon">
-                <i class="bi bi-shield-fill-check"></i>
-              </div>
-              <div class="pillar-body">
-                <h3 class="pillar-title" data-block-key="home.about.pillar1.title">Autonomy with Oversight</h3>
-                <p class="pillar-text" data-block-key="home.about.pillar1.body">
-                  We believe in employee autonomy as a pivotal component of corporate success — carefully balanced with the right level of oversight, without crossing into micro-management.
-                </p>
-              </div>
-            </div>
-
-            <div class="about-pillar-card">
-              <div class="pillar-icon">
-                <i class="bi bi-people-fill"></i>
-              </div>
-              <div class="pillar-body">
-                <h3 class="pillar-title" data-block-key="home.about.pillar2.title">Elite Virtual Specialists</h3>
-                <p class="pillar-text" data-block-key="home.about.pillar2.body">
-                  We hire only the most qualified virtual professionals so you can focus on what matters — the essentials that drive your organization's sustainability and industry superiority.
-                </p>
-              </div>
-            </div>
-
-            <div class="about-pillar-card">
-              <div class="pillar-icon">
-                <i class="bi bi-headset"></i>
-              </div>
-              <div class="pillar-body">
-                <h3 class="pillar-title" data-block-key="home.about.pillar3.title">Full-Spectrum Coverage</h3>
-                <p class="pillar-text" data-block-key="home.about.pillar3.body">
-                  From lead generation to customer service — phone, chat, and email — we cover every operational touchpoint, 24 hours a day, 7 days a week.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- BOTTOM: Stats strip -->
-        <div class="about-v2-stats">
-          <div class="about-stat-item">
-            <div class="stat-icon-ring"><i class="bi bi-people-fill"></i></div>
-            <div class="stat-value" data-block-key="home.about.stat1.val">200+</div>
-            <div class="stat-label" data-block-key="home.about.stat1.lbl">Clients Served</div>
-          </div>
-          <div class="about-stat-item">
-            <div class="stat-icon-ring"><i class="bi bi-clock-fill"></i></div>
-            <div class="stat-value" data-block-key="home.about.stat2.val">24/7</div>
-            <div class="stat-label" data-block-key="home.about.stat2.lbl">Operations</div>
-          </div>
-          <div class="about-stat-item">
-            <div class="stat-icon-ring"><i class="bi bi-star-fill"></i></div>
-            <div class="stat-value" data-block-key="home.about.stat3.val">5★</div>
-            <div class="stat-label" data-block-key="home.about.stat3.lbl">Satisfaction Rate</div>
-          </div>
-          <div class="about-stat-item">
-            <div class="stat-icon-ring"><i class="bi bi-globe2"></i></div>
-            <div class="stat-value" data-block-key="home.about.stat4.val">10+</div>
-            <div class="stat-label" data-block-key="home.about.stat4.lbl">Industries Served</div>
-          </div>
-        </div>
-
-      </div>
-    </section><!-- /About Section -->
-
-    <!-- Stats Section -->
-    <section id="stats" class="stats section">
-      <div class="container">
-        <div class="row gy-4">
-          <div class="col-lg-3 col-md-6 col-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter" data-stat-key="clients">232</span>
-              <p>Clients</p>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 col-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter" data-stat-key="projects">521</span>
-              <p>Projects</p>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 col-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="1453" data-purecounter-duration="1" class="purecounter" data-stat-key="hours_support">1453</span>
-              <p>Hours Of Support</p>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6 col-6">
-            <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="32" data-purecounter-duration="1" class="purecounter" data-stat-key="workers">32</span>
-              <p>Workers</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section><!-- /Stats Section -->
-
-    <!-- Services Section -->
-    <section id="services" class="services section services-redesign">
-      <div class="container">
-        <div class="services-header text-center">
-          <div class="services-pill-badge">
-            <span data-block-key="home.services.badge">✦ WHAT WE OFFER</span>
-          </div>
-          <h2 class="services-section-heading" data-block-key="home.services.heading">Our Services</h2>
-          <div class="services-heading-divider"></div>
-        </div>
-      </div>
-
-      <div class="container">
-        <div class="row gy-4 justify-content-center">
-          <div class="col-lg-6 col-md-6">
-            <div class="service-card-luxury position-relative">
-              <div class="service-card-top">
-                <div class="service-icon-box"><i class="bi bi-megaphone-fill"></i></div>
-                <div class="service-card-tag">Specialized Strategy</div>
-              </div>
-              <a href="services.html?open=marketing-dropdown" class="stretched-link text-decoration-none">
-                <h3 class="service-card-title">Marketing Services</h3>
-              </a>
-              <p class="service-card-desc">
-                One of the key features that makes an Omni book distinct from other self-published books is our professional editorial evaluation.
-              </p>
-              <div class="service-feature-pills">
-                <span class="service-pill"><i class="bi bi-check2"></i> Editorial Evaluation</span>
-                <span class="service-pill"><i class="bi bi-check2"></i> Strategic Visibility</span>
-                <span class="service-pill"><i class="bi bi-check2"></i> Target Reach</span>
-              </div>
-              <div class="service-card-footer">
-                <span class="service-link-text">Learn More</span>
-                <i class="bi bi-arrow-right service-link-arrow"></i>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-6 col-md-6">
-            <div class="service-card-luxury position-relative">
-              <div class="service-card-top">
-                <div class="service-icon-box"><i class="bi bi-book-half"></i></div>
-                <div class="service-card-tag">End-to-End Support</div>
-              </div>
-              <a href="services.html?open=eval-services" class="stretched-link text-decoration-none">
-                <h3 class="service-card-title">Publishing Packages</h3>
-              </a>
-              <p class="service-card-desc">
-                Our packages are designed to offer authors the support and tools they need to maximize their book's potential. Each package guarantees one-on-one author support for every step of the self-publishing journey.
-              </p>
-              <div class="service-feature-pills">
-                <span class="service-pill"><i class="bi bi-check2"></i> 1-on-1 Author Guidance</span>
-                <span class="service-pill"><i class="bi bi-check2"></i> Complete Tool Suite</span>
-                <span class="service-pill"><i class="bi bi-check2"></i> Maximize Potential</span>
-              </div>
-              <div class="service-card-footer">
-                <span class="service-link-text">Learn More</span>
-                <i class="bi bi-arrow-right service-link-arrow"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section><!-- /Services Section -->
-
-    <!-- Call To Action Section -->
-    <section id="call-to-action" class="call-to-action section cta-luxury-section">
-      <div class="cta-glow-backdrop"></div>
-      <div class="container position-relative">
-        <div class="row justify-content-center">
-          <div class="col-xl-9 col-lg-10 text-center">
-            <div class="cta-pill-badge">
-              <span data-block-key="home.cta.badge">✦ ELEVATE YOUR WORKFORCE</span>
-            </div>
-            <h2 class="cta-luxury-heading" data-block-key="home.cta.heading">Unlock Seamless Virtual Solutions</h2>
-            <p class="cta-luxury-desc" style="color: #f7f3ee !important;" data-block-key="home.cta.desc">Experience top-tier virtual specialists who enhance efficiency while maintaining autonomy and oversight. Let’s scale your business together.</p>
-            <div class="cta-btn-wrapper">
-              <a class="cta-btn-luxury" href="services.html">
-                <span class="cta-btn-text" data-block-key="home.cta.btn_label">Services</span>
-                <span class="cta-btn-icon"><i class="bi bi-arrow-right"></i></span>
-              </a>
-            </div>
-            <!-- Dynamic, Editable & Addable Trust Tags (Responsive) -->
-            <div class="cta-trust-tags-wrapper">
-              <div class="cta-trust-tags" id="ctaTrustTagsContainer" data-block-key="home.cta.trust_tags">
-                <!-- Dynamically rendered -->
-              </div>
-              <div class="cta-add-tag-wrap">
-                <button type="button" class="btn-add-trust-tag" id="btnAddTrustTag" onclick="addTrustTag()">
-                  <i class="bi bi-plus-circle-fill"></i> Add Highlight Tag
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section><!-- /Call To Action Section -->
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact section contact-redesign">
-      <div class="container">
-
-        <div class="text-center">
-          <div class="contact-pill-badge">
-            <span>✦ GET IN TOUCH</span>
-          </div>
-          <h2 class="contact-section-heading">Contact Our Team</h2>
-          <div class="contact-heading-divider"></div>
-        </div>
-
-        <div class="row gy-4 mt-2">
-          <!-- Contact Info -->
-          <div class="col-lg-5">
-            <div class="contact-info-card">
-              <div class="contact-info-icon"><i class="bi bi-geo-alt-fill"></i></div>
-              <div class="contact-info-content">
-                <h4>Our Headquarters</h4>
-                <p data-block-key="footer.address">1350 Ave of the Americas, Fl 2 -1100 New York, NY 10019</p>
-              </div>
-            </div>
-
-            <div class="contact-info-card">
-              <div class="contact-info-icon"><i class="bi bi-envelope-fill"></i></div>
-              <div class="contact-info-content">
-                <h4>Email Inquiries</h4>
-                <p><a href="mailto:admin@omnivirtualsolution.com" style="color:inherit;text-decoration:none;" data-block-key="footer.email">admin@omnivirtualsolution.com</a></p>
-              </div>
-            </div>
-
-            <div class="contact-info-card">
-              <div class="contact-info-icon"><i class="bi bi-telephone-fill"></i></div>
-              <div class="contact-info-content">
-                <h4>Phone Support</h4>
-                <p><a href="tel:+13159154799" style="color:inherit;text-decoration:none;" data-block-key="footer.phone">+1 315-915-4799</a></p>
-              </div>
-            </div>
-
-            <div class="contact-info-card">
-              <div class="contact-info-icon"><i class="bi bi-clock-fill"></i></div>
-              <div class="contact-info-content">
-                <h4>Operating Hours</h4>
-                <p>Monday – Friday: 9:00 AM – 6:00 PM EST<br>24/7 Virtual Specialist Operations</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Contact Form -->
-          <div class="col-lg-7">
-            <div class="contact-form-card">
-              <form id="omniContactForm" novalidate>
-                <div class="row gy-3">
-                  <div class="col-md-6">
-                    <label class="form-label">Your Name <span class="text-warning">*</span></label>
-                    <input type="text" name="name" class="form-control" placeholder="John Doe" required>
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label">Your Email <span class="text-warning">*</span></label>
-                    <input type="email" name="email" class="form-control" placeholder="john@example.com" required>
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label">Phone Number</label>
-                    <input type="tel" name="phone" class="form-control" placeholder="+1 (555) 000-0000">
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label">Service of Interest</label>
-                    <select name="service_interest" class="form-select">
-                      <option value="">Select a Service (Optional)</option>
-                      <option value="1">Publishing Packages</option>
-                      <option value="2">Editorial Evaluation</option>
-                      <option value="3">Book Marketing</option>
-                      <option value="4">Custom Virtual Assistance</option>
-                    </select>
-                  </div>
-                  <div class="col-12">
-                    <label class="form-label">Subject</label>
-                    <input type="text" name="subject" class="form-control" placeholder="Project Inquiry / Consultation">
-                  </div>
-                  <div class="col-12">
-                    <label class="form-label">Message <span class="text-warning">*</span></label>
-                    <textarea name="message" class="form-control" rows="4" placeholder="Tell us about your project or workforce needs..." required></textarea>
-                  </div>
-                  <div class="col-12 mt-2">
-                    <button type="button" class="contact-btn-submit">
-                      <span>Send Message (Preview)</span>
-                      <i class="bi bi-arrow-right"></i>
-                    </button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section><!-- /Contact Section -->
-
-  </main>
-
-  <footer id="footer" class="footer footer-luxury">
-    <div id="footer-contact" class="container footer-top">
-      <div class="row gy-4 align-items-start">
-        
-        <!-- Corporate Visual Column -->
-        <div class="col-lg-3 col-md-4 footer-image-col">
-          <div class="footer-img-wrapper position-relative">
-            <img src="assets/img/footer-image.jpg" alt="Omni Virtual Solutions Headquarters" class="img-fluid footer-building-img" data-block-key="footer.hq.image">
-            <div class="footer-img-caption">
-              <span data-block-key="footer.hq.caption">New York, NY</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Corporate Info Column -->
-        <div class="col-lg-4 col-md-8 footer-about">
-          <a href="index.html" class="d-flex align-items-center text-decoration-none">
-            <span class="sitename">Omni Virtual Solutions</span>
-          </a>
-          <div class="footer-contact pt-3">
-            <p class="footer-address" data-block-key="footer.address">
-              1350 Ave of the Americas,<br>
-              Fl 2 -1100 New York, NY<br>
-              10019
-            </p>
-            <div class="footer-meta-item">
-              <strong>Email:</strong> <span data-block-key="footer.email">admin@omnivirtualsolution.com</span>
-            </div>
-            <div class="footer-meta-item">
-              <strong>Phone:</strong> <span data-block-key="footer.phone">+1 315-915-4799</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Useful Links Column -->
-        <div class="col-lg-2 col-md-6 col-6 footer-links">
-          <h4>Useful Links</h4>
-          <ul>
-            <li><i class="bi bi-chevron-right"></i> <a href="/index.html#hero">Home</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="/index.html#about">About us</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="/index.html#services">Services</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="/index.html#contact">Contact</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="admin/">Admin Dashboard</a></li>
-          </ul>
-        </div>
-
-        <!-- Our Services Column -->
-        <div class="col-lg-3 col-md-6 col-6 footer-links">
-          <h4>Our Services</h4>
-          <ul>
-            <li><i class="bi bi-chevron-right"></i> <a href="services.html">Evaluation Services</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="services.html">Publishing Packages</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="services.html">Marketing Services</a></li>
-            <li><i class="bi bi-chevron-right"></i> <a href="services.html">Formats</a></li>
-          </ul>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="container copyright text-center mt-5">
-      <div class="copyright-inner">
-        <p>© <span>Copyright</span> <strong class="px-1 sitename">Omni Virtual Solutions</strong> <span>All Rights Reserved</span></p>
-      </div>
-    </div>
-  </footer>
+  <!-- ── 2. The Real Website (Single Source of Truth) ── -->
+  <iframe id="editorIframe" src="index.html?edit=1" allow="clipboard-write" title="Omni Website Live Preview"></iframe>
 
   <!-- ── 3. Image Picker Modal ── -->
   <div class="modal-backdrop-custom" id="modalBackdrop" onclick="closeMediaPicker()"></div>
@@ -1135,7 +356,7 @@
         <i class="bi bi-cloud-arrow-up-fill"></i> Upload New Image
         <input type="file" id="mediaUploadInput" accept="image/*" style="display:none" onchange="uploadImage(this)">
       </label>
-      <span style="font-size:12px; color:#a0aec0; margin-left: 10px;">Click an image below to update the target photo</span>
+      <span style="font-size:12px; color:#a0aec0; margin-left: 10px;">Click an image below to update target photo</span>
     </div>
     <div class="media-grid" id="mediaGrid">
       <div style="color:#718096; padding: 20px;">Loading images...</div>
@@ -1157,22 +378,15 @@
     </div>
   </div>
 
-  <!-- ── 4. Toast ── -->
+  <!-- ── 4. Toast Notification ── -->
   <div id="editorToast">
     <i class="bi bi-check-circle-fill text-warning fs-5"></i>
     <span id="editorToastMsg">Saved successfully</span>
   </div>
 
-  <!-- Vendor Scripts -->
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/js/main.js"></script>
-
-  <!-- ── 5. In-Place Editor Logic ── -->
+  <!-- ── 5. Editor Shell Logic & Iframe Synchronization Bridge ── -->
   <script>
-    (function() {
+    (function () {
       'use strict';
 
       const token = localStorage.getItem('omni_admin_token');
@@ -1189,13 +403,14 @@
 
       let isEditMode = true;
       let targetImgKey = null;
-      const debounceTimers = {};
 
       const saveStatus = document.getElementById('editorSaveStatus');
       const toast = document.getElementById('editorToast');
       const toastMsg = document.getElementById('editorToastMsg');
+      const iframe = document.getElementById('editorIframe');
 
       function showToast(msg) {
+        if (!toast || !toastMsg) return;
         toastMsg.textContent = msg;
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2400);
@@ -1218,41 +433,70 @@
         }
       }
 
-      // Check if embedded inside admin dashboard iframe
+      // Detect if embedded inside admin dashboard iframe
       if (window.self !== window.top) {
         document.documentElement.classList.add('in-iframe');
       }
 
+      // Master Edit Mode Switcher
+      window.setEditorMode = function (edit) {
+        isEditMode = Boolean(edit);
+        document.body.classList.toggle('mode-edit', isEditMode);
+        document.body.classList.toggle('mode-preview', !isEditMode);
+
+        const btnEdit = document.getElementById('btnEdit');
+        const btnPrev = document.getElementById('btnPreview');
+        if (btnEdit) btnEdit.classList.toggle('active', isEditMode);
+        if (btnPrev) btnPrev.classList.toggle('active', !isEditMode);
+
+        // Sync mode to iframe
+        if (iframe && iframe.contentWindow) {
+          iframe.contentWindow.postMessage({ type: 'SET_MODE', edit: isEditMode }, '*');
+          try {
+            if (typeof iframe.contentWindow.__omniSetEditMode === 'function') {
+              iframe.contentWindow.__omniSetEditMode(isEditMode);
+            }
+          } catch (_) {}
+        }
+        showToast(isEditMode ? 'Edit Mode active: click text, icon or photo to edit' : 'Visitor Preview active');
+      };
+
+      // When the iframe finishes loading
+      if (iframe) {
+        iframe.addEventListener('load', function () {
+          try {
+            if (iframe.contentDocument && iframe.contentDocument.documentElement) {
+              iframe.contentDocument.documentElement.classList.add('in-iframe');
+            }
+          } catch (_) {}
+          // Push current mode to iframe
+          if (iframe.contentWindow) {
+            iframe.contentWindow.postMessage({ type: 'SET_MODE', edit: isEditMode }, '*');
+            try {
+              if (typeof iframe.contentWindow.__omniSetEditMode === 'function') {
+                iframe.contentWindow.__omniSetEditMode(isEditMode);
+              }
+            } catch (_) {}
+          }
+        });
+      }
+
+      // Listen for messages from parent dashboard or inner iframe
       window.addEventListener('message', (e) => {
         if (!e.data) return;
         if (e.data.type === 'SET_MODE') {
-          if (typeof window.setEditorMode === 'function') window.setEditorMode(e.data.edit);
+          if (typeof window.setEditorMode === 'function') {
+            window.setEditorMode(e.data.edit);
+          }
         } else if (e.data.type === 'OPEN_MEDIA') {
-          if (typeof window.openMediaPicker === 'function') window.openMediaPicker();
+          openMediaPicker(e.data.key || null);
+        } else if (e.data.type === 'CMS_STATUS') {
+          const isSaving = e.data.status === 'saving' || e.data.saving === true;
+          setSaving(isSaving);
         }
       });
 
-      window.setEditorMode = function(edit) {
-        isEditMode = edit;
-        document.body.classList.toggle('mode-edit', edit);
-        document.body.classList.toggle('mode-preview', !edit);
-        document.getElementById('btnEdit').classList.toggle('active', edit);
-        document.getElementById('btnPreview').classList.toggle('active', !edit);
-
-        document.querySelectorAll('[data-block-key]').forEach(el => {
-          if (el.tagName.toLowerCase() !== 'img') {
-            el.contentEditable = edit ? 'true' : 'false';
-            el.spellcheck = false;
-          }
-        });
-
-        document.querySelectorAll('.trust-item-text').forEach(el => {
-          el.contentEditable = edit ? 'true' : 'false';
-        });
-
-        showToast(edit ? 'Edit Mode active: click text, icon or photo to edit' : 'Visitor Preview active');
-      };
-
+      // Save content block to backend database
       async function saveBlock(key, value) {
         setSaving(true);
         try {
@@ -1284,85 +528,106 @@
         }
       }
 
-      function initEditor() {
-        document.querySelectorAll('[data-block-key]').forEach(el => {
-          const key = el.getAttribute('data-block-key');
+      // ── Media Library Modal System ──
+      window.openMediaPicker = function (key = null) {
+        targetImgKey = key;
+        document.getElementById('modalBackdrop').classList.add('show');
+        document.getElementById('mediaModal').classList.add('show');
+        loadMedia();
+      };
 
-          if (el.tagName.toLowerCase() === 'img') {
-            el.addEventListener('click', (e) => {
-              if (!isEditMode) return;
-              e.preventDefault();
-              openMediaPicker(key);
-            });
-          } else {
-            el.contentEditable = 'true';
-            el.spellcheck = false;
+      window.closeMediaPicker = function () {
+        document.getElementById('modalBackdrop').classList.remove('show');
+        document.getElementById('mediaModal').classList.remove('show');
+        targetImgKey = null;
+      };
 
-            if (el.tagName.toLowerCase() === 'a' || el.closest('a')) {
-              el.addEventListener('click', (e) => {
-                if (isEditMode) e.preventDefault();
-              });
-            }
-
-            el.addEventListener('blur', () => {
-              if (!isEditMode) return;
-              saveBlock(key, el.innerText.trim());
-            });
-
-            el.addEventListener('input', () => {
-              if (!isEditMode) return;
-              setSaving(true);
-              clearTimeout(debounceTimers[key]);
-              debounceTimers[key] = setTimeout(() => {
-                saveBlock(key, el.innerText.trim());
-              }, 900);
-            });
-          }
-        });
-      }
-
-      async function loadContent() {
+      async function loadMedia() {
+        const grid = document.getElementById('mediaGrid');
         try {
           const res = await fetch('/api/v1/site-meta');
-          if (!res.ok) return;
           const data = await res.json();
-          if (data.blockMap) {
-            Object.entries(data.blockMap).forEach(([k, v]) => {
-              if (k === 'home.cta.trust_tags') {
-                try {
-                  const parsed = typeof v === 'string' ? JSON.parse(v) : v;
-                  if (Array.isArray(parsed) && parsed.length > 0) {
-                    trustTagsData = parsed;
-                  }
-                } catch(_) {}
-                renderTrustTags();
-                return;
-              }
+          const assets = data.media_assets || [];
+          const defaultImgs = [
+            'assets/img/about_team.jpg',
+            'assets/img/footer-image.jpg',
+            'assets/img/OmniLogo2.png',
+            'assets/img/books/book1.png',
+            'assets/img/books/book2.png',
+            'assets/img/books/book3.png',
+            'assets/img/books/book4.png'
+          ];
+          const all = Array.from(new Set([...assets.map(a => a.file_path), ...defaultImgs]));
 
-              document.querySelectorAll(`[data-block-key="${k}"]`).forEach(el => {
-                if (el.tagName.toLowerCase() === 'img') {
-                  el.src = v.startsWith('/') ? v.slice(1) : v;
-                } else {
-                  if (v.includes('\n')) {
-                    el.innerHTML = v.replace(/\n/g, '<br>');
-                  } else {
-                    el.textContent = v;
-                  }
-                }
-              });
-            });
-          }
-        } catch (err) {}
+          grid.innerHTML = all.map(path => {
+            const clean = path.startsWith('/') ? path.slice(1) : path;
+            return `<div><img src="${clean}" class="media-thumb" onclick="pickImage('${clean}')" alt="Media asset"></div>`;
+          }).join('');
+        } catch (e) {
+          grid.innerHTML = '<div class="text-danger p-3">Failed to load media.</div>';
+        }
       }
 
-      // ── Trust Tags Interactive System ──────────────────────────────
-      let trustTagsData = [
-        { icon: 'bi-book-half', text: 'Publishing Packages' },
-        { icon: 'bi-journal-check', text: 'Editorial Evaluation' },
-        { icon: 'bi-megaphone', text: 'Book Marketing' }
-      ];
-      let activeIconPickerTagIndex = null;
+      window.pickImage = async function (path) {
+        if (targetImgKey) {
+          try {
+            if (iframe && iframe.contentDocument) {
+              iframe.contentDocument.querySelectorAll(`img[data-block-key="${targetImgKey}"]`).forEach(img => {
+                img.src = path;
+              });
+            }
+          } catch (_) {}
+          await saveBlock(targetImgKey, path);
+        }
+        closeMediaPicker();
+      };
 
+      window.uploadImage = async function (input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('image', file);
+        if (targetImgKey) formData.append('block_key', targetImgKey);
+
+        showToast('Uploading image...');
+
+        try {
+          const res = await fetch('/api/v1/cms/upload', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token },
+            body: formData
+          });
+          if (res.status === 401) {
+            localStorage.removeItem('omni_admin_token');
+            localStorage.removeItem('omni_admin_user');
+            if (window.top !== window.self) window.top.location.href = 'admin/login.html';
+            else window.location.href = 'admin/login.html';
+            return;
+          }
+          const data = await res.json();
+          if (res.ok && data.success) {
+            showToast('Uploaded!');
+            if (targetImgKey) {
+              try {
+                if (iframe && iframe.contentDocument) {
+                  iframe.contentDocument.querySelectorAll(`img[data-block-key="${targetImgKey}"]`).forEach(img => {
+                    img.src = data.path;
+                  });
+                }
+              } catch (_) {}
+            }
+            loadMedia();
+          } else {
+            alert('Upload error: ' + (data.error?.message || 'Failed'));
+          }
+        } catch (e) {
+          alert('Upload failed: ' + e.message);
+        }
+      };
+
+      // ── Icon Picker Modal System ──
+      let activeIconPickerTagIndex = null;
       const AVAILABLE_ICONS = [
         { name: 'Book', icon: 'bi-book-half' },
         { name: 'Journal', icon: 'bi-journal-check' },
@@ -1390,77 +655,7 @@
         { name: 'Tags', icon: 'bi-tags-fill' }
       ];
 
-      function escapeHtml(str) {
-        if (!str) return '';
-        return String(str).replace(/[&<>"']/g, m => ({
-          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-        })[m]);
-      }
-
-      function renderTrustTags() {
-        const container = document.getElementById('ctaTrustTagsContainer');
-        if (!container) return;
-
-        container.innerHTML = trustTagsData.map((t, idx) => `
-          <div class="trust-item" data-index="${idx}">
-            <button type="button" class="trust-icon-btn" onclick="openIconPicker(${idx})" title="Click to change icon">
-              <i class="bi ${escapeHtml(t.icon || 'bi-check-circle')}"></i>
-            </button>
-            <span class="trust-item-text" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleTagBlur(${idx}, this)" oninput="handleTagInput(${idx}, this)">${escapeHtml(t.text)}</span>
-            <button type="button" class="trust-del-btn" onclick="deleteTrustTag(${idx})" title="Remove this tag">&times;</button>
-          </div>
-        `).join('');
-      }
-
-      window.addTrustTag = function() {
-        trustTagsData.push({
-          icon: 'bi-check-circle-fill',
-          text: 'New Highlight'
-        });
-        renderTrustTags();
-        saveBlock('home.cta.trust_tags', JSON.stringify(trustTagsData));
-
-        // Focus the newly added item's text
-        setTimeout(() => {
-          const items = document.querySelectorAll('#ctaTrustTagsContainer .trust-item-text');
-          const last = items[items.length - 1];
-          if (last) {
-            last.focus();
-            const range = document.createRange();
-            range.selectNodeContents(last);
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-          }
-        }, 50);
-      };
-
-      window.deleteTrustTag = function(idx) {
-        if (trustTagsData.length <= 1) {
-          if (!confirm('Remove this tag?')) return;
-        }
-        trustTagsData.splice(idx, 1);
-        renderTrustTags();
-        saveBlock('home.cta.trust_tags', JSON.stringify(trustTagsData));
-      };
-
-      window.handleTagInput = function(idx, el) {
-        if (!isEditMode) return;
-        setSaving(true);
-        trustTagsData[idx].text = el.innerText.trim();
-        clearTimeout(debounceTimers['home.cta.trust_tags']);
-        debounceTimers['home.cta.trust_tags'] = setTimeout(() => {
-          saveBlock('home.cta.trust_tags', JSON.stringify(trustTagsData));
-        }, 900);
-      };
-
-      window.handleTagBlur = function(idx, el) {
-        if (!isEditMode) return;
-        trustTagsData[idx].text = el.innerText.trim();
-        saveBlock('home.cta.trust_tags', JSON.stringify(trustTagsData));
-      };
-
-      window.openIconPicker = function(idx) {
+      window.openIconPicker = function (idx) {
         if (!isEditMode) return;
         activeIconPickerTagIndex = idx;
         document.getElementById('iconPickerBackdrop').classList.add('show');
@@ -1469,7 +664,7 @@
         renderIconGrid(AVAILABLE_ICONS);
       };
 
-      window.closeIconPicker = function() {
+      window.closeIconPicker = function () {
         document.getElementById('iconPickerBackdrop').classList.remove('show');
         document.getElementById('iconPickerModal').classList.remove('show');
         activeIconPickerTagIndex = null;
@@ -1485,129 +680,17 @@
         `).join('');
       }
 
-      window.filterIconGrid = function(query) {
+      window.filterIconGrid = function (query) {
         const q = query.toLowerCase().trim();
         const filtered = AVAILABLE_ICONS.filter(i => i.name.toLowerCase().includes(q) || i.icon.toLowerCase().includes(q));
         renderIconGrid(filtered);
       };
 
-      window.selectIcon = function(iconClass) {
-        if (activeIconPickerTagIndex !== null && trustTagsData[activeIconPickerTagIndex]) {
-          trustTagsData[activeIconPickerTagIndex].icon = iconClass;
-          renderTrustTags();
-          saveBlock('home.cta.trust_tags', JSON.stringify(trustTagsData));
-        }
+      window.selectIcon = function (iconClass) {
         closeIconPicker();
       };
 
-      window.openMediaPicker = function(key = null) {
-        targetImgKey = key;
-        document.getElementById('modalBackdrop').classList.add('show');
-        document.getElementById('mediaModal').classList.add('show');
-        loadMedia();
-      };
-
-      window.closeMediaPicker = function() {
-        document.getElementById('modalBackdrop').classList.remove('show');
-        document.getElementById('mediaModal').classList.remove('show');
-        targetImgKey = null;
-      };
-
-      async function loadMedia() {
-        const grid = document.getElementById('mediaGrid');
-        try {
-          const res = await fetch('/api/v1/site-meta');
-          const data = await res.json();
-          const assets = data.media_assets || [];
-          const defaultImgs = [
-            'assets/img/about_team.jpg',
-            'assets/img/footer-image.jpg',
-            'assets/img/OmniLogo2.png',
-            'assets/img/books/book1.png',
-            'assets/img/books/book2.png',
-            'assets/img/books/book3.png',
-            'assets/img/books/book4.png'
-          ];
-          const all = Array.from(new Set([...assets.map(a => a.file_path), ...defaultImgs]));
-
-          grid.innerHTML = all.map(path => {
-            const clean = path.startsWith('/') ? path.slice(1) : path;
-            return `<div><img src="${clean}" class="media-thumb" onclick="pickImage('${clean}')"></div>`;
-          }).join('');
-        } catch (e) {
-          grid.innerHTML = '<div class="text-danger p-3">Failed to load media.</div>';
-        }
-      }
-
-      window.pickImage = async function(path) {
-        if (targetImgKey) {
-          document.querySelectorAll(`img[data-block-key="${targetImgKey}"]`).forEach(img => img.src = path);
-          await saveBlock(targetImgKey, path);
-        }
-        closeMediaPicker();
-      };
-
-      window.uploadImage = async function(input) {
-        const file = input.files[0];
-        if (!file) return;
-
-        const formData = new FormData();
-        formData.append('image', file);
-        if (targetImgKey) formData.append('block_key', targetImgKey);
-
-        showToast('Uploading image...');
-
-        try {
-          const res = await fetch('/api/v1/cms/upload', {
-            method: 'POST',
-            headers: { 'Authorization': 'Bearer ' + token },
-            body: formData
-          });
-          if (res.status === 401) {
-            localStorage.removeItem('omni_admin_token');
-            localStorage.removeItem('omni_admin_user');
-            if (window.top !== window.self) window.top.location.href = 'admin/login.html';
-            else window.location.href = 'admin/login.html';
-            return;
-          }
-          const data = await res.json();
-          if (res.ok && data.success) {
-            showToast('Uploaded!');
-            if (targetImgKey) {
-              document.querySelectorAll(`img[data-block-key="${targetImgKey}"]`).forEach(img => img.src = data.path);
-            }
-            loadMedia();
-          } else {
-            alert('Upload error: ' + (data.error?.message || 'Failed'));
-          }
-        } catch (e) {
-          alert('Upload failed: ' + e.message);
-        }
-      };
-
-      // ── Mobile Navigation Drawer Toggle ──
-      window.toggleMobileNav = function(open) {
-        const drawer = document.getElementById('mobileNavDrawer');
-        const backdrop = document.getElementById('mobileNavBackdrop');
-        const btn = document.getElementById('mobileNavToggleBtn');
-        const isOpen = open !== undefined ? open : (drawer && !drawer.classList.contains('open'));
-        if (drawer) drawer.classList.toggle('open', isOpen);
-        if (backdrop) backdrop.classList.toggle('open', isOpen);
-        if (btn) btn.classList.toggle('is-active', isOpen);
-      };
-
-      const mobBtn = document.getElementById('mobileNavToggleBtn');
-      if (mobBtn) {
-        mobBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          window.toggleMobileNav();
-        });
-      }
-
-      if (window.self !== window.top) {
-        document.documentElement.classList.add('in-iframe');
-      }
-
+      // Verify token and reveal editor UI
       function startEditor() {
         fetch('/api/v1/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
           .then(res => {
@@ -1619,8 +702,6 @@
               return;
             }
             document.documentElement.classList.add('auth-ready');
-            loadContent();
-            initEditor();
           })
           .catch(() => {
             localStorage.removeItem('omni_admin_token');
@@ -1637,7 +718,6 @@
       }
     })();
   </script>
-
 </body>
 
 </html>

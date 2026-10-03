@@ -537,4 +537,58 @@ router.get("/email-stats", requireAuth, async (req, res) => {
   }
 });
 
+// =================================================================
+// GET /api/v1/contact/email-templates/preview  — Admin: live preview of email design
+// Query: ?style=luxury_gold|clean_minimal|gradient_glass&type=auto_reply|notification|reply
+// =================================================================
+router.get("/email-templates/preview", requireAuth, async (req, res) => {
+  const { style = "luxury_gold", type = "auto_reply" } = req.query;
+  try {
+    const html = emailSvc.previewEmail({ style, type });
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.send(html);
+  } catch (err) {
+    res.status(500).send(`<div style="color:red; padding:20px;">Preview error: ${err.message}</div>`);
+  }
+});
+
+// =================================================================
+// POST /api/v1/contact/email-templates/select  — Admin: choose active email design
+// Body: { style: 'luxury_gold' | 'clean_minimal' | 'gradient_glass' }
+// =================================================================
+router.post("/email-templates/select", requireAuth, async (req, res) => {
+  let { style } = req.body;
+  if (style === "gradient_glass") style = "warm_editorial";
+  const validStyles = ["luxury_gold", "clean_minimal", "warm_editorial", "gradient_glass"];
+  if (!style || !validStyles.includes(style)) {
+    return res.status(400).json({ error: { code: "INVALID_STYLE", message: `Invalid style. Choose one of: ${validStyles.join(", ")}` } });
+  }
+
+  const editor = req.admin?.username || "admin";
+  try {
+    await db.execute({
+      sql: `INSERT INTO email_settings (setting_key, setting_value, setting_label, updated_by)
+            VALUES ('email_template_style', ?, 'Active Email UI Template Style', ?)
+            ON CONFLICT(setting_key) DO UPDATE SET
+              setting_value = excluded.setting_value,
+              updated_at = CURRENT_TIMESTAMP,
+              updated_by = excluded.updated_by`,
+      args: [style, editor],
+    });
+
+    broadcast({
+      type: "email_settings_updated",
+      key: "email_template_style",
+      value: style,
+      updated_by: editor,
+      timestamp: new Date().toISOString(),
+    });
+
+    res.json({ success: true, activeStyle: style, message: `Active email UI set to ${style}.` });
+  } catch (err) {
+    res.status(500).json({ error: { code: "INTERNAL_ERROR", message: "Failed to update email template style." } });
+  }
+});
+
 module.exports = router;
+

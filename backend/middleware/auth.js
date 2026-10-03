@@ -42,7 +42,7 @@ const EFFECTIVE_SECRET = JWT_SECRET || "omni-cms-dev-secret-DO-NOT-USE-IN-PRODUC
 // ── requireAuth middleware ─────────────────────────────────────────
 function requireAuth(req, res, next) {
   const header = req.headers["authorization"] || "";
-  const token  = header.startsWith("Bearer ") ? header.slice(7).trim() : null;
+  const token  = header.startsWith("Bearer ") ? header.slice(7).trim() : (req.query?.token || null);
 
   if (!token) {
     return res.status(401).json({

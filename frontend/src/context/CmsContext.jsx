@@ -11,12 +11,7 @@ const CmsContext = createContext({
 
 export const CmsProvider = ({ children }) => {
   const [blocks, setBlocks] = useState({});
-  const [stats, setStats] = useState({
-    clients: '232',
-    projects: '521',
-    hours_support: '1453',
-    workers: '32',
-  });
+  const [stats, setStats] = useState({});
   const [company, setCompany] = useState({});
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);

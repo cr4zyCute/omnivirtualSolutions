@@ -7,6 +7,8 @@
 // =================================================================
 
 const nodemailer = require("nodemailer");
+const path = require("path");
+const fs = require("fs");
 const { db } = require("./db");
 
 // ── Load all email settings from DB ──────────────────────────────
@@ -83,13 +85,42 @@ async function updateNotifyStatus(submissionId, status) {
 
 // ── Visual Design Template Builders (Compliant with Email Visual Design Skill) ──
 
-function buildEmailShell({ title, heroPill, heroTitle, heroSubtitle, bodyContent, ctaText, ctaUrl, footerNote, supportEmail }) {
-  const brandGold = "#eba22d";
-  const darkNavy  = "#0d1117";
-  const footerBg  = "#0f172a";
-  const emailTo   = supportEmail || "nikkisixxacosta083@gmail.com";
+function getLogoAttachment() {
+  const logoPath = path.resolve(__dirname, "../assets/img/OmniLogo2.png");
+  if (fs.existsSync(logoPath)) {
+    return [
+      {
+        filename: "omni-logo.png",
+        path: logoPath,
+        cid: "omnilogo",
+      },
+    ];
+  }
+  return [];
+}
 
-  return `<!DOCTYPE html>
+function buildEmailShell({
+  title,
+  heroPill,
+  heroTitle,
+  heroSubtitle,
+  bodyContent,
+  ctaText,
+  ctaUrl,
+  footerNote,
+  supportEmail,
+  templateStyle = "luxury_gold",
+  isWebPreview = false,
+}) {
+  const emailTo = supportEmail || "nikkisixxacosta083@gmail.com";
+  const logoSrc = isWebPreview ? "/assets/img/OmniLogo2.png" : "cid:omnilogo";
+  const brandGold = "#eba22d";
+
+  // ─────────────────────────────────────────────────────────────────
+  // TEMPLATE 1: LUXURY GOLD (Executive Dark Obsidian & Gold Accent)
+  // ─────────────────────────────────────────────────────────────────
+  if (templateStyle === "luxury_gold") {
+    return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -100,7 +131,7 @@ function buildEmailShell({ title, heroPill, heroTitle, heroSubtitle, bodyContent
     body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
     table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
     img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
-    body { margin: 0; padding: 0; width: 100% !important; min-width: 100%; background-color: #f3f4f6; }
+    body { margin: 0; padding: 0; width: 100% !important; min-width: 100%; background-color: #0b0f17; }
     @media only screen and (max-width: 620px) {
       .email-container { width: 100% !important; max-width: 100% !important; }
       .mobile-p { padding: 20px 16px !important; }
@@ -109,26 +140,29 @@ function buildEmailShell({ title, heroPill, heroTitle, heroSubtitle, bodyContent
     }
   </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+<body style="margin: 0; padding: 0; background-color: #0b0f17; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
   <div style="display: none; max-height: 0px; overflow: hidden; mso-hide: all;">
     ${heroTitle} — Omni Virtual Solutions
   </div>
 
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f3f4f6">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0b0f17">
     <tr>
-      <td align="center" style="padding: 28px 12px 36px 12px;">
-        <table role="presentation" class="email-container" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06); border: 1px solid #e5e7eb;">
+      <td align="center" style="padding: 32px 12px 40px 12px;">
+        <table role="presentation" class="email-container" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background-color: #111622; border-radius: 14px; overflow: hidden; box-shadow: 0 16px 45px rgba(0, 0, 0, 0.7); border: 1px solid rgba(235, 162, 45, 0.32);">
           
-          <!-- 1. Header -->
+          <!-- Header with Official Logo -->
           <tr>
-            <td bgcolor="${darkNavy}" style="padding: 24px 32px; border-bottom: 3px solid ${brandGold};">
+            <td bgcolor="#080b11" style="padding: 24px 32px; border-bottom: 3px solid ${brandGold};">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td>
-                    <span style="font-size: 20px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; display: inline-block;">
-                      <span style="color: ${brandGold};">✦</span> Omni Virtual Solutions
+                  <td width="52" style="vertical-align: middle; padding-right: 14px;">
+                    <img src="${logoSrc}" alt="Omni Logo" width="46" height="46" style="display:block; width:46px; height:46px; border-radius:10px; border:1px solid rgba(235, 162, 45, 0.45); background:rgba(235, 162, 45, 0.08);">
+                  </td>
+                  <td style="vertical-align: middle;">
+                    <span style="font-size: 21px; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; display: inline-block;">
+                      Omni Virtual Solutions
                     </span>
-                    <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; letter-spacing: 0.3px; text-transform: uppercase;">
+                    <div style="font-size: 11px; color: ${brandGold}; margin-top: 3px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 700;">
                       Empowering Individuals &amp; Businesses
                     </div>
                   </td>
@@ -137,7 +171,133 @@ function buildEmailShell({ title, heroPill, heroTitle, heroSubtitle, bodyContent
             </td>
           </tr>
 
-          <!-- 2. Hero Headline -->
+          <!-- Hero Headline -->
+          <tr>
+            <td class="mobile-p" style="padding: 34px 32px 18px 32px; background-color: #111622;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    ${heroPill || ""}
+                    <h1 class="mobile-h1" style="margin: 0 0 10px 0; font-size: 25px; line-height: 32px; font-weight: 800; color: #ffffff;">
+                      ${heroTitle}
+                    </h1>
+                    ${heroSubtitle ? `<p style="margin: 0; font-size: 15px; line-height: 24px; color: #94a3b8;">${heroSubtitle}</p>` : ""}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Body Content -->
+          <tr>
+            <td class="mobile-p" style="padding: 0 32px 24px 32px; background-color: #111622;">
+              ${bodyContent}
+            </td>
+          </tr>
+
+          <!-- Primary CTA Button -->
+          ${ctaText && ctaUrl ? `
+          <tr>
+            <td class="mobile-p" align="center" style="padding: 6px 32px 32px 32px; background-color: #111622;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" bgcolor="${brandGold}" style="border-radius: 8px;">
+                    <a href="${ctaUrl}" target="_blank" class="mobile-btn" style="background: linear-gradient(135deg, #eba22d 0%, #c87a1d 100%); color: #0d1117; font-size: 14.5px; font-weight: 800; text-decoration: none; padding: 13px 34px; border-radius: 8px; display: inline-block; letter-spacing: 0.3px;">
+                      ${ctaText} &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>` : ""}
+
+          <!-- Footer -->
+          <tr>
+            <td bgcolor="#080b11" style="padding: 24px 32px; color: #64748b; font-size: 12px; line-height: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+              <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; color: #f1f5f9;">
+                Omni Virtual Solutions
+              </p>
+              <p style="margin: 0 0 8px 0; color: #94a3b8;">
+                1350 Ave of the Americas, Fl 2 -1100, New York, NY 10019<br>
+                Phone: <a href="tel:+13159154799" style="color: ${brandGold}; text-decoration: none; font-weight: 600;">+1 315-915-4799</a> &nbsp;|&nbsp; Email: <a href="mailto:${emailTo}" style="color: ${brandGold}; text-decoration: none; font-weight: 600;">${emailTo}</a>
+              </p>
+              <p style="margin: 0; color: #475569; font-size: 11px;">
+                ${footerNote || "© 2026 Omni Virtual Solutions. All rights reserved."}
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // TEMPLATE 2: CLEAN MINIMAL (Corporate Modern Light & Navy)
+  // ─────────────────────────────────────────────────────────────────
+  if (templateStyle === "clean_minimal") {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>${title || "Omni Virtual Solutions"}</title>
+  <style type="text/css">
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+    body { margin: 0; padding: 0; width: 100% !important; min-width: 100%; background-color: #f4f6f9; }
+    @media only screen and (max-width: 620px) {
+      .email-container { width: 100% !important; max-width: 100% !important; }
+      .mobile-p { padding: 20px 16px !important; }
+      .mobile-h1 { font-size: 22px !important; line-height: 28px !important; }
+      .mobile-btn { display: block !important; width: 100% !important; box-sizing: border-box !important; text-align: center !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f6f9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <div style="display: none; max-height: 0px; overflow: hidden; mso-hide: all;">
+    ${heroTitle} — Omni Virtual Solutions
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f4f6f9">
+    <tr>
+      <td align="center" style="padding: 32px 12px 40px 12px;">
+        <table role="presentation" class="email-container" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0;">
+          
+          <!-- Top Accent Bar -->
+          <tr>
+            <td bgcolor="#0f172a" style="height: 4px; line-height: 4px; font-size: 4px; background: linear-gradient(90deg, #0f172a 0%, #1e293b 70%, #eba22d 100%);">
+              &nbsp;
+            </td>
+          </tr>
+
+          <!-- Header with Official Logo -->
+          <tr>
+            <td bgcolor="#ffffff" style="padding: 24px 32px; border-bottom: 1px solid #e2e8f0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="52" style="vertical-align: middle; padding-right: 14px;">
+                    <img src="${logoSrc}" alt="Omni Logo" width="44" height="44" style="display:block; width:44px; height:44px; border-radius:10px; border:1px solid #e2e8f0; background:#f8fafc;">
+                  </td>
+                  <td style="vertical-align: middle;">
+                    <span style="font-size: 20px; font-weight: 800; color: #0f172a; letter-spacing: 0.2px; display: inline-block;">
+                      Omni Virtual Solutions
+                    </span>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 3px; letter-spacing: 0.4px; text-transform: uppercase; font-weight: 600;">
+                      Executive Business &amp; Publishing Services
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Hero Headline -->
           <tr>
             <td class="mobile-p" style="padding: 32px 32px 18px 32px; background-color: #ffffff;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -154,21 +314,21 @@ function buildEmailShell({ title, heroPill, heroTitle, heroSubtitle, bodyContent
             </td>
           </tr>
 
-          <!-- 3. Body Content -->
+          <!-- Body Content -->
           <tr>
-            <td class="mobile-p" style="padding: 0 32px 24px 32px;">
+            <td class="mobile-p" style="padding: 0 32px 24px 32px; background-color: #ffffff;">
               ${bodyContent}
             </td>
           </tr>
 
-          <!-- 4. Primary CTA -->
+          <!-- Primary CTA Button -->
           ${ctaText && ctaUrl ? `
           <tr>
-            <td class="mobile-p" align="center" style="padding: 6px 32px 32px 32px;">
+            <td class="mobile-p" align="center" style="padding: 6px 32px 32px 32px; background-color: #ffffff;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td align="center" bgcolor="${brandGold}" style="border-radius: 8px;">
-                    <a href="${ctaUrl}" target="_blank" class="mobile-btn" style="background-color: ${brandGold}; color: #0d1117; font-size: 14.5px; font-weight: 700; text-decoration: none; padding: 13px 32px; border-radius: 8px; display: inline-block; letter-spacing: 0.2px;">
+                  <td align="center" bgcolor="#0f172a" style="border-radius: 8px;">
+                    <a href="${ctaUrl}" target="_blank" class="mobile-btn" style="background-color: #0f172a; color: #ffffff; font-size: 14.5px; font-weight: 700; text-decoration: none; padding: 13px 32px; border-radius: 8px; display: inline-block; letter-spacing: 0.2px; border: 1px solid #1e293b;">
                       ${ctaText} &rarr;
                     </a>
                   </td>
@@ -177,17 +337,17 @@ function buildEmailShell({ title, heroPill, heroTitle, heroSubtitle, bodyContent
             </td>
           </tr>` : ""}
 
-          <!-- 5. Footer -->
+          <!-- Footer -->
           <tr>
-            <td bgcolor="${footerBg}" style="padding: 24px 32px; color: #94a3b8; font-size: 12px; line-height: 20px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
-              <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; color: #f1f5f9;">
+            <td bgcolor="#f8fafc" style="padding: 24px 32px; color: #64748b; font-size: 12px; line-height: 20px; border-top: 1px solid #e2e8f0;">
+              <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; color: #0f172a;">
                 Omni Virtual Solutions
               </p>
-              <p style="margin: 0 0 8px 0; color: #94a3b8;">
+              <p style="margin: 0 0 8px 0; color: #64748b;">
                 1350 Ave of the Americas, Fl 2 -1100, New York, NY 10019<br>
-                Phone: <a href="tel:+13159154799" style="color: ${brandGold}; text-decoration: none;">+1 315-915-4799</a> &nbsp;|&nbsp; Email: <a href="mailto:${emailTo}" style="color: ${brandGold}; text-decoration: none;">${emailTo}</a>
+                Phone: <a href="tel:+13159154799" style="color: #0f172a; text-decoration: none; font-weight: 600;">+1 315-915-4799</a> &nbsp;|&nbsp; Email: <a href="mailto:${emailTo}" style="color: #0f172a; text-decoration: none; font-weight: 600;">${emailTo}</a>
               </p>
-              <p style="margin: 0; color: #64748b; font-size: 11px;">
+              <p style="margin: 0; color: #94a3b8; font-size: 11px;">
                 ${footerNote || "© 2026 Omni Virtual Solutions. All rights reserved."}
               </p>
             </td>
@@ -199,50 +359,202 @@ function buildEmailShell({ title, heroPill, heroTitle, heroSubtitle, bodyContent
   </table>
 </body>
 </html>`;
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  // TEMPLATE 3: BESPOKE WARM EDITORIAL (Heritage Publishing & Author Press)
+  // ─────────────────────────────────────────────────────────────────
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>${title || "Omni Virtual Solutions"}</title>
+  <style type="text/css">
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+    body { margin: 0; padding: 0; width: 100% !important; min-width: 100%; background-color: #f7f4ed; }
+    @media only screen and (max-width: 620px) {
+      .email-container { width: 100% !important; max-width: 100% !important; }
+      .mobile-p { padding: 22px 18px !important; }
+      .mobile-h1 { font-size: 23px !important; line-height: 30px !important; }
+      .mobile-btn { display: block !important; width: 100% !important; box-sizing: border-box !important; text-align: center !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f7f4ed; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <div style="display: none; max-height: 0px; overflow: hidden; mso-hide: all;">
+    ${heroTitle} — Omni Virtual Solutions
+  </div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f7f4ed">
+    <tr>
+      <td align="center" style="padding: 34px 12px 46px 12px;">
+        <table role="presentation" class="email-container" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(44, 34, 22, 0.07); border: 1px solid #e7ded0;">
+          
+          <!-- Top Cognac Bar -->
+          <tr>
+            <td bgcolor="#9a6724" style="height: 4px; line-height: 4px; font-size: 4px; background: linear-gradient(90deg, #9a6724 0%, #c5832b 50%, #9a6724 100%);">
+              &nbsp;
+            </td>
+          </tr>
+
+          <!-- Editorial Header with Official Shield Logo -->
+          <tr>
+            <td bgcolor="#fcfaf6" style="padding: 24px 32px; border-bottom: 1px solid #ece4d7;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td width="52" style="vertical-align: middle; padding-right: 14px;">
+                    <img src="${logoSrc}" alt="Omni Logo" width="46" height="46" style="display:block; width:46px; height:46px; border-radius:8px; border:1px solid #ded5c6; background:#f4efe6;">
+                  </td>
+                  <td style="vertical-align: middle;">
+                    <span style="font-family: 'Georgia', 'Times New Roman', serif; font-size: 22px; font-weight: 700; color: #1c1917; letter-spacing: -0.2px; display: inline-block;">
+                      Omni Virtual Solutions
+                    </span>
+                    <div style="font-family: -apple-system, sans-serif; font-size: 10.5px; color: #8c7355; margin-top: 3px; letter-spacing: 0.8px; text-transform: uppercase; font-weight: 700;">
+                      Executive Advisory &amp; Publishing Press
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Hero Section -->
+          <tr>
+            <td class="mobile-p" style="padding: 34px 32px 18px 32px; background-color: #ffffff;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    ${heroPill || ""}
+                    <h1 class="mobile-h1" style="margin: 0 0 12px 0; font-family: 'Georgia', 'Times New Roman', serif; font-size: 26px; line-height: 33px; font-weight: 700; color: #1c1917; letter-spacing: -0.3px;">
+                      ${heroTitle}
+                    </h1>
+                    ${heroSubtitle ? `<p style="margin: 0; font-family: -apple-system, sans-serif; font-size: 15px; line-height: 25px; color: #57534e;">${heroSubtitle}</p>` : ""}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Body Content -->
+          <tr>
+            <td class="mobile-p" style="padding: 0 32px 24px 32px; background-color: #ffffff;">
+              ${bodyContent}
+            </td>
+          </tr>
+
+          <!-- Primary CTA Button -->
+          ${ctaText && ctaUrl ? `
+          <tr>
+            <td class="mobile-p" align="center" style="padding: 6px 32px 34px 32px; background-color: #ffffff;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" bgcolor="#1c1917" style="border-radius: 6px;">
+                    <a href="${ctaUrl}" target="_blank" class="mobile-btn" style="background-color: #1c1917; color: #ffffff; font-family: -apple-system, sans-serif; font-size: 14.5px; font-weight: 700; text-decoration: none; padding: 13px 34px; border-radius: 6px; display: inline-block; letter-spacing: 0.3px; border: 1px solid #3d3835; box-shadow: 0 4px 14px rgba(28, 25, 23, 0.15);">
+                      ${ctaText} &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>` : ""}
+
+          <!-- Footer -->
+          <tr>
+            <td bgcolor="#fcfaf6" style="padding: 26px 32px; color: #78716c; font-size: 12px; line-height: 20px; border-top: 1px solid #ece4d7;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td>
+                    <p style="margin: 0 0 6px 0; font-family: 'Georgia', serif; font-size: 14px; font-weight: 700; color: #1c1917;">
+                      Omni Virtual Solutions
+                    </p>
+                    <p style="margin: 0 0 8px 0; color: #78716c; font-family: -apple-system, sans-serif;">
+                      1350 Ave of the Americas, Fl 2 -1100, New York, NY 10019<br>
+                      Telephone: <a href="tel:+13159154799" style="color: #9a6724; text-decoration: none; font-weight: 600;">+1 315-915-4799</a> &nbsp;|&nbsp; Desk: <a href="mailto:${emailTo}" style="color: #9a6724; text-decoration: none; font-weight: 600;">${emailTo}</a>
+                    </p>
+                    <p style="margin: 0; color: #a8a29e; font-size: 11px;">
+                      ${footerNote || "© 2026 Omni Virtual Solutions. Executive Business & Publishing Services."}
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 }
 
-function buildAutoReplyHtml({ submission, settings, bodyText, senderEmail }) {
+function buildAutoReplyHtml({ submission, settings, bodyText, senderEmail, isWebPreview = false }) {
   const customerName = submission.full_name || "Valued Client";
   const inquirySubject = submission.subject || "General Inquiry";
   const submissionDate = submission.created_at || new Date().toLocaleString("en-US", { timeZoneName: "short" });
   const rawMessage = (submission.message || "").trim();
   const messageExcerpt = rawMessage.length > 320 ? rawMessage.substring(0, 320) + "..." : rawMessage;
   const siteUrl = "https://omnivirtualsolution.com";
+  const templateStyle = settings.email_template_style || "luxury_gold";
+  const isLight = templateStyle === "clean_minimal";
+  const isEditorial = templateStyle === "warm_editorial" || templateStyle === "gradient_glass";
 
-  const heroPill = `
-    <div style="display: inline-block; background-color: rgba(34, 197, 94, 0.12); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #15803d; margin-bottom: 14px;">
+  const heroPill = isEditorial ? `
+    <div style="display: inline-block; background-color: #f4efe6; border: 1px solid #ded4c3; border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 700; color: #855f2d; margin-bottom: 14px; letter-spacing: 0.5px;">
+      ✦ Editorial Dispatch: Inquiry Received
+    </div>` : isLight ? `
+    <div style="display: inline-block; background-color: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #047857; margin-bottom: 14px;">
+      ✓ Inquiry Received
+    </div>` : `
+    <div style="display: inline-block; background-color: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.35); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #4ade80; margin-bottom: 14px;">
       ✓ Inquiry Received
     </div>`;
 
+  const bannerBg = isEditorial ? "#fbf9f5" : isLight ? "#f8fafc" : "#161d2d";
+  const bannerBorder = isEditorial ? "#9a6724" : isLight ? "#0f172a" : "#eba22d";
+  const bannerText = isEditorial ? "#44403c" : isLight ? "#334155" : "#e2e8f0";
+
+  const cardBg = isEditorial ? "#ffffff" : isLight ? "#ffffff" : "#151b29";
+  const cardBorder = isEditorial ? "#e7ded0" : isLight ? "#e2e8f0" : "rgba(255, 255, 255, 0.08)";
+  const cardHeaderBg = isEditorial ? "#f7f3ec" : isLight ? "#f1f5f9" : "#1b2334";
+  const cardHeaderColor = isEditorial ? "#8c7355" : isLight ? "#475569" : "#eba22d";
+  const labelColor = isEditorial ? "#78716c" : isLight ? "#64748b" : "#94a3b8";
+  const valColor = isEditorial ? "#1c1917" : isLight ? "#0f172a" : "#f1f5f9";
+  const messageColor = isEditorial ? "#44403c" : isLight ? "#334155" : "#cbd5e1";
+
   const bodyContent = `
-    <div style="background-color: #f8fafc; border-left: 4px solid #eba22d; padding: 14px 16px; border-radius: 0 8px 8px 0; margin-bottom: 24px;">
-      <p style="margin: 0; font-size: 14px; line-height: 22px; color: #334155;">
-        <strong>Expected turnaround:</strong> We typically respond within <strong>1–2 business days</strong>. If your request is time-sensitive, you can also reach our desk at <a href="tel:+13159154799" style="color: #d97706; text-decoration: none; font-weight: 600;">+1 315-915-4799</a>.
+    <div style="background-color: ${bannerBg}; border-left: 4px solid ${bannerBorder}; padding: 14px 16px; border-radius: 0 8px 8px 0; margin-bottom: 24px;">
+      <p style="margin: 0; font-size: 14px; line-height: 22px; color: ${bannerText};">
+        <strong>Expected turnaround:</strong> We typically respond within <strong>1–2 business days</strong>. If your request is time-sensitive, you can also reach our desk at <a href="tel:+13159154799" style="color: #eba22d; text-decoration: none; font-weight: 600;">+1 315-915-4799</a>.
       </p>
     </div>
 
     <!-- Message Summary Card -->
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 8px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: ${cardBg}; border: 1px solid ${cardBorder}; border-radius: 10px; overflow: hidden; margin-bottom: 8px;">
       <tr>
-        <td style="padding: 12px 16px; background-color: #f1f5f9; border-bottom: 1px solid #e2e8f0; font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">
+        <td style="padding: 12px 16px; background-color: ${cardHeaderBg}; border-bottom: 1px solid ${cardBorder}; font-size: 12px; font-weight: 700; color: ${cardHeaderColor}; text-transform: uppercase; letter-spacing: 0.5px;">
           Inquiry Summary
         </td>
       </tr>
       <tr>
         <td style="padding: 16px;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 13.5px; color: #334155;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 13.5px;">
             <tr>
-              <td width="115" style="padding: 6px 0; font-weight: 600; color: #64748b; vertical-align: top;">Subject:</td>
-              <td style="padding: 6px 0; color: #0f172a; font-weight: 600;">${inquirySubject}</td>
+              <td width="115" style="padding: 6px 0; font-weight: 600; color: ${labelColor}; vertical-align: top;">Subject:</td>
+              <td style="padding: 6px 0; color: ${valColor}; font-weight: 600;">${inquirySubject}</td>
             </tr>
             <tr>
-              <td width="115" style="padding: 6px 0; font-weight: 600; color: #64748b; vertical-align: top;">Submitted At:</td>
-              <td style="padding: 6px 0; color: #0f172a;">${submissionDate}</td>
+              <td width="115" style="padding: 6px 0; font-weight: 600; color: ${labelColor}; vertical-align: top;">Submitted At:</td>
+              <td style="padding: 6px 0; color: ${valColor};">${submissionDate}</td>
             </tr>
             ${messageExcerpt ? `
             <tr>
-              <td width="115" style="padding: 6px 0; font-weight: 600; color: #64748b; vertical-align: top;">Your Message:</td>
-              <td style="padding: 6px 0; color: #334155; line-height: 1.6; font-style: italic;">
+              <td width="115" style="padding: 6px 0; font-weight: 600; color: ${labelColor}; vertical-align: top;">Your Message:</td>
+              <td style="padding: 6px 0; color: ${messageColor}; line-height: 1.6; font-style: italic;">
                 "${messageExcerpt.replace(/</g, "&lt;").replace(/>/g, "&gt;")}"
               </td>
             </tr>` : ""}
@@ -256,31 +568,48 @@ function buildAutoReplyHtml({ submission, settings, bodyText, senderEmail }) {
     title: "We received your message — Omni Virtual Solutions",
     heroPill,
     heroTitle: "We received your message!",
-    heroSubtitle: `Hello <strong style="color: #0f172a;">${customerName}</strong>, thank you for contacting Omni Virtual Solutions. Our team is already reviewing your inquiry.`,
+    heroSubtitle: `Hello <strong style="color: ${valColor};">${customerName}</strong>, thank you for contacting Omni Virtual Solutions. Our team is already reviewing your inquiry.`,
     bodyContent,
     ctaText: "Visit Omni Virtual Solutions",
     ctaUrl: siteUrl,
     footerNote: "You are receiving this confirmation because an inquiry was submitted with your email on omnivirtualsolution.com.",
-    supportEmail: senderEmail
+    supportEmail: senderEmail,
+    templateStyle,
+    isWebPreview,
   });
 }
 
-function buildReplyHtml({ submission, settings, fullBody, senderEmail }) {
+function buildReplyHtml({ submission, settings, fullBody, senderEmail, isWebPreview = false }) {
   const customerName = submission.full_name || "Valued Client";
   const inquirySubject = submission.subject || "Your Inquiry";
   const siteUrl = "https://omnivirtualsolution.com";
+  const templateStyle = settings.email_template_style || "luxury_gold";
+  const isLight = templateStyle === "clean_minimal";
+  const isEditorial = templateStyle === "warm_editorial" || templateStyle === "gradient_glass";
 
-  const heroPill = `
-    <div style="display: inline-block; background-color: rgba(235, 162, 45, 0.15); border: 1px solid rgba(235, 162, 45, 0.3); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #b45309; margin-bottom: 14px;">
+  const heroPill = isEditorial ? `
+    <div style="display: inline-block; background-color: #f4efe6; border: 1px solid #ded4c3; border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 700; color: #855f2d; margin-bottom: 14px; letter-spacing: 0.5px;">
+      ✦ Executive Advisory Response
+    </div>` : isLight ? `
+    <div style="display: inline-block; background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #1d4ed8; margin-bottom: 14px;">
+      ● Team Response
+    </div>` : `
+    <div style="display: inline-block; background-color: rgba(235, 162, 45, 0.15); border: 1px solid rgba(235, 162, 45, 0.35); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #eba22d; margin-bottom: 14px;">
       ● Team Response
     </div>`;
 
+  const boxBg = isEditorial ? "#ffffff" : isLight ? "#ffffff" : "#151b29";
+  const boxBorder = isEditorial ? "#e7ded0" : isLight ? "#e2e8f0" : "rgba(255, 255, 255, 0.08)";
+  const textColor = isEditorial ? "#292524" : isLight ? "#1f2937" : "#e2e8f0";
+  const metaBg = isEditorial ? "#fbf9f5" : isLight ? "#f8fafc" : "#111622";
+  const metaColor = isEditorial ? "#78716c" : isLight ? "#64748b" : "#94a3b8";
+
   const bodyContent = `
-    <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 22px; font-size: 15px; line-height: 1.7; color: #1f2937; margin-bottom: 20px;">
+    <div style="background-color: ${boxBg}; border: 1px solid ${boxBorder}; border-radius: 10px; padding: 20px 22px; font-size: 15px; line-height: 1.7; color: ${textColor}; margin-bottom: 20px;">
       ${fullBody.replace(/\n/g, "<br>")}
     </div>
 
-    <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #64748b;">
+    <div style="background-color: ${metaBg}; border: 1px solid ${boxBorder}; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: ${metaColor};">
       <strong>Regarding:</strong> ${inquirySubject} &nbsp;|&nbsp; Submitted by ${customerName}
     </div>
   `;
@@ -294,55 +623,76 @@ function buildReplyHtml({ submission, settings, fullBody, senderEmail }) {
     ctaText: "Visit Our Website",
     ctaUrl: siteUrl,
     footerNote: "This message was sent in direct response to your inquiry submitted at omnivirtualsolution.com.",
-    supportEmail: senderEmail
+    supportEmail: senderEmail,
+    templateStyle,
+    isWebPreview,
   });
 }
 
-function buildNotificationHtml({ submission, settings, senderEmail, recipientEmail }) {
+function buildNotificationHtml({ submission, settings, senderEmail, recipientEmail, isWebPreview = false }) {
   const adminUrl = settings.admin_url && !settings.admin_url.includes("localhost") ? settings.admin_url : "https://omnivirtualsolution.com/admin";
+  const templateStyle = settings.email_template_style || "luxury_gold";
+  const isLight = templateStyle === "clean_minimal";
+  const isEditorial = templateStyle === "warm_editorial" || templateStyle === "gradient_glass";
 
-  const heroPill = `
-    <div style="display: inline-block; background-color: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #1d4ed8; margin-bottom: 14px;">
+  const heroPill = isEditorial ? `
+    <div style="display: inline-block; background-color: #f4efe6; border: 1px solid #ded4c3; border-radius: 20px; padding: 4px 14px; font-size: 11.5px; font-weight: 700; color: #855f2d; margin-bottom: 14px; letter-spacing: 0.5px;">
+      ✦ New Author / Client Inquiry
+    </div>` : isLight ? `
+    <div style="display: inline-block; background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #1d4ed8; margin-bottom: 14px;">
+      ● New Website Lead
+    </div>` : `
+    <div style="display: inline-block; background-color: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.35); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; color: #60a5fa; margin-bottom: 14px;">
       ● New Website Lead
     </div>`;
 
+  const tableBg = isEditorial ? "#ffffff" : isLight ? "#ffffff" : "#151b29";
+  const tableBorder = isEditorial ? "#e7ded0" : isLight ? "#e2e8f0" : "rgba(255, 255, 255, 0.08)";
+  const headerBg = isEditorial ? "#f7f3ec" : isLight ? "#f1f5f9" : "#1b2334";
+  const headerText = isEditorial ? "#8c7355" : isLight ? "#475569" : "#eba22d";
+  const labelColor = isEditorial ? "#78716c" : isLight ? "#64748b" : "#94a3b8";
+  const valColor = isEditorial ? "#1c1917" : isLight ? "#0f172a" : "#f1f5f9";
+  const msgColor = isEditorial ? "#292524" : isLight ? "#1e293b" : "#cbd5e1";
+  const metaBg = isEditorial ? "#fbf9f5" : isLight ? "#f8fafc" : "#0d111a";
+
+
   const bodyContent = `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 16px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: ${tableBg}; border: 1px solid ${tableBorder}; border-radius: 10px; overflow: hidden; margin-bottom: 16px;">
       <tr>
-        <td style="padding: 12px 16px; background-color: #f1f5f9; border-bottom: 1px solid #e2e8f0; font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px;">
+        <td style="padding: 12px 16px; background-color: ${headerBg}; border-bottom: 1px solid ${tableBorder}; font-size: 12px; font-weight: 700; color: ${headerText}; text-transform: uppercase; letter-spacing: 0.5px;">
           Lead Details
         </td>
       </tr>
       <tr>
         <td style="padding: 16px;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 14px; color: #334155;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="font-size: 14px;">
             <tr>
-              <td width="110" style="padding: 8px 0; font-weight: 700; color: #64748b;">From:</td>
-              <td style="padding: 8px 0; color: #0f172a; font-weight: 600;">${submission.full_name}</td>
+              <td width="110" style="padding: 8px 0; font-weight: 700; color: ${labelColor};">From:</td>
+              <td style="padding: 8px 0; color: ${valColor}; font-weight: 600;">${submission.full_name}</td>
             </tr>
             <tr>
-              <td width="110" style="padding: 8px 0; font-weight: 700; color: #64748b;">Email:</td>
+              <td width="110" style="padding: 8px 0; font-weight: 700; color: ${labelColor};">Email:</td>
               <td style="padding: 8px 0;"><a href="mailto:${submission.email}" style="color: #eba22d; font-weight: 600; text-decoration: none;">${submission.email}</a></td>
             </tr>
             ${submission.phone ? `
             <tr>
-              <td width="110" style="padding: 8px 0; font-weight: 700; color: #64748b;">Phone:</td>
-              <td style="padding: 8px 0; color: #0f172a;">${submission.phone}</td>
+              <td width="110" style="padding: 8px 0; font-weight: 700; color: ${labelColor};">Phone:</td>
+              <td style="padding: 8px 0; color: ${valColor};">${submission.phone}</td>
             </tr>` : ""}
             <tr>
-              <td width="110" style="padding: 8px 0; font-weight: 700; color: #64748b;">Subject:</td>
-              <td style="padding: 8px 0; color: #0f172a; font-weight: 600;">${submission.subject || "General Inquiry"}</td>
+              <td width="110" style="padding: 8px 0; font-weight: 700; color: ${labelColor};">Subject:</td>
+              <td style="padding: 8px 0; color: ${valColor}; font-weight: 600;">${submission.subject || "General Inquiry"}</td>
             </tr>
             <tr>
-              <td width="110" style="padding: 8px 0; font-weight: 700; color: #64748b; vertical-align: top;">Message:</td>
-              <td style="padding: 8px 0; color: #1e293b; line-height: 1.6;">${(submission.message || "").replace(/\n/g, "<br>")}</td>
+              <td width="110" style="padding: 8px 0; font-weight: 700; color: ${labelColor}; vertical-align: top;">Message:</td>
+              <td style="padding: 8px 0; color: ${msgColor}; line-height: 1.6;">${(submission.message || "").replace(/\n/g, "<br>")}</td>
             </tr>
           </table>
         </td>
       </tr>
     </table>
 
-    <div style="background-color: #f8fafc; border-radius: 6px; padding: 12px 16px; font-size: 12.5px; color: #64748b;">
+    <div style="background-color: ${metaBg}; border-radius: 8px; padding: 12px 16px; font-size: 12.5px; color: #64748b; border: 1px solid ${tableBorder};">
       Received: ${submission.created_at || new Date().toISOString()} &nbsp;|&nbsp; IP: ${submission.ip_address || "unknown"}
     </div>
   `;
@@ -356,7 +706,9 @@ function buildNotificationHtml({ submission, settings, senderEmail, recipientEma
     ctaText: "Open Admin Leads Dashboard",
     ctaUrl: adminUrl,
     footerNote: "Automated administrative notification dispatched by Omni Virtual Solutions CMS.",
-    supportEmail: senderEmail
+    supportEmail: senderEmail,
+    templateStyle,
+    isWebPreview,
   });
 }
 
@@ -417,6 +769,7 @@ async function sendNewSubmissionNotification(submission) {
       subject,
       html: htmlBody,
       text: `New inquiry from ${submission.full_name} (${submission.email})\n\nSubject: ${submission.subject || "General Inquiry"}\n\nMessage:\n${submission.message}`,
+      attachments: getLogoAttachment(),
     });
 
     await updateNotifyStatus(submission.id, "sent");
@@ -465,6 +818,7 @@ async function sendAutoReply(submission) {
       subject,
       text: bodyText,
       html: htmlBody,
+      attachments: getLogoAttachment(),
     });
     await logEmail({ eventType: "auto_reply", submissionId: submission.id, recipientEmail: submission.email, subject, status: "sent" });
     return { success: true };
@@ -512,6 +866,7 @@ async function sendReply({ submission, replyBody, replyId, sentBy }) {
       subject,
       text: fullBody,
       html: htmlBody,
+      attachments: getLogoAttachment(),
     });
 
     await db.execute({
@@ -629,6 +984,56 @@ async function getQuotaStatus() {
   }
 }
 
+// =================================================================
+// Live Preview Generator for Email Templates
+// =================================================================
+function previewEmail({ style = "luxury_gold", type = "auto_reply" }) {
+  const sampleSubmission = {
+    id: 101,
+    full_name: "Alexander Vance",
+    email: "alexander.vance@example.com",
+    phone: "+1 (555) 789-0123",
+    subject: "Full-Service Publishing & Executive VA Package",
+    message: "Greetings, I am looking to contract a specialized team for full editorial evaluation, custom typesetting, and multi-channel book marketing for my upcoming release.",
+    created_at: new Date().toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" }),
+    ip_address: "192.168.1.1",
+  };
+
+  const sampleSettings = {
+    email_template_style: style,
+    recipient_email: "nikkisixxacosta083@gmail.com",
+    sender_name: "Omni Virtual Solutions",
+    sender_email: "nikkisixxacosta083@gmail.com",
+  };
+
+  if (type === "notification") {
+    return buildNotificationHtml({
+      submission: sampleSubmission,
+      settings: sampleSettings,
+      senderEmail: "nikkisixxacosta083@gmail.com",
+      recipientEmail: "nikkisixxacosta083@gmail.com",
+      isWebPreview: true,
+    });
+  } else if (type === "reply") {
+    return buildReplyHtml({
+      submission: sampleSubmission,
+      settings: sampleSettings,
+      fullBody: "Hello Alexander,\n\nThank you for reaching out to Omni Virtual Solutions!\n\nWe have reviewed your project requirements and would be delighted to partner on your upcoming book release. Our senior consultant has prepared a customized publishing roadmap and timeline for your review.\n\nPlease let us know if you are available for a brief discovery session this Thursday at 2:00 PM EST.\n\nWarm regards,\nOmni Virtual Solutions Executive Team",
+      senderEmail: "nikkisixxacosta083@gmail.com",
+      isWebPreview: true,
+    });
+  } else {
+    // auto_reply
+    return buildAutoReplyHtml({
+      submission: sampleSubmission,
+      settings: sampleSettings,
+      bodyText: "Hello {customer_name}, thank you for contacting Omni Virtual Solutions! We have received your inquiry and our team is already reviewing your details.",
+      senderEmail: "nikkisixxacosta083@gmail.com",
+      isWebPreview: true,
+    });
+  }
+}
+
 module.exports = {
   sendNewSubmissionNotification,
   sendAutoReply,
@@ -638,4 +1043,6 @@ module.exports = {
   getQuotaStatus,
   getSettings,
   interpolate,
+  previewEmail,
+  buildEmailShell,
 };

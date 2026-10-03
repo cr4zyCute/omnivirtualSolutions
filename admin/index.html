@@ -239,6 +239,15 @@
       background: #df9524;
       box-shadow: 0 4px 14px rgba(235, 162, 45, 0.35);
     }
+    .preview-type-btn.active {
+      background: var(--gold) !important;
+      color: #0d1117 !important;
+      font-weight: 700 !important;
+    }
+    .preview-device-btn.active {
+      background: var(--gold) !important;
+      color: #0d1117 !important;
+    }
 
     /* Content Area */
     .content-area {
@@ -950,54 +959,32 @@
       display: none !important;
     }
 
-    /* ── Mobile Mockup (iPhone 16 Pro Deep Titanium Purple - Exact 2nd Image Style) ── */
+    /* ── Mobile Mockup (Xiaomi Mi 11i - Matching Exact Reference Screenshot) ── */
     .mockup-container.mode-mobile {
       height: 100%;
-      max-height: min(840px, calc(100vh - 142px));
-      aspect-ratio: 395 / 830;
+      max-height: min(860px, calc(100vh - 140px));
+      aspect-ratio: 393 / 855;
       width: auto;
     }
     .mockup-container.mode-mobile .mockup-bezel {
       width: 100%;
       height: 100%;
-      background: #17141f; /* Deep Titanium finish */
-      border: 3.5px solid #3c334b; /* Metallic rail border */
-      border-radius: 52px;
-      padding: 10px;
+      background: #11141a;
+      border: 3.5px solid #485265; /* Sleek gunmetal/silver metallic rim */
+      border-radius: 44px;
+      padding: 6px;
       position: relative;
       display: flex;
       flex-direction: column;
       box-shadow:
-        0 0 0 1.5px rgba(255, 255, 255, 0.12),
-        0 0 0 3px #1a1722,
-        0 30px 80px -10px rgba(0, 0, 0, 0.95),
-        0 15px 40px rgba(0, 0, 0, 0.7);
+        0 0 0 1px #151922,
+        0 0 0 2px #2b3340,
+        0 25px 70px -10px rgba(0, 0, 0, 0.95),
+        0 15px 35px rgba(0, 0, 0, 0.7);
     }
-    /* Side buttons (Left: Action + Volume; Right: Power) */
-    .mockup-container.mode-mobile .mockup-bezel::before {
-      content: '';
-      position: absolute;
-      left: -6.5px;
-      top: 105px;
-      width: 3.5px;
-      height: 24px;
-      background: #3c334b;
-      border-radius: 2px 0 0 2px;
-      box-shadow:
-        0 38px 0 0 #3c334b,
-        0 38px 0 16px #3c334b,
-        0 92px 0 0 #3c334b,
-        0 92px 0 16px #3c334b;
-    }
+    .mockup-container.mode-mobile .mockup-bezel::before,
     .mockup-container.mode-mobile .mockup-bezel::after {
-      content: '';
-      position: absolute;
-      right: -6.5px;
-      top: 145px;
-      width: 3.5px;
-      height: 64px;
-      background: #3c334b;
-      border-radius: 0 2px 2px 0;
+      display: none !important;
     }
     .mockup-container.mode-mobile .mockup-top-hardware,
     .mockup-container.mode-mobile .mockup-bottom-hardware {
@@ -1008,70 +995,139 @@
       width: 100%;
       height: 100%;
       background: #000000;
-      border-radius: 44px;
+      border-radius: 36px;
       overflow: hidden;
       position: relative;
       display: flex;
       flex-direction: column;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
     }
 
-    /* iPhone Status Bar (Top) */
+    /* Xiaomi Mi 11i Status Bar (Top) */
     .mobile-status-bar {
       display: none;
-      height: 42px;
-      background: #000000;
-      color: #ffffff;
+      height: 30px;
+      background: #1e232d;
+      color: #e2e8f0;
       align-items: center;
       justify-content: space-between;
-      padding: 0 18px;
+      padding: 0 16px;
       flex-shrink: 0;
       z-index: 10;
       user-select: none;
+      font-size: 11.5px;
     }
     .mockup-container.mode-mobile .mobile-status-bar {
       display: flex !important;
     }
     .status-time {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-weight: 600;
-      font-size: 13px;
-      letter-spacing: -0.2px;
-      width: 75px;
+      font-size: 11.5px;
+      letter-spacing: -0.1px;
+      width: 80px;
+      color: #cbd5e1;
     }
     .status-icons {
       display: flex;
       align-items: center;
-      gap: 5px;
-      font-size: 13px;
-      width: 75px;
+      gap: 6px;
+      font-size: 11.5px;
+      width: 80px;
       justify-content: flex-end;
+      color: #cbd5e1;
     }
-    .status-icons i { font-size: 13px; line-height: 1; }
-    .status-cellular { font-size: 11.5px; }
-    .status-battery { font-size: 14.5px; }
+    .status-icons i { font-size: 11.5px; line-height: 1; }
+    .status-cellular { font-size: 10.5px; }
+    .status-battery-pct { font-size: 10.5px; font-weight: 600; }
+    .status-battery { font-size: 12.5px; }
 
-    /* Dynamic Island in Status Bar */
-    .mockup-container.mode-mobile .mobile-dynamic-island {
-      width: 96px;
-      height: 26px;
+    /* Xiaomi DotDisplay Punch Hole Camera (2.76mm tiny center lens) */
+    .mockup-container.mode-mobile .mobile-punch-hole {
+      width: 11px;
+      height: 11px;
       background: #000000;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
-      padding: 0 9px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+      justify-content: center;
       margin: 0 auto;
+      box-shadow: 0 0 3px rgba(0, 0, 0, 0.9);
     }
-    .mockup-container.mode-mobile .island-lens {
-      width: 9px;
-      height: 9px;
+    .mockup-container.mode-mobile .punch-hole-lens {
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
-      background: #080c14;
-      border: 1px solid #1a2233;
-      box-shadow: inset 0 1px 2px rgba(56, 189, 248, 0.45);
+      background: #05080e;
+      border: 1px solid #1c2538;
+      box-shadow: inset 0 0.5px 1px rgba(56, 189, 248, 0.7);
+    }
+
+    /* Chrome Android Top Browser Bar (Directly below status bar) */
+    .mobile-chrome-bar {
+      display: none;
+      height: 44px;
+      background: #1e232d;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      align-items: center;
+      gap: 8px;
+      padding: 0 12px;
+      flex-shrink: 0;
+      z-index: 10;
+      user-select: none;
+    }
+    .mockup-container.mode-mobile .mobile-chrome-bar {
+      display: flex !important;
+    }
+    .chrome-icon-btn {
+      background: none;
+      border: none;
+      color: #cbd5e1;
+      padding: 4px;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s;
+    }
+    .chrome-icon-btn:hover {
+      color: #ffffff;
+    }
+    .chrome-url-pill {
+      flex: 1;
+      height: 32px;
+      background: #2b3240;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      color: #ffffff;
+    }
+    .chrome-url-pill i {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .chrome-domain-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .chrome-tab-box {
+      width: 20px;
+      height: 20px;
+      border: 1.8px solid #94a3b8;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     /* Embedded Webpage Iframe */
@@ -1082,97 +1138,33 @@
       border: none;
       background: #ffffff;
       display: block;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .editor-iframe::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
     }
 
-    /* Mobile Safari iOS Browser Bottom Bar */
-    .mobile-safari-bar {
+    /* Android Bottom Gesture Bar */
+    .mobile-gesture-bar {
       display: none;
-      background: #1c1c1e;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      flex-shrink: 0;
-      flex-direction: column;
-      padding: 6px 12px 6px;
-      z-index: 10;
-      user-select: none;
-    }
-    .mockup-container.mode-mobile .mobile-safari-bar {
-      display: flex !important;
-    }
-    .safari-url-pill {
-      background: #2c2c2e;
-      border-radius: 10px;
-      height: 35px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 12px;
-      margin-bottom: 5px;
-      color: #ffffff;
-    }
-    .safari-url-aa {
-      font-size: 13px;
-      font-weight: 600;
-      color: #98989f;
-    }
-    .safari-url-domain {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 12.5px;
-      font-weight: 500;
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-    .safari-url-domain i {
-      font-size: 10.5px;
-      color: #8e8e93;
-    }
-    .safari-url-reload {
-      background: none;
-      border: none;
-      color: #98989f;
-      cursor: pointer;
-      padding: 0;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      transition: color 0.15s;
-    }
-    .safari-url-reload:hover {
-      color: #ffffff;
-    }
-    .safari-actions-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: 2px 4px 4px;
-    }
-    .safari-action-btn {
-      background: none;
-      border: none;
-      color: #0a84ff;
-      font-size: 16px;
-      cursor: pointer;
-      padding: 3px 6px;
-      display: flex;
+      height: 12px;
+      background: #000000;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.15s;
+      flex-shrink: 0;
     }
-    .safari-action-btn.disabled {
-      color: #48484a;
-      cursor: default;
-    }
-    .safari-action-btn:not(.disabled):hover {
-      opacity: 0.7;
+    .mockup-container.mode-mobile .mobile-gesture-bar {
+      display: flex !important;
     }
     .mobile-home-indicator {
-      width: 120px;
-      height: 4px;
+      width: 72px;
+      height: 3px;
       background: #ffffff;
       border-radius: 2px;
-      margin: 3px auto 1px auto;
-      opacity: 0.55;
+      opacity: 0.45;
     }
 
     /* Blocks Grid for quick table */
@@ -1461,6 +1453,11 @@
         </a>
       </li>
       <li>
+        <a class="nav-item" onclick="switchTab('email-templates', this)">
+          <i class="bi bi-palette2" style="color:var(--gold);"></i> Email UI & Templates
+        </a>
+      </li>
+      <li>
         <a class="nav-item" onclick="switchTab('media', this)">
           <i class="bi bi-images"></i> Media Library
         </a>
@@ -1680,8 +1677,8 @@
               <div class="d-flex align-items-center gap-2">
                 <span class="editor-bar-label"><i class="bi bi-file-earmark-richtext text-warning"></i> Page:</span>
                 <select id="editorPageSelect" onchange="switchEditorPage(this.value)" class="editor-page-select">
-                  <option value="admin/editor.html">🏠 Homepage (index.html)</option>
-                  <option value="admin/editor-services.html" selected>📄 Services Catalog (services.html)</option>
+                  <option value="index.html?edit=1" selected>🏠 Homepage (index.html)</option>
+                  <option value="admin/editor-services.html">📄 Services Catalog (services.html)</option>
                 </select>
               </div>
 
@@ -1697,7 +1694,7 @@
                   <button type="button" class="device-btn" id="btnDevTab" onclick="setDeviceViewport('tablet', this)">
                     <i class="bi bi-tablet"></i> Tablet
                   </button>
-                  <button type="button" class="device-btn" id="btnDevMob" onclick="setDeviceViewport('mobile', this)">
+                  <button type="button" class="device-btn" id="btnDevMob" onclick="setDeviceViewport('mobile', this)" title="Xiaomi Mi 11i (393 × 873)">
                     <i class="bi bi-phone"></i> Mobile
                   </button>
                 </div>
@@ -1754,38 +1751,39 @@
 
                 <!-- Screen Area with Iframe -->
                 <div class="mockup-screen" id="mockupScreen">
-                  <!-- iPhone Status Bar (Clock, Dynamic Island, Signal / Wifi / Battery) -->
+                  <!-- Xiaomi Mi 11i Status Bar (Clock, DotDisplay Punch-Hole, Signal / 100% / Battery) -->
                   <div class="mobile-status-bar" id="mobileStatusBar">
-                    <div class="status-time" id="statusClock">10:36 PM</div>
-                    <div class="mobile-dynamic-island" id="mobileDynamicIsland">
-                      <div class="island-lens"></div>
+                    <div class="status-time" id="statusClock">11:10 PM</div>
+                    <div class="mobile-punch-hole" id="mobilePunchHole" title="Xiaomi Mi 11i DotDisplay Camera">
+                      <div class="punch-hole-lens"></div>
                     </div>
                     <div class="status-icons">
                       <span class="status-cellular"><i class="bi bi-reception-4"></i></span>
-                      <span class="status-wifi"><i class="bi bi-wifi"></i></span>
+                      <span class="status-battery-pct">100%</span>
                       <span class="status-battery"><i class="bi bi-battery-full"></i></span>
                     </div>
+                  </div>
+
+                  <!-- Xiaomi Mi 11i Chrome Top Browser Bar (Exact Image 1 Style) -->
+                  <div class="mobile-chrome-bar" id="mobileChromeBar">
+                    <button type="button" class="chrome-icon-btn" onclick="reloadEditorIframe()" title="Home">
+                      <i class="bi bi-house-door"></i>
+                    </button>
+                    <div class="chrome-url-pill">
+                      <i class="bi bi-lock-fill"></i>
+                      <span class="chrome-domain-text" id="safariUrlDomain">localhost</span>
+                    </div>
+                    <div class="chrome-tab-box" title="1 Open Tab">1</div>
+                    <button type="button" class="chrome-icon-btn" onclick="window.open((document.getElementById('liveEditorIframe')||{}).src||'index.html','_blank')" title="More Options">
+                      <i class="bi bi-three-dots-vertical"></i>
+                    </button>
                   </div>
 
                   <!-- The Live Webpage Iframe -->
                   <iframe id="liveEditorIframe" src="about:blank" class="editor-iframe" onload="onEditorIframeLoaded()"></iframe>
 
-                  <!-- Mobile Safari Browser Bottom Bar -->
-                  <div class="mobile-safari-bar" id="mobileSafariBar">
-                    <div class="safari-url-pill">
-                      <span class="safari-url-aa">Aa</span>
-                      <span class="safari-url-domain" id="safariUrlDomain"><i class="bi bi-lock-fill"></i> localhost</span>
-                      <button type="button" class="safari-url-reload" onclick="reloadEditorIframe()" title="Refresh Page">
-                        <i class="bi bi-arrow-clockwise"></i>
-                      </button>
-                    </div>
-                    <div class="safari-actions-row">
-                      <button type="button" class="safari-action-btn disabled" title="Back"><i class="bi bi-chevron-left"></i></button>
-                      <button type="button" class="safari-action-btn disabled" title="Forward"><i class="bi bi-chevron-right"></i></button>
-                      <button type="button" class="safari-action-btn" title="Open in new window" onclick="window.open((document.getElementById('liveEditorIframe')||{}).src||'index.html','_blank')"><i class="bi bi-box-arrow-up"></i></button>
-                      <button type="button" class="safari-action-btn" title="Bookmarks"><i class="bi bi-book"></i></button>
-                      <button type="button" class="safari-action-btn" title="Tabs"><i class="bi bi-square-stack"></i></button>
-                    </div>
+                  <!-- Android Bottom Gesture Bar -->
+                  <div class="mobile-gesture-bar" id="mobileGestureBar">
                     <div class="mobile-home-indicator"></div>
                   </div>
                 </div>
@@ -1884,8 +1882,230 @@
         </div>
       </section>
 
+      <!-- ── SECTION: EMAIL UI & TEMPLATE DESIGNS ── -->
+      <section id="section-email-templates" class="admin-section">
+        <div class="panel">
+          <div class="panel-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+              <h2 style="font-size:18px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px; margin:0;">
+                <i class="bi bi-palette2 text-warning"></i> Client Email Design Studio
+              </h2>
+
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span id="activeEmailTemplateBadge" class="badge" style="background:rgba(235,162,45,0.15); color:#eba22d; border:1px solid rgba(235,162,45,0.3); padding:6px 14px; font-weight:700; border-radius:20px; font-size:12px;">
+                ✦ Active: Executive Dark Gold
+              </span>
+            </div>
+          </div>
+          <div class="panel-body">
+
+            <!-- 3 Design Cards Grid -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:22px; margin-bottom:24px;">
+
+              <!-- Design 1: Luxury Gold -->
+              <div class="template-card" id="card-template-luxury_gold" style="background:#111622; border:2px solid rgba(235,162,45,0.4); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; position:relative; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                <div style="padding:16px 20px; background:#080b11; border-bottom:2px solid #eba22d; display:flex; align-items:center; justify-content:space-between;">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="/assets/img/OmniLogo2.png" alt="Logo" style="width:34px; height:34px; border-radius:8px; border:1px solid rgba(235,162,45,0.4);">
+                    <div>
+                      <div style="font-size:15px; font-weight:800; color:#fff;">Executive Dark Gold</div>
+                      <div style="font-size:11px; color:#eba22d; font-weight:600; text-transform:uppercase;">Luxury &amp; High Contrast</div>
+                    </div>
+                  </div>
+                  <span class="active-pill" id="pill-luxury_gold" style="font-size:11px; background:#eba22d; color:#0d1117; font-weight:800; padding:3px 9px; border-radius:12px;">ACTIVE</span>
+                </div>
+                <!-- Visual Mockup Banner -->
+                <div style="height:140px; background:#0b0f17; padding:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; position:relative; border-bottom:1px solid rgba(255,255,255,0.06);">
+                  <div style="background:#111622; border:1px solid rgba(235,162,45,0.3); border-radius:8px; padding:12px 18px; width:88%; text-align:center; box-shadow:0 4px 15px rgba(0,0,0,0.4);">
+                    <div style="font-size:12px; font-weight:700; color:#fff;">✦ Omni Virtual Solutions</div>
+                    <div style="font-size:10px; color:#94a3b8; margin-top:2px;">Inquiry Confirmation &amp; Team Response</div>
+                    <div style="margin-top:8px; display:inline-block; font-size:10px; font-weight:700; background:#eba22d; color:#0d1117; padding:4px 12px; border-radius:4px;">Golden Action CTA &rarr;</div>
+                  </div>
+                </div>
+                <div style="padding:18px 20px; flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+                  <p style="font-size:12.5px; color:#94a3b8; line-height:1.5; margin:0 0 16px 0;">
+                    Obsidian dark shell with refined 24K gold accents and shield logo. Tailored for executive consulting, author publishing, and high-trust communications.
+                  </p>
+                  <div style="display:flex; gap:8px;">
+                    <button class="btn-header" style="flex:1; justify-content:center; padding:7px 12px; font-size:12.5px;" onclick="openEmailPreviewModal('luxury_gold')">
+                      <i class="bi bi-eye"></i> Live Preview
+                    </button>
+                    <button class="btn-header btn-primary-gold" id="btn-activate-luxury_gold" style="flex:1; justify-content:center; padding:7px 12px; font-size:12.5px;" onclick="activateEmailTemplate('luxury_gold')">
+                      <i class="bi bi-check2-circle"></i> Set Active
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Design 2: Clean Minimal -->
+              <div class="template-card" id="card-template-clean_minimal" style="background:#111622; border:1px solid rgba(255,255,255,0.1); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; position:relative;">
+                <div style="padding:16px 20px; background:#ffffff; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between;">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="/assets/img/OmniLogo2.png" alt="Logo" style="width:34px; height:34px; border-radius:8px; border:1px solid #e2e8f0; background:#f8fafc;">
+                    <div>
+                      <div style="font-size:15px; font-weight:800; color:#0f172a;">Corporate Modern Clean</div>
+                      <div style="font-size:11px; color:#64748b; font-weight:600; text-transform:uppercase;">Light &amp; Minimalist</div>
+                    </div>
+                  </div>
+                  <span class="active-pill" id="pill-clean_minimal" style="display:none; font-size:11px; background:#0f172a; color:#fff; font-weight:800; padding:3px 9px; border-radius:12px;">ACTIVE</span>
+                </div>
+                <!-- Visual Mockup Banner -->
+                <div style="height:140px; background:#f4f6f9; padding:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; position:relative; border-bottom:1px solid rgba(255,255,255,0.06);">
+                  <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:12px 18px; width:88%; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,0.04);">
+                    <div style="font-size:12px; font-weight:800; color:#0f172a;">Omni Virtual Solutions</div>
+                    <div style="font-size:10px; color:#64748b; margin-top:2px;">Clean Corporate Communication</div>
+                    <div style="margin-top:8px; display:inline-block; font-size:10px; font-weight:700; background:#0f172a; color:#ffffff; padding:4px 12px; border-radius:4px;">Navy Corporate CTA &rarr;</div>
+                  </div>
+                </div>
+                <div style="padding:18px 20px; flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+                  <p style="font-size:12.5px; color:#94a3b8; line-height:1.5; margin:0 0 16px 0;">
+                    Crisp, modern light aesthetic with high whitespace and deep navy typography. Excellent for corporate, traditional business, and clean readability.
+                  </p>
+                  <div style="display:flex; gap:8px;">
+                    <button class="btn-header" style="flex:1; justify-content:center; padding:7px 12px; font-size:12.5px;" onclick="openEmailPreviewModal('clean_minimal')">
+                      <i class="bi bi-eye"></i> Live Preview
+                    </button>
+                    <button class="btn-header btn-primary-gold" id="btn-activate-clean_minimal" style="flex:1; justify-content:center; padding:7px 12px; font-size:12.5px;" onclick="activateEmailTemplate('clean_minimal')">
+                      <i class="bi bi-check2-circle"></i> Set Active
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Design 3: Bespoke Warm Editorial -->
+              <div class="template-card" id="card-template-warm_editorial" style="background:#111622; border:1px solid rgba(255,255,255,0.1); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; position:relative;">
+                <div style="padding:16px 20px; background:#fcfaf6; border-bottom:2px solid #9a6724; display:flex; align-items:center; justify-content:space-between;">
+                  <div style="display:flex; align-items:center; gap:10px;">
+                    <img src="/assets/img/OmniLogo2.png" alt="Logo" style="width:34px; height:34px; border-radius:8px; border:1px solid #ded5c6; background:#f4efe6;">
+                    <div>
+                      <div style="font-size:15px; font-weight:800; color:#1c1917; font-family:'Georgia', serif;">Bespoke Warm Editorial</div>
+                      <div style="font-size:11px; color:#8c7355; font-weight:700; text-transform:uppercase;">Heritage Ivory &amp; Cognac</div>
+                    </div>
+                  </div>
+                  <span class="active-pill" id="pill-warm_editorial" style="display:none; font-size:11px; background:#9a6724; color:#fff; font-weight:800; padding:3px 9px; border-radius:12px;">ACTIVE</span>
+                </div>
+                <!-- Visual Mockup Banner -->
+                <div style="height:140px; background:#f7f4ed; padding:16px; display:flex; flex-direction:column; justify-content:center; align-items:center; position:relative; border-bottom:1px solid rgba(255,255,255,0.06);">
+                  <div style="background:#ffffff; border:1px solid #dfd7c9; border-radius:8px; padding:12px 18px; width:88%; text-align:center; box-shadow:0 4px 15px rgba(44,34,22,0.08);">
+                    <div style="font-size:13px; font-weight:700; color:#1c1917; font-family:'Georgia', serif;">Omni Virtual Solutions</div>
+                    <div style="font-size:10px; color:#8c7355; margin-top:2px; font-weight:600;">Executive Advisory &amp; Publishing Press</div>
+                    <div style="margin-top:8px; display:inline-block; font-size:10px; font-weight:700; background:#1c1917; color:#fdfbf7; padding:4px 12px; border-radius:4px; border:1px solid #3d3835;">Read Editorial Dispatch &rarr;</div>
+                  </div>
+                </div>
+                <div style="padding:18px 20px; flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+                  <p style="font-size:12.5px; color:#94a3b8; line-height:1.5; margin:0 0 16px 0;">
+                    Warm linen canvas with classic editorial serif typography, bookcraft dividers, and warm cognac accents. Inspired by prestigious New York publishing houses and literary journals.
+                  </p>
+                  <div style="display:flex; gap:8px;">
+                    <button class="btn-header" style="flex:1; justify-content:center; padding:7px 12px; font-size:12.5px;" onclick="openEmailPreviewModal('warm_editorial')">
+                      <i class="bi bi-eye"></i> Live Preview
+                    </button>
+                    <button class="btn-header btn-primary-gold" id="btn-activate-warm_editorial" style="flex:1; justify-content:center; padding:7px 12px; font-size:12.5px;" onclick="activateEmailTemplate('warm_editorial')">
+                      <i class="bi bi-check2-circle"></i> Set Active
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Email Design Features Banner -->
+            <!-- <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:20px; display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px;">
+              <div style="display:flex; gap:12px;">
+                <div style="width:36px; height:36px; border-radius:8px; background:rgba(235,162,45,0.15); color:#eba22d; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                  <i class="bi bi-shield-check"></i>
+                </div>
+                <div>
+                  <div style="font-size:13.5px; font-weight:700; color:#fff;">Official Logo Embedded</div>
+                  <div style="font-size:12px; color:#94a3b8; margin-top:2px;">Images are inline CID-attached so email clients display them without "Enable Images" warnings.</div>
+                </div>
+              </div>
+
+              <div style="display:flex; gap:12px;">
+                <div style="width:36px; height:36px; border-radius:8px; background:rgba(34,197,94,0.15); color:#22c55e; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                  <i class="bi bi-phone"></i>
+                </div>
+                <div>
+                  <div style="font-size:13.5px; font-weight:700; color:#fff;">Outlook &amp; Mobile Tested</div>
+                  <div style="font-size:12px; color:#94a3b8; margin-top:2px;">Built using bulletproof table markup that renders flawlessly across Gmail, Apple Mail, and Outlook.</div>
+                </div>
+              </div>
+
+              <div style="display:flex; gap:12px;">
+                <div style="width:36px; height:36px; border-radius:8px; background:rgba(59,130,246,0.15); color:#60a5fa; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
+                  <i class="bi bi-arrow-repeat"></i>
+                </div>
+                <div>
+                  <div style="font-size:13.5px; font-weight:700; color:#fff;">Instant Live Switch</div>
+                  <div style="font-size:12px; color:#94a3b8; margin-top:2px;">Switch templates instantly with one click; changes apply immediately to all outgoing emails.</div>
+                </div>
+              </div>
+            </div> -->
+
+          </div>
+        </div>
+      </section>
+
     </div>
   </main>
+
+  <!-- ── Email Template Live Preview Modal ── -->
+  <div id="emailPreviewModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); z-index:99999; justify-content:center; align-items:center; padding:18px;" onclick="if(event.target===this) closeEmailPreviewModal()">
+    <div style="background:#0e131e; border:1px solid rgba(235,162,45,0.35); border-radius:16px; width:100%; max-width:980px; height:92vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.95);">
+      
+      <!-- Modal Header -->
+      <div style="padding:14px 20px; background:#080b11; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div id="previewModalTitle" style="font-size:15px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
+          <i class="bi bi-palette2 text-warning"></i> Live Email Preview
+        </div>
+        
+        <!-- Controls: View Types & Device -->
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <!-- Template Types -->
+          <div style="display:flex; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:3px;">
+            <button class="preview-type-btn active" onclick="setPreviewType('auto_reply', this)" style="border:none; background:transparent; color:#fff; font-size:12px; font-weight:600; padding:5px 12px; border-radius:6px; cursor:pointer;">
+              Auto-Reply
+            </button>
+            <button class="preview-type-btn" onclick="setPreviewType('notification', this)" style="border:none; background:transparent; color:#94a3b8; font-size:12px; font-weight:600; padding:5px 12px; border-radius:6px; cursor:pointer;">
+              Admin Alert
+            </button>
+            <button class="preview-type-btn" onclick="setPreviewType('reply', this)" style="border:none; background:transparent; color:#94a3b8; font-size:12px; font-weight:600; padding:5px 12px; border-radius:6px; cursor:pointer;">
+              Team Reply
+            </button>
+          </div>
+
+          <!-- Device View -->
+          <div style="display:flex; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:3px;">
+            <button class="preview-device-btn active" onclick="setPreviewDevice('desktop', this)" style="border:none; background:transparent; color:#fff; font-size:13px; padding:5px 10px; border-radius:6px; cursor:pointer;" title="Desktop View (650px)">
+              <i class="bi bi-laptop"></i>
+            </button>
+            <button class="preview-device-btn" onclick="setPreviewDevice('mobile', this)" style="border:none; background:transparent; color:#94a3b8; font-size:13px; padding:5px 10px; border-radius:6px; cursor:pointer;" title="Mobile View (375px)">
+              <i class="bi bi-phone"></i>
+            </button>
+          </div>
+
+          <!-- Set Active Button in Modal -->
+          <button id="modalSetActiveBtn" class="btn-header btn-primary-gold" onclick="activateCurrentModalTemplate()" style="padding:6px 14px; font-size:12px;">
+            <i class="bi bi-check2-circle"></i> Set As Active
+          </button>
+
+          <!-- Close Button -->
+          <button onclick="closeEmailPreviewModal()" style="border:none; background:rgba(255,255,255,0.08); color:#fff; width:30px; height:30px; border-radius:8px; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center;" title="Close Preview">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Iframe Stage) -->
+      <div style="flex:1; background:#05070c; padding:20px; overflow-y:auto; display:flex; justify-content:center; align-items:flex-start;">
+        <div id="previewIframeWrapper" style="width:100%; max-width:680px; height:100%; min-height:560px; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 12px 35px rgba(0,0,0,0.6); transition:all 0.3s ease; border:1px solid rgba(255,255,255,0.1);">
+          <iframe id="emailPreviewIframe" style="width:100%; height:100%; min-height:560px; border:none; display:block;" src="about:blank"></iframe>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- ── Scripts ── -->
   <script>
@@ -2100,8 +2320,12 @@
           const iframe = document.getElementById('liveEditorIframe');
           if (iframe && (!iframe.src || iframe.src === 'about:blank' || iframe.src.endsWith('about:blank'))) {
             const select = document.getElementById('editorPageSelect');
-            iframe.src = select ? select.value : 'admin/editor.html';
+            iframe.src = select ? select.value : 'index.html?edit=1';
           }
+        }
+
+        if (tabId === 'email-templates') {
+          loadEmailTemplates();
         }
 
         const titles = {
@@ -2110,6 +2334,7 @@
           'blocks': '<i class="bi bi-file-earmark-text-fill text-warning"></i> Content Blocks',
           'services': '<i class="bi bi-briefcase-fill text-warning"></i> Services & Pricing Catalog',
           'leads': '<i class="bi bi-envelope-open-fill text-warning"></i> Contact Leads CRM',
+          'email-templates': '<i class="bi bi-palette2 text-warning"></i> Client Email Design Studio',
           'media': '<i class="bi bi-images text-warning"></i> Media Assets Library'
         };
         document.getElementById('topHeaderTitle').innerHTML = titles[tabId] || 'Admin Dashboard';
@@ -2134,7 +2359,7 @@
         const specs = {
           'desktop': '100% • Fluid Desktop',
           'tablet': 'iPad Pro • 768 × 1024',
-          'mobile': 'iPhone 16 Pro • 390 × 844'
+          'mobile': 'Xiaomi Mi 11i • 393 × 873'
         };
         if (specPill) {
           specPill.textContent = specs[deviceKey] || '100% • Fluid Desktop';
@@ -2157,6 +2382,9 @@
               iframe.contentWindow.setMode(isEdit);
             } else if (typeof iframe.contentWindow.setEditorMode === 'function') {
               iframe.contentWindow.setEditorMode(isEdit);
+            }
+            if (typeof iframe.contentWindow.__omniSetEditMode === 'function') {
+              iframe.contentWindow.__omniSetEditMode(isEdit);
             }
             iframe.contentWindow.postMessage({ type: 'SET_MODE', edit: isEdit }, '*');
           } catch (_) {}
@@ -2188,11 +2416,14 @@
           }
         } catch (_) {}
 
-        // Sync mode to iframe
+        // Sync mode to iframe immediately and after short delay for deferred script load
         window.setMasterEditorMode(masterEditMode);
+        setTimeout(() => {
+          window.setMasterEditorMode(masterEditMode);
+        }, 250);
 
         // Update context action button visibility
-        const isServices = (iframe.src || '').includes('editor-services.html');
+        const isServices = (iframe.src || '').includes('editor-services.html') || (iframe.src || '').includes('services.html');
         const addBtn = document.getElementById('btnGlobalAddService');
         if (addBtn) {
           addBtn.style.display = isServices ? 'inline-flex' : 'none';
@@ -2216,16 +2447,18 @@
             const svcParam = pageUrl.includes('service=') ? pageUrl.slice(pageUrl.indexOf('service=')) : '';
             targetUrl = 'admin/editor-services.html' + (svcParam ? '?' + svcParam : '');
           }
+        } else if (targetUrl.includes('editor.html') || targetUrl.includes('index.html')) {
+          targetUrl = 'index.html?edit=1';
         }
 
         if (select) {
-          select.value = targetUrl.includes('editor-services.html') ? 'admin/editor-services.html' : targetUrl;
+          select.value = targetUrl.includes('editor-services.html') ? 'admin/editor-services.html' : 'index.html?edit=1';
         }
         if (addBtn) {
           addBtn.style.display = targetUrl.includes('editor-services.html') ? 'inline-flex' : 'none';
         }
         if (iframe) iframe.src = targetUrl;
-        if (fullBtn) fullBtn.href = targetUrl;
+        if (fullBtn) fullBtn.href = targetUrl.includes('editor-services.html') ? targetUrl : 'admin/editor.html';
 
         const safariDomain = document.getElementById('safariUrlDomain');
         if (safariDomain) {
@@ -2234,16 +2467,15 @@
         }
       };
 
-      // Synchronize realistic iPhone status bar clock
+      // Synchronize realistic Xiaomi Mi 11i status bar clock
       function updateMockupClock() {
         const clockEl = document.getElementById('statusClock');
         if (!clockEl) return;
         const now = new Date();
         let hours = now.getHours();
         const minutes = String(now.getMinutes()).padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12 || 12;
-        clockEl.textContent = `${hours}:${minutes} ${ampm}`;
+        clockEl.textContent = `${hours}:${minutes}`;
       }
       setInterval(updateMockupClock, 30000);
       updateMockupClock();
@@ -2671,6 +2903,7 @@
         loadBlocks();
         loadServices();
         loadMedia();
+        loadEmailTemplates();
         if (!liveEventSource) {
           initRealtimeStream();
         }
@@ -2930,6 +3163,228 @@
           }
         } catch (e) {
           alert('Upload failed: ' + e.message);
+        }
+      };
+
+      // ── Email Template Studio ────────────────────────────────────
+      let activeEmailTemplateStyle = 'luxury_gold';
+      let currentModalStyle = 'luxury_gold';
+      let currentModalType = 'auto_reply';
+      let currentModalDevice = 'desktop';
+
+      window.loadEmailTemplates = async function() {
+        try {
+          const res = await fetch('/api/v1/contact/email-settings', {
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+          if (res.status === 401) {
+            handleAuthFailure();
+            return;
+          }
+          if (res.ok) {
+            const data = await res.json();
+            const settingRow = (data.settings || []).find(s => s.setting_key === 'email_template_style');
+            const style = settingRow ? settingRow.setting_value : 'luxury_gold';
+            activeEmailTemplateStyle = style;
+            updateEmailTemplateUI(style);
+          }
+        } catch (e) {
+          console.error('[Email Templates] Failed to load settings:', e);
+        }
+      };
+
+      function updateEmailTemplateUI(style) {
+        let activeKey = style;
+        if (activeKey === 'gradient_glass') activeKey = 'warm_editorial';
+
+        const styles = ['luxury_gold', 'clean_minimal', 'warm_editorial'];
+        const styleNames = {
+          'luxury_gold': 'Executive Dark Gold',
+          'clean_minimal': 'Corporate Modern Clean',
+          'warm_editorial': 'Bespoke Warm Editorial',
+          'gradient_glass': 'Bespoke Warm Editorial'
+        };
+
+        const activeBadge = document.getElementById('activeEmailTemplateBadge');
+        if (activeBadge) {
+          activeBadge.innerHTML = `✦ Active: ${styleNames[activeKey] || activeKey}`;
+        }
+
+        styles.forEach(s => {
+          const card = document.getElementById('card-template-' + s);
+          const pill = document.getElementById('pill-' + s);
+          const btn = document.getElementById('btn-activate-' + s);
+
+          if (s === activeKey) {
+            if (card) {
+              card.style.borderColor = '#eba22d';
+              card.style.boxShadow = '0 0 25px rgba(235, 162, 45, 0.25), 0 8px 24px rgba(0,0,0,0.5)';
+            }
+            if (pill) {
+              pill.style.display = 'inline-block';
+            }
+            if (btn) {
+              btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Active Design';
+              btn.style.opacity = '0.7';
+              btn.style.pointerEvents = 'none';
+              btn.classList.remove('btn-primary-gold');
+            }
+          } else {
+            if (card) {
+              card.style.borderColor = 'rgba(255,255,255,0.1)';
+              card.style.boxShadow = 'none';
+            }
+            if (pill) {
+              pill.style.display = 'none';
+            }
+            if (btn) {
+              btn.innerHTML = '<i class="bi bi-check2-circle"></i> Set Active';
+              btn.style.opacity = '1';
+              btn.style.pointerEvents = 'auto';
+              btn.classList.add('btn-primary-gold');
+            }
+          }
+        });
+      }
+
+      window.activateEmailTemplate = async function(style) {
+        let targetStyle = style;
+        if (targetStyle === 'gradient_glass') targetStyle = 'warm_editorial';
+
+        const btn = document.getElementById('btn-activate-' + targetStyle);
+        const originalText = btn ? btn.innerHTML : '';
+        if (btn) {
+          btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Activating...';
+          btn.disabled = true;
+        }
+
+        try {
+          const res = await fetch('/api/v1/contact/email-templates/select', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ style: targetStyle })
+          });
+
+          if (res.status === 401) {
+            handleAuthFailure();
+            return;
+          }
+
+          const data = await res.json();
+          if (res.ok && data.success) {
+            activeEmailTemplateStyle = targetStyle;
+            updateEmailTemplateUI(targetStyle);
+            const modalSetBtn = document.getElementById('modalSetActiveBtn');
+            if (modalSetBtn && currentModalStyle === targetStyle) {
+              modalSetBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Currently Active';
+              modalSetBtn.style.opacity = '0.7';
+              modalSetBtn.disabled = true;
+            }
+          } else {
+            alert('Could not update template: ' + (data.error?.message || 'Unknown error'));
+            if (btn) {
+              btn.innerHTML = originalText;
+              btn.disabled = false;
+            }
+          }
+        } catch (e) {
+          alert('Network error activating template: ' + e.message);
+          if (btn) {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+          }
+        }
+      };
+
+      window.openEmailPreviewModal = function(style) {
+        let chosenStyle = style || activeEmailTemplateStyle || 'luxury_gold';
+        if (chosenStyle === 'gradient_glass') chosenStyle = 'warm_editorial';
+        currentModalStyle = chosenStyle;
+
+        const modal = document.getElementById('emailPreviewModal');
+        if (!modal) return;
+
+        const styleNames = {
+          'luxury_gold': 'Executive Dark Gold',
+          'clean_minimal': 'Corporate Modern Clean',
+          'warm_editorial': 'Bespoke Warm Editorial',
+          'gradient_glass': 'Bespoke Warm Editorial'
+        };
+
+        const titleEl = document.getElementById('previewModalTitle');
+        if (titleEl) {
+          titleEl.innerHTML = `<i class="bi bi-palette2 text-warning"></i> Live Email Preview: <span style="color:#eba22d;">${styleNames[currentModalStyle]}</span>`;
+        }
+
+        const modalSetBtn = document.getElementById('modalSetActiveBtn');
+        if (modalSetBtn) {
+          if (currentModalStyle === activeEmailTemplateStyle) {
+            modalSetBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Currently Active';
+            modalSetBtn.style.opacity = '0.7';
+            modalSetBtn.disabled = true;
+          } else {
+            modalSetBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Set As Active Design';
+            modalSetBtn.style.opacity = '1';
+            modalSetBtn.disabled = false;
+          }
+        }
+
+        updateModalPreview();
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      };
+
+      window.closeEmailPreviewModal = function() {
+        const modal = document.getElementById('emailPreviewModal');
+        if (modal) modal.style.display = 'none';
+        document.body.style.overflow = '';
+      };
+
+      window.updateModalPreview = function() {
+        const iframe = document.getElementById('emailPreviewIframe');
+        if (!iframe) return;
+        const previewUrl = `/api/v1/contact/email-templates/preview?style=${encodeURIComponent(currentModalStyle)}&type=${encodeURIComponent(currentModalType)}&token=${encodeURIComponent(token)}`;
+        iframe.src = previewUrl;
+      };
+
+      window.setPreviewType = function(type, btn) {
+        currentModalType = type;
+        document.querySelectorAll('.preview-type-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+        updateModalPreview();
+      };
+
+      window.setPreviewDevice = function(device, btn) {
+        currentModalDevice = device;
+        document.querySelectorAll('.preview-device-btn').forEach(b => b.classList.remove('active'));
+        if (btn) btn.classList.add('active');
+
+        const wrapper = document.getElementById('previewIframeWrapper');
+        if (wrapper) {
+          if (device === 'mobile') {
+            wrapper.style.maxWidth = '400px';
+            wrapper.style.boxShadow = '0 0 35px rgba(0,0,0,0.8), 0 0 0 10px #1e293b';
+            wrapper.style.borderRadius = '32px';
+            wrapper.style.border = '2px solid rgba(255,255,255,0.15)';
+          } else {
+            wrapper.style.maxWidth = '680px';
+            wrapper.style.boxShadow = '0 12px 35px rgba(0,0,0,0.6)';
+            wrapper.style.borderRadius = '12px';
+            wrapper.style.border = '1px solid rgba(255,255,255,0.1)';
+          }
+        }
+      };
+
+      window.activateCurrentModalTemplate = async function() {
+        await window.activateEmailTemplate(currentModalStyle);
+        const modalSetBtn = document.getElementById('modalSetActiveBtn');
+        if (modalSetBtn) {
+          modalSetBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Currently Active';
+          modalSetBtn.style.opacity = '0.7';
+          modalSetBtn.disabled = true;
         }
       };
 

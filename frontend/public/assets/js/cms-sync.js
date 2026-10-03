@@ -135,17 +135,6 @@
           applyBlock(key, val);
         });
       }
-
-      // Update PureCounter stats if present
-      if (Array.isArray(data.stats) && data.stats.length > 0) {
-        data.stats.forEach((st) => {
-          const statEl = document.querySelector(`[data-stat-key="${st.stat_key}"]`);
-          if (statEl) {
-            statEl.setAttribute('data-purecounter-end', st.stat_value);
-            statEl.textContent = st.stat_value;
-          }
-        });
-      }
     } catch (err) {
       console.warn('[cms-sync] Could not load initial DB content:', err.message);
     }

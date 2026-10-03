@@ -20,6 +20,8 @@ export default function Contact() {
   const [copied, setCopied] = useState(false);
   const [confirmation, setConfirmation] = useState(null);
   const [countdown, setCountdown] = useState(5);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formLoadTime] = useState(Date.now());
 
   // Auto-close confirmation modal in 5 seconds
   useEffect(() => {
@@ -95,10 +97,15 @@ export default function Contact() {
     };
   };
 
-  const handleSendViaGmail = (e) => {
+  const handleSubmit = async (e) => {
     if (e) e.preventDefault();
 
-    if (!formData.name.trim() || !formData.message.trim()) {
+    const name = formData.name.trim();
+    const email = formData.email.trim();
+    const phone = formData.phone.trim();
+    const message = formData.message.trim();
+
+    if (!name || !message) {
       setStatus({
         type: 'danger',
         message: 'Please provide your Name and Message before sending.',
@@ -107,60 +114,101 @@ export default function Contact() {
       return;
     }
 
-    const { subject, body } = buildEmailContent();
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setStatus({
+        type: 'danger',
+        message: 'Please provide a valid email address.',
+        link: '',
+      });
+      return;
+    }
 
-    // Construct direct Gmail Web Compose URL
+    setIsSubmitting(true);
+    setStatus({ type: '', message: '', link: '' });
+
+    const { subject, body } = buildEmailContent();
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
       businessEmail
     )}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    // Optional background log to admin database so inquiry shows in Leads CRM
     try {
-      fetch('/api/v1/contact/submit', {
+      const response = await fetch('/api/v1/contact/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          full_name: formData.name.trim(),
-          name: formData.name.trim(),
-          email: formData.email.trim() || 'visitor@direct-mail.com',
-          phone: formData.phone.trim(),
+          full_name: name,
+          name: name,
+          email: email || 'visitor@direct-mail.com',
+          phone: phone,
           subject,
-          message: formData.message.trim(),
+          message,
           service_interest_id: formData.service_interest ? parseInt(formData.service_interest, 10) : null,
-          direct_mail: true,
+          form_load_time: formLoadTime,
         }),
-      }).catch(() => {});
-    } catch (_) {}
+      });
 
-    // Open Gmail web compose as a Floating Popup Window (not a full browser tab!)
-    const popup = openGmailPopup(gmailUrl);
+      const resData = await response.json();
 
-    setConfirmation({
-      recipient: businessEmail,
-      senderName: formData.name.trim(),
-      senderEmail: formData.email.trim() || 'Not specified',
-      phone: formData.phone.trim() || '',
-      subject,
-      message: formData.message.trim(),
-      gmailUrl,
-      popupBlocked: !popup,
-    });
+      if (response.ok && resData.success) {
+        const isFallback = resData.mode === 'popup_fallback';
 
-    // Reset form fields
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      service_interest: '',
-      subject: '',
-      message: '',
-    });
+        if (isFallback) {
+          // Daily quota reached on server: launch floating Gmail popup as graceful fallback
+          const popup = openGmailPopup(gmailUrl);
+          setConfirmation({
+            isFallback: true,
+            recipient: businessEmail,
+            senderName: name,
+            senderEmail: email || 'Not specified',
+            phone: phone,
+            subject,
+            message,
+            gmailUrl,
+            popupBlocked: !popup,
+          });
+        } else {
+          // Standard under-quota delivery: background SMTP dispatch
+          setConfirmation({
+            isFallback: false,
+            recipient: businessEmail,
+            senderName: name,
+            senderEmail: email || 'Not specified',
+            phone: phone,
+            subject,
+            message,
+            gmailUrl,
+            popupBlocked: false,
+          });
+        }
 
-    setStatus({
-      type: 'success',
-      message: 'Message sent! Floating Gmail popup window opened.',
-      link: gmailUrl,
-    });
+        // Reset form fields
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          service_interest: '',
+          subject: '',
+          message: '',
+        });
+
+        setStatus({ type: '', message: '', link: '' });
+      } else {
+        setStatus({
+          type: 'danger',
+          message: resData?.error?.message || resData?.message || 'Failed to send your message. Please try again.',
+          link: '',
+        });
+      }
+    } catch (err) {
+      console.error('[contact] Submit error:', err);
+      setStatus({
+        type: 'danger',
+        message: 'Network error. Please check your internet connection or try again.',
+        link: '',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSendDefaultMail = () => {
@@ -286,7 +334,7 @@ export default function Contact() {
           {/* Contact Form Column */}
           <div className="col-lg-7" data-aos="fade-left" data-aos-delay="200">
             <div className="contact-form-card">
-              <form onSubmit={handleSendViaGmail} noValidate>
+              <form onSubmit={handleSubmit} noValidate>
                 <div className="row gy-3">
                   <div className="col-md-6">
                     <label className="form-label">
@@ -388,34 +436,19 @@ export default function Contact() {
                   )}
 
                   <div className="col-12 mt-2">
-                    <button type="submit" className="contact-btn-submit">
-                      <i className="bi bi-google"></i>
-                      <span>Send via Gmail</span>
-                      <i className="bi bi-box-arrow-up-right ms-1" style={{ fontSize: '13px' }}></i>
+                    <button type="submit" className="contact-btn-submit" disabled={isSubmitting}>
+                      {isSubmitting ? (
+                        <>
+                          <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                          <span>Sending Message...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Send Message</span>
+                          <i className="bi bi-arrow-right ms-1"></i>
+                        </>
+                      )}
                     </button>
-                  </div>
-
-                  <div className="col-12">
-                    <div className="d-flex align-items-center justify-content-between flex-wrap gap-2 pt-1">
-                      <button
-                        type="button"
-                        onClick={handleSendDefaultMail}
-                        className="btn btn-sm btn-outline-secondary"
-                        style={{
-                          borderRadius: '8px',
-                          fontSize: '12.5px',
-                          borderColor: 'rgba(255, 255, 255, 0.15)',
-                          color: '#a0aec0',
-                        }}
-                      >
-                        <i className="bi bi-envelope me-1"></i> Open Default Mail App
-                      </button>
-
-                      <div className="d-flex align-items-center gap-1" style={{ fontSize: '12px', color: '#718096' }}>
-                        <span>Delivering to:</span>
-                        <span className="text-warning fw-semibold">{businessEmail}</span>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </form>
@@ -475,7 +508,9 @@ export default function Contact() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                background: 'linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, transparent 100%)',
+                background: confirmation.isFallback
+                  ? 'linear-gradient(180deg, rgba(235, 162, 45, 0.08) 0%, transparent 100%)'
+                  : 'linear-gradient(180deg, rgba(34, 197, 94, 0.08) 0%, transparent 100%)',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -484,21 +519,23 @@ export default function Contact() {
                     width: '38px',
                     height: '38px',
                     borderRadius: '10px',
-                    background: 'rgba(34, 197, 94, 0.2)',
-                    border: '1px solid rgba(34, 197, 94, 0.4)',
-                    color: '#22c55e',
+                    background: confirmation.isFallback ? 'rgba(235, 162, 45, 0.2)' : 'rgba(34, 197, 94, 0.2)',
+                    border: `1px solid ${confirmation.isFallback ? 'rgba(235, 162, 45, 0.4)' : 'rgba(34, 197, 94, 0.4)'}`,
+                    color: confirmation.isFallback ? '#eba22d' : '#22c55e',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontSize: '20px',
-                    boxShadow: '0 0 15px rgba(34, 197, 94, 0.25)',
+                    boxShadow: confirmation.isFallback
+                      ? '0 0 15px rgba(235, 162, 45, 0.25)'
+                      : '0 0 15px rgba(34, 197, 94, 0.25)',
                   }}
                 >
-                  <i className="bi bi-check-circle-fill"></i>
+                  <i className={`bi ${confirmation.isFallback ? 'bi-info-circle-fill' : 'bi-check-circle-fill'}`}></i>
                 </div>
                 <div>
                   <h4 style={{ margin: 0, fontSize: '17px', fontWeight: 700, color: '#f8fafc' }}>
-                    Message Sent
+                    {confirmation.isFallback ? 'Daily Quota Limit — Direct Fallback' : 'Message Sent Successfully'}
                   </h4>
                   <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>
                     Auto-closing in <span style={{ color: '#eba22d', fontWeight: 700 }}>{countdown}s</span>...
@@ -527,20 +564,31 @@ export default function Contact() {
             <div style={{ padding: '20px 24px' }}>
               <div
                 style={{
-                  background: 'rgba(34, 197, 94, 0.1)',
-                  border: '1px solid rgba(34, 197, 94, 0.25)',
+                  background: confirmation.isFallback ? 'rgba(235, 162, 45, 0.12)' : 'rgba(34, 197, 94, 0.1)',
+                  border: `1px solid ${confirmation.isFallback ? 'rgba(235, 162, 45, 0.3)' : 'rgba(34, 197, 94, 0.25)'}`,
                   borderRadius: '10px',
                   padding: '12px 16px',
                   marginBottom: '16px',
                   fontSize: '13.5px',
-                  color: '#86efac',
+                  color: confirmation.isFallback ? '#fef08a' : '#86efac',
                   lineHeight: 1.5,
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                  <i className="bi bi-check-circle-fill" style={{ color: '#22c55e', marginTop: '2px' }}></i>
+                  <i
+                    className={`bi ${confirmation.isFallback ? 'bi-info-circle-fill text-warning' : 'bi-check-circle-fill text-success'}`}
+                    style={{ marginTop: '2px' }}
+                  ></i>
                   <div>
-                    Your message was prepared and logged! The draft is also loaded in the <strong>floating Gmail popup window</strong>.
+                    {confirmation.isFallback ? (
+                      <>
+                        Daily automated email quota reached. A <strong>floating Gmail compose window</strong> has been opened with your inquiry pre-filled so you can send directly.
+                      </>
+                    ) : (
+                      <>
+                        Your message has been received! Our team has been notified and will get back to you within 1-2 business days.
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -655,60 +703,81 @@ export default function Contact() {
                 background: 'rgba(255, 255, 255, 0.02)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                justifyContent: confirmation.isFallback ? 'space-between' : 'flex-end',
                 flexWrap: 'wrap',
                 gap: '10px',
               }}
             >
-              <button
-                type="button"
-                onClick={() => openGmailPopup(confirmation.gmailUrl)}
-                className="btn btn-sm"
-                style={{
-                  background: '#eba22d',
-                  color: '#0d1117',
-                  fontWeight: 700,
-                  borderRadius: '8px',
-                  padding: '8px 16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                }}
-              >
-                <i className="bi bi-box-arrow-up-right"></i>
-                Re-open Gmail Popup
-              </button>
+              {confirmation.isFallback ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => openGmailPopup(confirmation.gmailUrl)}
+                    className="btn btn-sm"
+                    style={{
+                      background: '#eba22d',
+                      color: '#0d1117',
+                      fontWeight: 700,
+                      borderRadius: '8px',
+                      padding: '8px 16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <i className="bi bi-box-arrow-up-right"></i>
+                    Re-open Gmail Popup
+                  </button>
 
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  type="button"
-                  onClick={handleSendDefaultMail}
-                  className="btn btn-sm btn-outline-secondary"
-                  style={{
-                    borderRadius: '8px',
-                    fontSize: '12.5px',
-                    borderColor: 'rgba(255, 255, 255, 0.2)',
-                    color: '#cbd5e1',
-                  }}
-                >
-                  <i className="bi bi-envelope me-1"></i> Mail App
-                </button>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={handleSendDefaultMail}
+                      className="btn btn-sm btn-outline-secondary"
+                      style={{
+                        borderRadius: '8px',
+                        fontSize: '12.5px',
+                        borderColor: 'rgba(255, 255, 255, 0.2)',
+                        color: '#cbd5e1',
+                      }}
+                    >
+                      <i className="bi bi-envelope me-1"></i> Mail App
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmation(null)}
+                      className="btn btn-sm btn-secondary"
+                      style={{
+                        borderRadius: '8px',
+                        fontSize: '12.5px',
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        border: 'none',
+                        color: '#fff',
+                        padding: '6px 14px',
+                      }}
+                    >
+                      Close ({countdown}s)
+                    </button>
+                  </div>
+                </>
+              ) : (
                 <button
                   type="button"
                   onClick={() => setConfirmation(null)}
-                  className="btn btn-sm btn-secondary"
+                  className="btn btn-sm"
                   style={{
+                    background: 'linear-gradient(135deg, #eba22d 0%, #c87a1d 100%)',
+                    color: '#0d1117',
+                    fontWeight: 700,
                     borderRadius: '8px',
-                    fontSize: '12.5px',
-                    background: 'rgba(255, 255, 255, 0.1)',
+                    padding: '8px 22px',
                     border: 'none',
-                    color: '#fff',
-                    padding: '6px 14px',
+                    cursor: 'pointer',
                   }}
                 >
-                  Close ({countdown}s)
+                  Done ({countdown}s)
                 </button>
-              </div>
+              )}
             </div>
           </div>
         </div>

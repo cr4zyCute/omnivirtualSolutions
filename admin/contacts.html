@@ -354,6 +354,11 @@
     }
     .toast-msg.success { border-color: rgba(52,211,153,0.4); }
     .toast-msg.error   { border-color: rgba(248,113,113,0.4); }
+    .contacts-preview-type-btn.active, .contacts-preview-device-btn.active {
+      background: var(--gold) !important;
+      color: #0d1117 !important;
+      font-weight: 700 !important;
+    }
 
     /* Loading */
     .spinner-sm { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.15); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
@@ -617,7 +622,7 @@
         <span class="nav-badge" id="unreadBadge">0</span>
       </a></li>
       <li><a class="nav-item" onclick="switchTab('email-settings', this)">
-        <i class="bi bi-gear-fill"></i> Email Settings
+        <i class="bi bi-palette2" style="color:var(--gold);"></i> Email UI &amp; Settings
       </a></li>
       <li><a class="nav-item" onclick="switchTab('email-stats', this)">
         <i class="bi bi-bar-chart-fill"></i> Email Usage Stats
@@ -747,6 +752,133 @@
       <!-- ── TAB: EMAIL SETTINGS ── -->
       <div id="tab-email-settings" class="admin-tab">
         <div class="settings-grid">
+
+          <!-- Email UI & Brand Designs -->
+          <div class="settings-card" id="emailUiStudioCard">
+            <div class="settings-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <i class="bi bi-palette2" style="color:var(--gold)"></i> Client Email UI Designs (With Official Logo)
+              </div>
+              <span id="activeEmailTemplateBadgeContacts" class="badge" style="background:rgba(235,162,45,0.15); color:#eba22d; border:1px solid rgba(235,162,45,0.3); padding:4px 12px; font-weight:700; border-radius:12px; font-size:11.5px;">
+                ✦ Active: Executive Dark Gold
+              </span>
+            </div>
+            <div class="settings-card-body">
+              <p style="font-size:13px; color:var(--muted); margin:0 0 16px 0;">
+                Choose which email design layout is dispatched for visitor auto-replies, admin notification alerts, and direct CRM replies. All designs embed the official logo.
+              </p>
+
+              <!-- 3 Design Selector Cards -->
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:18px; margin-bottom:14px;">
+
+                <!-- Design 1: Luxury Gold -->
+                <div id="contacts-card-template-luxury_gold" style="background:#111622; border:2px solid rgba(235,162,45,0.4); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; position:relative;">
+                  <div style="padding:14px 18px; background:#080b11; border-bottom:2px solid #eba22d; display:flex; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <img src="/assets/img/OmniLogo2.png" alt="Logo" style="width:30px; height:30px; border-radius:6px; border:1px solid rgba(235,162,45,0.4);">
+                      <div>
+                        <div style="font-size:14px; font-weight:800; color:#fff;">Executive Dark Gold</div>
+                        <div style="font-size:10px; color:#eba22d; font-weight:600; text-transform:uppercase;">Luxury &amp; High Contrast</div>
+                      </div>
+                    </div>
+                    <span id="contacts-pill-luxury_gold" style="font-size:10px; background:#eba22d; color:#0d1117; font-weight:800; padding:2px 8px; border-radius:10px;">ACTIVE</span>
+                  </div>
+                  <!-- Visual Mockup -->
+                  <div style="height:115px; background:#0b0f17; padding:12px; display:flex; flex-direction:column; justify-content:center; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06);">
+                    <div style="background:#111622; border:1px solid rgba(235,162,45,0.3); border-radius:6px; padding:10px 14px; width:90%; text-align:center;">
+                      <div style="font-size:11px; font-weight:700; color:#fff;">✦ Omni Virtual Solutions</div>
+                      <div style="font-size:9.5px; color:#94a3b8; margin-top:2px;">Inquiry Confirmation &amp; Team Response</div>
+                      <div style="margin-top:6px; display:inline-block; font-size:9.5px; font-weight:700; background:#eba22d; color:#0d1117; padding:3px 10px; border-radius:4px;">Golden Action CTA &rarr;</div>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px; flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+                    <p style="font-size:12px; color:#94a3b8; line-height:1.45; margin:0 0 14px 0;">
+                      Obsidian dark shell with refined 24K gold accents and shield emblem. Ideal for executive consulting and publishing.
+                    </p>
+                    <div style="display:flex; gap:8px;">
+                      <button class="btn btn-sm" style="flex:1; justify-content:center;" onclick="openEmailPreviewModalContacts('luxury_gold')">
+                        <i class="bi bi-eye"></i> Preview
+                      </button>
+                      <button class="btn btn-sm btn-gold" id="contacts-btn-activate-luxury_gold" style="flex:1; justify-content:center;" onclick="activateEmailTemplateContacts('luxury_gold')">
+                        <i class="bi bi-check2-circle"></i> Set Active
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Design 2: Clean Minimal -->
+                <div id="contacts-card-template-clean_minimal" style="background:#111622; border:1px solid rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; position:relative;">
+                  <div style="padding:14px 18px; background:#ffffff; border-bottom:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <img src="/assets/img/OmniLogo2.png" alt="Logo" style="width:30px; height:30px; border-radius:6px; border:1px solid #e2e8f0; background:#f8fafc;">
+                      <div>
+                        <div style="font-size:14px; font-weight:800; color:#0f172a;">Corporate Modern Clean</div>
+                        <div style="font-size:10px; color:#64748b; font-weight:600; text-transform:uppercase;">Light &amp; Minimalist</div>
+                      </div>
+                    </div>
+                    <span id="contacts-pill-clean_minimal" style="display:none; font-size:10px; background:#0f172a; color:#fff; font-weight:800; padding:2px 8px; border-radius:10px;">ACTIVE</span>
+                  </div>
+                  <!-- Visual Mockup -->
+                  <div style="height:115px; background:#f4f6f9; padding:12px; display:flex; flex-direction:column; justify-content:center; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06);">
+                    <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:6px; padding:10px 14px; width:90%; text-align:center;">
+                      <div style="font-size:11px; font-weight:800; color:#0f172a;">Omni Virtual Solutions</div>
+                      <div style="font-size:9.5px; color:#64748b; margin-top:2px;">Clean Corporate Communication</div>
+                      <div style="margin-top:6px; display:inline-block; font-size:9.5px; font-weight:700; background:#0f172a; color:#ffffff; padding:3px 10px; border-radius:4px;">Navy Corporate CTA &rarr;</div>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px; flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+                    <p style="font-size:12px; color:#94a3b8; line-height:1.45; margin:0 0 14px 0;">
+                      Crisp, modern light aesthetic with generous whitespace and deep navy typography. High corporate readability.
+                    </p>
+                    <div style="display:flex; gap:8px;">
+                      <button class="btn btn-sm" style="flex:1; justify-content:center;" onclick="openEmailPreviewModalContacts('clean_minimal')">
+                        <i class="bi bi-eye"></i> Preview
+                      </button>
+                      <button class="btn btn-sm btn-gold" id="contacts-btn-activate-clean_minimal" style="flex:1; justify-content:center;" onclick="activateEmailTemplateContacts('clean_minimal')">
+                        <i class="bi bi-check2-circle"></i> Set Active
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Design 3: Bespoke Warm Editorial -->
+                <div id="contacts-card-template-warm_editorial" style="background:#111622; border:1px solid rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; position:relative;">
+                  <div style="padding:14px 18px; background:#fcfaf6; border-bottom:2px solid #9a6724; display:flex; align-items:center; justify-content:space-between;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <img src="/assets/img/OmniLogo2.png" alt="Logo" style="width:30px; height:30px; border-radius:6px; border:1px solid #ded5c6; background:#f4efe6;">
+                      <div>
+                        <div style="font-size:14px; font-weight:800; color:#1c1917; font-family:'Georgia', serif;">Bespoke Warm Editorial</div>
+                        <div style="font-size:10px; color:#8c7355; font-weight:700; text-transform:uppercase;">Heritage Ivory &amp; Cognac</div>
+                      </div>
+                    </div>
+                    <span id="contacts-pill-warm_editorial" style="display:none; font-size:10px; background:#9a6724; color:#fff; font-weight:800; padding:2px 8px; border-radius:10px;">ACTIVE</span>
+                  </div>
+                  <!-- Visual Mockup -->
+                  <div style="height:115px; background:#f7f4ed; padding:12px; display:flex; flex-direction:column; justify-content:center; align-items:center; border-bottom:1px solid rgba(255,255,255,0.06);">
+                    <div style="background:#ffffff; border:1px solid #dfd7c9; border-radius:6px; padding:10px 14px; width:90%; text-align:center; box-shadow:0 3px 12px rgba(44,34,22,0.07);">
+                      <div style="font-size:12px; font-weight:700; color:#1c1917; font-family:'Georgia', serif;">Omni Virtual Solutions</div>
+                      <div style="font-size:9.5px; color:#8c7355; margin-top:2px; font-weight:600;">Executive Advisory &amp; Publishing Press</div>
+                      <div style="margin-top:6px; display:inline-block; font-size:9.5px; font-weight:700; background:#1c1917; color:#fdfbf7; padding:3px 10px; border-radius:4px; border:1px solid #3d3835;">Read Editorial Dispatch &rarr;</div>
+                    </div>
+                  </div>
+                  <div style="padding:14px 16px; flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+                    <p style="font-size:12px; color:#94a3b8; line-height:1.45; margin:0 0 14px 0;">
+                      Warm linen canvas with classic editorial serif typography, bookcraft dividers, and warm cognac accents. Inspired by prestigious New York publishing houses.
+                    </p>
+                    <div style="display:flex; gap:8px;">
+                      <button class="btn btn-sm" style="flex:1; justify-content:center;" onclick="openEmailPreviewModalContacts('warm_editorial')">
+                        <i class="bi bi-eye"></i> Preview
+                      </button>
+                      <button class="btn btn-sm btn-gold" id="contacts-btn-activate-warm_editorial" style="flex:1; justify-content:center;" onclick="activateEmailTemplateContacts('warm_editorial')">
+                        <i class="bi bi-check2-circle"></i> Set Active
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
 
           <!-- Notification toggle -->
           <div class="settings-card">
@@ -1511,6 +1643,7 @@
         if (document.getElementById('stratForceSmtp')) document.getElementById('stratForceSmtp').checked = strat === 'force_smtp';
         if (document.getElementById('stratForcePopup')) document.getElementById('stratForcePopup').checked = strat === 'force_popup';
         refreshQuota();
+        updateContactsTemplateUI(settingsMap.email_template_style || 'luxury_gold');
       } catch (e) {
         toast('Failed to load email settings', 'error');
       }
@@ -1671,10 +1804,261 @@
       } catch (e) { toast('Failed to load stats', 'error'); }
     }
 
+    // ════════════════════════════════════════════════════════════
+    // EMAIL TEMPLATES STUDIO
+    // ════════════════════════════════════════════════════════════
+    let activeContactsTemplate = 'luxury_gold';
+    let currentContactsModalStyle = 'luxury_gold';
+    let currentContactsModalType = 'auto_reply';
+    let currentContactsModalDevice = 'desktop';
+
+    window.updateContactsTemplateUI = function(style) {
+      let activeKey = style || 'luxury_gold';
+      if (activeKey === 'gradient_glass') activeKey = 'warm_editorial';
+      activeContactsTemplate = activeKey;
+
+      const styles = ['luxury_gold', 'clean_minimal', 'warm_editorial'];
+      const styleNames = {
+        'luxury_gold': 'Executive Dark Gold',
+        'clean_minimal': 'Corporate Modern Clean',
+        'warm_editorial': 'Bespoke Warm Editorial',
+        'gradient_glass': 'Bespoke Warm Editorial'
+      };
+
+      const badge = document.getElementById('activeEmailTemplateBadgeContacts');
+      if (badge) {
+        badge.innerHTML = `✦ Active: ${styleNames[activeKey] || activeKey}`;
+      }
+
+      styles.forEach(s => {
+        const card = document.getElementById('contacts-card-template-' + s);
+        const pill = document.getElementById('contacts-pill-' + s);
+        const btn = document.getElementById('contacts-btn-activate-' + s);
+
+        if (s === activeKey) {
+          if (card) {
+            card.style.borderColor = '#eba22d';
+            card.style.boxShadow = '0 0 20px rgba(235, 162, 45, 0.25)';
+          }
+          if (pill) pill.style.display = 'inline-block';
+          if (btn) {
+            btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Active Design';
+            btn.style.opacity = '0.7';
+            btn.style.pointerEvents = 'none';
+            btn.classList.remove('btn-gold');
+          }
+        } else {
+          if (card) {
+            card.style.borderColor = 'rgba(255,255,255,0.1)';
+            card.style.boxShadow = 'none';
+          }
+          if (pill) pill.style.display = 'none';
+          if (btn) {
+            btn.innerHTML = '<i class="bi bi-check2-circle"></i> Set Active';
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+            btn.classList.add('btn-gold');
+          }
+        }
+      });
+    };
+
+    window.activateEmailTemplateContacts = async function(style) {
+      let targetStyle = style;
+      if (targetStyle === 'gradient_glass') targetStyle = 'warm_editorial';
+
+      const btn = document.getElementById('contacts-btn-activate-' + targetStyle);
+      const orig = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.innerHTML = '<span class="spinner-sm"></span> Activating...';
+        btn.disabled = true;
+      }
+
+      try {
+        const res = await fetch('/api/v1/contact/email-templates/select', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token
+          },
+          body: JSON.stringify({ style: targetStyle })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          toast('Email design set to ' + targetStyle + '! ✓');
+          updateContactsTemplateUI(targetStyle);
+          const modalBtn = document.getElementById('contactsModalSetActiveBtn');
+          if (modalBtn && currentContactsModalStyle === targetStyle) {
+            modalBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Currently Active';
+            modalBtn.style.opacity = '0.7';
+            modalBtn.disabled = true;
+          }
+        } else {
+          toast(data.error?.message || 'Failed to update template', 'error');
+          if (btn) {
+            btn.innerHTML = orig;
+            btn.disabled = false;
+          }
+        }
+      } catch (e) {
+        toast('Network error', 'error');
+        if (btn) {
+          btn.innerHTML = orig;
+          btn.disabled = false;
+        }
+      }
+    };
+
+    window.openEmailPreviewModalContacts = function(style) {
+      let chosenStyle = style || activeContactsTemplate || 'luxury_gold';
+      if (chosenStyle === 'gradient_glass') chosenStyle = 'warm_editorial';
+      currentContactsModalStyle = chosenStyle;
+
+      const modal = document.getElementById('emailPreviewModalContacts');
+      if (!modal) return;
+
+      const styleNames = {
+        'luxury_gold': 'Executive Dark Gold',
+        'clean_minimal': 'Corporate Modern Clean',
+        'warm_editorial': 'Bespoke Warm Editorial',
+        'gradient_glass': 'Bespoke Warm Editorial'
+      };
+
+      const titleEl = document.getElementById('contactsPreviewModalTitle');
+      if (titleEl) {
+        titleEl.innerHTML = `<i class="bi bi-palette2" style="color:var(--gold)"></i> Live Preview: <span style="color:var(--gold);">${styleNames[currentContactsModalStyle]}</span>`;
+      }
+
+      const modalBtn = document.getElementById('contactsModalSetActiveBtn');
+      if (modalBtn) {
+        if (currentContactsModalStyle === activeContactsTemplate) {
+          modalBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Currently Active';
+          modalBtn.style.opacity = '0.7';
+          modalBtn.disabled = true;
+        } else {
+          modalBtn.innerHTML = '<i class="bi bi-check2-circle"></i> Set As Active Design';
+          modalBtn.style.opacity = '1';
+          modalBtn.disabled = false;
+        }
+      }
+
+      updateModalPreviewContacts();
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeEmailPreviewModalContacts = function() {
+      const modal = document.getElementById('emailPreviewModalContacts');
+      if (modal) modal.style.display = 'none';
+      document.body.style.overflow = '';
+    };
+
+    window.updateModalPreviewContacts = function() {
+      const iframe = document.getElementById('contactsEmailPreviewIframe');
+      if (!iframe) return;
+      const url = `/api/v1/contact/email-templates/preview?style=${encodeURIComponent(currentContactsModalStyle)}&type=${encodeURIComponent(currentContactsModalType)}&token=${encodeURIComponent(token)}`;
+      iframe.src = url;
+    };
+
+    window.setPreviewTypeContacts = function(type, btn) {
+      currentContactsModalType = type;
+      document.querySelectorAll('.contacts-preview-type-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      updateModalPreviewContacts();
+    };
+
+    window.setPreviewDeviceContacts = function(device, btn) {
+      currentContactsModalDevice = device;
+      document.querySelectorAll('.contacts-preview-device-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      const wrapper = document.getElementById('contactsPreviewIframeWrapper');
+      if (wrapper) {
+        if (device === 'mobile') {
+          wrapper.style.maxWidth = '400px';
+          wrapper.style.boxShadow = '0 0 35px rgba(0,0,0,0.8), 0 0 0 10px #1e293b';
+          wrapper.style.borderRadius = '32px';
+          wrapper.style.border = '2px solid rgba(255,255,255,0.15)';
+        } else {
+          wrapper.style.maxWidth = '680px';
+          wrapper.style.boxShadow = '0 12px 35px rgba(0,0,0,0.6)';
+          wrapper.style.borderRadius = '12px';
+          wrapper.style.border = '1px solid rgba(255,255,255,0.1)';
+        }
+      }
+    };
+
+    window.activateCurrentModalTemplateContacts = async function() {
+      await window.activateEmailTemplateContacts(currentContactsModalStyle);
+      const modalBtn = document.getElementById('contactsModalSetActiveBtn');
+      if (modalBtn) {
+        modalBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Currently Active';
+        modalBtn.style.opacity = '0.7';
+        modalBtn.disabled = true;
+      }
+    };
+
     // ── Init ─────────────────────────────────────────────────────
     loadInbox();
 
   })();
   </script>
+
+  <!-- ── Email Template Preview Modal (Contacts Page) ── -->
+  <div id="emailPreviewModalContacts" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); z-index:99999; justify-content:center; align-items:center; padding:18px;" onclick="if(event.target===this) closeEmailPreviewModalContacts()">
+    <div style="background:#0e131e; border:1px solid rgba(235,162,45,0.35); border-radius:16px; width:100%; max-width:980px; height:92vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.95);">
+      
+      <!-- Modal Header -->
+      <div style="padding:14px 20px; background:#080b11; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <div id="contactsPreviewModalTitle" style="font-size:15px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
+          <i class="bi bi-palette2" style="color:var(--gold)"></i> Live Email Preview
+        </div>
+        
+        <!-- Controls: View Types & Device -->
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <!-- Template Types -->
+          <div style="display:flex; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:3px;">
+            <button class="contacts-preview-type-btn active" onclick="setPreviewTypeContacts('auto_reply', this)" style="border:none; background:transparent; color:#fff; font-size:12px; font-weight:600; padding:5px 12px; border-radius:6px; cursor:pointer;">
+              Auto-Reply
+            </button>
+            <button class="contacts-preview-type-btn" onclick="setPreviewTypeContacts('notification', this)" style="border:none; background:transparent; color:#94a3b8; font-size:12px; font-weight:600; padding:5px 12px; border-radius:6px; cursor:pointer;">
+              Admin Alert
+            </button>
+            <button class="contacts-preview-type-btn" onclick="setPreviewTypeContacts('reply', this)" style="border:none; background:transparent; color:#94a3b8; font-size:12px; font-weight:600; padding:5px 12px; border-radius:6px; cursor:pointer;">
+              Team Reply
+            </button>
+          </div>
+
+          <!-- Device View -->
+          <div style="display:flex; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:3px;">
+            <button class="contacts-preview-device-btn active" onclick="setPreviewDeviceContacts('desktop', this)" style="border:none; background:transparent; color:#fff; font-size:13px; padding:5px 10px; border-radius:6px; cursor:pointer;" title="Desktop View (650px)">
+              <i class="bi bi-laptop"></i>
+            </button>
+            <button class="contacts-preview-device-btn" onclick="setPreviewDeviceContacts('mobile', this)" style="border:none; background:transparent; color:#94a3b8; font-size:13px; padding:5px 10px; border-radius:6px; cursor:pointer;" title="Mobile View (375px)">
+              <i class="bi bi-phone"></i>
+            </button>
+          </div>
+
+          <!-- Set Active Button in Modal -->
+          <button id="contactsModalSetActiveBtn" class="btn btn-gold" onclick="activateCurrentModalTemplateContacts()" style="padding:6px 14px; font-size:12px;">
+            <i class="bi bi-check2-circle"></i> Set As Active
+          </button>
+
+          <!-- Close Button -->
+          <button onclick="closeEmailPreviewModalContacts()" style="border:none; background:rgba(255,255,255,0.08); color:#fff; width:30px; height:30px; border-radius:8px; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center;" title="Close Preview">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Iframe Stage) -->
+      <div style="flex:1; background:#05070c; padding:20px; overflow-y:auto; display:flex; justify-content:center; align-items:flex-start;">
+        <div id="contactsPreviewIframeWrapper" style="width:100%; max-width:680px; height:100%; min-height:560px; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 12px 35px rgba(0,0,0,0.6); transition:all 0.3s ease; border:1px solid rgba(255,255,255,0.1);">
+          <iframe id="contactsEmailPreviewIframe" style="width:100%; height:100%; min-height:560px; border:none; display:block;" src="about:blank"></iframe>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </body>
 </html>

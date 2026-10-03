@@ -135,17 +135,6 @@
           applyBlock(key, val);
         });
       }
-
-      // Update PureCounter stats if present
-      if (Array.isArray(data.stats) && data.stats.length > 0) {
-        data.stats.forEach((st) => {
-          const statEl = document.querySelector(`[data-stat-key="${st.stat_key}"]`);
-          if (statEl) {
-            statEl.setAttribute('data-purecounter-end', st.stat_value);
-            statEl.textContent = st.stat_value;
-          }
-        });
-      }
     } catch (err) {
       console.warn('[cms-sync] Could not load initial DB content:', err.message);
     }
@@ -199,8 +188,17 @@
           if (!isEditMode) return;
           e.preventDefault();
           e.stopPropagation();
+          if (isInsideIframe) {
+            try {
+              window.parent.postMessage({ type: 'OPEN_MEDIA', key: key }, '*');
+              return;
+            } catch (_) {}
+          }
           promptImageUpload(key, el);
         });
+      } else if (key === 'home.cta.trust_tags') {
+        // Trust tags container has specialized child items; do not make container plain editable
+        return;
       } else {
         el.contentEditable = isEditMode ? 'true' : 'false';
         el.spellcheck = false;
@@ -383,23 +381,39 @@
 
     document.body.appendChild(bar);
 
-    const toggleBtn = bar.querySelector('#toggleEditBtn');
-    if (toggleBtn) {
-      toggleBtn.onclick = () => {
-        isEditMode = !isEditMode;
-        document.body.classList.toggle('mode-edit', isEditMode);
-        document.body.classList.toggle('mode-preview', !isEditMode);
+    function setMode(edit) {
+      isEditMode = Boolean(edit);
+      document.body.classList.toggle('mode-edit', isEditMode);
+      document.body.classList.toggle('mode-preview', !isEditMode);
+      const toggleBtn = document.getElementById('toggleEditBtn');
+      if (toggleBtn) {
         toggleBtn.textContent = isEditMode ? '✏️ Edit Mode: ON' : '👁️ Visitor Preview';
         toggleBtn.style.background = isEditMode ? '#eba22d' : 'rgba(255,255,255,0.1)';
         toggleBtn.style.color = isEditMode ? '#0d1117' : '#fff';
+      }
 
-        document.querySelectorAll('[data-block-key]').forEach((el) => {
-          if (el.tagName.toLowerCase() !== 'img') {
-            el.contentEditable = isEditMode ? 'true' : 'false';
-          }
-        });
-        showToast(isEditMode ? 'Edit Mode active' : 'Visitor Preview active');
-      };
+      document.querySelectorAll('[data-block-key]').forEach((el) => {
+        if (el.tagName.toLowerCase() !== 'img' && el.getAttribute('data-block-key') !== 'home.cta.trust_tags') {
+          el.contentEditable = isEditMode ? 'true' : 'false';
+        }
+      });
+      showToast(isEditMode ? 'Edit Mode active' : 'Visitor Preview active');
+    }
+
+    window.__omniSetEditMode = setMode;
+
+    window.addEventListener('message', (e) => {
+      if (!e.data) return;
+      if (e.data.type === 'SET_MODE') {
+        setMode(e.data.edit);
+      } else if (e.data.type === 'REFRESH_BLOCKS') {
+        loadInitialContent();
+      }
+    });
+
+    const toggleBtn = bar.querySelector('#toggleEditBtn');
+    if (toggleBtn) {
+      toggleBtn.onclick = () => setMode(!isEditMode);
     }
   }
 
@@ -779,6 +793,14 @@
         outline: none !important;
         cursor: default !important;
         background-color: transparent !important;
+      }
+      html.in-iframe [data-aos],
+      body.is-admin-session [data-aos],
+      body.mode-edit [data-aos] {
+        opacity: 1 !important;
+        transform: none !important;
+        visibility: visible !important;
+        transition: none !important;
       }
     `;
     document.head.appendChild(style);
