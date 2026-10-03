@@ -500,7 +500,9 @@ router.post("/email-settings/test", requireAuth, async (req, res) => {
 // =================================================================
 router.get("/email-settings/quota", requireAuth, async (req, res) => {
   try {
-    const quota = await emailSvc.getQuotaStatus();
+    // tz = minutes east of UTC (e.g. 480 for Philippines). Defaults to +08:00.
+    const tzOffsetMinutes = req.query.tz !== undefined ? Number(req.query.tz) : 480;
+    const quota = await emailSvc.getQuotaStatus({ tzOffsetMinutes });
     res.json({ success: true, quota });
   } catch (err) {
     res.status(500).json({ success: false, error: { code: "INTERNAL_ERROR", message: err.message } });

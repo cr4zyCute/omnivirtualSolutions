@@ -924,19 +924,30 @@ async function getEmailStats() {
 // =================================================================
 // 24-Hour Quota & Delivery Strategy Engine
 // =================================================================
-async function getQuotaStatus() {
+async function getQuotaStatus({ tzOffsetMinutes = 480 } = {}) {
   try {
     const settings = await getSettings();
     const strategy = settings.delivery_strategy || "smart_auto"; // 'smart_auto' | 'force_smtp' | 'force_popup'
     const limit = parseInt(settings.daily_quota_limit || "500", 10);
 
-    // Count sent emails in rolling 24 hours
+    // Count sent emails in rolling 24 hours (this is what Google's 500/day limit enforces)
     const resCount = await db.execute({
       sql: `SELECT COUNT(*) AS n FROM email_log 
             WHERE status = 'sent' 
             AND datetime(sent_at) >= datetime('now', '-24 hours')`,
     });
     const sent24h = Number(resCount.rows?.[0]?.n || 0);
+
+    // Count sent emails since local midnight (calendar "today" in the admin's timezone).
+    // sent_at is stored in UTC, so shift to local, snap to start of day, shift back to UTC.
+    const off = Number.isFinite(Number(tzOffsetMinutes)) ? Math.max(-840, Math.min(840, Math.round(Number(tzOffsetMinutes)))) : 480;
+    const resToday = await db.execute({
+      sql: `SELECT COUNT(*) AS n FROM email_log 
+            WHERE status = 'sent' 
+            AND datetime(sent_at) >= datetime('now', ? || ' minutes', 'start of day', ? || ' minutes')`,
+      args: [(off >= 0 ? "+" : "") + off, (-off >= 0 ? "+" : "") + (-off)],
+    });
+    const sentToday = Number(resToday.rows?.[0]?.n || 0);
 
     // Check if Google rejected recently due to quota/daily limit
     const resLimitErr = await db.execute({
@@ -963,6 +974,7 @@ async function getQuotaStatus() {
       strategy,
       limit,
       sent24h,
+      sentToday,
       remaining,
       isExceeded,
       googleLimitHit,
@@ -975,6 +987,7 @@ async function getQuotaStatus() {
       strategy: "smart_auto",
       limit: 500,
       sent24h: 0,
+      sentToday: 0,
       remaining: 500,
       isExceeded: false,
       googleLimitHit: false,

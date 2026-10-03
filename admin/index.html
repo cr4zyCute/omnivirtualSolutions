@@ -1775,9 +1775,9 @@
                 <div class="stat-val" id="statEmailsSentToday">—</div>
                 <span id="statEmailQuotaBadge" class="stat-badge green" style="margin-top:0;">🟢 Healthy</span>
               </div>
-              <div class="stat-lbl">Emails Sent Today (24h)</div>
-              <div class="stat-sub">
-                <i class="bi bi-speedometer2"></i> <span id="statEmailQuotaRatio">0 / 500</span> daily Google limit
+              <div class="stat-lbl">Emails Sent Today</div>
+              <div class="stat-sub" title="Google's sending limit is a rolling 24-hour window, so this can include emails sent yesterday.">
+                <i class="bi bi-speedometer2"></i> <span id="statEmailQuotaRatio">0 / 500</span> Google limit (rolling 24h)
               </div>
               <div style="margin-top:6px; background:rgba(255,255,255,0.08); height:6px; border-radius:3px; overflow:hidden;">
                 <div id="statEmailQuotaBar" style="height:100%; width:0%; background:linear-gradient(90deg, #22c55e, #eba22d); border-radius:3px; transition:width 0.4s ease;"></div>
@@ -1805,25 +1805,16 @@
             </div>
           </div>
 
-          <!-- Chart 2: Lead Funnel & Top Visited Pages (Diagnostic Breakdown) -->
+          <!-- Chart 2: Top Visited Entry Pages -->
           <div class="panel" style="margin-bottom:0;">
             <div class="panel-header">
               <div class="panel-title">
-                <i class="bi bi-pie-chart-fill text-warning"></i> Inquiries Status Funnel
+                <i class="bi bi-cursor-fill text-warning"></i> Top Visited Entry Pages
               </div>
-              <span class="nav-badge" id="leadsStatusTotalBadge" style="background:var(--gold); color:#0b0e14;">—</span>
             </div>
             <div class="panel-body">
-              <div style="height:170px; position:relative;">
-                <canvas id="chartLeadStatus"></canvas>
-              </div>
-              <div style="margin-top:14px;">
-                <div style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px;">
-                  <i class="bi bi-cursor-fill text-warning"></i> Top Visited Entry Pages
-                </div>
-                <div class="top-pages-list" id="topPagesList">
-                  <div style="color:var(--muted); font-size:11px; text-align:center; padding:10px;">Loading pages...</div>
-                </div>
+              <div class="top-pages-list" id="topPagesList">
+                <div style="color:var(--muted); font-size:11px; text-align:center; padding:10px;">Loading pages...</div>
               </div>
             </div>
           </div>
@@ -3124,7 +3115,7 @@
 
           // Fetch Email Quota Telemetry for Dashboard
           try {
-            const quotaRes = await fetch('/api/v1/contact/email-settings/quota', {
+            const quotaRes = await fetch('/api/v1/contact/email-settings/quota?tz=' + (-new Date().getTimezoneOffset()), {
               headers: { 'Authorization': 'Bearer ' + token }
             });
             if (quotaRes.ok) {
@@ -3136,7 +3127,7 @@
                 const badgeEl = document.getElementById('statEmailQuotaBadge');
                 const barEl = document.getElementById('statEmailQuotaBar');
 
-                if (sentEl) sentEl.textContent = q.sent24h ?? 0;
+                if (sentEl) sentEl.textContent = q.sentToday ?? q.sent24h ?? 0;
                 if (ratioEl) ratioEl.textContent = `${q.sent24h ?? 0} / ${q.limit ?? 500}`;
                 
                 const pct = Math.min(100, Math.round(((q.sent24h || 0) / (q.limit || 500)) * 100));
