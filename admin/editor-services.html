@@ -47,6 +47,27 @@
   <link href="assets/css/main.css" rel="stylesheet">
 
   <style>
+    /* ── Responsive Sleek Scrollbars (Never squish mobile viewports) ── */
+    html, body {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(235, 162, 45, 0.45) transparent;
+      -webkit-overflow-scrolling: touch;
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(235, 162, 45, 0.35);
+      border-radius: 6px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(235, 162, 45, 0.65);
+    }
+
     /* ── Instant Auth Shield: prevent flash of editor ── */
     html {
       visibility: hidden;
@@ -261,22 +282,63 @@
       color: #a8a29e;
     }
 
-    /* Sidebar */
+    /* ── Sidebar (Responsive & Container Query Ready) ── */
     .desktop-services-sidebar {
       background: #ffffff;
       border-radius: 16px;
       border: 1px solid rgba(194, 154, 107, 0.25);
-      padding: 16px;
+      padding: clamp(12px, 2.5vw, 16px);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      container-type: inline-size;
+      container-name: services-sidebar;
     }
     .sidebar-brand-box {
-      padding: 12px 14px;
+      padding: 10px 12px;
       background: #faf6f0;
       border-radius: 10px;
       margin-bottom: 12px;
       font-size: 0.92rem;
       color: #2b2219;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
     }
+    .sidebar-brand-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      min-width: 0;
+    }
+    .sidebar-brand-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .sidebar-add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      min-height: 32px;
+      border-radius: 6px;
+      border: 1.5px solid #d49e35;
+      background: #fff8eb;
+      color: #ba7918;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      touch-action: manipulation;
+    }
+    .sidebar-add-btn:hover {
+      background: #eba22d;
+      color: #0b0e14;
+    }
+
     .category-accordion-row {
       width: 100%;
       display: flex;
@@ -285,8 +347,9 @@
       padding: 9px 12px;
       background: #ffffff;
       border: 1px solid rgba(173, 125, 66, 0.2);
-      border-radius: 9px;
+      border-radius: 10px;
       margin-bottom: 6px;
+      gap: 8px;
       transition: all 0.18s ease;
     }
     .category-accordion-row:hover {
@@ -301,19 +364,35 @@
     .category-accordion-label {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex: 1;
       min-width: 0;
       cursor: pointer;
       user-select: none;
+      padding: 4px 0;
+      touch-action: manipulation;
+    }
+    .category-accordion-label .cat-icon {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      cursor: pointer;
+      padding: 2px;
+      transition: transform 0.15s ease;
+    }
+    .category-accordion-label .cat-icon:hover {
+      transform: scale(1.18);
     }
     .category-name-text {
       font-weight: 700;
-      font-size: 0.94rem;
+      font-size: clamp(0.86rem, 2.5vw, 0.94rem);
       color: #2b2219;
-      white-space: nowrap;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.25;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
     }
     .category-accordion-row.expanded .category-name-text {
       color: #ad7d42;
@@ -325,28 +404,37 @@
       gap: 6px;
       flex-shrink: 0;
     }
+    .cat-count-badge {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
 
     .btn-cat-add-service {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 6px;
+      min-width: 32px;
+      min-height: 32px;
+      width: 32px;
+      height: 32px;
+      border-radius: 7px;
       background: #fff8eb;
       border: 1.5px solid #eba22d;
       color: #ba7918;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 900;
       cursor: pointer;
       transition: all 0.18s ease;
       padding: 0;
+      touch-action: manipulation;
     }
     .btn-cat-add-service:hover {
       background: #eba22d;
       color: #ffffff;
       border-color: #eba22d;
-      transform: scale(1.15);
+      transform: scale(1.08);
       box-shadow: 0 3px 10px rgba(235, 162, 45, 0.4);
     }
     .btn-cat-add-service:active {
@@ -357,16 +445,21 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
-      background: transparent;
-      border: none;
-      color: #8c827a;
+      min-width: 32px;
+      min-height: 32px;
+      width: 32px;
+      height: 32px;
+      background: #faf6f0;
+      border: 1px solid rgba(173, 125, 66, 0.15);
+      border-radius: 7px;
+      color: #78716c;
       cursor: pointer;
       padding: 0;
-      transition: color 0.15s ease;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
     }
     .btn-cat-toggle:hover {
+      background: #eee8dc;
       color: #2b2219;
     }
 
@@ -374,15 +467,16 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 20px;
-      height: 20px;
-      border-radius: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 5px;
       background: rgba(235, 162, 45, 0.08);
       border: 1px solid rgba(235, 162, 45, 0.3);
       color: #ad7d42;
       font-size: 12px;
       cursor: pointer;
       transition: all 0.2s;
+      touch-action: manipulation;
     }
     .btn-sub-add-service:hover {
       background: #eba22d;
@@ -391,9 +485,9 @@
     }
 
     .subcategories-list {
-      padding: 6px 8px 12px 16px;
+      padding: 6px 8px 12px 14px;
       border-left: 2px solid rgba(173, 125, 66, 0.25);
-      margin: 4px 0 12px 14px;
+      margin: 4px 0 12px 12px;
     }
     .subcategory-label {
       font-size: 0.76rem;
@@ -408,15 +502,19 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 7px 10px;
+      padding: 8px 12px;
+      min-height: 40px;
       background: transparent;
       border: none;
-      border-radius: 6px;
-      font-size: 0.86rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
       color: #57534e;
       text-align: left;
       cursor: pointer;
       transition: all 0.15s;
+      margin-bottom: 3px;
+      gap: 8px;
+      touch-action: manipulation;
     }
     .service-nav-item:hover {
       background: #f7f3ec;
@@ -824,6 +922,146 @@
       color: #fff;
     }
     .icon-opt i { font-size: 1.25rem; color: #eba22d; }
+
+    /* ── Responsive Design Mastery: Container Queries & Breakpoints ── */
+    @container services-sidebar (max-width: 330px) {
+      .sidebar-brand-box {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .sidebar-brand-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .category-accordion-row {
+        padding: 8px 10px;
+      }
+      .category-name-text {
+        font-size: 0.85rem;
+      }
+    }
+
+    /* Page-level Media Queries */
+    @media (max-width: 768px) {
+      .services-catalog-page {
+        padding: clamp(14px, 3vw, 24px) 0 clamp(36px, 5vw, 60px);
+      }
+      .services-top-bar {
+        margin-bottom: 18px;
+      }
+      .services-main-title {
+        font-size: clamp(1.4rem, 5.5vw, 1.85rem);
+      }
+      .services-subtitle {
+        font-size: clamp(0.85rem, 3.2vw, 0.95rem);
+        padding: 0 4px;
+      }
+      .services-control-bar {
+        margin-top: 12px;
+      }
+      .services-search-input {
+        font-size: 16px; /* Prevents auto-zoom on mobile touch devices */
+        height: 44px;
+      }
+      .desktop-services-sidebar {
+        padding: 12px;
+        border-radius: 14px;
+      }
+      .service-detail-card {
+        padding: clamp(16px, 4vw, 24px);
+        border-radius: 16px;
+      }
+      .service-breadcrumb {
+        flex-wrap: wrap;
+        gap: 4px 6px;
+        font-size: 0.75rem;
+        margin-bottom: 10px;
+      }
+      .service-price-block {
+        text-align: left;
+        margin-top: 6px;
+        width: 100%;
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+      .service-price-amount {
+        font-size: 1.6rem;
+      }
+      .service-lead-box {
+        padding: 12px 14px;
+        margin-bottom: 18px;
+      }
+      .features-checklist-section {
+        margin-bottom: 20px;
+      }
+      .feature-checkpoint-item {
+        padding: 8px 10px;
+        min-height: 42px;
+        font-size: 0.88rem;
+      }
+      .service-cta-card {
+        padding: 18px 16px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        margin-top: 22px;
+      }
+      .service-cta-text-col {
+        max-width: 100%;
+      }
+      .service-cta-actions {
+        width: 100%;
+        align-items: stretch;
+        gap: 10px;
+      }
+      .service-cta-btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 46px;
+        font-size: 0.92rem;
+      }
+      .service-email-action-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+      }
+      .service-email-chip {
+        width: 100%;
+        justify-content: space-between;
+        min-height: 42px;
+        padding: 7px 12px;
+      }
+      .service-nav-controls {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 18px;
+        padding-top: 14px;
+      }
+      .service-step-btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 44px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+      }
+      .category-accordion-row {
+        padding: 8px 10px;
+      }
+      .sidebar-brand-box {
+        padding: 8px 10px;
+      }
+      .editor-modal {
+        width: calc(100vw - 24px);
+        max-height: 88vh;
+      }
+    }
   </style>
 </head>
 
@@ -897,17 +1135,17 @@
         <!-- Left Sidebar: Categories & Services -->
         <div class="col-lg-4">
           <div class="desktop-services-sidebar">
-            <div class="sidebar-brand-box d-flex align-items-center justify-content-between">
-              <span class="fw-bold d-flex align-items-center gap-2">
+            <div class="sidebar-brand-box">
+              <span class="sidebar-brand-title">
                 <i class="bi bi-folder2-open" style="color: #d8aa71; font-size: 1.05rem;"></i>
                 <span>All Categories (<span id="catTotalCount">0</span>)</span>
               </span>
-              <div class="d-flex align-items-center gap-2">
+              <div class="sidebar-brand-actions">
                 <span class="badge rounded-pill bg-dark text-warning border border-warning" style="font-size: 0.72rem; padding: 4px 8px;">
                   Live Catalog
                 </span>
-                <button type="button" class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size: 0.75rem;" onclick="openAddServiceModal()" title="Add new service">
-                  <i class="bi bi-plus"></i> Add
+                <button type="button" class="sidebar-add-btn" onclick="openAddServiceModal()" title="Add new service">
+                  <i class="bi bi-plus-lg"></i> Add
                 </button>
               </div>
             </div>

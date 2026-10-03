@@ -713,6 +713,32 @@
       padding: 3px 8px;
       white-space: nowrap;
     }
+    .btn-fit-toggle {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      padding: 3px 9px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: nowrap;
+      user-select: none;
+    }
+    .btn-fit-toggle:hover {
+      background: rgba(235, 162, 45, 0.16);
+      color: #eba22d;
+      border-color: rgba(235, 162, 45, 0.45);
+    }
+    .btn-fit-toggle.active {
+      background: rgba(235, 162, 45, 0.2);
+      color: #eba22d;
+      border-color: #eba22d;
+    }
 
     /* Mode Toggle */
     .editor-mode-toggle {
@@ -842,8 +868,9 @@
     /* ── Studio Canvas Stage & Hyper-Realistic Device Mockup ── */
     .editor-canvas-stage {
       flex: 1;
-      height: calc(100% - 52px);
       min-height: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -851,11 +878,12 @@
       background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
       background-size: 24px 24px;
       overflow: hidden;
-      padding: 14px 20px;
+      padding: clamp(8px, 1.8vh, 22px) clamp(8px, 1.8vw, 24px);
+      box-sizing: border-box;
       position: relative;
     }
     .editor-canvas-stage.is-device {
-      padding: 14px 20px;
+      padding: clamp(8px, 1.8vh, 22px) clamp(8px, 1.8vw, 24px);
     }
 
     .mockup-container {
@@ -863,14 +891,22 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), height 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      box-sizing: border-box;
+      min-height: 0;
     }
 
-    /* Desktop Viewport */
+    /* Desktop Viewport (100% Fluid) */
     .mockup-container.mode-desktop {
       width: 100%;
       height: 100%;
+      max-width: 100%;
+      max-height: 100%;
     }
     .mockup-container.mode-desktop .mockup-bezel {
       width: 100%;
@@ -896,29 +932,34 @@
       display: none !important;
     }
 
-    /* ── Tablet Mockup (iPad Pro Style) ── */
+    /* ── Tablet Mockup (True iPad Pro 768px Viewport) ── */
     .mockup-container.mode-tablet {
-      height: 100%;
-      max-height: min(880px, calc(100vh - 142px));
-      aspect-ratio: 768 / 1024;
-      width: auto;
+      width: 792px; /* 768px viewport + 24px bezel */
+      max-width: 100%;
+      height: 820px;
+      max-height: 100%;
+      box-sizing: border-box;
+      min-height: 0;
     }
     .mockup-container.mode-tablet .mockup-bezel {
       width: 100%;
       height: 100%;
+      max-height: 100%;
+      box-sizing: border-box;
+      min-height: 0 !important;
       background: #181c24;
       border: 3px solid #2b3345;
-      border-radius: 36px;
-      padding: 14px;
+      border-radius: 32px;
+      padding: 12px;
       position: relative;
       display: flex;
       flex-direction: column;
       box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.08),
-        0 25px 65px -10px rgba(0, 0, 0, 0.85);
+        0 20px 55px -10px rgba(0, 0, 0, 0.85);
     }
     .mockup-container.mode-tablet .mockup-top-hardware {
-      height: 16px;
+      height: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -933,9 +974,10 @@
     }
     .mockup-container.mode-tablet .mockup-screen {
       flex: 1;
+      min-height: 0 !important;
       width: 100%;
       background: #ffffff;
-      border-radius: 22px;
+      border-radius: 20px;
       overflow: hidden;
       position: relative;
       display: flex;
@@ -943,7 +985,7 @@
       box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
     }
     .mockup-container.mode-tablet .mockup-bottom-hardware {
-      height: 16px;
+      height: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -959,32 +1001,57 @@
       display: none !important;
     }
 
-    /* ── Mobile Mockup (Xiaomi Mi 11i - Matching Exact Reference Screenshot) ── */
+    /* ── Mobile Mockup (iPhone 16 Pro Deep Titanium Purple - Exact Reference Style) ── */
     .mockup-container.mode-mobile {
       height: 100%;
-      max-height: min(860px, calc(100vh - 140px));
-      aspect-ratio: 393 / 855;
+      max-height: min(840px, calc(100vh - 142px));
+      aspect-ratio: 395 / 830;
       width: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
     }
     .mockup-container.mode-mobile .mockup-bezel {
       width: 100%;
       height: 100%;
-      background: #11141a;
-      border: 3.5px solid #485265; /* Sleek gunmetal/silver metallic rim */
-      border-radius: 44px;
-      padding: 6px;
+      background: #17141f; /* Deep Titanium finish */
+      border: 3.5px solid #3c334b; /* Metallic rail border */
+      border-radius: 52px;
+      padding: 10px;
       position: relative;
       display: flex;
       flex-direction: column;
       box-shadow:
-        0 0 0 1px #151922,
-        0 0 0 2px #2b3340,
-        0 25px 70px -10px rgba(0, 0, 0, 0.95),
-        0 15px 35px rgba(0, 0, 0, 0.7);
+        0 0 0 1.5px rgba(255, 255, 255, 0.12),
+        0 0 0 3px #1a1722,
+        0 30px 80px -10px rgba(0, 0, 0, 0.95),
+        0 15px 40px rgba(0, 0, 0, 0.7);
     }
-    .mockup-container.mode-mobile .mockup-bezel::before,
+    /* Side buttons (Left: Action + Volume; Right: Power) */
+    .mockup-container.mode-mobile .mockup-bezel::before {
+      content: '';
+      position: absolute;
+      left: -6.5px;
+      top: 105px;
+      width: 3.5px;
+      height: 24px;
+      background: #3c334b;
+      border-radius: 2px 0 0 2px;
+      box-shadow:
+        0 42px 0 0 #3c334b,
+        0 88px 0 0 #3c334b;
+    }
     .mockup-container.mode-mobile .mockup-bezel::after {
-      display: none !important;
+      content: '';
+      position: absolute;
+      right: -6.5px;
+      top: 145px;
+      width: 3.5px;
+      height: 64px;
+      background: #3c334b;
+      border-radius: 0 2px 2px 0;
     }
     .mockup-container.mode-mobile .mockup-top-hardware,
     .mockup-container.mode-mobile .mockup-bottom-hardware {
@@ -995,139 +1062,71 @@
       width: 100%;
       height: 100%;
       background: #000000;
-      border-radius: 36px;
+      border-radius: 44px;
       overflow: hidden;
       position: relative;
       display: flex;
       flex-direction: column;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
     }
 
-    /* Xiaomi Mi 11i Status Bar (Top) */
+    /* iPhone Status Bar (Top) */
     .mobile-status-bar {
       display: none;
-      height: 30px;
-      background: #1e232d;
-      color: #e2e8f0;
+      height: 42px;
+      background: #000000;
+      color: #ffffff;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 0 18px;
       flex-shrink: 0;
       z-index: 10;
       user-select: none;
-      font-size: 11.5px;
     }
     .mockup-container.mode-mobile .mobile-status-bar {
       display: flex !important;
     }
     .status-time {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
       font-weight: 600;
-      font-size: 11.5px;
-      letter-spacing: -0.1px;
-      width: 80px;
-      color: #cbd5e1;
+      font-size: 13px;
+      letter-spacing: -0.2px;
+      width: 75px;
     }
     .status-icons {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 11.5px;
-      width: 80px;
-      justify-content: flex-end;
-      color: #cbd5e1;
-    }
-    .status-icons i { font-size: 11.5px; line-height: 1; }
-    .status-cellular { font-size: 10.5px; }
-    .status-battery-pct { font-size: 10.5px; font-weight: 600; }
-    .status-battery { font-size: 12.5px; }
-
-    /* Xiaomi DotDisplay Punch Hole Camera (2.76mm tiny center lens) */
-    .mockup-container.mode-mobile .mobile-punch-hole {
-      width: 11px;
-      height: 11px;
-      background: #000000;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      box-shadow: 0 0 3px rgba(0, 0, 0, 0.9);
-    }
-    .mockup-container.mode-mobile .punch-hole-lens {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: #05080e;
-      border: 1px solid #1c2538;
-      box-shadow: inset 0 0.5px 1px rgba(56, 189, 248, 0.7);
-    }
-
-    /* Chrome Android Top Browser Bar (Directly below status bar) */
-    .mobile-chrome-bar {
-      display: none;
-      height: 44px;
-      background: #1e232d;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      align-items: center;
-      gap: 8px;
-      padding: 0 12px;
-      flex-shrink: 0;
-      z-index: 10;
-      user-select: none;
-    }
-    .mockup-container.mode-mobile .mobile-chrome-bar {
-      display: flex !important;
-    }
-    .chrome-icon-btn {
-      background: none;
-      border: none;
-      color: #cbd5e1;
-      padding: 4px;
-      font-size: 15px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: color 0.15s;
-    }
-    .chrome-icon-btn:hover {
-      color: #ffffff;
-    }
-    .chrome-url-pill {
-      flex: 1;
-      height: 32px;
-      background: #2b3240;
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 14px;
-      color: #ffffff;
-    }
-    .chrome-url-pill i {
-      font-size: 11px;
-      color: #94a3b8;
-    }
-    .chrome-domain-text {
+      gap: 5px;
       font-size: 13px;
-      font-weight: 500;
-      color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      width: 75px;
+      justify-content: flex-end;
     }
-    .chrome-tab-box {
-      width: 20px;
-      height: 20px;
-      border: 1.8px solid #94a3b8;
-      border-radius: 5px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #ffffff;
+    .status-icons i { font-size: 13px; line-height: 1; }
+    .status-cellular { font-size: 11.5px; }
+    .status-wifi { font-size: 13px; }
+    .status-battery { font-size: 14.5px; }
+
+    /* Dynamic Island in Status Bar */
+    .mockup-container.mode-mobile .mobile-dynamic-island {
+      width: 96px;
+      height: 26px;
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      justify-content: flex-end;
+      padding: 0 9px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+      margin: 0 auto;
+    }
+    .mockup-container.mode-mobile .island-lens {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #080c14;
+      border: 1px solid #1a2233;
+      box-shadow: inset 0 1px 2px rgba(56, 189, 248, 0.45);
     }
 
     /* Embedded Webpage Iframe */
@@ -1147,24 +1146,95 @@
       height: 0;
     }
 
-    /* Android Bottom Gesture Bar */
-    .mobile-gesture-bar {
+    /* Mobile Safari iOS Browser Bottom Bar */
+    .mobile-safari-bar {
       display: none;
-      height: 12px;
-      background: #000000;
-      align-items: center;
-      justify-content: center;
+      background: #1c1c1e;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
       flex-shrink: 0;
+      flex-direction: column;
+      padding: 6px 12px 6px;
+      z-index: 10;
+      user-select: none;
     }
-    .mockup-container.mode-mobile .mobile-gesture-bar {
+    .mockup-container.mode-mobile .mobile-safari-bar {
       display: flex !important;
     }
+    .safari-url-pill {
+      background: #2c2c2e;
+      border-radius: 10px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      margin-bottom: 5px;
+      color: #ffffff;
+    }
+    .safari-url-aa {
+      font-size: 13px;
+      font-weight: 600;
+      color: #98989f;
+    }
+    .safari-url-domain {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #ffffff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .safari-url-domain i {
+      font-size: 10.5px;
+      color: #8e8e93;
+    }
+    .safari-url-reload {
+      background: none;
+      border: none;
+      color: #98989f;
+      cursor: pointer;
+      padding: 0;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s;
+    }
+    .safari-url-reload:hover {
+      color: #ffffff;
+    }
+    .safari-actions-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 2px 4px 4px;
+    }
+    .safari-action-btn {
+      background: none;
+      border: none;
+      color: #0a84ff;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 3px 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.15s;
+    }
+    .safari-action-btn.disabled {
+      color: #48484a;
+      cursor: default;
+    }
+    .safari-action-btn:not(.disabled):hover {
+      opacity: 0.7;
+    }
     .mobile-home-indicator {
-      width: 72px;
-      height: 3px;
+      width: 120px;
+      height: 4px;
       background: #ffffff;
       border-radius: 2px;
-      opacity: 0.45;
+      margin: 3px auto 1px auto;
+      opacity: 0.55;
     }
 
     /* Blocks Grid for quick table */
@@ -1354,14 +1424,138 @@
         width: 100%;
         justify-content: center;
       }
-      .editor-frame-bar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
+      /* ── Live In-Place Editor Mobile Responsiveness (Responsive Design Mastery Skill) ── */
+      body.tab-live-editor .top-header {
+        height: 50px !important;
+        padding: 0 max(10px, env(safe-area-inset-left)) !important;
       }
-      .editor-frame-bar > div {
-        width: 100%;
-        justify-content: space-between;
+      body.tab-live-editor #mainContent {
+        height: 100dvh !important;
+        min-height: 100dvh !important;
+        max-height: 100dvh !important;
+        overflow: hidden !important;
+      }
+      body.tab-live-editor .content-area {
+        height: calc(100dvh - 50px) !important;
+        min-height: calc(100dvh - 50px) !important;
+        max-height: calc(100dvh - 50px) !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+      }
+      .editor-frame-bar {
+        min-height: 52px;
+        padding: 6px max(10px, env(safe-area-inset-right)) 6px max(10px, env(safe-area-inset-left));
+        gap: 10px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        touch-action: pan-x;
+      }
+      .editor-frame-bar::-webkit-scrollbar {
+        display: none;
+      }
+      .editor-bar-section {
+        gap: 8px;
+        flex-shrink: 0;
+      }
+      .editor-bar-label {
+        display: none !important;
+      }
+      .device-spec-pill {
+        display: none !important;
+      }
+      .btn-fit-toggle {
+        display: none !important;
+      }
+      .editor-page-select {
+        min-height: 42px;
+        font-size: 12px;
+        padding: 6px 10px;
+        max-width: 165px;
+        border-radius: 8px;
+      }
+      .device-btn {
+        min-height: 42px;
+        min-width: 42px;
+        padding: 8px 12px;
+        font-size: 12px;
+        gap: 6px;
+        border-radius: 8px;
+        touch-action: manipulation;
+      }
+      .mode-btn {
+        min-height: 42px;
+        padding: 8px 13px;
+        font-size: 12px;
+        gap: 6px;
+        border-radius: 8px;
+        touch-action: manipulation;
+      }
+      .live-status-chip {
+        display: none !important;
+      }
+      .master-save-status {
+        font-size: 11px;
+      }
+      .btn-header {
+        min-height: 42px;
+        padding: 8px 12px;
+        font-size: 12px;
+        touch-action: manipulation;
+      }
+      .btn-add-service-global {
+        min-height: 42px;
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+
+      .editor-canvas-stage {
+        padding: 0 !important;
+        background: #0d1117 !important;
+      }
+      .editor-canvas-stage.is-device {
+        padding: 0 !important;
+      }
+
+      /* When viewed on a mobile device screen, the mockup fits seamlessly 100% edge-to-edge with no fake bezels */
+      .mockup-container.mode-mobile,
+      .mockup-container.mode-tablet,
+      .mockup-container.mode-desktop {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        transform: none !important;
+      }
+      .mockup-bezel {
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+      .mockup-screen {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+      }
+      .mobile-status-bar,
+      .mobile-chrome-bar,
+      .mobile-gesture-bar,
+      .mockup-top-hardware,
+      .mockup-bottom-hardware {
+        display: none !important;
+      }
+
+      /* Image Media Modal on Mobile */
+      #editorMediaModal {
+        width: 95% !important;
+        max-height: 90vh !important;
+        border-radius: 14px !important;
+      }
+      #editorMediaGrid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
+        gap: 10px !important;
       }
       .panel-header {
         flex-direction: column;
@@ -1694,7 +1888,7 @@
                   <button type="button" class="device-btn" id="btnDevTab" onclick="setDeviceViewport('tablet', this)">
                     <i class="bi bi-tablet"></i> Tablet
                   </button>
-                  <button type="button" class="device-btn" id="btnDevMob" onclick="setDeviceViewport('mobile', this)" title="Xiaomi Mi 11i (393 × 873)">
+                  <button type="button" class="device-btn" id="btnDevMob" onclick="setDeviceViewport('mobile', this)" title="iPhone 16 Pro (393 × 852)">
                     <i class="bi bi-phone"></i> Mobile
                   </button>
                 </div>
@@ -1751,39 +1945,38 @@
 
                 <!-- Screen Area with Iframe -->
                 <div class="mockup-screen" id="mockupScreen">
-                  <!-- Xiaomi Mi 11i Status Bar (Clock, DotDisplay Punch-Hole, Signal / 100% / Battery) -->
+                  <!-- iPhone Status Bar (Clock, Dynamic Island, Signal / Wifi / Battery) -->
                   <div class="mobile-status-bar" id="mobileStatusBar">
-                    <div class="status-time" id="statusClock">11:10 PM</div>
-                    <div class="mobile-punch-hole" id="mobilePunchHole" title="Xiaomi Mi 11i DotDisplay Camera">
-                      <div class="punch-hole-lens"></div>
+                    <div class="status-time" id="statusClock">3:34 PM</div>
+                    <div class="mobile-dynamic-island" id="mobileDynamicIsland" title="iPhone Dynamic Island">
+                      <div class="island-lens"></div>
                     </div>
                     <div class="status-icons">
                       <span class="status-cellular"><i class="bi bi-reception-4"></i></span>
-                      <span class="status-battery-pct">100%</span>
+                      <span class="status-wifi"><i class="bi bi-wifi"></i></span>
                       <span class="status-battery"><i class="bi bi-battery-full"></i></span>
                     </div>
-                  </div>
-
-                  <!-- Xiaomi Mi 11i Chrome Top Browser Bar (Exact Image 1 Style) -->
-                  <div class="mobile-chrome-bar" id="mobileChromeBar">
-                    <button type="button" class="chrome-icon-btn" onclick="reloadEditorIframe()" title="Home">
-                      <i class="bi bi-house-door"></i>
-                    </button>
-                    <div class="chrome-url-pill">
-                      <i class="bi bi-lock-fill"></i>
-                      <span class="chrome-domain-text" id="safariUrlDomain">localhost</span>
-                    </div>
-                    <div class="chrome-tab-box" title="1 Open Tab">1</div>
-                    <button type="button" class="chrome-icon-btn" onclick="window.open((document.getElementById('liveEditorIframe')||{}).src||'index.html','_blank')" title="More Options">
-                      <i class="bi bi-three-dots-vertical"></i>
-                    </button>
                   </div>
 
                   <!-- The Live Webpage Iframe -->
                   <iframe id="liveEditorIframe" src="about:blank" class="editor-iframe" onload="onEditorIframeLoaded()"></iframe>
 
-                  <!-- Android Bottom Gesture Bar -->
-                  <div class="mobile-gesture-bar" id="mobileGestureBar">
+                  <!-- Mobile Safari iOS Browser Bottom Bar -->
+                  <div class="mobile-safari-bar" id="mobileSafariBar">
+                    <div class="safari-url-pill">
+                      <span class="safari-url-aa">Aa</span>
+                      <span class="safari-url-domain" id="safariUrlDomain"><i class="bi bi-lock-fill"></i> localhost</span>
+                      <button type="button" class="safari-url-reload" onclick="reloadEditorIframe()" title="Refresh Page">
+                        <i class="bi bi-arrow-clockwise"></i>
+                      </button>
+                    </div>
+                    <div class="safari-actions-row">
+                      <button type="button" class="safari-action-btn disabled" title="Back"><i class="bi bi-chevron-left"></i></button>
+                      <button type="button" class="safari-action-btn disabled" title="Forward"><i class="bi bi-chevron-right"></i></button>
+                      <button type="button" class="safari-action-btn" title="Open in new window" onclick="window.open((document.getElementById('liveEditorIframe')||{}).src||'index.html','_blank')"><i class="bi bi-box-arrow-up"></i></button>
+                      <button type="button" class="safari-action-btn" title="Bookmarks"><i class="bi bi-book"></i></button>
+                      <button type="button" class="safari-action-btn" title="Tabs"><i class="bi bi-square-stack"></i></button>
+                    </div>
                     <div class="mobile-home-indicator"></div>
                   </div>
                 </div>
@@ -2049,87 +2242,6 @@
 
     </div>
   </main>
-
-  <!-- ── Live Editor Image Picker Modal ── -->
-  <div class="modal-backdrop-custom" id="editorMediaBackdrop" onclick="closeEditorMediaPicker()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); z-index:999998;"></div>
-  <div id="editorMediaModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:min(760px, 94vw); max-height:86vh; background:#0e131e; border:1px solid rgba(235, 162, 45, 0.4); border-radius:16px; z-index:999999; box-shadow:0 25px 70px rgba(0,0,0,0.95); flex-direction:column; overflow:hidden;">
-    <div style="padding:16px 22px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; background:#080b11;">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <div style="width:36px; height:36px; border-radius:10px; background:rgba(235,162,45,0.15); border:1px solid rgba(235,162,45,0.3); display:flex; align-items:center; justify-content:center; color:#eba22d;">
-          <i class="bi bi-images fs-5"></i>
-        </div>
-        <div>
-          <h4 style="margin:0; font-size:16px; font-weight:700; color:#fff;">Change Website Image</h4>
-          <span id="targetImageKeyBadge" style="font-size:11.5px; color:#eba22d; font-family:monospace;">Target: home.about.image</span>
-        </div>
-      </div>
-      <button type="button" class="btn-close btn-close-white" onclick="closeEditorMediaPicker()" style="filter:invert(1); opacity:0.7; cursor:pointer; background:transparent; border:none; color:#fff; font-size:22px; padding:0; line-height:1;">✕</button>
-    </div>
-    <div style="padding:14px 22px; border-bottom:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-      <label class="btn-header btn-primary-gold" style="cursor:pointer; display:inline-flex; align-items:center; gap:8px; margin:0; padding:6px 14px; font-weight:700;">
-        <i class="bi bi-cloud-arrow-up-fill"></i> Upload New Image
-        <input type="file" id="editorMediaFileInput" accept="image/*" style="display:none" onchange="uploadEditorMedia(this)">
-      </label>
-      <span style="font-size:12px; color:#94a3b8;"><i class="bi bi-info-circle me-1 text-warning"></i> Click any photo below to replace target image immediately</span>
-    </div>
-    <div id="editorMediaGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:14px; padding:20px; max-height:440px; overflow-y:auto;">
-      <!-- Populated dynamically -->
-    </div>
-  </div>
-
-  <!-- ── Email Template Live Preview Modal ── -->
-  <div id="emailPreviewModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); z-index:99999; justify-content:center; align-items:center; padding:18px;" onclick="if(event.target===this) closeEmailPreviewModal()">
-    <div style="background:#0e131e; border:1px solid rgba(235,162,45,0.35); border-radius:16px; width:100%; max-width:980px; height:92vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.95);">
-      
-      <!-- Modal Header -->
-      <div style="padding:14px 20px; background:#080b11; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-        <div id="previewModalTitle" style="font-size:15px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
-          <i class="bi bi-palette2 text-warning"></i> Live Email Preview
-        </div>
-        
-        <!-- Controls: View Types & Device -->
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-          <!-- Template Types -->
-          <div style="display:flex; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:3px;">
-            <button class="preview-type-btn active" onclick="setPreviewType('auto_reply', this)" style="border:none; background:transparent; color:#fff; font-size:12px; font-weight:600; padding:5px 12px; border-radius:6px; cursor:pointer;">
-              Auto-Reply
-            </button>
-            <button class="preview-type-btn" onclick="setPreviewType('notification', this)" style="border:none; background:transparent; color:#94a3b8; font-size:12px; font-weight:600; padding:5px 12px; border-radius:6px; cursor:pointer;">
-              Admin Alert
-            </button>
-            <button class="preview-type-btn" onclick="setPreviewType('reply', this)" style="border:none; background:transparent; color:#94a3b8; font-size:12px; font-weight:600; padding:5px 12px; border-radius:6px; cursor:pointer;">
-              Team Reply
-            </button>
-          </div>
-
-          <!-- Device View -->
-          <div style="display:flex; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:3px;">
-            <button class="preview-device-btn active" onclick="setPreviewDevice('desktop', this)" style="border:none; background:transparent; color:#fff; font-size:13px; padding:5px 10px; border-radius:6px; cursor:pointer;" title="Desktop View (650px)">
-              <i class="bi bi-laptop"></i>
-            </button>
-            <button class="preview-device-btn" onclick="setPreviewDevice('mobile', this)" style="border:none; background:transparent; color:#94a3b8; font-size:13px; padding:5px 10px; border-radius:6px; cursor:pointer;" title="Mobile View (375px)">
-              <i class="bi bi-phone"></i>
-            </button>
-          </div>
-
-          <!-- Set Active Button in Modal -->
-          <button id="modalSetActiveBtn" class="btn-header btn-primary-gold" onclick="activateCurrentModalTemplate()" style="padding:6px 14px; font-size:12px;">
-            <i class="bi bi-check2-circle"></i> Set As Active
-          </button>
-
-          <!-- Close Button -->
-          <button onclick="closeEmailPreviewModal()" style="border:none; background:rgba(255,255,255,0.08); color:#fff; width:30px; height:30px; border-radius:8px; font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center;" title="Close Preview">
-            <i class="bi bi-x-lg"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Modal Body (Iframe Stage) -->
-      <div style="flex:1; background:#05070c; padding:20px; overflow-y:auto; display:flex; justify-content:center; align-items:flex-start;">
-        <div id="previewIframeWrapper" style="width:100%; max-width:680px; height:100%; min-height:560px; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 12px 35px rgba(0,0,0,0.6); transition:all 0.3s ease; border:1px solid rgba(255,255,255,0.1);">
-          <iframe id="emailPreviewIframe" style="width:100%; height:100%; min-height:560px; border:none; display:block;" src="about:blank"></iframe>
-        </div>
-      </div>
 
   <!-- ── Live Editor Image Picker & Media Manager Modal ── -->
   <div id="editorMediaBackdrop" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.78); backdrop-filter:blur(8px); z-index:99998;" onclick="closeEditorMediaPicker()"></div>
@@ -2407,7 +2519,7 @@
           if (matchingNav) matchingNav.classList.add('active');
         }
 
-        // Single screen fit toggle: removes body scrolling and fills 100vh
+        // Single screen fit toggle: removes body scrolling and fills 100vh / 100dvh
         if (tabId === 'live-editor') {
           document.body.classList.add('tab-live-editor');
         } else {
@@ -2450,6 +2562,8 @@
 
         if (container) {
           container.className = 'mockup-container mode-' + deviceKey;
+          container.style.transform = '';
+          container.style.transformOrigin = '';
         }
         if (stage) {
           stage.classList.toggle('is-device', deviceKey !== 'desktop');
@@ -2457,12 +2571,21 @@
 
         const specs = {
           'desktop': '100% • Fluid Desktop',
-          'tablet': 'iPad Pro • 768 × 1024',
-          'mobile': 'Xiaomi Mi 11i • 393 × 873'
+          'tablet': 'iPad Pro • 768px Width',
+          'mobile': 'iPhone 16 Pro • 393px Width'
         };
         if (specPill) {
           specPill.textContent = specs[deviceKey] || '100% • Fluid Desktop';
         }
+
+        setTimeout(() => {
+          const iframe = document.getElementById('liveEditorIframe');
+          if (iframe && iframe.contentWindow) {
+            try {
+              iframe.contentWindow.dispatchEvent(new Event('resize'));
+            } catch (_) {}
+          }
+        }, 320);
       };
 
       // ── Master Editor Mode Switcher (Edit vs Visitor Preview) ─────
@@ -2566,15 +2689,16 @@
         }
       };
 
-      // Synchronize realistic Xiaomi Mi 11i status bar clock
+      // Synchronize realistic iPhone status bar clock
       function updateMockupClock() {
         const clockEl = document.getElementById('statusClock');
         if (!clockEl) return;
         const now = new Date();
         let hours = now.getHours();
         const minutes = String(now.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
         hours = hours % 12 || 12;
-        clockEl.textContent = `${hours}:${minutes}`;
+        clockEl.textContent = `${hours}:${minutes} ${ampm}`;
       }
       setInterval(updateMockupClock, 30000);
       updateMockupClock();

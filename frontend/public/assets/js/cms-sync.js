@@ -325,6 +325,7 @@
 
   // ── 8. Status Bar & Indicators ───────────────────────────────────
   function injectFloatingBar() {
+    if (isInsideIframe) return; // Parent editor bar handles all controls
     if (document.getElementById('omniLiveAdminBar')) return;
 
     const bar = document.createElement('div');
@@ -798,7 +799,8 @@
         cursor: text !important;
         transition: outline 0.15s, background-color 0.15s !important;
         min-height: 1.2em;
-        display: inline-block;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
       }
       body.mode-edit p[data-block-key],
       body.mode-edit h1[data-block-key],
@@ -807,6 +809,14 @@
       body.mode-edit h4[data-block-key],
       body.mode-edit h5[data-block-key] {
         display: block !important;
+      }
+      body.mode-edit span[data-block-key],
+      body.mode-edit b[data-block-key],
+      body.mode-edit strong[data-block-key] {
+        display: inline !important;
+      }
+      body.mode-edit a[data-block-key] {
+        display: inline-flex !important;
       }
       body.mode-edit [data-block-key]:hover {
         outline: 2px solid #eba22d !important;
@@ -848,6 +858,51 @@
         transform: none !important;
         visibility: visible !important;
         transition: none !important;
+      }
+      /* Responsive Design Mastery: Hide scroll-to-top button in iframe and edit mode so it never covers buttons (e.g. SERVICES ->) */
+      html.in-iframe #scroll-top,
+      body.mode-edit #scroll-top,
+      body.mode-preview.in-iframe #scroll-top {
+        display: none !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        visibility: hidden !important;
+      }
+      /* Sleek mobile overlay scrollbar inside editor iframe (eliminates 17px Windows desktop scrollbar that squishes 393px viewport) */
+      html.in-iframe,
+      html.in-iframe body {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(235, 162, 45, 0.4) transparent;
+        -webkit-overflow-scrolling: touch;
+      }
+      html.in-iframe::-webkit-scrollbar,
+      html.in-iframe body::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+      }
+      html.in-iframe::-webkit-scrollbar-track,
+      html.in-iframe body::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      html.in-iframe::-webkit-scrollbar-thumb,
+      html.in-iframe body::-webkit-scrollbar-thumb {
+        background: rgba(235, 162, 45, 0.35);
+        border-radius: 4px;
+      }
+      html.in-iframe::-webkit-scrollbar-thumb:hover,
+      html.in-iframe body::-webkit-scrollbar-thumb:hover {
+        background: rgba(235, 162, 45, 0.75);
+      }
+      /* Mobile touch & outline refinement */
+      @media (max-width: 768px) {
+        body.mode-edit [data-block-key] {
+          outline-offset: 1.5px !important;
+          outline-width: 1.5px !important;
+        }
+      }
+      body.mode-edit [data-block-key] {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(235, 162, 45, 0.2);
       }
     `;
     document.head.appendChild(style);
