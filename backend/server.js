@@ -96,15 +96,14 @@ app.use(cors({
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false, limit: "10mb" }));
 
-// ── Serve React Vite frontend if built ────────────────────────────
-const fs = require("fs");
-const frontendDist = path.resolve(__dirname, "../frontend/dist");
-if (fs.existsSync(frontendDist)) {
-  app.use(express.static(frontendDist));
-}
-
 // ── Serve all static files (HTML, CSS, JS, images, uploads) ──────
 app.use(express.static(path.resolve(__dirname, "..")));
+
+// ── Live In-Place Editor mirror of the real website ──────────────
+// Served under /admin/site/ so it is reachable through the Vite dev proxy
+// (which only forwards /admin and /api to this server) and stays same-origin
+// with the admin dashboard (shared login token + iframe access).
+app.use("/admin/site", express.static(path.resolve(__dirname, "..")));
 
 // ─────────────────────────────────────────────────────────────────
 // Public API Routes

@@ -200,6 +200,7 @@
 .about-v2-img-overlay {
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background: linear-gradient(
     to top,
     rgba(13, 11, 7, 0.65) 0%,

@@ -1677,7 +1677,7 @@
               <div class="d-flex align-items-center gap-2">
                 <span class="editor-bar-label"><i class="bi bi-file-earmark-richtext text-warning"></i> Page:</span>
                 <select id="editorPageSelect" onchange="switchEditorPage(this.value)" class="editor-page-select">
-                  <option value="index.html?edit=1" selected>🏠 Homepage (index.html)</option>
+                  <option value="admin/site/index.html?edit=1" selected>🏠 Homepage (index.html)</option>
                   <option value="admin/editor-services.html">📄 Services Catalog (services.html)</option>
                 </select>
               </div>
@@ -2050,6 +2050,33 @@
     </div>
   </main>
 
+  <!-- ── Live Editor Image Picker Modal ── -->
+  <div class="modal-backdrop-custom" id="editorMediaBackdrop" onclick="closeEditorMediaPicker()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); z-index:999998;"></div>
+  <div id="editorMediaModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:min(760px, 94vw); max-height:86vh; background:#0e131e; border:1px solid rgba(235, 162, 45, 0.4); border-radius:16px; z-index:999999; box-shadow:0 25px 70px rgba(0,0,0,0.95); flex-direction:column; overflow:hidden;">
+    <div style="padding:16px 22px; border-bottom:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; background:#080b11;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:36px; height:36px; border-radius:10px; background:rgba(235,162,45,0.15); border:1px solid rgba(235,162,45,0.3); display:flex; align-items:center; justify-content:center; color:#eba22d;">
+          <i class="bi bi-images fs-5"></i>
+        </div>
+        <div>
+          <h4 style="margin:0; font-size:16px; font-weight:700; color:#fff;">Change Website Image</h4>
+          <span id="targetImageKeyBadge" style="font-size:11.5px; color:#eba22d; font-family:monospace;">Target: home.about.image</span>
+        </div>
+      </div>
+      <button type="button" class="btn-close btn-close-white" onclick="closeEditorMediaPicker()" style="filter:invert(1); opacity:0.7; cursor:pointer; background:transparent; border:none; color:#fff; font-size:22px; padding:0; line-height:1;">✕</button>
+    </div>
+    <div style="padding:14px 22px; border-bottom:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <label class="btn-header btn-primary-gold" style="cursor:pointer; display:inline-flex; align-items:center; gap:8px; margin:0; padding:6px 14px; font-weight:700;">
+        <i class="bi bi-cloud-arrow-up-fill"></i> Upload New Image
+        <input type="file" id="editorMediaFileInput" accept="image/*" style="display:none" onchange="uploadEditorMedia(this)">
+      </label>
+      <span style="font-size:12px; color:#94a3b8;"><i class="bi bi-info-circle me-1 text-warning"></i> Click any photo below to replace target image immediately</span>
+    </div>
+    <div id="editorMediaGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:14px; padding:20px; max-height:440px; overflow-y:auto;">
+      <!-- Populated dynamically -->
+    </div>
+  </div>
+
   <!-- ── Email Template Live Preview Modal ── -->
   <div id="emailPreviewModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(8px); z-index:99999; justify-content:center; align-items:center; padding:18px;" onclick="if(event.target===this) closeEmailPreviewModal()">
     <div style="background:#0e131e; border:1px solid rgba(235,162,45,0.35); border-radius:16px; width:100%; max-width:980px; height:92vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,0.95);">
@@ -2104,7 +2131,79 @@
         </div>
       </div>
 
+  <!-- ── Live Editor Image Picker & Media Manager Modal ── -->
+  <div id="editorMediaBackdrop" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.78); backdrop-filter:blur(8px); z-index:99998;" onclick="closeEditorMediaPicker()"></div>
+
+  <div id="editorMediaModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); width:94%; max-width:880px; max-height:88vh; background:#0d1117; border:1px solid rgba(235,162,45,0.45); border-radius:18px; box-shadow:0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(235,162,45,0.18); z-index:99999; flex-direction:column; overflow:hidden; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    
+    <!-- Modal Header -->
+    <div style="padding:16px 22px; border-bottom:1px solid rgba(255,255,255,0.08); background:#141922; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="width:38px; height:38px; border-radius:10px; background:rgba(235,162,45,0.16); border:1px solid rgba(235,162,45,0.35); display:flex; align-items:center; justify-content:center; color:#eba22d; font-size:18px;">
+          <i class="bi bi-images"></i>
+        </div>
+        <div>
+          <div style="font-size:16px; font-weight:700; color:#f8fafc; letter-spacing:0.2px;">
+            Change Website Image
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
+            <span id="targetImageKeyBadge" style="font-size:11px; font-family:'JetBrains Mono', monospace; color:#eba22d; background:rgba(235,162,45,0.12); padding:2px 8px; border-radius:4px; border:1px solid rgba(235,162,45,0.25);">
+              Target: home.about.image
+            </span>
+            <span style="font-size:11.5px; color:#94a3b8;">Select a photo below or upload a new one to save instantly</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <!-- Upload Button -->
+        <input type="file" id="editorMediaFileInput" accept="image/*" style="display:none;" onchange="uploadEditorMedia(this)">
+        <button type="button" onclick="document.getElementById('editorMediaFileInput').click()" style="background:#eba22d; color:#0d1117; border:none; padding:7px 16px; border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;" onmouseover="this.style.background='#f59e0b'" onmouseout="this.style.background='#eba22d'">
+          <i class="bi bi-cloud-arrow-up-fill"></i> Upload New Image
+        </button>
+        <!-- Close Button -->
+        <button type="button" onclick="closeEditorMediaPicker()" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:#94a3b8; width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px;" onmouseover="this.style.color='#fff'; this.style.borderColor='rgba(255,255,255,0.25)'" onmouseout="this.style.color='#94a3b8'; this.style.borderColor='rgba(255,255,255,0.1)'">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
     </div>
+
+    <!-- Quick URL / Custom Path Bar -->
+    <div style="padding:10px 22px; background:#0a0e16; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; gap:10px; flex-shrink:0;">
+      <i class="bi bi-link-45deg" style="color:#eba22d; font-size:18px;"></i>
+      <input type="text" id="editorCustomUrlInput" placeholder="Enter image URL or path (e.g. assets/img/about_team.jpg or https://...)" style="flex:1; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#f1f5f9; padding:7px 12px; border-radius:6px; font-size:12.5px; outline:none;" onkeydown="if(event.key==='Enter') applyCustomImageUrl()">
+      <button type="button" onclick="applyCustomImageUrl()" style="background:rgba(235,162,45,0.18); border:1px solid rgba(235,162,45,0.4); color:#eba22d; padding:7px 16px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;" onmouseover="this.style.background='rgba(235,162,45,0.28)'" onmouseout="this.style.background='rgba(235,162,45,0.18)'">
+        Apply URL
+      </button>
+    </div>
+
+    <!-- Category Tabs & Quick Filter -->
+    <div style="padding:8px 22px 0; background:#111620; border-bottom:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+      <div style="display:flex; gap:6px;">
+        <button type="button" class="media-tab-btn active" data-filter="all" onclick="filterEditorMedia('all', this)" style="background:transparent; border:none; border-bottom:2px solid #eba22d; color:#eba22d; font-size:12.5px; font-weight:700; padding:8px 14px; cursor:pointer;">All Assets</button>
+        <button type="button" class="media-tab-btn" data-filter="uploads" onclick="filterEditorMedia('uploads', this)" style="background:transparent; border:none; border-bottom:2px solid transparent; color:#94a3b8; font-size:12.5px; font-weight:600; padding:8px 14px; cursor:pointer;">Uploaded</button>
+        <button type="button" class="media-tab-btn" data-filter="brand" onclick="filterEditorMedia('brand', this)" style="background:transparent; border:none; border-bottom:2px solid transparent; color:#94a3b8; font-size:12.5px; font-weight:600; padding:8px 14px; cursor:pointer;">Brand & Team</button>
+        <button type="button" class="media-tab-btn" data-filter="books" onclick="filterEditorMedia('books', this)" style="background:transparent; border:none; border-bottom:2px solid transparent; color:#94a3b8; font-size:12.5px; font-weight:600; padding:8px 14px; cursor:pointer;">Hero Books</button>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; padding-bottom:6px;">
+        <input type="text" id="editorMediaSearchInput" placeholder="Filter by name..." oninput="onEditorMediaSearch(this.value)" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); color:#cbd5e1; font-size:11.5px; padding:4px 10px; border-radius:6px; outline:none; width:150px;">
+      </div>
+    </div>
+
+    <!-- Modal Body: Media Grid -->
+    <div style="padding:18px 22px; overflow-y:auto; flex:1;">
+      <div id="editorMediaGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:14px;">
+        <!-- Populated via loadEditorMediaList() -->
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div style="padding:12px 22px; background:#0a0e16; border-top:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:space-between; font-size:12px; color:#64748b; flex-shrink:0;">
+      <span><i class="bi bi-info-circle me-1 text-warning"></i> Click any image above to instantly apply to the page and save to database.</span>
+      <button type="button" onclick="closeEditorMediaPicker()" style="background:transparent; border:1px solid rgba(255,255,255,0.12); color:#cbd5e1; padding:5px 14px; border-radius:6px; cursor:pointer; font-size:12px;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='transparent'">
+        Cancel
+      </button>
+    </div>
+
   </div>
 
   <!-- ── Scripts ── -->
@@ -2320,7 +2419,7 @@
           const iframe = document.getElementById('liveEditorIframe');
           if (iframe && (!iframe.src || iframe.src === 'about:blank' || iframe.src.endsWith('about:blank'))) {
             const select = document.getElementById('editorPageSelect');
-            iframe.src = select ? select.value : 'index.html?edit=1';
+            iframe.src = select ? select.value : 'admin/site/index.html?edit=1';
           }
         }
 
@@ -2448,11 +2547,11 @@
             targetUrl = 'admin/editor-services.html' + (svcParam ? '?' + svcParam : '');
           }
         } else if (targetUrl.includes('editor.html') || targetUrl.includes('index.html')) {
-          targetUrl = 'index.html?edit=1';
+          targetUrl = 'admin/site/index.html?edit=1';
         }
 
         if (select) {
-          select.value = targetUrl.includes('editor-services.html') ? 'admin/editor-services.html' : 'index.html?edit=1';
+          select.value = targetUrl.includes('editor-services.html') ? 'admin/editor-services.html' : 'admin/site/index.html?edit=1';
         }
         if (addBtn) {
           addBtn.style.display = targetUrl.includes('editor-services.html') ? 'inline-flex' : 'none';
@@ -2493,8 +2592,253 @@
             statusEl.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> All changes saved';
             statusEl.style.color = '#94a3b8';
           }
+        } else if (e.data.type === 'OPEN_MEDIA') {
+          openEditorMediaPicker(e.data.key || 'home.about.image');
         }
       });
+
+      // ── Live Editor Image Picker & Media Integration ──────────────
+      let activeImageBlockKey = null;
+      let cachedEditorMediaList = [];
+      let currentMediaFilter = 'all';
+      let currentMediaSearch = '';
+
+      window.openEditorMediaPicker = async function(blockKey) {
+        activeImageBlockKey = blockKey || 'home.about.image';
+        const backdrop = document.getElementById('editorMediaBackdrop');
+        const modal = document.getElementById('editorMediaModal');
+        const badge = document.getElementById('targetImageKeyBadge');
+        const urlInput = document.getElementById('editorCustomUrlInput');
+        const searchInput = document.getElementById('editorMediaSearchInput');
+
+        if (badge) badge.textContent = `Target: ${activeImageBlockKey}`;
+        if (urlInput) urlInput.value = '';
+        if (searchInput) searchInput.value = '';
+        currentMediaFilter = 'all';
+        currentMediaSearch = '';
+
+        document.querySelectorAll('.media-tab-btn').forEach(btn => {
+          const isAll = btn.getAttribute('data-filter') === 'all';
+          btn.classList.toggle('active', isAll);
+          btn.style.color = isAll ? '#eba22d' : '#94a3b8';
+          btn.style.borderBottomColor = isAll ? '#eba22d' : 'transparent';
+        });
+
+        if (backdrop) backdrop.style.display = 'block';
+        if (modal) modal.style.display = 'flex';
+        await loadEditorMediaList();
+      };
+
+      window.closeEditorMediaPicker = function() {
+        const backdrop = document.getElementById('editorMediaBackdrop');
+        const modal = document.getElementById('editorMediaModal');
+        if (backdrop) backdrop.style.display = 'none';
+        if (modal) modal.style.display = 'none';
+        activeImageBlockKey = null;
+      };
+
+      window.filterEditorMedia = function(category, btn) {
+        currentMediaFilter = category || 'all';
+        document.querySelectorAll('.media-tab-btn').forEach(b => {
+          b.classList.remove('active');
+          b.style.color = '#94a3b8';
+          b.style.borderBottomColor = 'transparent';
+        });
+        if (btn) {
+          btn.classList.add('active');
+          btn.style.color = '#eba22d';
+          btn.style.borderBottomColor = '#eba22d';
+        }
+        renderEditorMediaGrid();
+      };
+
+      window.onEditorMediaSearch = function(query) {
+        currentMediaSearch = (query || '').toLowerCase().trim();
+        renderEditorMediaGrid();
+      };
+
+      window.applyCustomImageUrl = function() {
+        const input = document.getElementById('editorCustomUrlInput');
+        const val = input ? input.value.trim() : '';
+        if (!val) {
+          alert('Please enter a valid image URL or local path.');
+          return;
+        }
+        applyPickedImage(val);
+      };
+
+      async function loadEditorMediaList() {
+        const grid = document.getElementById('editorMediaGrid');
+        if (!grid) return;
+        grid.innerHTML = '<div style="color:#94a3b8; padding:30px; grid-column:1/-1; text-align:center;"><span class="spinner-border spinner-border-sm text-warning me-2"></span>Loading media library...</div>';
+        try {
+          const res = await fetch('/api/v1/site-meta');
+          const data = await res.json();
+          const assets = data.media_assets || [];
+          const defaultImgs = [
+            'assets/img/about_team.jpg',
+            'assets/img/footer-image.jpg',
+            'assets/img/OmniLogo2.png',
+            'assets/img/OmniLogo.png',
+            'assets/img/books/book1.png',
+            'assets/img/books/book2.png',
+            'assets/img/books/book3.png',
+            'assets/img/books/book4.png',
+            'assets/img/books/book5.png',
+            'assets/img/books/book6.png',
+            'assets/img/books/book7.png',
+            'assets/img/books/book8.png',
+            'assets/img/books/book9.png',
+            'assets/img/books/book10.png',
+            'assets/img/books/book11.png',
+            'assets/img/books/book12.png',
+            'assets/img/books/book13.png'
+          ];
+          const all = Array.from(new Set([...assets.map(a => a.file_path), ...defaultImgs]));
+          cachedEditorMediaList = all;
+          renderEditorMediaGrid();
+        } catch (e) {
+          grid.innerHTML = '<div style="color:#ef4444; padding:30px; grid-column:1/-1; text-align:center;">Failed to load assets: ' + e.message + '</div>';
+        }
+      }
+
+      function renderEditorMediaGrid() {
+        const grid = document.getElementById('editorMediaGrid');
+        if (!grid) return;
+
+        let filtered = cachedEditorMediaList.filter(path => {
+          const clean = (path.startsWith('/') ? path.slice(1) : path).toLowerCase();
+          
+          // Category check
+          if (currentMediaFilter === 'uploads') {
+            if (!clean.includes('uploads/')) return false;
+          } else if (currentMediaFilter === 'brand') {
+            if (!clean.includes('about_team') && !clean.includes('footer') && !clean.includes('logo')) return false;
+          } else if (currentMediaFilter === 'books') {
+            if (!clean.includes('books/')) return false;
+          }
+
+          // Search check
+          if (currentMediaSearch) {
+            const filename = clean.split('/').pop();
+            if (!filename.includes(currentMediaSearch) && !clean.includes(currentMediaSearch)) return false;
+          }
+
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `
+            <div style="grid-column:1/-1; text-align:center; padding:40px 20px; color:#64748b;">
+              <i class="bi bi-folder2-open" style="font-size:32px; display:block; margin-bottom:8px; opacity:0.5;"></i>
+              No images match this filter. Click <strong>Upload New Image</strong> above to upload your photo.
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = filtered.map(path => {
+          const clean = path.startsWith('/') ? path.slice(1) : path;
+          const fullUrl = clean.startsWith('http') ? clean : '/' + clean;
+          const filename = clean.split('/').pop();
+          return `
+            <div style="position:relative; aspect-ratio:4/3; border-radius:10px; overflow:hidden; border:2px solid rgba(255,255,255,0.08); background:#151a24; cursor:pointer; transition:all 0.2s;"
+                 onmouseover="this.style.borderColor='#eba22d'; this.style.transform='scale(1.04)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.6)';"
+                 onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.transform='scale(1)'; this.style.boxShadow='none';"
+                 onclick="applyPickedImage('${clean}')"
+                 title="Click to apply: ${filename}">
+              <img src="${fullUrl}" alt="${filename}" style="width:100%; height:100%; object-fit:cover; display:block;">
+              <div style="position:absolute; bottom:0; inset-inline:0; padding:4px 8px; background:rgba(0,0,0,0.78); font-size:10px; color:#cbd5e1; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-top:1px solid rgba(255,255,255,0.06);">
+                ${filename}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      window.applyPickedImage = async function(imagePath) {
+        if (!activeImageBlockKey) return;
+        const targetKey = activeImageBlockKey;
+        const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
+        
+        // 1. Immediately update image inside liveEditorIframe
+        const iframe = document.getElementById('liveEditorIframe');
+        if (iframe && iframe.contentDocument) {
+          iframe.contentDocument.querySelectorAll(`img[data-block-key="${targetKey}"]`).forEach(img => {
+            img.src = cleanPath;
+            img.classList.add('cms-live-pulsing');
+            setTimeout(() => img.classList.remove('cms-live-pulsing'), 1200);
+          });
+          // Also post message to iframe for deep sync
+          try {
+            iframe.contentWindow.postMessage({ type: 'IMAGE_CHANGED', key: targetKey, src: cleanPath }, '*');
+          } catch (_) {}
+        }
+
+        // 2. Save directly to database
+        const saveStatus = document.getElementById('masterSaveStatus');
+        if (saveStatus) {
+          saveStatus.innerHTML = '<span class="spinner-border spinner-border-sm me-1 text-warning"></span> Saving image...';
+          saveStatus.style.color = '#eba22d';
+        }
+
+        try {
+          const res = await fetch(`/api/v1/cms/blocks/${encodeURIComponent(targetKey)}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ value: cleanPath })
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            if (saveStatus) {
+              saveStatus.innerHTML = '<i class="bi bi-check-circle-fill text-success"></i> All changes saved';
+              saveStatus.style.color = '#94a3b8';
+            }
+            showLiveToast(`Image updated: ${targetKey}`, 'success');
+          }
+        } catch (e) {
+          alert('Save failed: ' + e.message);
+        }
+
+        closeEditorMediaPicker();
+      };
+
+      window.uploadEditorMedia = async function(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('image', file);
+        if (activeImageBlockKey) formData.append('block_key', activeImageBlockKey);
+
+        const saveStatus = document.getElementById('masterSaveStatus');
+        if (saveStatus) {
+          saveStatus.innerHTML = '<span class="spinner-border spinner-border-sm me-1 text-warning"></span> Uploading photo...';
+          saveStatus.style.color = '#eba22d';
+        }
+
+        try {
+          const res = await fetch('/api/v1/cms/upload', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token },
+            body: formData
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            const uploadedPath = data.path.startsWith('/') ? data.path.slice(1) : data.path;
+            await applyPickedImage(uploadedPath);
+            loadEditorMediaList();
+            if (typeof loadMedia === 'function') loadMedia();
+          } else {
+            alert('Upload error: ' + (data.error?.message || 'Upload failed'));
+          }
+        } catch (e) {
+          alert('Upload failed: ' + e.message);
+        }
+      };
 
       // ── Analytics & Dashboard Telemetry (Data Analysis Mastery Skill) ──
       let currentTimeWindow = 14;

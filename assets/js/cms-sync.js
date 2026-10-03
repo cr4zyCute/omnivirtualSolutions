@@ -27,10 +27,11 @@
     } catch (_) {}
   }
 
-  // Inside admin iframe or with ?edit=1 or with valid token -> Admin Edit Mode
-  const isInsideAdminDashboard = isInsideIframe;
-  const isAdmin = Boolean(token || isEditParam || isInsideAdminDashboard);
-  let isEditMode = isAdmin;
+  // Edit mode is active ONLY inside the admin editor iframe OR when explicitly requested with ?edit=1.
+  // Regular visitors on the public live site will NEVER have edit mode enabled.
+  const isEditorSession = isInsideIframe || isEditParam;
+  const isAdmin = Boolean(isEditorSession);
+  let isEditMode = Boolean(isEditorSession);
 
   const debounceTimers = {};
   const boundElements = new WeakSet();
@@ -120,6 +121,13 @@
           }
         }
       });
+
+      // Tag Images
+      sec.querySelectorAll('img').forEach((imgEl, idx) => {
+        if (!imgEl.hasAttribute('data-block-key')) {
+          imgEl.setAttribute('data-block-key', `service.${secId}.img_${idx}`);
+        }
+      });
     });
   }
 
@@ -184,6 +192,21 @@
 
       if (el.tagName.toLowerCase() === 'img') {
         el.title = `Click to change image (${key})`;
+        
+        // Also attach click proxy to parent wrapper if any
+        const parentFrame = el.closest('.about-v2-img-frame, .footer-img-wrapper, .book-card-wrap, .about-v2-visual');
+        if (parentFrame && !parentFrame.hasAttribute('data-has-img-proxy')) {
+          parentFrame.setAttribute('data-has-img-proxy', 'true');
+          parentFrame.addEventListener('click', (e) => {
+            if (!isEditMode) return;
+            if (e.target !== el) {
+              e.preventDefault();
+              e.stopPropagation();
+              el.click();
+            }
+          });
+        }
+
         el.addEventListener('click', (e) => {
           if (!isEditMode) return;
           e.preventDefault();
@@ -381,41 +404,49 @@
 
     document.body.appendChild(bar);
 
-    function setMode(edit) {
-      isEditMode = Boolean(edit);
-      document.body.classList.toggle('mode-edit', isEditMode);
-      document.body.classList.toggle('mode-preview', !isEditMode);
-      const toggleBtn = document.getElementById('toggleEditBtn');
-      if (toggleBtn) {
-        toggleBtn.textContent = isEditMode ? '✏️ Edit Mode: ON' : '👁️ Visitor Preview';
-        toggleBtn.style.background = isEditMode ? '#eba22d' : 'rgba(255,255,255,0.1)';
-        toggleBtn.style.color = isEditMode ? '#0d1117' : '#fff';
-      }
-
-      document.querySelectorAll('[data-block-key]').forEach((el) => {
-        if (el.tagName.toLowerCase() !== 'img' && el.getAttribute('data-block-key') !== 'home.cta.trust_tags') {
-          el.contentEditable = isEditMode ? 'true' : 'false';
-        }
-      });
-      showToast(isEditMode ? 'Edit Mode active' : 'Visitor Preview active');
-    }
-
-    window.__omniSetEditMode = setMode;
-
-    window.addEventListener('message', (e) => {
-      if (!e.data) return;
-      if (e.data.type === 'SET_MODE') {
-        setMode(e.data.edit);
-      } else if (e.data.type === 'REFRESH_BLOCKS') {
-        loadInitialContent();
-      }
-    });
-
     const toggleBtn = bar.querySelector('#toggleEditBtn');
     if (toggleBtn) {
       toggleBtn.onclick = () => setMode(!isEditMode);
     }
   }
+
+  function setMode(edit) {
+    isEditMode = Boolean(edit);
+    document.body.classList.toggle('mode-edit', isEditMode);
+    document.body.classList.toggle('mode-preview', !isEditMode);
+    if (isEditMode) {
+      document.body.classList.add('is-admin-session');
+    }
+
+    const toggleBtn = document.getElementById('toggleEditBtn');
+    if (toggleBtn) {
+      toggleBtn.textContent = isEditMode ? '✏️ Edit Mode: ON' : '👁️ Visitor Preview';
+      toggleBtn.style.background = isEditMode ? '#eba22d' : 'rgba(255,255,255,0.1)';
+      toggleBtn.style.color = isEditMode ? '#0d1117' : '#fff';
+    }
+
+    attachEditableListeners();
+
+    document.querySelectorAll('[data-block-key]').forEach((el) => {
+      if (el.tagName.toLowerCase() !== 'img' && el.getAttribute('data-block-key') !== 'home.cta.trust_tags') {
+        el.contentEditable = isEditMode ? 'true' : 'false';
+      }
+    });
+    showToast(isEditMode ? 'Edit Mode active' : 'Visitor Preview active');
+  }
+
+  window.__omniSetEditMode = setMode;
+
+  window.addEventListener('message', (e) => {
+    if (!e.data) return;
+    if (e.data.type === 'SET_MODE') {
+      setMode(e.data.edit);
+    } else if (e.data.type === 'REFRESH_BLOCKS') {
+      loadInitialContent();
+    } else if (e.data.type === 'IMAGE_CHANGED') {
+      applyBlock(e.data.key, e.data.src, 'image');
+    }
+  });
 
   function updateStatus(state) {
     const el = document.getElementById('omniBarStatus') || document.getElementById('editorSaveStatus');
@@ -786,8 +817,24 @@
         background-color: rgba(235, 162, 45, 0.18) !important;
       }
       body.mode-edit img[data-block-key] {
+        outline: 2.5px dashed #eba22d !important;
+        outline-offset: 3px !important;
         cursor: pointer !important;
-        display: inline-block !important;
+        transition: outline 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
+        position: relative !important;
+      }
+      body.mode-edit img[data-block-key]:hover {
+        outline: 3px solid #f59e0b !important;
+        box-shadow: 0 0 22px rgba(235, 162, 45, 0.75) !important;
+        filter: brightness(1.1) !important;
+      }
+      body.mode-edit .about-v2-img-overlay {
+        pointer-events: none !important;
+      }
+      body.mode-edit .about-v2-img-frame,
+      body.mode-edit .footer-img-wrapper,
+      body.mode-edit .book-card-wrap {
+        cursor: pointer !important;
       }
       body.mode-preview [data-block-key] {
         outline: none !important;

@@ -126,18 +126,19 @@ router.patch("/blocks/:key", requireAuth, async (req, res) => {
 
     if (existing.rows.length === 0) {
       // Auto-create block if it does not exist yet
+      const inferredType = (key.includes('image') || key.includes('logo') || key.includes('img') || String(newValue).match(/\.(png|jpg|jpeg|webp|svg|gif)$/i)) ? 'image' : 'text';
       await db.execute({
-        sql: "INSERT INTO content_blocks (block_key, block_type, label, value, updated_by) VALUES (?, 'text', ?, ?, ?)",
-        args: [key, key, newValue, editor],
+        sql: "INSERT INTO content_blocks (block_key, block_type, label, value, updated_by) VALUES (?, ?, ?, ?, ?)",
+        args: [key, inferredType, key, newValue, editor],
       });
       await db.execute({
         sql: "INSERT INTO content_block_revisions (block_key, old_value, new_value, changed_by) VALUES (?, '', ?, ?)",
         args: [key, newValue, editor],
       });
 
-      console.log(`[cms] ${editor} created new block: ${key}`);
-      broadcast({ key, value: newValue, blockType: 'text', updatedBy: editor, table: "content_blocks" });
-      return res.json({ success: true, block: { block_key: key, value: newValue, block_type: 'text', updated_by: editor } });
+      console.log(`[cms] ${editor} created new block: ${key} (${inferredType})`);
+      broadcast({ key, value: newValue, blockType: inferredType, updatedBy: editor, table: "content_blocks" });
+      return res.json({ success: true, block: { block_key: key, value: newValue, block_type: inferredType, updated_by: editor } });
     }
 
     const block    = existing.rows[0];
