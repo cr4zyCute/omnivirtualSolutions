@@ -7,6 +7,7 @@
 // =================================================================
 
 const nodemailer = require("nodemailer");
+const fs = require("fs");
 const path = require("path");
 const { db } = require("./db");
 const { getFullBusinessProfile } = require("./business-profile-sync");
