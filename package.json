@@ -9,6 +9,7 @@
     "dev:frontend": "npm --prefix frontend run dev",
     "build": "npm run build:frontend",
     "build:frontend": "npm --prefix frontend run build",
+    "render-build": "npm --prefix frontend install && npm run build:frontend",
     "start": "node backend/server.js",
     "admin:password": "node backend/change-password.js",
     "sync:turso": "node backend/sync-local-to-turso.js",
