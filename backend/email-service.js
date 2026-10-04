@@ -121,7 +121,8 @@ function buildEmailShell({
   const brandAddress = company?.full_address || "1350 Ave of the Americas, Fl 2 -1100, New York, NY 10019";
   const emailTo = supportEmail || company?.email || "admin@omnivirtualsolution.com";
   const copyrightLine = company?.copyright_text || `© ${new Date().getFullYear()} ${brandName}. All rights reserved.`;
-  const logoSrc = isWebPreview ? "/assets/img/OmniLogo2.png" : "cid:omnilogo";
+  const siteBaseUrl = (process.env.PUBLIC_URL || process.env.URL || "https://velvety-begonia-1fea6f.netlify.app").replace(/\/$/, "");
+  const logoSrc = isWebPreview ? "/assets/img/OmniLogo2.png" : `${siteBaseUrl}/assets/img/OmniLogo2.png`;
   const brandGold = "#eba22d";
 
   // ─────────────────────────────────────────────────────────────────
