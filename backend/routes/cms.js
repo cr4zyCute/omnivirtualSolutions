@@ -189,7 +189,7 @@ router.patch("/blocks/:key", requireAuth, async (req, res) => {
       });
 
       console.log(`[cms] ${editor} created new block: ${key} (${inferredType})`);
-      broadcast({ key, value: newValue, blockType: inferredType, updatedBy: editor, table: "content_blocks" });
+      broadcast({ type: "cms_block_updated", key, value: newValue, blockType: inferredType, updatedBy: editor, table: "content_blocks" });
       return res.json({ success: true, block: { block_key: key, value: newValue, block_type: inferredType, updated_by: editor } });
     }
 
@@ -211,7 +211,7 @@ router.patch("/blocks/:key", requireAuth, async (req, res) => {
     console.log(`[cms] ${editor} updated block: ${key}`);
 
     // Broadcast live to all open tabs
-    broadcast({ key, value: newValue, blockType: block.block_type, updatedBy: editor, table: "content_blocks" });
+    broadcast({ type: "cms_block_updated", key, value: newValue, blockType: block.block_type, updatedBy: editor, table: "content_blocks" });
 
     res.json({ success: true, block: { block_key: key, value: newValue, block_type: block.block_type, updated_by: editor } });
   } catch (err) {
@@ -571,7 +571,7 @@ router.post("/upload", requireAuth, upload.single("image"), async (req, res) => 
         sql: "UPDATE content_blocks SET value = ?, updated_at = CURRENT_TIMESTAMP, updated_by = ? WHERE block_key = ?",
         args: [relativePath, editor, blockKey],
       });
-      broadcast({ key: blockKey, value: relativePath, blockType: "image", updatedBy: editor, table: "content_blocks" });
+      broadcast({ type: "cms_block_updated", key: blockKey, value: relativePath, blockType: "image", updatedBy: editor, table: "content_blocks" });
     } catch (_) { /* non-critical if block doesn't exist */ }
   }
 

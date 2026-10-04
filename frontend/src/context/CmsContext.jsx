@@ -56,7 +56,7 @@ export const CmsProvider = ({ children }) => {
       eventSource.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          if (data.type === 'cms_block_updated' && data.key) {
+          if ((data.type === 'cms_block_updated' || data.table === 'content_blocks') && data.key) {
             setBlocks((prev) => {
               const updated = { ...prev, [data.key]: data.value };
               if (data.key === 'services.cta.email' || data.key === 'footer.email') {
@@ -70,13 +70,15 @@ export const CmsProvider = ({ children }) => {
             }
           } else if (data.type === 'stats_updated' && data.key) {
             setStats((prev) => ({ ...prev, [data.key]: data.value }));
-          } else if (data.type === 'company_updated' && data.company) {
-            setCompany((prev) => ({ ...prev, ...data.company }));
-            if (data.company.email) {
+          } else if ((data.type === 'company_updated' || data.type === 'business_profile_updated') && (data.company || data.profile)) {
+            const comp = data.company || data.profile;
+            setCompany((prev) => ({ ...prev, ...comp }));
+            const newEmail = comp.email || comp.recipient_email;
+            if (newEmail) {
               setBlocks((prev) => ({
                 ...prev,
-                'footer.email': data.company.email,
-                'services.cta.email': data.company.email,
+                'footer.email': newEmail,
+                'services.cta.email': newEmail,
               }));
             }
           } else if (data.type === 'email_settings_updated' && data.recipient_email) {
@@ -98,8 +100,12 @@ export const CmsProvider = ({ children }) => {
   }, []);
 
   const t = (key, fallback = '') => {
-    if (blocks[key] !== undefined && blocks[key] !== null) {
-      return blocks[key];
+    const val = blocks[key];
+    if (val !== undefined && val !== null) {
+      if (typeof val === 'string' && (key.includes('image') || key.includes('img') || key.includes('logo')) && val.startsWith('assets/')) {
+        return '/' + val;
+      }
+      return val;
     }
     return fallback;
   };
