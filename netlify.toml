@@ -1,0 +1,28 @@
+[build]
+  command = "npm run build"
+  publish = "frontend/dist"
+  functions = "netlify/functions"
+
+# Route API requests to Netlify Serverless Function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/api/:splat"
+  status = 200
+  force = true
+
+# Route Admin Portal
+[[redirects]]
+  from = "/admin"
+  to = "/admin/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/:splat"
+  status = 200
+
+# React SPA Fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -283,19 +283,21 @@ app.use((err, req, res, _next) => {
 });
 
 // ─────────────────────────────────────────────────────────────────
-// Start
+// Start (only when executed directly, not when imported by serverless functions)
 // ─────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log("\n" + "=".repeat(62));
-  console.log("  🚀 Omni Virtual Solutions API v2.0");
-  console.log("=".repeat(62));
-  console.log(`  Website:  http://localhost:${PORT}/index.html`);
-  console.log(`  Admin:    http://localhost:${PORT}/admin/`);
-  console.log(`  Health:   http://localhost:${PORT}/api/v1/health`);
-  console.log(`  Live SSE: http://localhost:${PORT}/api/v1/live`);
-  console.log("=".repeat(62));
-  console.log(`  Database: ${process.env.TURSO_DATABASE_URL ? "☁️  Turso Cloud" : "💾 Local SQLite (data/omni.db)"}`);
-  console.log("=".repeat(62) + "\n");
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log("\n" + "=".repeat(62));
+    console.log("  🚀 Omni Virtual Solutions API v2.0");
+    console.log("=".repeat(62));
+    console.log(`  Website:  http://localhost:${PORT}/index.html`);
+    console.log(`  Admin:    http://localhost:${PORT}/admin/`);
+    console.log(`  Health:   http://localhost:${PORT}/api/v1/health`);
+    console.log(`  Live SSE: http://localhost:${PORT}/api/v1/live`);
+    console.log("=".repeat(62));
+    console.log(`  Database: ${process.env.TURSO_DATABASE_URL ? "☁️  Turso Cloud" : "💾 Local SQLite (data/omni.db)"}`);
+    console.log("=".repeat(62) + "\n");
+  });
+}
 
 module.exports = app;
