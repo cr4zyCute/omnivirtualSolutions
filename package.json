@@ -11,6 +11,7 @@
     "build:frontend": "npm --prefix frontend run build",
     "start": "node backend/server.js",
     "admin:password": "node backend/change-password.js",
+    "sync:turso": "node backend/sync-local-to-turso.js",
     "migrate": "node backend/migrate.js",
     "migrate:cms": "node backend/migrate-cms.js",
     "migrate:email": "node backend/migrate-email.js",
