@@ -75,6 +75,10 @@
       if (el.tagName.toLowerCase() === 'img') {
         const path = value.startsWith('/') ? value.slice(1) : value;
         el.src = path;
+      } else if (el.classList.contains('service-pill')) {
+        const icon = el.querySelector('i');
+        const iconHtml = icon ? icon.outerHTML + ' ' : '<i class="bi bi-check2"></i> ';
+        el.innerHTML = iconHtml + String(value).replace(/^✓\s*/, '').trim();
       } else {
         if (value.includes('\n')) {
           el.innerHTML = value.replace(/\n/g, '<br>');
@@ -214,12 +218,20 @@
       sec.querySelectorAll('p, blockquote, span').forEach((textEl, idx) => {
         const text = textEl.textContent.trim();
         // Skip tiny labels, icons, or if inside an already tagged element
-        if (text.length > 12 && !textEl.hasAttribute('data-block-key')) {
+        const isPill = textEl.classList.contains('service-pill');
+        if ((isPill || text.length >= 4) && !textEl.hasAttribute('data-block-key')) {
           const parentTagged = textEl.parentElement?.closest('[data-block-key]');
           if (!parentTagged) {
             const tag = textEl.tagName.toLowerCase();
             textEl.setAttribute('data-block-key', `service.${secId}.${tag}_${idx}`);
           }
+        }
+      });
+
+      // Tag Service Card Badges/Tags
+      sec.querySelectorAll('.service-card-tag').forEach((tagEl, idx) => {
+        if (!tagEl.hasAttribute('data-block-key')) {
+          tagEl.setAttribute('data-block-key', `service.${secId}.tag_${idx + 1}`);
         }
       });
 
@@ -331,19 +343,25 @@
         el.contentEditable = isEditMode ? 'true' : 'false';
         el.spellcheck = false;
 
-        // Prevent link navigation when clicking inside content in edit mode
+        // Prevent link navigation when clicking inside content in edit mode, and ensure immediate focus
         el.addEventListener('click', (e) => {
           if (isEditMode) {
-            // Allow clicking to focus, but stop link navigation
             const anchor = el.tagName.toLowerCase() === 'a' ? el : el.closest('a');
             if (anchor) e.preventDefault();
+            el.focus();
+          }
+        });
+        el.addEventListener('mousedown', (e) => {
+          if (isEditMode) {
+            el.focus();
           }
         });
 
         // Auto-save on blur
         el.addEventListener('blur', () => {
           if (!isEditMode) return;
-          const val = el.innerText.trim();
+          const raw = el.innerText.trim();
+          const val = el.classList.contains('service-pill') ? raw.replace(/^✓\s*/, '').trim() : raw;
           saveBlock(key, val);
         });
 
@@ -353,23 +371,22 @@
           updateStatus('saving');
           clearTimeout(debounceTimers[key]);
           debounceTimers[key] = setTimeout(() => {
-            const val = el.innerText.trim();
+            const raw = el.innerText.trim();
+            const val = el.classList.contains('service-pill') ? raw.replace(/^✓\s*/, '').trim() : raw;
             saveBlock(key, val);
           }, 800);
         });
       }
     });
 
-    // Also disable clicking on links within content during edit mode
+    // Also disable clicking on links within content during edit mode so user can edit text without redirecting
     if (isEditMode) {
-      document.querySelectorAll('.content a, section a').forEach((a) => {
-        if (!a.classList.contains('content-link')) {
-          a.addEventListener('click', (e) => {
-            if (isEditMode && a.getAttribute('href')?.startsWith('#')) {
-              e.preventDefault();
-            }
-          });
-        }
+      document.querySelectorAll('a, .content a, section a, .service-card-luxury a').forEach((a) => {
+        a.addEventListener('click', (e) => {
+          if (isEditMode) {
+            e.preventDefault();
+          }
+        });
       });
     }
   }
@@ -542,6 +559,27 @@
   }
 
   window.__omniSetEditMode = setMode;
+
+  // Intercept clicks during Edit Mode so clicking cards/text focuses editables and avoids accidental link navigation
+  document.addEventListener('click', function (e) {
+    if (!isEditMode) return;
+    const editable = e.target.closest('[contenteditable="true"], [data-block-key]');
+    if (editable && editable.tagName.toLowerCase() !== 'img') {
+      editable.focus();
+    }
+    const link = e.target.closest('a');
+    if (link && (!editable || editable.tagName.toLowerCase() === 'a')) {
+      e.preventDefault();
+    }
+  }, true);
+
+  document.addEventListener('mousedown', function (e) {
+    if (!isEditMode) return;
+    const editable = e.target.closest('[contenteditable="true"], [data-block-key]');
+    if (editable && editable.tagName.toLowerCase() !== 'img') {
+      editable.focus();
+    }
+  }, true);
 
   window.addEventListener('message', (e) => {
     if (!e.data) return;
@@ -929,6 +967,15 @@
         min-height: 1.2em;
         max-width: 100% !important;
         box-sizing: border-box !important;
+        -webkit-user-select: text !important;
+        user-select: text !important;
+      }
+      body.mode-edit .service-card-title[data-block-key] {
+        position: relative !important;
+        z-index: 5 !important;
+        cursor: text !important;
+        -webkit-user-select: text !important;
+        user-select: text !important;
       }
       body.mode-edit p[data-block-key],
       body.mode-edit h1[data-block-key],

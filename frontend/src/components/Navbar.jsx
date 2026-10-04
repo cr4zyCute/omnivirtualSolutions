@@ -4,18 +4,33 @@ import { useCms } from '../context/CmsContext';
 import './Navbar.css';
 
 export default function Navbar() {
-  const { t } = useCms();
+  const { t, company } = useCms();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
+  const [activeSection, setActiveSection] = useState('hero');
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
+
+      if (location.pathname === '/') {
+        const sections = ['contact', 'services', 'about', 'hero'];
+        const scrollPosition = window.scrollY + 140;
+        for (const sectionId of sections) {
+          const el = document.getElementById(sectionId);
+          if (el && el.offsetTop <= scrollPosition) {
+            setActiveSection(sectionId);
+            break;
+          }
+        }
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location.pathname]);
 
   // Close mobile nav on route change
   useEffect(() => {
@@ -91,7 +106,7 @@ export default function Navbar() {
           {/* Logo & Title — centered on mobile, left-aligned on desktop */}
           <Link to="/" className="logo header-center-brand" onClick={closeMobileNav}>
             <img src="/assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo" />
-            <span className="sitename">Omni Virtual Solutions</span>
+            <span className="sitename">{company?.company_name || t('site.name', 'Omni Virtual Solutions')}</span>
           </Link>
 
           {/* Desktop Navigation (Screens >= 1200px) */}
@@ -101,7 +116,7 @@ export default function Navbar() {
                 {location.pathname === '/' ? (
                   <a
                     href="#hero"
-                    className="active"
+                    className={activeSection === 'hero' ? 'active' : ''}
                     onClick={(e) => {
                       e.preventDefault();
                       scrollToHash('#hero');
@@ -117,6 +132,7 @@ export default function Navbar() {
                 {location.pathname === '/' ? (
                   <a
                     href="#about"
+                    className={activeSection === 'about' ? 'active' : ''}
                     onClick={(e) => {
                       e.preventDefault();
                       scrollToHash('#about');
@@ -129,14 +145,26 @@ export default function Navbar() {
                 )}
               </li>
               <li>
-                <Link to="/services" className={location.pathname === '/services' ? 'active' : ''}>
-                  Services
-                </Link>
+                {location.pathname === '/' ? (
+                  <a
+                    href="#services"
+                    className={activeSection === 'services' ? 'active' : ''}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToHash('#services');
+                    }}
+                  >
+                    Services
+                  </a>
+                ) : (
+                  <Link to="/#services">Services</Link>
+                )}
               </li>
               <li>
                 {location.pathname === '/' ? (
                   <a
                     href="#contact"
+                    className={activeSection === 'contact' ? 'active' : ''}
                     onClick={(e) => {
                       e.preventDefault();
                       scrollToHash('#contact');
@@ -188,7 +216,7 @@ export default function Navbar() {
         <div className="mobile-drawer-header">
           <Link to="/" className="mobile-drawer-brand" onClick={closeMobileNav}>
             <img src="/assets/img/OmniLogo2.png" alt="Omni Virtual Solutions Logo" />
-            <span className="drawer-sitename">Omni Virtual Solutions</span>
+            <span className="drawer-sitename">{company?.company_name || t('site.name', 'Omni Virtual Solutions')}</span>
           </Link>
           <button
             type="button"
@@ -255,17 +283,30 @@ export default function Navbar() {
           </li>
 
           <li>
-            <Link
-              to="/services"
-              className={`mobile-nav-link ${location.pathname === '/services' ? 'active' : ''}`}
-              onClick={closeMobileNav}
-            >
-              <span>
-                <i className="bi bi-grid-fill me-2" style={{ color: '#c29a6b' }}></i>
-                Services Catalog
-              </span>
-              <i className="bi bi-chevron-right text-muted small"></i>
-            </Link>
+            {location.pathname === '/' ? (
+              <a
+                href="#services"
+                className={`mobile-nav-link ${activeSection === 'services' ? 'active' : ''}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToHash('#services');
+                }}
+              >
+                <span>
+                  <i className="bi bi-grid-fill me-2" style={{ color: '#c29a6b' }}></i>
+                  Services
+                </span>
+                <i className="bi bi-chevron-right text-muted small"></i>
+              </a>
+            ) : (
+              <Link to="/#services" className="mobile-nav-link" onClick={closeMobileNav}>
+                <span>
+                  <i className="bi bi-grid-fill me-2" style={{ color: '#c29a6b' }}></i>
+                  Services
+                </span>
+                <i className="bi bi-chevron-right text-muted small"></i>
+              </Link>
+            )}
           </li>
 
           <li>
@@ -316,13 +357,13 @@ export default function Navbar() {
           </a>
 
           <div className="mobile-drawer-contact-info">
-            <a href="tel:+13159154799">
+            <a href={`tel:${(company?.phone || t('footer.phone', '+1 315-915-4799')).replace(/[^0-9+]/g, '')}`}>
               <i className="bi bi-telephone-fill"></i>
-              <span>+1 315-915-4799</span>
+              <span>{company?.phone || t('footer.phone', '+1 315-915-4799')}</span>
             </a>
-            <a href="mailto:admin@omnivirtualsolution.com">
+            <a href={`mailto:${company?.email || t('footer.email', 'admin@omnivirtualsolution.com')}`}>
               <i className="bi bi-envelope-fill"></i>
-              <span>Email Support</span>
+              <span>{company?.email || t('footer.email', 'admin@omnivirtualsolution.com')}</span>
             </a>
           </div>
         </div>

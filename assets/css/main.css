@@ -3880,3 +3880,12 @@ body {
     padding: 11px 12px;
   }
 }
+
+/* In-Place Live Editor: disable stretched-link overlays so content inside cards can be clicked and edited */
+body.mode-edit .stretched-link::after,
+body.is-admin-session .stretched-link::after,
+.in-iframe.mode-edit .stretched-link::after,
+.in-iframe .stretched-link::after {
+  display: none !important;
+  pointer-events: none !important;
+}

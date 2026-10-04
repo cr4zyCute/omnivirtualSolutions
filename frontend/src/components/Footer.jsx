@@ -4,7 +4,15 @@ import { useCms } from '../context/CmsContext';
 import './Footer.css';
 
 export default function Footer() {
-  const { t } = useCms();
+  const { t, company } = useCms();
+
+  const companyName = company?.company_name || t('site.name', 'Omni Virtual Solutions');
+  const companyTagline = company?.tagline || t('site.tagline', 'Empowering businesses and authors worldwide with world-class virtual specialists, comprehensive publishing workflows, and dedicated operational oversight.');
+  const phone = company?.phone || t('footer.phone', '+1 315-915-4799');
+  const cleanPhone = phone.replace(/[^0-9+]/g, '');
+  const email = company?.email || t('footer.email', 'admin@omnivirtualsolution.com');
+  const address = company?.full_address || t('footer.address', '1350 Ave of the Americas, Fl 2 -1100 New York, NY 10019');
+  const copyright = company?.copyright_text || t('footer.copyright', `© ${new Date().getFullYear()} ${companyName}. All Rights Reserved.`);
 
   return (
     <footer id="footer" className="footer-v2">
@@ -18,7 +26,7 @@ export default function Footer() {
             <div className="footer-img-frame">
               <img
                 src={t('footer.hq.image', '/assets/img/footer-image.jpg')}
-                alt="Omni Virtual Solutions Corporate Facility"
+                alt={`${companyName} Corporate Facility`}
                 className="footer-building-img"
                 data-block-key="footer.hq.image"
               />
@@ -31,14 +39,14 @@ export default function Footer() {
             <Link to="/" className="footer-brand-header">
               <img
                 src="/assets/img/OmniLogo2.png"
-                alt="Omni Virtual Solutions Logo"
+                alt={`${companyName} Logo`}
                 className="footer-brand-logo"
               />
-              <span className="footer-brand-title">Omni Virtual Solutions</span>
+              <span className="footer-brand-title">{companyName}</span>
             </Link>
             
             <p className="footer-brand-tagline">
-              Empowering businesses and authors worldwide with world-class virtual specialists, comprehensive publishing workflows, and dedicated operational oversight.
+              {companyTagline}
             </p>
 
             <div className="footer-trust-chips">
@@ -51,14 +59,21 @@ export default function Footer() {
             </div>
 
             <div className="footer-contact-inline">
-              <a href="tel:+13159154799" className="footer-inline-contact">
+              <a href={`tel:${cleanPhone}`} className="footer-inline-contact">
                 <i className="bi bi-telephone-fill"></i>
-                <span data-block-key="footer.phone">{t('footer.phone', '+1 315-915-4799')}</span>
+                <span data-block-key="footer.phone">{phone}</span>
               </a>
-              <a href={`mailto:${t('footer.email', 'admin@omnivirtualsolution.com')}`} className="footer-inline-contact">
+              <a href={`mailto:${email}`} className="footer-inline-contact">
                 <i className="bi bi-envelope-fill"></i>
-                <span data-block-key="footer.email">{t('footer.email', 'admin@omnivirtualsolution.com')}</span>
+                <span data-block-key="footer.email">{email}</span>
               </a>
+            </div>
+
+            <div className="footer-contact-inline mt-1">
+              <div className="footer-inline-contact" style={{ cursor: 'default' }}>
+                <i className="bi bi-geo-alt-fill"></i>
+                <span data-block-key="footer.address">{address}</span>
+              </div>
             </div>
           </div>
 
@@ -103,8 +118,8 @@ export default function Footer() {
 
         {/* ════ Bottom Bar: Copyright ════ */}
         <div className="footer-v2-bottom">
-          <p className="footer-copyright-text">
-            © {new Date().getFullYear()} <strong>Omni Virtual Solutions</strong>. All Rights Reserved.
+          <p className="footer-copyright-text" data-block-key="footer.copyright">
+            {copyright}
           </p>
         </div>
 

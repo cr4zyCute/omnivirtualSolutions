@@ -4,8 +4,11 @@ import { useCms } from '../context/CmsContext';
 export default function Contact() {
   const { company, t } = useCms();
 
-  // Business email is dynamic: pulled from database company profile or CMS, fallback to default
+  // Business identity & contact data dynamic from database company profile or CMS
   const businessEmail = company?.email || t('footer.email', 'admin@omnivirtualsolution.com');
+  const businessPhone = company?.phone || t('footer.phone', '+1 315-915-4799');
+  const cleanPhone = businessPhone.replace(/[^0-9+]/g, '');
+  const businessAddress = company?.full_address || t('footer.address', '1350 Ave of the Americas, Fl 2 -1100 New York, NY 10019');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -264,7 +267,7 @@ export default function Contact() {
               <div className="contact-info-content">
                 <h4>Our Headquarters</h4>
                 <p data-block-key="footer.address">
-                  {t('footer.address', '1350 Ave of the Americas, Fl 2 -1100 New York, NY 10019')}
+                  {businessAddress}
                 </p>
               </div>
             </div>
@@ -306,11 +309,11 @@ export default function Contact() {
                 <h4>Phone Support</h4>
                 <p>
                   <a
-                    href={`tel:${t('footer.phone', '+1 315-915-4799')}`}
+                    href={`tel:${cleanPhone}`}
                     style={{ color: 'inherit', textDecoration: 'none' }}
                     data-block-key="footer.phone"
                   >
-                    {t('footer.phone', '+1 315-915-4799')}
+                    {businessPhone}
                   </a>
                 </p>
               </div>

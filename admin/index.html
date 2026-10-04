@@ -2719,10 +2719,31 @@
         const iframe = document.getElementById('liveEditorIframe');
         if (!iframe) return;
 
-        // Apply in-iframe class to hide duplicate inside toolbar
+        // Apply in-iframe class to hide duplicate inside toolbar & prevent link redirects during edit mode
         try {
           if (iframe.contentDocument && iframe.contentDocument.documentElement) {
             iframe.contentDocument.documentElement.classList.add('in-iframe');
+            iframe.contentDocument.addEventListener('click', function(e) {
+              if (masterEditMode) {
+                const editable = e.target.closest('[contenteditable="true"], [data-block-key]');
+                if (editable && editable.tagName.toLowerCase() !== 'img') {
+                  editable.focus();
+                }
+                const link = e.target.closest('a');
+                if (link && (!editable || editable.tagName.toLowerCase() === 'a')) {
+                  e.preventDefault();
+                }
+              }
+            }, true);
+
+            iframe.contentDocument.addEventListener('mousedown', function(e) {
+              if (masterEditMode) {
+                const editable = e.target.closest('[contenteditable="true"], [data-block-key]');
+                if (editable && editable.tagName.toLowerCase() !== 'img') {
+                  editable.focus();
+                }
+              }
+            }, true);
           }
         } catch (_) {}
 
