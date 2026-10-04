@@ -382,10 +382,10 @@
               </a>
             </div>
             <div class="cta-trust-tags-wrapper">
-              <div class="cta-trust-tags" id="ctaTrustTagsContainer" data-block-key="home.cta.trust_tags">
-                <span class="trust-item"><i class="bi bi-book-half"></i> Publishing Packages</span>
-                <span class="trust-item"><i class="bi bi-journal-check"></i> Editorial Evaluation</span>
-                <span class="trust-item"><i class="bi bi-megaphone"></i> Book Marketing</span>
+              <div class="cta-trust-tags" id="ctaTrustTagsContainer">
+                <span class="trust-item" data-block-key="home.cta.trust_tag_1"><i class="bi bi-book-half"></i> Publishing Packages</span>
+                <span class="trust-item" data-block-key="home.cta.trust_tag_2"><i class="bi bi-journal-check"></i> Editorial Evaluation</span>
+                <span class="trust-item" data-block-key="home.cta.trust_tag_3"><i class="bi bi-megaphone"></i> Book Marketing</span>
               </div>
             </div>
           </div>
@@ -399,9 +399,9 @@
 
         <div class="text-center">
           <div class="contact-pill-badge">
-            <span>✦ GET IN TOUCH</span>
+            <span data-block-key="home.contact.badge">✦ GET IN TOUCH</span>
           </div>
-          <h2 class="contact-section-heading">Contact Our Team</h2>
+          <h2 class="contact-section-heading" data-block-key="home.contact.heading">Contact Our Team</h2>
           <div class="contact-heading-divider"></div>
         </div>
 
@@ -411,7 +411,7 @@
             <div class="contact-info-card">
               <div class="contact-info-icon"><i class="bi bi-geo-alt-fill"></i></div>
               <div class="contact-info-content">
-                <h4>Our Headquarters</h4>
+                <h4 data-block-key="home.contact.hq_title">Our Headquarters</h4>
                 <p data-block-key="footer.address">1350 Ave of the Americas, Fl 2 -1100 New York, NY 10019</p>
               </div>
             </div>
@@ -419,24 +419,24 @@
             <div class="contact-info-card">
               <div class="contact-info-icon"><i class="bi bi-envelope-fill"></i></div>
               <div class="contact-info-content">
-                <h4>Email Inquiries</h4>
-                <p><a href="mailto:admin@omnivirtualsolution.com" style="color:inherit;text-decoration:none;" data-block-key="footer.email">admin@omnivirtualsolution.com</a></p>
+                <h4 data-block-key="home.contact.email_title">Email Inquiries</h4>
+                <p class="contact-card-text"><a href="mailto:admin@omnivirtualsolution.com" style="color:inherit;text-decoration:none;" data-block-key="footer.email">admin@omnivirtualsolution.com</a></p>
               </div>
             </div>
 
             <div class="contact-info-card">
               <div class="contact-info-icon"><i class="bi bi-telephone-fill"></i></div>
               <div class="contact-info-content">
-                <h4>Phone Support</h4>
-                <p><a href="tel:+13159154799" style="color:inherit;text-decoration:none;" data-block-key="footer.phone">+1 315-915-4799</a></p>
+                <h4 data-block-key="home.contact.phone_title">Phone Support</h4>
+                <p class="contact-card-text"><a href="tel:+13159154799" style="color:inherit;text-decoration:none;" data-block-key="footer.phone">+1 315-915-4799</a></p>
               </div>
             </div>
 
             <div class="contact-info-card">
               <div class="contact-info-icon"><i class="bi bi-clock-fill"></i></div>
               <div class="contact-info-content">
-                <h4>Operating Hours</h4>
-                <p>Monday – Friday: 9:00 AM – 6:00 PM EST<br>24/7 Virtual Specialist Operations</p>
+                <h4 data-block-key="home.contact.hours_title">Operating Hours</h4>
+                <p data-block-key="home.contact.hours_text">Monday – Friday: 9:00 AM – 6:00 PM EST<br>24/7 Virtual Specialist Operations</p>
               </div>
             </div>
           </div>
@@ -451,19 +451,19 @@
 
                 <div class="row gy-3">
                   <div class="col-md-6">
-                    <label class="form-label">Your Name <span class="text-warning">*</span></label>
+                    <label class="form-label"><span data-block-key="home.contact.lbl_name">Your Name</span> <span class="text-warning">*</span></label>
                     <input type="text" name="name" class="form-control" placeholder="John Doe" required>
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label">Your Email <span class="text-warning">*</span></label>
+                    <label class="form-label"><span data-block-key="home.contact.lbl_email">Your Email</span> <span class="text-warning">*</span></label>
                     <input type="email" name="email" class="form-control" placeholder="john@example.com" required>
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label">Phone Number</label>
+                    <label class="form-label"><span data-block-key="home.contact.lbl_phone">Phone Number</span></label>
                     <input type="tel" name="phone" class="form-control" placeholder="+1 (555) 000-0000">
                   </div>
                   <div class="col-md-6">
-                    <label class="form-label">Service of Interest</label>
+                    <label class="form-label"><span data-block-key="home.contact.lbl_service">Service of Interest</span></label>
                     <select name="service_interest" class="form-select">
                       <option value="">Select a Service (Optional)</option>
                       <option value="1">Publishing Packages</option>
@@ -473,11 +473,11 @@
                     </select>
                   </div>
                   <div class="col-12">
-                    <label class="form-label">Subject</label>
+                    <label class="form-label"><span data-block-key="home.contact.lbl_subject">Subject</span></label>
                     <input type="text" name="subject" class="form-control" placeholder="Project Inquiry / Consultation">
                   </div>
                   <div class="col-12">
-                    <label class="form-label">Message <span class="text-warning">*</span></label>
+                    <label class="form-label"><span data-block-key="home.contact.lbl_message">Message</span> <span class="text-warning">*</span></label>
                     <textarea name="message" class="form-control" rows="4" placeholder="Tell us about your project or workforce needs..." required></textarea>
                   </div>
                   <div class="col-12">
@@ -485,7 +485,7 @@
                   </div>
                   <div class="col-12 mt-2">
                     <button type="submit" class="contact-btn-submit">
-                      <span>Send Message</span>
+                      <span data-block-key="home.contact.submit_label">Send Message</span>
                       <i class="bi bi-arrow-right"></i>
                     </button>
                   </div>
@@ -508,9 +508,6 @@
         <div class="col-lg-3 col-md-4 footer-image-col" data-aos="fade-up" data-aos-delay="100">
           <div class="footer-img-wrapper">
             <img src="assets/img/footer-image.jpg" alt="Omni Virtual Solutions Headquarters" class="img-fluid footer-building-img" data-block-key="footer.hq.image">
-            <div class="footer-img-caption">
-              <span data-block-key="footer.hq.caption">New York, NY</span>
-            </div>
           </div>
         </div>
 

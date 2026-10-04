@@ -156,6 +156,17 @@ export const CmsProvider = ({ children }) => {
       }
       return val;
     }
+
+    if (key.startsWith('home.cta.trust_tag_') && blocks['home.cta.trust_tags']) {
+      try {
+        const idx = parseInt(key.replace('home.cta.trust_tag_', ''), 10) - 1;
+        const parsed = typeof blocks['home.cta.trust_tags'] === 'string' ? JSON.parse(blocks['home.cta.trust_tags']) : blocks['home.cta.trust_tags'];
+        if (Array.isArray(parsed) && parsed[idx]?.text) {
+          return parsed[idx].text;
+        }
+      } catch (_) {}
+    }
+
     return fallback;
   };
 

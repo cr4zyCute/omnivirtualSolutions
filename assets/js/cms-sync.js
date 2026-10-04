@@ -62,11 +62,15 @@
         try {
           const tags = typeof value === 'string' ? JSON.parse(value) : value;
           if (Array.isArray(tags)) {
-            el.innerHTML = tags.map(t => `
-              <span class="trust-item"><i class="bi ${t.icon || 'bi-check-circle'}"></i> ${t.text || ''}</span>
-            `).join('');
-            el.classList.add('cms-live-pulsing');
-            setTimeout(() => el.classList.remove('cms-live-pulsing'), 1200);
+            tags.forEach((t, idx) => {
+              const itemKey = `home.cta.trust_tag_${idx + 1}`;
+              const itemEl = document.querySelector(`[data-block-key="${itemKey}"]`);
+              if (itemEl && document.activeElement !== itemEl) {
+                const icon = itemEl.querySelector('i');
+                const iconHtml = icon ? icon.outerHTML + ' ' : '';
+                itemEl.innerHTML = iconHtml + (t.text || '');
+              }
+            });
             return;
           }
         } catch (_) {}
@@ -75,10 +79,10 @@
       if (el.tagName.toLowerCase() === 'img') {
         const path = value.startsWith('/') ? value.slice(1) : value;
         el.src = path;
-      } else if (el.classList.contains('service-pill')) {
+      } else if (el.classList.contains('service-pill') || el.classList.contains('trust-item')) {
         const icon = el.querySelector('i');
-        const iconHtml = icon ? icon.outerHTML + ' ' : '<i class="bi bi-check2"></i> ';
-        el.innerHTML = iconHtml + String(value).replace(/^✓\s*/, '').trim();
+        const iconHtml = icon ? icon.outerHTML + ' ' : '';
+        el.innerHTML = iconHtml + String(value).replace(/^[✓📖☑️📢]\s*/, '').trim();
       } else {
         if (value.includes('\n')) {
           el.innerHTML = value.replace(/\n/g, '<br>');
@@ -202,6 +206,8 @@
     const sections = contentArea.querySelectorAll('section');
     sections.forEach((sec) => {
       const secId = (sec.id || 'general').replace(/-section$/, '').toLowerCase();
+      // Contact section has explicit standardized keys — skip auto-tagging
+      if (secId === 'contact') return;
 
       // Tag Headings
       sec.querySelectorAll('h1, h2, h3, h4, h5').forEach((heading, idx) => {
@@ -217,7 +223,8 @@
       // Tag Paragraphs and Spans
       sec.querySelectorAll('p, blockquote, span').forEach((textEl, idx) => {
         const text = textEl.textContent.trim();
-        // Skip tiny labels, icons, or if inside an already tagged element
+        // Skip tiny labels, icons, or if inside an already tagged element, or if contains tagged child
+        if (textEl.hasAttribute('data-block-key') || textEl.querySelector('[data-block-key]')) return;
         const isPill = textEl.classList.contains('service-pill');
         if ((isPill || text.length >= 4) && !textEl.hasAttribute('data-block-key')) {
           const parentTagged = textEl.parentElement?.closest('[data-block-key]');
@@ -343,16 +350,22 @@
         el.contentEditable = isEditMode ? 'true' : 'false';
         el.spellcheck = false;
 
-        // Prevent link navigation when clicking inside content in edit mode, and ensure immediate focus
+        // Prevent link navigation and label/button activations when clicking inside content in edit mode, and ensure immediate focus
         el.addEventListener('click', (e) => {
           if (isEditMode) {
             const anchor = el.tagName.toLowerCase() === 'a' ? el : el.closest('a');
             if (anchor) e.preventDefault();
+            if (el.tagName.toLowerCase() === 'label' || el.closest('label') || el.closest('button')) {
+              e.preventDefault();
+            }
             el.focus();
           }
         });
         el.addEventListener('mousedown', (e) => {
           if (isEditMode) {
+            if (el.tagName.toLowerCase() === 'label' || el.closest('label') || el.closest('button')) {
+              e.preventDefault();
+            }
             el.focus();
           }
         });
@@ -361,8 +374,11 @@
         el.addEventListener('blur', () => {
           if (!isEditMode) return;
           const raw = el.innerText.trim();
-          const val = el.classList.contains('service-pill') ? raw.replace(/^✓\s*/, '').trim() : raw;
+          const val = (el.classList.contains('service-pill') || el.classList.contains('trust-item')) ? raw.replace(/^[✓📖☑️📢]\s*/, '').trim() : raw;
           saveBlock(key, val);
+          if (key.startsWith('home.cta.trust_tag_')) {
+            syncTrustTagsContainer();
+          }
         });
 
         // Debounced auto-save on typing (800ms)
@@ -372,12 +388,31 @@
           clearTimeout(debounceTimers[key]);
           debounceTimers[key] = setTimeout(() => {
             const raw = el.innerText.trim();
-            const val = el.classList.contains('service-pill') ? raw.replace(/^✓\s*/, '').trim() : raw;
+            const val = (el.classList.contains('service-pill') || el.classList.contains('trust-item')) ? raw.replace(/^[✓📖☑️📢]\s*/, '').trim() : raw;
             saveBlock(key, val);
+            if (key.startsWith('home.cta.trust_tag_')) {
+              syncTrustTagsContainer();
+            }
           }, 800);
         });
       }
     });
+
+    function syncTrustTagsContainer() {
+      const container = document.getElementById('ctaTrustTagsContainer') || document.querySelector('.cta-trust-tags');
+      if (!container) return;
+      const items = Array.from(container.querySelectorAll('.trust-item')).map(item => {
+        const i = item.querySelector('i');
+        let icon = 'bi-check-circle';
+        if (i) {
+          const cls = Array.from(i.classList).find(c => c.startsWith('bi-') && c !== 'bi');
+          if (cls) icon = cls;
+        }
+        const text = item.innerText.replace(/^[✓📖☑️📢]\s*/, '').trim();
+        return { icon, text };
+      });
+      saveBlock('home.cta.trust_tags', JSON.stringify(items));
+    }
 
     // Also disable clicking on links within content during edit mode so user can edit text without redirecting
     if (isEditMode) {
@@ -997,6 +1032,14 @@
         -webkit-user-select: text !important;
         user-select: text !important;
       }
+      body.mode-edit .trust-item[data-block-key] {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        cursor: text !important;
+        -webkit-user-select: text !important;
+        user-select: text !important;
+      }
       body.mode-edit p[data-block-key],
       body.mode-edit h1[data-block-key],
       body.mode-edit h2[data-block-key],
@@ -1005,13 +1048,43 @@
       body.mode-edit h5[data-block-key] {
         display: block !important;
       }
-      body.mode-edit span[data-block-key]:not(.service-pill):not(.service-link-text),
+      body.mode-edit span[data-block-key]:not(.service-pill):not(.service-link-text):not(.trust-item),
       body.mode-edit b[data-block-key],
       body.mode-edit strong[data-block-key] {
         display: inline !important;
       }
       body.mode-edit a[data-block-key] {
         display: inline-flex !important;
+      }
+      body.mode-edit .contact-info-card:hover {
+        transform: none !important;
+      }
+      body.mode-edit .contact-pill-badge span[data-block-key] {
+        display: inline-block !important;
+        cursor: text !important;
+      }
+      body.mode-edit .contact-section-heading[data-block-key] {
+        cursor: text !important;
+      }
+      body.mode-edit .contact-info-content h4[data-block-key] {
+        cursor: text !important;
+        display: inline-block !important;
+        margin-bottom: 4px !important;
+      }
+      body.mode-edit .contact-card-text {
+        cursor: default;
+      }
+      body.mode-edit .contact-card-text a[data-block-key] {
+        cursor: text !important;
+        display: inline-block !important;
+      }
+      body.mode-edit .contact-btn-submit span[data-block-key] {
+        cursor: text !important;
+        display: inline-block !important;
+      }
+      body.mode-edit .form-label span[data-block-key] {
+        cursor: text !important;
+        display: inline-block !important;
       }
       body.mode-edit [data-block-key]:hover {
         outline: 2px solid #eba22d !important;

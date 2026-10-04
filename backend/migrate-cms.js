@@ -92,6 +92,22 @@ const CONTENT_BLOCKS = [
   { key: "home.cta.desc",          type: "text",  label: "CTA — Description",        value: "Experience top-tier virtual specialists who enhance efficiency while maintaining autonomy and oversight. Let's scale your business together." },
   { key: "home.cta.btn_label",     type: "text",  label: "CTA — Button Label",       value: "Services" },
 
+  // Contact Section
+  { key: "home.contact.badge",       type: "text",  label: "Contact — Pill Badge",            value: "✦ GET IN TOUCH" },
+  { key: "home.contact.heading",     type: "text",  label: "Contact — Section Heading",       value: "Contact Our Team" },
+  { key: "home.contact.hq_title",    type: "text",  label: "Contact — HQ Card Title",         value: "Our Headquarters" },
+  { key: "home.contact.email_title", type: "text",  label: "Contact — Email Card Title",      value: "Email Inquiries" },
+  { key: "home.contact.phone_title", type: "text",  label: "Contact — Phone Card Title",      value: "Phone Support" },
+  { key: "home.contact.hours_title", type: "text",  label: "Contact — Hours Card Title",      value: "Operating Hours" },
+  { key: "home.contact.hours_text",  type: "text",  label: "Contact — Operating Hours",       value: "Monday – Friday: 9:00 AM – 6:00 PM EST\n24/7 Virtual Specialist Operations" },
+  { key: "home.contact.lbl_name",    type: "text",  label: "Contact — Form Label: Name",      value: "Your Name" },
+  { key: "home.contact.lbl_email",   type: "text",  label: "Contact — Form Label: Email",     value: "Your Email" },
+  { key: "home.contact.lbl_phone",   type: "text",  label: "Contact — Form Label: Phone",     value: "Phone Number" },
+  { key: "home.contact.lbl_service", type: "text",  label: "Contact — Form Label: Service",   value: "Service of Interest" },
+  { key: "home.contact.lbl_subject", type: "text",  label: "Contact — Form Label: Subject",   value: "Subject" },
+  { key: "home.contact.lbl_message", type: "text",  label: "Contact — Form Label: Message",   value: "Message" },
+  { key: "home.contact.submit_label",type: "text",  label: "Contact — Submit Button",         value: "Send Message" },
+
   // Footer / Contact
   { key: "footer.hq.image",        type: "image", label: "Footer — HQ Photo",        value: "assets/img/footer-image.jpg" },
   { key: "footer.hq.caption",      type: "text",  label: "Footer — HQ Caption",      value: "New York, NY" },

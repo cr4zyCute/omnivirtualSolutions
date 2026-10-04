@@ -251,9 +251,9 @@ export default function Contact() {
       <div className="container" data-aos="fade-up" data-aos-delay="100">
         <div className="text-center">
           <div className="contact-pill-badge">
-            <span>✦ GET IN TOUCH</span>
+            <span data-block-key="home.contact.badge">{t('home.contact.badge', '✦ GET IN TOUCH')}</span>
           </div>
-          <h2 className="contact-section-heading">Contact Our Team</h2>
+          <h2 className="contact-section-heading" data-block-key="home.contact.heading">{t('home.contact.heading', 'Contact Our Team')}</h2>
           <div className="contact-heading-divider"></div>
         </div>
 
@@ -265,7 +265,7 @@ export default function Contact() {
                 <i className="bi bi-geo-alt-fill"></i>
               </div>
               <div className="contact-info-content">
-                <h4>Our Headquarters</h4>
+                <h4 data-block-key="home.contact.hq_title">{t('home.contact.hq_title', 'Our Headquarters')}</h4>
                 <p data-block-key="footer.address">
                   {businessAddress}
                 </p>
@@ -277,11 +277,12 @@ export default function Contact() {
                 <i className="bi bi-envelope-fill"></i>
               </div>
               <div className="contact-info-content">
-                <h4>Email Inquiries</h4>
-                <p>
+                <h4 data-block-key="home.contact.email_title">{t('home.contact.email_title', 'Email Inquiries')}</h4>
+                <p className="contact-card-text">
                   <a
                     href={`mailto:${businessEmail}`}
                     style={{ color: '#eba22d', textDecoration: 'none', fontWeight: 600 }}
+                    data-block-key="footer.email"
                   >
                     {businessEmail}
                   </a>
@@ -306,8 +307,8 @@ export default function Contact() {
                 <i className="bi bi-telephone-fill"></i>
               </div>
               <div className="contact-info-content">
-                <h4>Phone Support</h4>
-                <p>
+                <h4 data-block-key="home.contact.phone_title">{t('home.contact.phone_title', 'Phone Support')}</h4>
+                <p className="contact-card-text">
                   <a
                     href={`tel:${cleanPhone}`}
                     style={{ color: 'inherit', textDecoration: 'none' }}
@@ -324,11 +325,16 @@ export default function Contact() {
                 <i className="bi bi-clock-fill"></i>
               </div>
               <div className="contact-info-content">
-                <h4>Operating Hours</h4>
-                <p>
-                  Monday – Friday: 9:00 AM – 6:00 PM EST
-                  <br />
-                  24/7 Virtual Specialist Operations
+                <h4 data-block-key="home.contact.hours_title">{t('home.contact.hours_title', 'Operating Hours')}</h4>
+                <p data-block-key="home.contact.hours_text">
+                  {t('home.contact.hours_text', 'Monday – Friday: 9:00 AM – 6:00 PM EST\n24/7 Virtual Specialist Operations')
+                    .split('\n')
+                    .map((line, idx) => (
+                      <React.Fragment key={idx}>
+                        {line}
+                        {idx < 1 && <br />}
+                      </React.Fragment>
+                    ))}
                 </p>
               </div>
             </div>
@@ -341,7 +347,7 @@ export default function Contact() {
                 <div className="row gy-3">
                   <div className="col-md-6">
                     <label className="form-label">
-                      Your Name <span className="text-warning">*</span>
+                      <span data-block-key="home.contact.lbl_name">{t('home.contact.lbl_name', 'Your Name')}</span> <span className="text-warning">*</span>
                     </label>
                     <input
                       type="text"
@@ -354,7 +360,9 @@ export default function Contact() {
                     />
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label">Your Email</label>
+                    <label className="form-label">
+                      <span data-block-key="home.contact.lbl_email">{t('home.contact.lbl_email', 'Your Email')}</span> <span className="text-warning">*</span>
+                    </label>
                     <input
                       type="email"
                       name="email"
@@ -365,7 +373,9 @@ export default function Contact() {
                     />
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label">Phone Number</label>
+                    <label className="form-label">
+                      <span data-block-key="home.contact.lbl_phone">{t('home.contact.lbl_phone', 'Phone Number')}</span>
+                    </label>
                     <input
                       type="tel"
                       name="phone"
@@ -376,7 +386,9 @@ export default function Contact() {
                     />
                   </div>
                   <div className="col-md-6">
-                    <label className="form-label">Service of Interest</label>
+                    <label className="form-label">
+                      <span data-block-key="home.contact.lbl_service">{t('home.contact.lbl_service', 'Service of Interest')}</span>
+                    </label>
                     <select
                       name="service_interest"
                       className="form-select"
@@ -392,7 +404,9 @@ export default function Contact() {
                     </select>
                   </div>
                   <div className="col-12">
-                    <label className="form-label">Subject</label>
+                    <label className="form-label">
+                      <span data-block-key="home.contact.lbl_subject">{t('home.contact.lbl_subject', 'Subject')}</span>
+                    </label>
                     <input
                       type="text"
                       name="subject"
@@ -404,7 +418,7 @@ export default function Contact() {
                   </div>
                   <div className="col-12">
                     <label className="form-label">
-                      Message <span className="text-warning">*</span>
+                      <span data-block-key="home.contact.lbl_message">{t('home.contact.lbl_message', 'Message')}</span> <span className="text-warning">*</span>
                     </label>
                     <textarea
                       name="message"
@@ -447,7 +461,7 @@ export default function Contact() {
                         </>
                       ) : (
                         <>
-                          <span>Send Message</span>
+                          <span data-block-key="home.contact.submit_label">{t('home.contact.submit_label', 'Send Message')}</span>
                           <i className="bi bi-arrow-right ms-1"></i>
                         </>
                       )}
