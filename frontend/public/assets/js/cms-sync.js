@@ -977,6 +977,26 @@
         -webkit-user-select: text !important;
         user-select: text !important;
       }
+      body.mode-edit .service-pill[data-block-key] {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        cursor: text !important;
+        -webkit-user-select: text !important;
+        user-select: text !important;
+      }
+      body.mode-edit .service-card-tag[data-block-key] {
+        display: inline-block !important;
+        cursor: text !important;
+        -webkit-user-select: text !important;
+        user-select: text !important;
+      }
+      body.mode-edit .service-link-text[data-block-key] {
+        display: inline-block !important;
+        cursor: text !important;
+        -webkit-user-select: text !important;
+        user-select: text !important;
+      }
       body.mode-edit p[data-block-key],
       body.mode-edit h1[data-block-key],
       body.mode-edit h2[data-block-key],
@@ -985,7 +1005,7 @@
       body.mode-edit h5[data-block-key] {
         display: block !important;
       }
-      body.mode-edit span[data-block-key],
+      body.mode-edit span[data-block-key]:not(.service-pill):not(.service-link-text),
       body.mode-edit b[data-block-key],
       body.mode-edit strong[data-block-key] {
         display: inline !important;

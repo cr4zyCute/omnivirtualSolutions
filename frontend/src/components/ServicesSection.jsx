@@ -56,7 +56,9 @@ export default function ServicesSection() {
               </div>
 
               <Link to="/services?open=marketing-dropdown" className="service-card-footer text-decoration-none">
-                <span className="service-link-text">Learn More</span>
+                <span className="service-link-text" data-block-key="service.services.link_1">
+                  {t('service.services.link_1', 'Learn More')}
+                </span>
                 <i className="bi bi-arrow-right service-link-arrow"></i>
               </Link>
             </div>
@@ -95,7 +97,9 @@ export default function ServicesSection() {
               </div>
 
               <Link to="/services?open=eval-services" className="service-card-footer text-decoration-none">
-                <span className="service-link-text">Learn More</span>
+                <span className="service-link-text" data-block-key="service.services.link_2">
+                  {t('service.services.link_2', 'Learn More')}
+                </span>
                 <i className="bi bi-arrow-right service-link-arrow"></i>
               </Link>
             </div>
