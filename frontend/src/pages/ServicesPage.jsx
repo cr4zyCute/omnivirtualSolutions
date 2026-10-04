@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import { useCms } from '../context/CmsContext';
 import './ServicesPage.css';
 
 // Comprehensive fallback catalog matching services catalog
@@ -298,12 +299,53 @@ const DEFAULT_CATALOG = [
   },
 ];
 
+// Helper to normalize and ensure full property tree for catalog objects
+function formatCatalog(rawList) {
+  if (!Array.isArray(rawList)) return [];
+  return rawList.map((cat) => ({
+    id: cat.id || cat.slug || '',
+    title: cat.title || '',
+    tag: cat.tag || cat.slug || '',
+    icon: cat.icon || cat.icon_class || 'bi-bookmark-star',
+    subcategories: (cat.subcategories || []).map((sub) => ({
+      id: sub.id || sub.slug || '',
+      title: sub.title || '',
+      services: (sub.services || []).map((s) => ({
+        slug: s.slug || '',
+        title: s.title || '',
+        price: s.price || s.price_display || 'Inquire for Quote',
+        price_display: s.price || s.price_display || 'Inquire for Quote',
+        lead: s.lead || s.lead_paragraph || '',
+        lead_paragraph: s.lead || s.lead_paragraph || '',
+        features: Array.isArray(s.features) && s.features.length > 0 ? s.features : [
+          'Full editorial and publishing consultation',
+          'Dedicated project manager assignment',
+          '100% author rights and royalty retention',
+        ],
+      })),
+    })),
+  }));
+}
+
 export default function ServicesPage() {
   const [searchParams] = useSearchParams();
   const openParam = searchParams.get('open');
   const serviceParam = searchParams.get('service');
+  const { t, blocks, company } = useCms();
 
-  const [catalog, setCatalog] = useState(DEFAULT_CATALOG);
+  const [catalog, setCatalog] = useState(() => {
+    if (blocks && blocks['services.catalog.data']) {
+      try {
+        const parsed = typeof blocks['services.catalog.data'] === 'string'
+          ? JSON.parse(blocks['services.catalog.data'])
+          : blocks['services.catalog.data'];
+        const formatted = formatCatalog(parsed);
+        if (formatted.length > 0) return formatted;
+      } catch (_) {}
+    }
+    return DEFAULT_CATALOG;
+  });
+
   const [selectedService, setSelectedService] = useState(null);
   const [activeCategoryTag, setActiveCategoryTag] = useState('all');
   const [expandedCategories, setExpandedCategories] = useState({ 'eval-services': true });
@@ -311,80 +353,71 @@ export default function ServicesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [emailCopied, setEmailCopied] = useState(false);
 
-  // Headers loaded from CMS
-  const [headerTitle, setHeaderTitle] = useState('Omni Services Catalog');
-  const [headerSubtitle, setHeaderSubtitle] = useState('Explore our full spectrum of publishing, editorial, and author marketing solutions.');
-  const [badgeText, setBadgeText] = useState('Omni Specialist Service');
-  const [priceSubText, setPriceSubText] = useState('Transparent Pricing');
-  const [overviewHeading, setOverviewHeading] = useState('Service Overview');
-  const [includedHeading, setIncludedHeading] = useState("What's Included:");
-  const [ctaSubtitle, setCtaSubtitle] = useState('Get a free consultation, custom quote, and turnaround timeline today.');
-  const [ctaBtnText, setCtaBtnText] = useState('Inquire About This Service');
-  const [ctaEmail, setCtaEmail] = useState('admin@omnivirtualsolution.com');
-
-  // Load site-meta text overrides
-  useEffect(() => {
-    fetch('/api/v1/site-meta')
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data) {
-          const email =
-            data.blockMap?.['services.cta.email'] ||
-            data.blockMap?.['footer.email'] ||
-            data.company?.recipient_email ||
-            data.company?.email ||
-            data.recipient_email;
-          if (email) setCtaEmail(email);
-
-          if (data.blockMap) {
-            if (data.blockMap['services.header.title']) setHeaderTitle(data.blockMap['services.header.title']);
-            if (data.blockMap['services.header.subtitle']) setHeaderSubtitle(data.blockMap['services.header.subtitle']);
-            if (data.blockMap['services.badge.text']) setBadgeText(data.blockMap['services.badge.text']);
-            if (data.blockMap['services.price.sub']) setPriceSubText(data.blockMap['services.price.sub']);
-            if (data.blockMap['services.overview.heading']) setOverviewHeading(data.blockMap['services.overview.heading']);
-            if (data.blockMap['services.included.heading']) setIncludedHeading(data.blockMap['services.included.heading']);
-            if (data.blockMap['services.cta.subtitle']) setCtaSubtitle(data.blockMap['services.cta.subtitle']);
-            if (data.blockMap['services.cta.btn_text']) setCtaBtnText(data.blockMap['services.cta.btn_text']);
+  // Helper to synchronously update both catalog tree and currently selected service object
+  const updateCatalogAndSelected = (rawCatalog) => {
+    const formatted = formatCatalog(rawCatalog);
+    if (!formatted.length) return;
+    setCatalog(formatted);
+    setSelectedService((current) => {
+      if (!current) return formatted[0]?.subcategories?.[0]?.services?.[0] || null;
+      for (const cat of formatted) {
+        for (const sub of (cat.subcategories || [])) {
+          for (const s of (sub.services || [])) {
+            if (s.slug === current.slug) {
+              return {
+                ...s,
+                categoryId: cat.id,
+                categoryTitle: cat.title,
+                subcategoryId: sub.id,
+                subcategoryTitle: sub.title,
+                categoryTag: cat.tag,
+              };
+            }
           }
         }
-      })
-      .catch(() => {});
-  }, []);
+      }
+      const fallback = formatted[0]?.subcategories?.[0]?.services?.[0];
+      if (fallback) {
+        return {
+          ...fallback,
+          categoryId: formatted[0].id,
+          categoryTitle: formatted[0].title,
+          subcategoryId: formatted[0].subcategories[0]?.id,
+          subcategoryTitle: formatted[0].subcategories[0]?.title,
+          categoryTag: formatted[0].tag,
+        };
+      }
+      return null;
+    });
+  };
 
-  // 1. Fetch live services catalog from backend API
+  // Sync whenever blocks['services.catalog.data'] updates from universal CmsContext
+  useEffect(() => {
+    if (blocks && blocks['services.catalog.data']) {
+      try {
+        const parsed = typeof blocks['services.catalog.data'] === 'string'
+          ? JSON.parse(blocks['services.catalog.data'])
+          : blocks['services.catalog.data'];
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          updateCatalogAndSelected(parsed);
+        }
+      } catch (_) {}
+    }
+  }, [blocks ? blocks['services.catalog.data'] : null]);
+
+  // Initial fetch of live catalog from backend API
   useEffect(() => {
     fetch('/api/v1/services')
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data && data.catalog && data.catalog.length > 0) {
-          const formatted = data.catalog.map((cat) => ({
-            id: cat.id || cat.slug,
-            title: cat.title,
-            tag: cat.tag || cat.slug,
-            icon: cat.icon || cat.icon_class || 'bi-bookmark-star',
-            subcategories: (cat.subcategories || []).map((sub) => ({
-              id: sub.id || sub.slug,
-              title: sub.title,
-              services: (sub.services || []).map((s) => ({
-                slug: s.slug,
-                title: s.title,
-                price: s.price || s.price_display || 'Inquire for Quote',
-                lead: s.lead || s.lead_paragraph || '',
-                features: Array.isArray(s.features) && s.features.length > 0 ? s.features : [
-                  'Full editorial and publishing consultation',
-                  'Dedicated project manager assignment',
-                  '100% author rights and royalty retention',
-                ],
-              })),
-            })),
-          }));
-          setCatalog(formatted);
+          updateCatalogAndSelected(data.catalog);
         }
       })
       .catch(() => {});
   }, []);
 
-  // Real-time SSE updates from CMS editor
+  // Real-time SSE updates from CMS editor directly
   useEffect(() => {
     let es = null;
     try {
@@ -393,26 +426,44 @@ export default function ServicesPage() {
         try {
           const payload = JSON.parse(event.data);
           if (payload.type === 'cms_block_updated' && payload.key === 'services.catalog.data') {
-            const newCat = JSON.parse(payload.value);
-            if (Array.isArray(newCat) && newCat.length > 0) {
-              setCatalog(newCat);
+            const rawCat = typeof payload.value === 'string' ? JSON.parse(payload.value) : payload.value;
+            if (Array.isArray(rawCat) && rawCat.length > 0) {
+              updateCatalogAndSelected(rawCat);
             }
-          } else if (payload.type === 'email_settings_updated' && payload.recipient_email) {
-            setCtaEmail(payload.recipient_email);
-          } else if (payload.type === 'company_updated' && payload.company?.email) {
-            setCtaEmail(payload.company.email);
-          } else if (payload.type === 'cms_block_updated') {
-            if (payload.key === 'services.cta.email' || payload.key === 'footer.email') {
-              setCtaEmail(payload.value);
-            }
-            if (payload.key === 'services.header.title') setHeaderTitle(payload.value);
-            if (payload.key === 'services.header.subtitle') setHeaderSubtitle(payload.value);
-            if (payload.key === 'services.badge.text') setBadgeText(payload.value);
-            if (payload.key === 'services.price.sub') setPriceSubText(payload.value);
-            if (payload.key === 'services.overview.heading') setOverviewHeading(payload.value);
-            if (payload.key === 'services.included.heading') setIncludedHeading(payload.value);
-            if (payload.key === 'services.cta.subtitle') setCtaSubtitle(payload.value);
-            if (payload.key === 'services.cta.btn_text') setCtaBtnText(payload.value);
+          } else if (payload.type === 'service_updated' && payload.key && payload.value) {
+            const slug = payload.key.replace(/^service\./, '');
+            setSelectedService((current) => {
+              if (!current || current.slug !== slug) return current;
+              return {
+                ...current,
+                title: payload.value.title !== undefined ? payload.value.title : current.title,
+                price: payload.value.price_display || payload.value.price || current.price,
+                price_display: payload.value.price_display || payload.value.price || current.price,
+                lead: payload.value.lead_paragraph || payload.value.lead || current.lead,
+                lead_paragraph: payload.value.lead_paragraph || payload.value.lead || current.lead,
+                features: Array.isArray(payload.value.features) ? payload.value.features : current.features,
+              };
+            });
+            setCatalog((prev) =>
+              prev.map((cat) => ({
+                ...cat,
+                subcategories: (cat.subcategories || []).map((sub) => ({
+                  ...sub,
+                  services: (sub.services || []).map((s) => {
+                    if (s.slug !== slug) return s;
+                    return {
+                      ...s,
+                      title: payload.value.title !== undefined ? payload.value.title : s.title,
+                      price: payload.value.price_display || payload.value.price || s.price,
+                      price_display: payload.value.price_display || payload.value.price || s.price,
+                      lead: payload.value.lead_paragraph || payload.value.lead || s.lead,
+                      lead_paragraph: payload.value.lead_paragraph || payload.value.lead || s.lead,
+                      features: Array.isArray(payload.value.features) ? payload.value.features : s.features,
+                    };
+                  }),
+                })),
+              }))
+            );
           }
         } catch (_) {}
       };
@@ -422,6 +473,47 @@ export default function ServicesPage() {
       if (es) es.close();
     };
   }, []);
+
+  // Synchronize individual service block overrides in real-time
+  useEffect(() => {
+    setSelectedService((current) => {
+      if (!current || !blocks) return current;
+      const slug = current.slug;
+      const titleOverride = blocks[`service.${slug}.title`];
+      const priceOverride = blocks[`service.${slug}.price`] || blocks[`service.${slug}.price_display`];
+      const leadOverride = blocks[`service.${slug}.desc`] || blocks[`service.${slug}.lead`];
+      const featOverride = blocks[`service.${slug}.features`];
+
+      let changed = false;
+      const updated = { ...current };
+
+      if (titleOverride !== undefined && titleOverride !== current.title) {
+        updated.title = titleOverride;
+        changed = true;
+      }
+      if (priceOverride !== undefined && priceOverride !== current.price) {
+        updated.price = priceOverride;
+        updated.price_display = priceOverride;
+        changed = true;
+      }
+      if (leadOverride !== undefined && leadOverride !== current.lead) {
+        updated.lead = leadOverride;
+        updated.lead_paragraph = leadOverride;
+        changed = true;
+      }
+      if (featOverride !== undefined) {
+        const parsedFeats = Array.isArray(featOverride)
+          ? featOverride
+          : (typeof featOverride === 'string' ? JSON.parse(featOverride) : null);
+        if (Array.isArray(parsedFeats)) {
+          updated.features = parsedFeats;
+          changed = true;
+        }
+      }
+
+      return changed ? updated : current;
+    });
+  }, [blocks]);
 
   // Flatten all services for quick lookup and navigation
   const allServicesList = useMemo(() => {
@@ -479,6 +571,36 @@ export default function ServicesPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Dynamic header, labels, and CTA bound directly to CMS t()
+  const headerTitle = t('services.header.title', 'Omni Services Catalog');
+  const headerSubtitle = t('services.header.subtitle', 'Explore our full spectrum of publishing, editorial, and author marketing solutions.');
+  const badgeText = t('services.badge.text', 'Omni Specialist Service');
+  const priceSubText = t('services.price.sub', 'Transparent Pricing');
+  const overviewHeading = t('services.overview.heading', 'Service Overview');
+  const includedHeading = t('services.included.heading', "What's Included:");
+  const ctaSubtitle = t('services.cta.subtitle', 'Get a free consultation, custom quote, and turnaround timeline today.');
+  const ctaBtnText = t('services.cta.btn_text', 'Inquire About This Service');
+  const ctaEmail = t('services.cta.email', t('footer.email', company?.email || company?.recipient_email || 'admin@omnivirtualsolution.com'));
+
+  // Active selected service display values with fallback to t() overrides
+  const displayTitle = selectedService ? t(`service.${selectedService.slug}.title`, selectedService.title) : '';
+  const displayPrice = selectedService ? t(`service.${selectedService.slug}.price`, selectedService.price || selectedService.price_display) : '';
+  const displayLead = selectedService ? t(`service.${selectedService.slug}.desc`, t(`service.${selectedService.slug}.lead`, selectedService.lead || selectedService.lead_paragraph)) : '';
+  const ctaHeading = t('services.cta.heading', selectedService ? `Ready to start with ${displayTitle}?` : 'Ready to get started?');
+
+  const displayFeatures = useMemo(() => {
+    if (!selectedService) return [];
+    const override = blocks ? blocks[`service.${selectedService.slug}.features`] : null;
+    if (Array.isArray(override)) return override;
+    if (typeof override === 'string') {
+      try {
+        const parsed = JSON.parse(override);
+        if (Array.isArray(parsed)) return parsed;
+      } catch (_) {}
+    }
+    return selectedService.features || [];
+  }, [selectedService, blocks]);
 
   // Copy email
   const handleCopyEmail = (e) => {
@@ -556,10 +678,10 @@ export default function ServicesPage() {
           
           {/* Top Header Bar (Centered) */}
           <div className="services-top-bar text-center">
-            <h1 className="services-main-title text-center">
+            <h1 className="services-main-title text-center" data-block-key="services.header.title">
               {headerTitle}
             </h1>
-            <p className="services-subtitle text-center mx-auto" style={{ maxWidth: '640px' }}>
+            <p className="services-subtitle text-center mx-auto" style={{ maxWidth: '640px' }} data-block-key="services.header.subtitle">
               {headerSubtitle}
             </p>
 
@@ -628,6 +750,7 @@ export default function ServicesPage() {
                   {catalog.map((cat) => {
                     const isExpanded = expandedCategories[cat.tag] || activeCategoryTag === cat.tag || searchQuery.length > 0;
                     const totalCount = cat.subcategories.reduce((acc, sub) => acc + sub.services.length, 0);
+                    const catTitle = t(`service.${cat.id}.title`, cat.title);
 
                     return (
                       <div key={cat.id} className="sidebar-category-group">
@@ -639,8 +762,8 @@ export default function ServicesPage() {
                           >
                             <span className="d-flex align-items-center gap-2">
                               <i className={`bi ${cat.icon}`} style={{ color: '#ad7d42' }}></i>
-                              <span className="cat-title-text">
-                                {cat.title}
+                              <span className="cat-title-text" data-block-key={`service.${cat.id}.title`}>
+                                {catTitle}
                               </span>
                             </span>
                             <span className="d-flex align-items-center gap-2">
@@ -654,27 +777,31 @@ export default function ServicesPage() {
 
                         {isExpanded && (
                           <div className="subcategories-list">
-                            {cat.subcategories.map((sub) => (
-                              <div key={sub.id} className="mb-2">
-                                <div className="subcategory-label">
-                                  {sub.title}
+                            {cat.subcategories.map((sub) => {
+                              const subTitle = t(`service.${sub.id}.title`, sub.title);
+                              return (
+                                <div key={sub.id} className="mb-2">
+                                  <div className="subcategory-label" data-block-key={`service.${sub.id}.title`}>
+                                    {subTitle}
+                                  </div>
+                                  {sub.services.map((svc) => {
+                                    const isSelected = selectedService?.slug === svc.slug;
+                                    const svcTitle = t(`service.${svc.slug}.title`, svc.title);
+                                    return (
+                                      <button
+                                        key={svc.slug}
+                                        type="button"
+                                        className={`service-nav-item ${isSelected ? 'active' : ''}`}
+                                        onClick={() => handleSelectService({ ...svc, title: svcTitle }, cat, sub)}
+                                      >
+                                        <span className="text-truncate" data-block-key={`service.${svc.slug}.title`}>{svcTitle}</span>
+                                        {isSelected && <i className="bi bi-check2"></i>}
+                                      </button>
+                                    );
+                                  })}
                                 </div>
-                                {sub.services.map((svc) => {
-                                  const isSelected = selectedService?.slug === svc.slug;
-                                  return (
-                                    <button
-                                      key={svc.slug}
-                                      type="button"
-                                      className={`service-nav-item ${isSelected ? 'active' : ''}`}
-                                      onClick={() => handleSelectService(svc, cat, sub)}
-                                    >
-                                      <span className="text-truncate">{svc.title}</span>
-                                      {isSelected && <i className="bi bi-check2"></i>}
-                                    </button>
-                                  );
-                                })}
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         )}
                       </div>
@@ -694,7 +821,7 @@ export default function ServicesPage() {
                     <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }}></i>
                     <span>{selectedService.categoryTitle || 'Publishing'}</span>
                     <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }}></i>
-                    <span className="text-dark fw-semibold">{selectedService.title}</span>
+                    <span className="text-dark fw-semibold" data-block-key={selectedService ? `service.${selectedService.slug}.title` : undefined}>{displayTitle}</span>
                   </div>
 
                   {/* Header row: Badge, Title, Price */}
@@ -702,18 +829,18 @@ export default function ServicesPage() {
                     <div style={{ maxWidth: '620px' }}>
                       <div className="service-tag-badge">
                         <i className="bi bi-award-fill"></i>
-                        <span>{badgeText}</span>
+                        <span data-block-key="services.badge.text">{badgeText}</span>
                       </div>
-                      <h2 className="service-title">
-                        {selectedService.title}
+                      <h2 className="service-title" data-block-key={selectedService ? `service.${selectedService.slug}.title` : undefined}>
+                        {displayTitle}
                       </h2>
                     </div>
 
                     <div className="service-price-block">
-                      <span className="service-price-amount">
-                        {selectedService.price}
+                      <span className="service-price-amount" data-block-key={selectedService ? `service.${selectedService.slug}.price` : undefined}>
+                        {displayPrice}
                       </span>
-                      <span className="service-price-sub">
+                      <span className="service-price-sub" data-block-key="services.price.sub">
                         {priceSubText}
                       </span>
                     </div>
@@ -723,20 +850,20 @@ export default function ServicesPage() {
 
                   {/* Service Overview Box */}
                   <div className="service-lead-box">
-                    <h5>{overviewHeading}</h5>
-                    <p className="service-lead-text">
-                      {selectedService.lead}
+                    <h5 data-block-key="services.overview.heading">{overviewHeading}</h5>
+                    <p className="service-lead-text" data-block-key={selectedService ? `service.${selectedService.slug}.lead` : undefined}>
+                      {displayLead}
                     </p>
                   </div>
 
                   {/* What's Included Feature Checklist */}
                   <div className="features-checklist-section">
-                    <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }}>
+                    <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
                       {includedHeading}
                     </h5>
 
                     <div className="service-features-list">
-                      {selectedService.features?.map((feat, idx) => (
+                      {displayFeatures.map((feat, idx) => (
                         <div className="feature-checkpoint-item" key={idx}>
                           <i className="bi bi-patch-check-fill feature-check-icon"></i>
                           <span>{feat}</span>
@@ -748,17 +875,17 @@ export default function ServicesPage() {
                   {/* Direct Action Card (Book / Consult) */}
                   <div className="service-cta-card">
                     <div className="service-cta-text-col">
-                      <h4 className="fw-bold mb-1" style={{ color: '#ffffff', fontSize: '1.25rem' }}>
-                        Ready to start with {selectedService.title}?
+                      <h4 className="fw-bold mb-1" style={{ color: '#ffffff', fontSize: '1.25rem' }} data-block-key="services.cta.heading">
+                        {ctaHeading}
                       </h4>
-                      <p className="small mb-0" style={{ color: '#fae2b2' }}>
+                      <p className="small mb-0" style={{ color: '#fae2b2' }} data-block-key="services.cta.subtitle">
                         {ctaSubtitle}
                       </p>
                     </div>
 
                     <div className="service-cta-actions">
                       <Link to="/#contact" className="service-cta-btn">
-                        <span>{ctaBtnText}</span>
+                        <span data-block-key="services.cta.btn_text">{ctaBtnText}</span>
                         <i className="bi bi-arrow-right"></i>
                       </Link>
 
@@ -772,7 +899,7 @@ export default function ServicesPage() {
                           aria-label={`Copy email: ${ctaEmail}`}
                         >
                           <i className={`bi ${emailCopied ? 'bi-check-circle-fill' : 'bi-envelope-fill'} email-lead-icon`}></i>
-                          <span className="service-email-address">
+                          <span className="service-email-address" data-block-key="services.cta.email">
                             {ctaEmail}
                           </span>
                           <span className="email-copy-icon-btn" aria-hidden="true">
@@ -794,7 +921,7 @@ export default function ServicesPage() {
                       <i className="bi bi-arrow-left"></i>
                       <span className="d-none d-sm-inline">Previous: </span>
                       <span className="text-truncate" style={{ maxWidth: '140px' }}>
-                        {prevService?.title || 'None'}
+                        {prevService ? t(`service.${prevService.slug}.title`, prevService.title) : 'None'}
                       </span>
                     </button>
 
@@ -806,7 +933,7 @@ export default function ServicesPage() {
                     >
                       <span className="d-none d-sm-inline">Next: </span>
                       <span className="text-truncate" style={{ maxWidth: '140px' }}>
-                        {nextService?.title || 'None'}
+                        {nextService ? t(`service.${nextService.slug}.title`, nextService.title) : 'None'}
                       </span>
                       <i className="bi bi-arrow-right"></i>
                     </button>
@@ -860,6 +987,7 @@ export default function ServicesPage() {
           <div className="drawer-body">
             {catalog.map((cat) => {
               const isExpanded = expandedCategories[cat.tag] || searchQuery.length > 0;
+              const catTitle = t(`service.${cat.id}.title`, cat.title);
               return (
                 <div key={cat.id} className="sidebar-category-group mb-2">
                   <button
@@ -869,32 +997,36 @@ export default function ServicesPage() {
                   >
                     <span className="d-flex align-items-center gap-2">
                       <i className={`bi ${cat.icon}`} style={{ color: '#ad7d42' }}></i>
-                      {cat.title}
+                      <span data-block-key={`service.${cat.id}.title`}>{catTitle}</span>
                     </span>
                     <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} small`}></i>
                   </button>
 
                   {isExpanded && (
                     <div className="subcategories-list">
-                      {cat.subcategories.map((sub) => (
-                        <div key={sub.id} className="mb-2">
-                          <div className="subcategory-label">{sub.title}</div>
-                          {sub.services.map((svc) => {
-                            const isSelected = selectedService?.slug === svc.slug;
-                            return (
-                              <button
-                                key={svc.slug}
-                                type="button"
-                                className={`service-nav-item ${isSelected ? 'active' : ''}`}
-                                onClick={() => handleSelectService(svc, cat, sub)}
-                              >
-                                <span className="text-truncate">{svc.title}</span>
-                                {isSelected && <i className="bi bi-check2"></i>}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      ))}
+                      {cat.subcategories.map((sub) => {
+                        const subTitle = t(`service.${sub.id}.title`, sub.title);
+                        return (
+                          <div key={sub.id} className="mb-2">
+                            <div className="subcategory-label" data-block-key={`service.${sub.id}.title`}>{subTitle}</div>
+                            {sub.services.map((svc) => {
+                              const isSelected = selectedService?.slug === svc.slug;
+                              const svcTitle = t(`service.${svc.slug}.title`, svc.title);
+                              return (
+                                <button
+                                  key={svc.slug}
+                                  type="button"
+                                  className={`service-nav-item ${isSelected ? 'active' : ''}`}
+                                  onClick={() => handleSelectService({ ...svc, title: svcTitle }, cat, sub)}
+                                >
+                                  <span className="text-truncate" data-block-key={`service.${svc.slug}.title`}>{svcTitle}</span>
+                                  {isSelected && <i className="bi bi-check2"></i>}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

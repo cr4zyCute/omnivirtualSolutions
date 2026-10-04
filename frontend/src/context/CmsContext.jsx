@@ -92,6 +92,16 @@ export const CmsProvider = ({ children }) => {
             } else if (data.key === 'footer.hq.caption') {
               setCompany((prev) => ({ ...prev, hq_caption: data.value }));
             }
+          } else if (data.type === 'service_updated' && data.key && data.value) {
+            const slug = data.key.replace(/^service\./, '');
+            setBlocks((prev) => ({
+              ...prev,
+              [`service.${slug}.title`]: data.value.title,
+              [`service.${slug}.price`]: data.value.price_display || data.value.price,
+              [`service.${slug}.lead`]: data.value.lead_paragraph || data.value.lead,
+              [`service.${slug}.desc`]: data.value.lead_paragraph || data.value.lead,
+              [`service.${slug}.features`]: data.value.features,
+            }));
           } else if (data.type === 'stats_updated' && data.key) {
             setStats((prev) => ({ ...prev, [data.key]: data.value }));
           } else if ((data.type === 'company_updated' || data.type === 'business_profile_updated') && (data.company || data.profile)) {
