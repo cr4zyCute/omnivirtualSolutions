@@ -210,12 +210,59 @@ router.get("/me", requireAuth, async (req, res) => {
   }
 });
 
-// ── POST /api/v1/auth/logout ──────────────────────────────────────
-// Server-side: logs the event. Client must clear its stored token.
-router.post("/logout", requireAuth, (req, res) => {
-  const ip = getClientIP(req);
-  console.log(`[auth/logout] ${req.admin.username} | IP: ${ip}`);
-  return res.json({ success: true, message: "Logged out. Clear your token on the client." });
+// ── PATCH /api/v1/auth/password — change admin password ───────────
+router.patch("/password", requireAuth, async (req, res) => {
+  const { currentPassword, newPassword } = req.body || {};
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({
+      error: { code: "VALIDATION_ERROR", message: "currentPassword and newPassword are required." },
+    });
+  }
+
+  if (typeof newPassword !== "string" || newPassword.length < 10) {
+    return res.status(400).json({
+      error: { code: "VALIDATION_ERROR", message: "newPassword must be at least 10 characters long." },
+    });
+  }
+
+  if (newPassword === "omni-admin-2024") {
+    return res.status(400).json({
+      error: { code: "VALIDATION_ERROR", message: "Cannot reuse the sample default password." },
+    });
+  }
+
+  try {
+    const result = await db.execute({
+      sql: "SELECT id, password_hash FROM admin_users WHERE id = ? AND is_active = 1",
+      args: [req.admin.id],
+    });
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: { code: "NOT_FOUND", message: "Admin user not found." } });
+    }
+
+    const user = result.rows[0];
+    const match = await bcrypt.compare(currentPassword, user.password_hash);
+    if (!match) {
+      return res.status(401).json({
+        error: { code: "INVALID_CREDENTIALS", message: "Current password is incorrect." },
+      });
+    }
+
+    const newHash = await bcrypt.hash(newPassword, 12);
+    await db.execute({
+      sql: "UPDATE admin_users SET password_hash = ? WHERE id = ?",
+      args: [newHash, user.id],
+    });
+
+    console.log(`[auth/password] Password updated successfully for admin ID ${user.id}`);
+    return res.json({ success: true, message: "Password updated successfully." });
+  } catch (err) {
+    console.error("[auth/password] Error:", err.message);
+    return res.status(500).json({
+      error: { code: "INTERNAL_ERROR", message: "Failed to update password." },
+    });
+  }
 });
 
 module.exports = router;

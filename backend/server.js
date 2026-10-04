@@ -27,6 +27,8 @@ const cors    = require("cors");
 const path    = require("path");
 const fs      = require("fs");
 
+const { rateLimit: createRateLimit } = require("express-rate-limit");
+
 // ── Route modules ─────────────────────────────────────────────────
 const siteRoutes       = require("./routes/site");
 const servicesRoutes   = require("./routes/services");
@@ -39,6 +41,47 @@ const app  = express();
 const PORT = process.env.PORT || 3000;
 
 // ─────────────────────────────────────────────────────────────────
+// Trust Proxy Configuration (for reverse proxies: Render, Railway, Nginx, Cloudflare)
+// ─────────────────────────────────────────────────────────────────
+const trustProxyVal = process.env.TRUST_PROXY || "1";
+app.set(
+  "trust proxy",
+  trustProxyVal === "false" ? false : isNaN(Number(trustProxyVal)) ? trustProxyVal : parseInt(trustProxyVal, 10)
+);
+
+// ─────────────────────────────────────────────────────────────────
+// Security Gatekeeper: Block unauthorized access to sensitive files
+// Prevents downloading database files, backend source, .env, or package configs
+// ─────────────────────────────────────────────────────────────────
+app.use((req, res, next) => {
+  let decodedPath = "";
+  try {
+    decodedPath = decodeURIComponent(req.path).toLowerCase();
+  } catch (_) {
+    return res.status(400).json({ error: { code: "BAD_REQUEST", message: "Invalid path encoding." } });
+  }
+
+  const isSensitive =
+    /(?:^|\/)\.env/i.test(decodedPath) ||
+    /(?:^|\/)data(?:\/|$)/i.test(decodedPath) ||
+    /(?:^|\/)backend(?:\/|$)/i.test(decodedPath) ||
+    /(?:^|\/)node_modules(?:\/|$)/i.test(decodedPath) ||
+    /(?:^|\/)\.git/i.test(decodedPath) ||
+    /(?:^|\/)\.vscode/i.test(decodedPath) ||
+    /(?:^|\/)\.agents/i.test(decodedPath) ||
+    /\.(db|sqlite|sqlite3|sql|log)$/i.test(decodedPath) ||
+    /(?:^|\/)package(?:-lock)?\.json$/i.test(decodedPath);
+
+  if (isSensitive) {
+    return res.status(403).json({
+      error: { code: "FORBIDDEN", message: "Access denied." },
+    });
+  }
+
+  next();
+});
+
+// ─────────────────────────────────────────────────────────────────
 // Security Headers (Login Page Security Mastery Skill §2)
 // ─────────────────────────────────────────────────────────────────
 app.use((req, res, next) => {
@@ -49,25 +92,23 @@ app.use((req, res, next) => {
   // Basic XSS protection for older browsers
   res.setHeader("X-XSS-Protection", "1; mode=block");
   // Tell browsers to prefer HTTPS (HSTS) — 1 year, include subdomains
-  // Only send over HTTPS; no-op on localhost HTTP during dev
   if (req.secure || req.headers["x-forwarded-proto"] === "https") {
     res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   }
   // Referrer: don't leak URL path info to third parties
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   // Content Security Policy for admin pages
-  // Allows: same origin scripts/styles, Google Fonts, inline scripts (admin pages use them)
   if (req.path.startsWith("/admin")) {
     res.setHeader(
       "Content-Security-Policy",
       [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",  // admin pages use inline scripts & Chart.js
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com",
         "img-src 'self' data: blob: https:",
         "connect-src 'self'",
-        "frame-ancestors 'self'",                      // blocks framing from other origins
+        "frame-ancestors 'self'",
         "base-uri 'self'",
         "form-action 'self'",
       ].join("; ")
@@ -77,34 +118,77 @@ app.use((req, res, next) => {
 });
 
 // ─────────────────────────────────────────────────────────────────
-// Middleware
+// Middleware & CORS
 // ─────────────────────────────────────────────────────────────────
+const configuredOrigins = (process.env.ALLOWED_ORIGINS || process.env.CLIENT_URL || "")
+  .split(",")
+  .map((s) => s.trim().replace(/\/$/, ""))
+  .filter(Boolean);
+
 app.use(cors({
   origin: (origin, cb) => {
-    const allowed = [
-      undefined,
-      "null",
-      /^http:\/\/localhost(:\d+)?$/,
-      /^http:\/\/127\.0\.0\.1(:\d+)?$/,
-    ];
-    const ok = !origin || allowed.some((p) => (p instanceof RegExp ? p.test(origin) : p === origin));
-    cb(null, ok);
+    if (!origin || origin === "null") return cb(null, true);
+
+    // Development origins
+    if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+      return cb(null, true);
+    }
+
+    // Default production domain
+    if (/^https:\/\/(www\.)?omnivirtualsolution\.com$/.test(origin)) {
+      return cb(null, true);
+    }
+
+    // Custom environment configured origins
+    if (configuredOrigins.some((allowed) => allowed === origin || (allowed.startsWith("*.") && origin.endsWith(allowed.slice(1))))) {
+      return cb(null, true);
+    }
+
+    // Allow during development
+    if (process.env.NODE_ENV !== "production") {
+      return cb(null, true);
+    }
+
+    cb(new Error(`CORS blocked for origin: ${origin}`));
   },
   methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 }));
 
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: false, limit: "10mb" }));
+app.use(express.json({ limit: "2mb" }));
+app.use(express.urlencoded({ extended: false, limit: "2mb" }));
 
-// ── Serve all static files (HTML, CSS, JS, images, uploads) ──────
-app.use(express.static(path.resolve(__dirname, "..")));
+// ─────────────────────────────────────────────────────────────────
+// Static Files: Whitelisted directories only (NO full root exposure)
+// ─────────────────────────────────────────────────────────────────
+// 1. Shared assets: /assets/* -> ../assets/*
+app.use("/assets", express.static(path.resolve(__dirname, "../assets")));
 
-// ── Live In-Place Editor mirror of the real website ──────────────
-// Served under /admin/site/ so it is reachable through the Vite dev proxy
-// (which only forwards /admin and /api to this server) and stays same-origin
-// with the admin dashboard (shared login token + iframe access).
-app.use("/admin/site", express.static(path.resolve(__dirname, "..")));
+// 2. Forms: /forms/* -> ../forms/*
+app.use("/forms", express.static(path.resolve(__dirname, "../forms")));
+
+// 3. Admin dashboard: /admin/* -> ../admin/*
+app.use("/admin", express.static(path.resolve(__dirname, "../admin")));
+
+// 4. Live In-Place Editor mirror for admin visual iframe
+// Restrict to safe web document & media extensions only
+const liveEditorStatic = express.static(path.resolve(__dirname, ".."), {
+  index: false,
+  dotfiles: "ignore",
+});
+app.use("/admin/site", (req, res, next) => {
+  if (req.path.endsWith("/") || /\.(html|htm|css|js|png|jpg|jpeg|webp|svg|ico)$/i.test(req.path)) {
+    return liveEditorStatic(req, res, next);
+  }
+  return res.status(403).json({ error: { code: "FORBIDDEN", message: "Access denied." } });
+});
+
+// 5. Frontend React distribution build (if built)
+const frontendDistPath = path.resolve(__dirname, "../frontend/dist");
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+}
 
 // ─────────────────────────────────────────────────────────────────
 // Public API Routes
@@ -114,25 +198,34 @@ app.use("/api/v1/services",  servicesRoutes);
 app.use("/api/v1/contact",   contactRoutes);
 app.use("/api/v1/live",      liveRouter);
 
-// ── Lightweight visitor tracking (privacy-preserving) ─────────────
+// ── Lightweight visitor tracking (privacy-preserving & rate-limited) ──
 const crypto = require("crypto");
 const { db: appDb } = require("./db");
-app.post("/api/v1/track-visit", (req, res) => {
+
+const trackVisitLimit = createRateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 60, // max 60 visit pings per minute per IP
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  handler: (_req, res) => res.status(429).json({ ok: false, error: "Rate limit exceeded" }),
+});
+
+app.post("/api/v1/track-visit", trackVisitLimit, (req, res) => {
   const { path: p = "/", referrer = "direct" } = req.body || {};
   const ua = req.headers["user-agent"] || "";
-  const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket?.remoteAddress || "";
+  const ip = req.ip || req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket?.remoteAddress || "";
   const ipHash = crypto.createHash("sha256").update(ip + (process.env.JWT_SECRET || "omni-salt")).digest("hex").slice(0, 16);
   const device = /mobile/i.test(ua) ? "mobile" : /tablet|ipad/i.test(ua) ? "tablet" : "desktop";
 
   appDb.execute({
     sql: "INSERT INTO page_visits (path, ip_hash, device, referrer) VALUES (?, ?, ?, ?)",
-    args: [String(p).slice(0, 200), ipHash, device, String(referrer).slice(0, 200)]
+    args: [String(p).slice(0, 200), ipHash, device, String(referrer).slice(0, 200)],
   }).then(() => {
     broadcast({
       type: "page_visit",
       path: String(p).slice(0, 200),
       device,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }).catch(() => {});
   res.json({ ok: true });

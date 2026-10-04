@@ -25,18 +25,21 @@ const emailSvc  = require("../email-service");
 const { broadcast } = require("./live");
 const { syncUniversalEmail } = require("../email-sync");
 
-// ── Rate limiting: generous in local dev (max 100 per 15 min) ──────
+// ── Rate limiting: Production safe threshold (configurable via env) ──
 let rateLimit;
 try {
   const rl = require("express-rate-limit");
+  const maxSubmissions = process.env.CONTACT_RATE_LIMIT
+    ? parseInt(process.env.CONTACT_RATE_LIMIT, 10)
+    : (process.env.NODE_ENV === "production" ? 10 : 100);
+
   rateLimit = rl({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // high threshold to prevent blocking during development / testing
-    standardHeaders: true,
+    max: maxSubmissions,
+    standardHeaders: "draft-7",
     legacyHeaders: false,
     message: { error: { code: "RATE_LIMIT", message: "Too many submissions. Please wait a few minutes before trying again." } },
-    keyGenerator: (req) =>
-      req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket?.remoteAddress || "unknown",
+    keyGenerator: (req) => req.ip || req.socket?.remoteAddress || "unknown",
   });
 } catch (_) {
   rateLimit = (_req, _res, next) => next(); // fallback if package missing
@@ -123,18 +126,17 @@ const handleContactSubmission = async (req, res) => {
     });
     newId = Number(result.lastInsertRowid);
     console.log(`[contact] New submission #${newId} from: ${email.toLowerCase()}`);
-    // Broadcast live event to real-time dashboards
+    // Broadcast live event to real-time dashboards (privacy-safe: no email or full message on public stream)
     broadcast({
       type: "new_lead",
       lead: {
         id: newId,
-        full_name: full_name,
-        email: email.toLowerCase(),
-        subject: subject,
+        full_name: full_name ? full_name.slice(0, 30) : "Client Lead",
+        subject: subject ? subject.slice(0, 50) : "General Inquiry",
         status: 'new',
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (err) {
     console.error("[contact] Insert error:", err.message);

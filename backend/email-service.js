@@ -503,7 +503,34 @@ function buildEmailShell({
 function buildAutoReplyHtml({ submission, settings, bodyText, senderEmail, isWebPreview = false, company = null }) {
   const customerName = submission.full_name || "Valued Client";
   const inquirySubject = submission.subject || "General Inquiry";
-  const submissionDate = submission.created_at || new Date().toLocaleString("en-US", { timeZoneName: "short" });
+  let submissionDate = submission.created_at;
+  try {
+    if (submissionDate) {
+      const d = new Date(submissionDate);
+      if (!isNaN(d.getTime())) {
+        submissionDate = d.toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        });
+      }
+    } else {
+      submissionDate = new Date().toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+    }
+  } catch (_) {
+    submissionDate = new Date().toISOString();
+  }
+
   const rawMessage = (submission.message || "").trim();
   const messageExcerpt = rawMessage.length > 320 ? rawMessage.substring(0, 320) + "..." : rawMessage;
   const siteUrl = "https://omnivirtualsolution.com";
@@ -538,7 +565,16 @@ function buildAutoReplyHtml({ submission, settings, bodyText, senderEmail, isWeb
   const valColor = isEditorial ? "#1c1917" : isLight ? "#0f172a" : "#f1f5f9";
   const messageColor = isEditorial ? "#44403c" : isLight ? "#334155" : "#cbd5e1";
 
+  // Check if admin configured custom message in auto_reply_body setting
+  const trimmedBodyText = (bodyText || "").trim();
+  const hasCustomMessage = trimmedBodyText && !trimmedBodyText.startsWith("Hello {customer_name}, thank you for contacting us");
+
   const bodyContent = `
+    ${hasCustomMessage ? `
+    <div style="background-color: ${cardBg}; border: 1px solid ${cardBorder}; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px; font-size: 14px; line-height: 1.6; color: ${valColor};">
+      ${trimmedBodyText.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}
+    </div>` : ""}
+
     <div style="background-color: ${bannerBg}; border-left: 4px solid ${bannerBorder}; padding: 14px 16px; border-radius: 0 8px 8px 0; margin-bottom: 24px;">
       <p style="margin: 0; font-size: 14px; line-height: 22px; color: ${bannerText};">
         <strong>Expected turnaround:</strong> We typically respond within <strong>1–2 business days</strong>. If your request is time-sensitive, you can also reach our desk at <a href="tel:${cleanPhone}" style="color: #eba22d; text-decoration: none; font-weight: 600;">${brandPhone}</a>.
