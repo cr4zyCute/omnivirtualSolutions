@@ -1631,7 +1631,7 @@
       </li>
       <li>
         <a class="nav-item" onclick="switchTab('services', this)">
-          <i class="bi bi-briefcase-fill"></i> Services & Pricing
+          <i class="bi bi-briefcase-fill"></i> Services Catalog
         </a>
       </li>
       <li>
@@ -2129,17 +2129,17 @@
       </section>
 
 
-      <!-- ── SECTION 4: SERVICES & PRICING ── -->
+      <!-- ── SECTION 4: SERVICES CATALOG ── -->
       <section id="section-services" class="admin-section">
         <div class="panel">
           <div class="panel-header">
-            <div class="panel-title"><i class="bi bi-briefcase-fill text-warning"></i> Services & Pricing Catalog</div>
+            <div class="panel-title"><i class="bi bi-briefcase-fill text-warning"></i> Services Catalog</div>
             <input type="text" class="search-input" id="searchServices" placeholder="Search service..." oninput="filterServicesTable(this.value)">
           </div>
           <div class="panel-body" style="padding:0; overflow-x:auto;">
             <table class="data-table">
               <thead>
-                <tr><th>Title</th><th>Category</th><th>Price Display</th><th>Action</th></tr>
+                <tr><th>Title</th><th>Category</th><th>Action</th></tr>
               </thead>
               <tbody id="servicesTableBody">
                 <tr><td colspan="4" style="text-align:center; padding:24px; color:var(--muted)">Loading services...</td></tr>
@@ -2782,7 +2782,7 @@
           'overview': '<i class="bi bi-grid-1x2-fill text-warning"></i> Overview Dashboard',
           'live-editor': '<i class="bi bi-browser-chrome text-warning"></i> Live In-Place Website Editor',
           'business-profile': '<i class="bi bi-building-gear text-warning"></i> Universal Business Profile & Contact Data',
-          'services': '<i class="bi bi-briefcase-fill text-warning"></i> Services & Pricing Catalog',
+          'services': '<i class="bi bi-briefcase-fill text-warning"></i> Services Catalog',
           'leads': '<i class="bi bi-envelope-open-fill text-warning"></i> Contact Leads CRM',
           'email-templates': '<i class="bi bi-palette2 text-warning"></i> Client Email Design Studio',
           'media': '<i class="bi bi-images text-warning"></i> Media Assets Library',
@@ -4014,14 +4014,8 @@
             <td><strong>${escapeHtml(s.title)}</strong></td>
             <td><span class="status-badge" style="background:rgba(255,255,255,0.06); color:var(--muted);">${escapeHtml(s.categoryTitle)}</span></td>
             <td>
-              <input type="text" value="${escapeHtml(s.price || s.price_display || '')}" id="price-${s.slug}" style="background:#1a202c; color:#fff; border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:12px; width:130px;">
-            </td>
-            <td>
-              <button class="btn-header btn-primary-gold" style="padding:3px 8px; font-size:11px;" onclick="saveServicePrice('${s.slug}')">
-                Save Price
-              </button>
-              <button class="btn-header" style="padding:3px 8px; font-size:11px; margin-left:6px; border-color:rgba(235,162,45,0.4);" onclick="openServiceInLiveEditor('${s.slug}')" title="Edit title, price, overview, and features in Live Editor">
-                <i class="bi bi-browser-chrome text-warning"></i> Live Editor
+              <button class="btn-header btn-primary-gold" style="padding:4px 10px; font-size:11px;" onclick="openServiceInLiveEditor('${s.slug}')" title="Edit title, overview, and features in Live Editor">
+                <i class="bi bi-browser-chrome"></i> Edit in Live Editor
               </button>
             </td>
           </tr>
