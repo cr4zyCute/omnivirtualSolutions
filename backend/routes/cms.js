@@ -168,6 +168,12 @@ router.patch("/blocks/:key", requireAuth, async (req, res) => {
         args: [newValue],
       }).catch(() => {});
       broadcast({ type: "company_updated", company: { company_name: newValue } });
+    } else if (key.startsWith('service.') && key.endsWith('.price')) {
+      const slug = key.replace(/^service\./, '').replace(/\.price$/, '');
+      await db.execute({
+        sql: "UPDATE services SET price_display = ? WHERE slug = ?",
+        args: [newValue, slug],
+      }).catch(() => {});
     }
 
     if (existing.rows.length === 0) {
@@ -316,6 +322,16 @@ router.put("/services/catalog", requireAuth, async (req, res) => {
                 sql: "UPDATE services SET title = ?, price_display = ?, lead_paragraph = ? WHERE id = ?",
                 args: [svc.title || '', svc.price || svc.price_display || '', svc.lead || svc.lead_paragraph || '', svcId],
               });
+
+              if (svc.price || svc.price_display) {
+                const pVal = svc.price || svc.price_display;
+                await db.execute({
+                  sql: `INSERT INTO content_blocks (block_key, block_type, label, value, updated_by)
+                        VALUES (?, 'text', 'Package Price', ?, ?)
+                        ON CONFLICT(block_key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP`,
+                  args: [`service.${svc.slug}.price`, pVal, editor],
+                }).catch(() => {});
+              }
 
               // Also sync features if provided
               if (Array.isArray(svc.features) && svc.features.length > 0) {
