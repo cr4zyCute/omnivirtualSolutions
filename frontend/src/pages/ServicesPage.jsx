@@ -372,6 +372,50 @@ const SUBCATEGORY_DESCRIPTIONS = {
   'registration': 'Protect your work with official U.S. Copyright Office registration and secure a Library of Congress Control Number.'
 };
 
+// Exact authentic subcategory leads from services.html
+const SUBCATEGORY_LEADS = {
+  'publishing-options': 'Our packages offer various combinations of our publishing, editorial, and marketing services for a truly customized publishing experience. With Omni, you can choose the package that best suits your literary goals.',
+  'editorial-evaluation': 'The Editorial Evaluation is a manuscript checkup that assesses your work to be sure that it has fulfilled the basic requirements of a published book. The editorial evaluator will not only provide you with a general overview of your manuscript but will also educate you through constructive comments on how to write a better book.',
+  'advanced-editorial-services': "Sometimes manuscripts need specialized attention that goes beyond detail work in grammar, spelling, and punctuation. Our experienced editors take an in-depth look at your book's content and other high-level stylistic considerations, including content, plot, and pace. Services include Developmental Editing, Book Doctoring, Ghostwriting, and Ghostwriting Estimate and Sample.",
+  'author-assistance-editorial-services': 'While all of our Editorial Services aim to assist authors, this category of services takes an extra step, providing professional guidance to authors during the crucial revision stage following a core editorial service. Services include a Quality Review and an Editorial Assistant as an add-on to all of our Core and Advanced Editorial Services. Plus, Researching is available to those authors who need help gathering facts, such as for historical works or memoirs. For more information on Author Assistance Editorial Services, refer to the following form, which is used to provide additional information for the Editorial Assistant before work can begin on your manuscript: Editorial Assistant Form (.doc, 93KB)',
+  'core-editorial-services': 'Core editing services focus on improving the nuts and bolts of a book: grammar, spelling, punctuation, capitalization, and sentence structure. Services include Copyediting, Line Editing, Content Editing, and Content Editing Plus.',
+  'cover-copy-polish': 'With Omni Cover Copy Polish, ideas you provide allow us to create intriguing copy that can help you clinch the sale.',
+  'indexing': 'To maximize the usability of a nonfiction title, readers, book buyers, librarians, and reviewers will expect you to include an index in your book. You can even sell your book to readers by the index.',
+  'proofreading': 'Our proofreading and revisions services can help save you from embarrassment and costly corrections after publication.',
+  'audiobook-publishing': 'Over the years, the demand for audiobooks has significantly increased because readers are now able to easily download books and listen to them while they are on the move. Through audiobooks, stories are shared in a convenient way. Let your words unfold in your readers’ imagination through Omni audiobook publishing. Lift your story from its pages and let your readers listen to it.',
+  'print-formats': 'All manuscripts submitted to Omni are formatted as trade paperbacks and printed on high-quality, acid-free, book-grade opaque paper stock.',
+  'black-and-white-illustrations': 'Elevate your book to the next creative level with custom artwork produced in our in-house art studio. The Omni team of seasoned studio artists will work with you to produce striking black-and-white illustrations that add visual interest to your book’s content.',
+  'color-illustrations': "One of Omni's talented studio artists will use your descriptions and feedback to create custom color illustrations that reflect your book’s unique style.",
+  'cover-design': "The cover is the first opportunity you have to connect with potential readers. That's why at Omni we make sure that your cover will meet the professional standards for commercially successful books. After all, when a book is sitting on the shelf, potential readers don't look to see how a book is published. They only know whether the cover image draws their attention or the back cover copy makes them want to read more. These elements make a great cover, and that is why we pay attention to these details when we are publishing your book.",
+  'interior-page-layout': 'Careful planning and execution of the layout of your book is very important. Readers need to be able to easily follow the text of your book. Our professionals will help you create the best layout for your book.',
+  'stock-images': 'All books published via the Omni standard publishing packages receive custom-designed covers, produced in full color. Within the realm of this custom-designed cover, you have the option to choose two images, free of charge, from the millions found through Getty Images. If you wish to include more than two images on your cover, a Stock Image Processing fee will be assessed.',
+  'post-page-layout-services': 'Omni allows you to make changes to your book after the manuscript has been laid out by our designers. Charges will be applied.',
+  'pre-manuscript-services': 'Preparing your manuscript for submission and for publishing is a whole lot easier when we do it for you. Omni can convert your typewritten manuscript, or previously published book, to a word-processed format.',
+  'resubmission': 'Once your book has gone live and is for sale, you can still correct errors or other issues that might have been missed. Resubmission services are available for a fee.',
+  'video-book-trailer': 'REASONS WHY VIDEO BOOK TRAILERS ARE ESSENTIAL: A book video trailer combines visuals, text, music, and voiceovers, making it appealing to people who prefer video content over traditional text-based marketing. Videos rank well on search engines and social media platforms, increasing discoverability.',
+  'book-reviews': 'A book review is an excellent way to generate interest for your title. Book readers, buyers, and retailers rely on the opinion of experts when considering which titles are worth purchasing and reading. Omni offers four distinct review services to help you elevate your book’s credibility and raise its marketing potential.',
+  'book-signings-and-galleries': "A book exhibition or book signing event can be a terrific way to create buzz around your book. As an exhibitor at many of the largest trade shows and book events, we've put our books in the hands of booklovers and industry insiders through Omni book exhibition services.",
+  'hollywood-book-to-screen': 'Have you ever considered for even a moment that your book could be adapted into a movie or television series? If the answer is yes, then Omni can make your book available to agents, producers, directors, writers, and actors through multiple services available to our authors.',
+  'internet-marketing': 'Having your own website, internet search, or preview tools are effective and economical ways to promote your book, enhance your image as an author, and communicate with prospective readers around the world.',
+  'publicity-services': 'Get your book noticed from a unique platform created by our publicity and media services. When done right, a press release is an effective way to get publicity and build media relationships.',
+  'radio-services': 'Have you ever considered how a radio interview might affect your book’s marketing plan? If the answer is yes, then Omni can make your voice available on the airwaves to help you reach new audiences and further your cause.',
+  'bookstore-essentials': 'Through Omni Bookstore Essentials, your book receives professional bookselling services that make your book even more attractive to bookstores. By making your book returnable or adding preview services to your book, bookstores and other book buyers receive additional incentives to stock or purchase your book.',
+  'registration': 'As you make your work available to the public, you want to make sure you have the appropriate protection. There are two ways we can help you with that. The first is registering your copyright with the U.S. Copyright Office. Second, a Library of Congress Control Number makes your book more accessible to librarians and book vendors.'
+};
+
+// Authentic service summaries when displayed inside a subcategory overview (matching services.html)
+const AUTHENTIC_SERVICE_SUMMARIES = {
+  'developmental-editing': 'The Omni Developmental Editing service combines three editorial services into one package: First, a developmental editor evaluates the manuscript at the paragraph, chapter, and book levels and makes suggestions throughout the manuscript to identify big-picture areas that need work. Second, the content editor will check the manuscript for errors in grammar, spelling, and punctuation. And third, the manuscript will receive a quality review to ensure the manuscript is editorially sound before it goes into production.',
+  'book-doctor': 'A book doctor makes the changes recommended by an Omni developmental editor after you approve the suggested revisions.',
+  'small-book-review-with-editing-under-5-000-words': 'Our editors carefully review your full manuscript (under 5,000 words) and provide you with the edits best suited to your book. This all-inclusive service is a combination of our Editorial Assessment, Line Editing and Content Editing services.',
+  'copyediting': 'An experienced editor will correct errors in spelling, grammar, and punctuation in your manuscript.',
+  'line-editing': 'An editorial specialist will not only check your manuscript for more pervasive errors in spelling, grammar and punctuation, but also will make suggestions regarding sentence structure and word choice.',
+  'content-editing': 'The Content Editing service provides extensive restructuring for manuscripts that need more attention than Line Editing provides.',
+  'content-editing-plus': 'This service is ideal for manuscripts that need more work on sentence structure and grammar than basic Content Editing can provide.',
+  'cover-copy-polish': 'With Omni Cover Copy Polish, ideas you provide allow us to create intriguing copy that can help you clinch the sale.',
+  'professional-indexing': "Our professional indexers will provide you with an industry-standard, two-level topical index that is personalized to provide maximum usability for the book's target audience. The professional indexer analyzes your entire book, anticipating line items your reader will most likely want to find and listing them in an intuitive, accessible manner. This high-quality index is the standard found throughout the publishing industry."
+};
+
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
   const displayTitle = selectedService ? (selectedService.title || t(`service.${selectedService.slug}.title`, '')) : '';
   const displayPrice = selectedService ? (selectedService.price || selectedService.price_display || t(`service.${selectedService.slug}.price`, '')) : '';
@@ -389,6 +433,18 @@ const SUBCATEGORY_DESCRIPTIONS = {
     if (!selectedService || !selectedCategory) return false;
     return selectedService.slug === selectedCategory.id;
   }, [selectedService, selectedCategory]);
+
+  // Find the current subcategory
+  const currentSubcategory = useMemo(() => {
+    if (!selectedService || !selectedCategory) return null;
+    return (selectedCategory.subcategories || []).find((sub) => sub.id === selectedService.slug || sub.id === selectedService.subcategoryId) || null;
+  }, [selectedService, selectedCategory]);
+
+  // Determine if currently selected item is a Subcategory Overview
+  const isCurrentSubcategoryOverview = useMemo(() => {
+    if (!selectedService || !currentSubcategory) return false;
+    return Boolean(selectedService.isSubcategoryOverview || (selectedService.slug === currentSubcategory.id && selectedService.slug !== selectedCategory?.id));
+  }, [selectedService, selectedCategory, currentSubcategory]);
 
   const displayFeatures = useMemo(() => {
     if (!selectedService) return [];
@@ -412,15 +468,40 @@ const SUBCATEGORY_DESCRIPTIONS = {
     });
   }, [selectedService, blocks]);
 
+  // Select a subcategory overview
+  const handleSelectSubcategory = (cat, sub) => {
+    setExpandedCategories((prev) => ({ ...prev, [cat.tag]: true, [cat.id]: true }));
+    setExpandedSubcategories((prev) => ({ ...prev, [sub.id]: true }));
+
+    const subLead = SUBCATEGORY_LEADS[sub.id] || SUBCATEGORY_DESCRIPTIONS[sub.id] || sub.lead || `Explore all specialized services under ${sub.title}.`;
+    const subServices = (sub.services || []).filter(s => s.slug !== cat.id && s.slug !== sub.id);
+
+    setSelectedService({
+      slug: sub.id,
+      title: sub.title,
+      isSubcategoryOverview: true,
+      categoryId: cat.id,
+      categoryTitle: cat.title,
+      subcategoryId: sub.id,
+      subcategoryTitle: sub.title,
+      categoryTag: cat.tag,
+      lead: subLead,
+      services: subServices,
+      features: [
+        `Dedicated specialist support across all ${sub.title} offerings`,
+        'Professional project consultation and turnaround management',
+        'Transparent pricing and author royalty retention',
+        'Full compliance with industry publishing standards'
+      ]
+    });
+
+    setDrawerOpen(false);
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  };
+
   // Jump from category overview card into a specific subcategory
   const handleJumpToSubcategory = (targetCat, targetSub) => {
-    const filtered = (targetSub.services || []).filter(s => s.slug !== targetCat.id);
-    const targetSvc = filtered[0] || targetSub.services[0];
-    if (targetSvc) {
-      setExpandedCategories((prev) => ({ ...prev, [targetCat.tag]: true, [targetCat.id]: true }));
-      setExpandedSubcategories((prev) => ({ ...prev, [targetSub.id]: true }));
-      handleSelectService(targetSvc, targetCat, targetSub);
-    }
+    handleSelectSubcategory(targetCat, targetSub);
   };
 
   // Copy email
@@ -646,12 +727,14 @@ const SUBCATEGORY_DESCRIPTIONS = {
                                   ? expandedSubcategories[sub.id]
                                   : defaultSubOpen;
 
+                              const isSubOverviewSelected = selectedService?.slug === sub.id;
+
                               return (
                                 <div key={sub.id} className="subcategory-group mb-2">
                                   <button
                                     type="button"
-                                    className={`subcategory-dropdown-btn ${isSubExpanded ? 'expanded' : ''}`}
-                                    onClick={(e) => toggleSubcategoryAccordion(sub.id, e, defaultSubOpen)}
+                                    className={`subcategory-dropdown-btn ${isSubExpanded ? 'expanded' : ''} ${isSubOverviewSelected ? 'active-subcategory' : ''}`}
+                                    onClick={() => handleSelectSubcategory(cat, sub)}
                                     aria-expanded={isSubExpanded}
                                   >
                                     <span className="subcategory-label-text" data-block-key={`service.${sub.id}.title`}>
@@ -661,7 +744,16 @@ const SUBCATEGORY_DESCRIPTIONS = {
                                       <span className="subcat-count-badge">
                                         {filteredServices.length}
                                       </span>
-                                      <i className={`bi bi-chevron-${isSubExpanded ? 'down' : 'right'} subcat-chevron`}></i>
+                                      <span
+                                        className="subcat-toggle-chevron-btn"
+                                        title={isSubExpanded ? "Collapse" : "Expand"}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          toggleSubcategoryAccordion(sub.id, e, defaultSubOpen);
+                                        }}
+                                      >
+                                        <i className={`bi bi-chevron-${isSubExpanded ? 'down' : 'right'} subcat-chevron`}></i>
+                                      </span>
                                     </span>
                                   </button>
 
@@ -704,9 +796,46 @@ const SUBCATEGORY_DESCRIPTIONS = {
                   <div className="service-breadcrumb">
                     <span>Services</span>
                     <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }}></i>
-                    <span>{selectedCategory?.title || selectedService.categoryTitle || 'Publishing'}</span>
-                    {!isCurrentCategoryOverview && (
+                    <span 
+                      style={{ cursor: selectedCategory ? 'pointer' : 'default' }}
+                      onClick={() => {
+                        if (selectedCategory) {
+                          const catOverviewSvc = allServicesList.find((s) => s.slug === selectedCategory.id);
+                          if (catOverviewSvc) {
+                            handleSelectService(
+                              {
+                                ...catOverviewSvc,
+                                title: catOverviewSvc.title || t(`service.${catOverviewSvc.slug}.title`, selectedCategory.title),
+                                lead: catOverviewSvc.lead || catOverviewSvc.lead_paragraph || t(`service.${catOverviewSvc.slug}.lead`, ''),
+                              },
+                              selectedCategory,
+                              selectedCategory.subcategories?.[0]
+                            );
+                          }
+                        }
+                      }}
+                    >
+                      {selectedCategory?.title || selectedService.categoryTitle || 'Publishing'}
+                    </span>
+                    {isCurrentSubcategoryOverview && (
                       <>
+                        <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }}></i>
+                        <span className="text-dark fw-semibold" data-block-key={selectedService ? `service.${selectedService.slug}.title` : undefined}>{displayTitle}</span>
+                      </>
+                    )}
+                    {!isCurrentCategoryOverview && !isCurrentSubcategoryOverview && (
+                      <>
+                        {currentSubcategory && (
+                          <>
+                            <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }}></i>
+                            <span 
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => selectedCategory && handleSelectSubcategory(selectedCategory, currentSubcategory)}
+                            >
+                              {currentSubcategory.title}
+                            </span>
+                          </>
+                        )}
                         <i className="bi bi-chevron-right" style={{ fontSize: '0.65rem' }}></i>
                         <span className="text-dark fw-semibold" data-block-key={selectedService ? `service.${selectedService.slug}.title` : undefined}>{displayTitle}</span>
                       </>
@@ -717,8 +846,8 @@ const SUBCATEGORY_DESCRIPTIONS = {
                   <div>
                     <div className="service-tag-badge">
                       <i className="bi bi-award-fill"></i>
-                      <span data-block-key={isCurrentCategoryOverview ? undefined : "services.badge.text"}>
-                        {isCurrentCategoryOverview ? 'Omni Category Overview' : badgeText}
+                      <span data-block-key={(isCurrentCategoryOverview || isCurrentSubcategoryOverview) ? undefined : "services.badge.text"}>
+                        {isCurrentCategoryOverview ? 'Omni Category Overview' : isCurrentSubcategoryOverview ? 'Omni Subcategory Overview' : badgeText}
                       </span>
                     </div>
                     <div className="d-flex align-items-baseline gap-3 flex-wrap">
@@ -951,6 +1080,259 @@ const SUBCATEGORY_DESCRIPTIONS = {
                       </div>
 
                       {/* Feature bullets */}
+                      <div className="features-checklist-section">
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
+                          {includedHeading}
+                        </h5>
+                        <div className="service-features-list">
+                          {displayFeatures.map((feat, idx) => (
+                            <div className="feature-checkpoint-item" key={idx}>
+                              <i className="bi bi-patch-check-fill feature-check-icon"></i>
+                              <span>{feat}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'developmental-editing' ? (
+                    /* Developmental Editing (Matching Screenshot 1 - NO PRICE) */
+                    <div className="developmental-editing-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-1 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Prescribed by Editorial Evaluation only. Please speak with your editorial consultant for more information.
+                        </p>
+                        <p className="fst-italic mb-0 fw-semibold" style={{ color: '#ad7d42', fontSize: '0.92rem' }}>
+                          Please Note: A Developmental Edit includes FREE Content Editing and Quality Review.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          The Omni Developmental Editing service combines three editorial services into one package: First, a developmental editor evaluates the manuscript at the paragraph, chapter, and book levels and makes suggestions throughout the manuscript to identify big-picture areas that need work.
+                        </p>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fcfbf9', border: '1px solid #ebd9c4' }}>
+                          <ul className="mb-0 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.94rem' }}>
+                            <li>
+                              <strong>For fiction works</strong>, the editor will analyze the readership and genre to determine whether the content is appropriate. He will then examine essential considerations such as plot, pace, characterization and dialogue.
+                            </li>
+                            <li>
+                              <strong>For nonfiction titles</strong>, the editor will analyze the readership, purpose, and possible uses of the work to determine that the content is complete and appropriate; that concepts are developed adequately; that material is well organized; and that illustrations, tables, and lists are used effectively throughout.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <p className="mb-3">
+                          Authors can choose to make improvements suggested by the developmental editor themselves or purchase the services of a Book Doctor to help them make alterations. (If applicable, a price estimate for book doctoring is included with the completed developmental edit.) Once big-picture changes have been made, the second step, a free Content Edit, begins; the content editor will check the manuscript for errors in grammar, spelling, and punctuation. And third, the manuscript will receive a quality review to ensure the manuscript is editorially sound before it goes into production.
+                        </p>
+
+                        <blockquote 
+                          className="editorial-testimonial-quote"
+                          style={{
+                            margin: '22px 0',
+                            padding: '16px 22px',
+                            borderLeft: '4px solid #ad7d42',
+                            background: 'rgba(173, 125, 66, 0.05)',
+                            borderRadius: '0 8px 8px 0',
+                            fontStyle: 'italic',
+                            color: '#333'
+                          }}
+                        >
+                          <p className="mb-2" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+                            "I am THRILLED with the edit so far! I've never had a developmental edit, and it's so cool to 'hear' someone else's voice regarding the material. What's more, the editor has targeted areas that I subconsciously knew needed work, but just didn't hear my conscious voice telling me how to correct. Please let her know how excited I am and how far her input had surpassed what I thought I was paying for."
+                          </p>
+                          <footer style={{ fontStyle: 'normal', fontWeight: '600', color: '#78716c', fontSize: '0.88rem' }}>
+                            — Eric Rankin, author of <em>The Aquarians</em>
+                          </footer>
+                        </blockquote>
+                      </div>
+
+                      {/* Feature bullets */}
+                      <div className="features-checklist-section">
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
+                          {includedHeading}
+                        </h5>
+                        <div className="service-features-list">
+                          {displayFeatures.map((feat, idx) => (
+                            <div className="feature-checkpoint-item" key={idx}>
+                              <i className="bi bi-patch-check-fill feature-check-icon"></i>
+                              <span>{feat}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'book-doctor' ? (
+                    /* Book Doctor (Matching Screenshot 2 - NO PRICE) */
+                    <div className="book-doctor-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Prerequisite: Omni Developmental Edit. Please speak with your editorial consultant for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Following the advice of a professional editor takes time and careful consideration. Developmental Editing, in particular, often requires the author to rewrite or reorganize the manuscript to enhance material. Hiring a book doctor may be the best choice for authors who don't have the time or ability to make the big-picture changes recommended by a developmental editor.
+                        </p>
+                        <p className="mb-3">
+                          A book doctor makes the changes recommended by the developmental editor and approved by the author. A price quote for the book doctor will be provided with the completed developmental edit.
+                        </p>
+                        <p className="mb-3 fw-medium" style={{ color: '#2b2219' }}>
+                          After completion of Book Doctoring, Content Editing and a Quality Review will be provided at no extra cost.
+                        </p>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Duration: </span>
+                          <span style={{ color: '#57534e' }}>Estimate based on work required and detailed through the Developmental Edit.</span>
+                        </div>
+                      </div>
+
+                      {/* Feature bullets */}
+                      <div className="features-checklist-section">
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
+                          {includedHeading}
+                        </h5>
+                        <div className="service-features-list">
+                          {displayFeatures.map((feat, idx) => (
+                            <div className="feature-checkpoint-item" key={idx}>
+                              <i className="bi bi-patch-check-fill feature-check-icon"></i>
+                              <span>{feat}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (selectedService?.slug?.startsWith('quality-review-') || selectedService?.slug?.startsWith('editorial-assistant-')) ? (
+                    /* Quality Review & Editorial Assistant Series (Matching Screenshots 3, 4, 5 - NO PRICE) */
+                    <div className="quality-review-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Prerequisite: Omni {selectedService.title.replace('Quality Review - ', '').replace('Editorial Assistant - ', '')}. Please speak with your editorial consultant for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Our {selectedService.title} service provides a final check to make sure your revised manuscript is sound before it goes into production—for a fraction of the price of your original edit.
+                        </p>
+                        <p className="mb-3">
+                          After you review and revise your edited manuscript, you may want an editor to check your work to ensure that you've done it correctly and haven't created new errors in the process.
+                        </p>
+
+                        {selectedService.slug === 'quality-review-copyediting' && (
+                          <blockquote 
+                            className="editorial-testimonial-quote"
+                            style={{
+                              margin: '22px 0',
+                              padding: '16px 22px',
+                              borderLeft: '4px solid #ad7d42',
+                              background: 'rgba(173, 125, 66, 0.05)',
+                              borderRadius: '0 8px 8px 0',
+                              fontStyle: 'italic',
+                              color: '#333'
+                            }}
+                          >
+                            <p className="mb-2" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+                              "I am really impressed by [the editor's] incredible attention to detail, and I am just so grateful there are people like her who can subject my writing to such close critical analysis."
+                            </p>
+                            <footer style={{ fontStyle: 'normal', fontWeight: '600', color: '#78716c', fontSize: '0.88rem' }}>
+                              — Michelle Dixon, author of <em>The Disappearance of Lilya Bekirova</em>
+                            </footer>
+                          </blockquote>
+                        )}
+
+                        <p className="mb-3">
+                          With the Quality Review, an editor will not only review the work you've done on the manuscript in response to the editing, but ensure that you've adequately addressed all of the queries and comments.
+                        </p>
+
+                        <p className="fst-italic mb-0 text-muted" style={{ fontSize: '0.9rem' }}>
+                          *There is a 5,000-word minimum charge for all editing services.
+                        </p>
+                      </div>
+
+                      {/* Feature bullets */}
+                      <div className="features-checklist-section">
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
+                          {includedHeading}
+                        </h5>
+                        <div className="service-features-list">
+                          {displayFeatures.map((feat, idx) => (
+                            <div className="feature-checkpoint-item" key={idx}>
+                              <i className="bi bi-patch-check-fill feature-check-icon"></i>
+                              <span>{feat}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : isCurrentSubcategoryOverview ? (
+                    /* Subcategory Overview matching user's screenshots (Image 1 - Image 5) */
+                    <div className="subcategory-overview-content">
+                      <div className="subcategory-services-lead-container mb-4">
+                        <div 
+                          className="d-flex align-items-center justify-content-between mb-3 pb-2" 
+                          style={{ borderBottom: '2px solid rgba(173, 125, 66, 0.2)' }}
+                        >
+                          <h4 className="fw-bold m-0" style={{ color: '#2b2219', fontSize: '1.2rem' }}>
+                            Available Services in {selectedService.title}
+                          </h4>
+                          <span className="badge rounded-pill bg-light text-muted border px-2.5 py-1" style={{ fontSize: '0.78rem' }}>
+                            {(selectedService.services || currentSubcategory?.services || []).filter(s => s.slug !== selectedCategory?.id && s.slug !== selectedService.slug).length} Offerings
+                          </span>
+                        </div>
+                        <p className="text-muted mb-4" style={{ fontSize: '0.92rem' }}>
+                          Select any service below to explore complete inclusions, pricing, and dedicated publishing assistance.
+                        </p>
+
+                        {/* List of services in this subcategory */}
+                        <div className="d-flex flex-column gap-3 mb-4">
+                          {(selectedService.services || currentSubcategory?.services || [])
+                            .filter(s => s.slug !== selectedCategory?.id && s.slug !== selectedService.slug)
+                            .map((svc) => {
+                              const svcTitle = t(`service.${svc.slug}.title`, svc.title);
+                              const svcLead = AUTHENTIC_SERVICE_SUMMARIES[svc.slug] || t(`service.${svc.slug}.lead`, svc.lead || svc.lead_paragraph || svc.summary || '');
+                              const svcPrice = t(`service.${svc.slug}.price`, svc.price || svc.price_display || '');
+
+                              return (
+                                <div
+                                  key={svc.slug}
+                                  className="subcategory-service-card"
+                                  onClick={() => handleSelectService({ ...svc, title: svcTitle }, selectedCategory, currentSubcategory)}
+                                  role="button"
+                                  tabIndex={0}
+                                >
+                                  <div className="d-flex align-items-start justify-content-between gap-3 mb-2">
+                                    <h5
+                                      className="subcategory-item-title fw-bold m-0"
+                                      style={{ color: '#d9534f', fontSize: '1.18rem', letterSpacing: '-0.01em', transition: 'color 0.2s ease' }}
+                                      data-block-key={`service.${svc.slug}.title`}
+                                    >
+                                      {svcTitle}
+                                    </h5>
+                                    <div className="d-flex align-items-center gap-2 flex-shrink-0">
+                                      <span className="publishing-package-arrow-badge">
+                                        <i className="bi bi-arrow-right-short"></i>
+                                      </span>
+                                    </div>
+                                  </div>
+
+                                  {svcLead && (
+                                    <p
+                                      className="mb-0"
+                                      style={{ color: '#57534e', fontSize: '0.94rem', lineHeight: '1.68' }}
+                                      data-block-key={`service.${svc.slug}.lead`}
+                                    >
+                                      {svcLead}
+                                    </p>
+                                  )}
+                                </div>
+                              );
+                            })}
+                        </div>
+                      </div>
+
+                      {/* What's Included Feature Checklist for Subcategory */}
                       <div className="features-checklist-section">
                         <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
                           {includedHeading}
@@ -1333,12 +1715,17 @@ const SUBCATEGORY_DESCRIPTIONS = {
                             ? expandedSubcategories[sub.id]
                             : defaultSubOpen;
 
+                        const isSubOverviewSelected = selectedService?.slug === sub.id;
+
                         return (
                           <div key={sub.id} className="subcategory-group mb-2">
                             <button
                               type="button"
-                              className={`subcategory-dropdown-btn ${isSubExpanded ? 'expanded' : ''}`}
-                              onClick={(e) => toggleSubcategoryAccordion(sub.id, e, defaultSubOpen)}
+                              className={`subcategory-dropdown-btn ${isSubExpanded ? 'expanded' : ''} ${isSubOverviewSelected ? 'active-subcategory' : ''}`}
+                              onClick={() => {
+                                handleSelectSubcategory(cat, sub);
+                                setDrawerOpen(false);
+                              }}
                               aria-expanded={isSubExpanded}
                             >
                               <span className="subcategory-label-text" data-block-key={`service.${sub.id}.title`}>
@@ -1348,7 +1735,16 @@ const SUBCATEGORY_DESCRIPTIONS = {
                                 <span className="subcat-count-badge">
                                   {filteredServices.length}
                                 </span>
-                                <i className={`bi bi-chevron-${isSubExpanded ? 'down' : 'right'} subcat-chevron`}></i>
+                                <span
+                                  className="subcat-toggle-chevron-btn"
+                                  title={isSubExpanded ? "Collapse" : "Expand"}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleSubcategoryAccordion(sub.id, e, defaultSubOpen);
+                                  }}
+                                >
+                                  <i className={`bi bi-chevron-${isSubExpanded ? 'down' : 'right'} subcat-chevron`}></i>
+                                </span>
                               </span>
                             </button>
 

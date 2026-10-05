@@ -935,4 +935,69 @@
   gap: 8px;
 }
 
+/* ==============================================================
+   Subcategory Overview & Interactive Service Cards
+   ============================================================== */
+.subcategory-dropdown-btn.active-subcategory {
+  background: #faf4eb !important;
+  color: #8a5c28 !important;
+  border-color: #ad7d42 !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(173, 125, 66, 0.12);
+}
+
+.subcategory-dropdown-btn.active-subcategory .subcat-count-badge {
+  background: #ad7d42;
+  color: #ffffff;
+}
+
+.subcat-toggle-chevron-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.subcat-toggle-chevron-btn:hover {
+  background: rgba(173, 125, 66, 0.18);
+  color: #8a5c28;
+}
+
+.subcategory-service-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid rgba(194, 154, 107, 0.28);
+  border-left: 4px solid #d9534f;
+  border-radius: 12px;
+  padding: 20px 22px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+
+.subcategory-service-card:hover {
+  background: #fdfbf8;
+  border-color: #d9534f;
+  border-left-width: 5px;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(217, 83, 79, 0.14);
+}
+
+.subcategory-service-card:hover .subcategory-item-title {
+  color: #c9302c !important;
+}
+
+.subcategory-service-card:hover .publishing-package-arrow-badge {
+  background: #d9534f;
+  color: #ffffff;
+  border-color: #d9534f;
+  transform: translateX(3px);
+}
+
+
 
