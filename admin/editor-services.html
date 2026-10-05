@@ -1173,18 +1173,18 @@
             </div>
 
             <!-- Header Row: Badge, Title, Price -->
-            <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
-              <div style="max-width: 620px;">
-                <div class="service-tag-badge">
-                  <i class="bi bi-award-fill"></i>
-                  <span class="editable-field" id="detailBadge" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.badge.text', this.innerText.trim())">
-                    Omni Specialist Service
-                  </span>
-                </div>
-                <h2 class="service-title editable-field" id="detailTitle" contenteditable="true" spellcheck="false" onblur="handleServiceFieldSave('title', this.innerText.trim())">
+            <div>
+              <div class="service-tag-badge mb-2">
+                <i class="bi bi-award-fill"></i>
+                <span class="editable-field" id="detailBadge" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.badge.text', this.innerText.trim())">
+                  Omni Specialist Service
+                </span>
+              </div>
+              <div class="d-flex align-items-baseline gap-3 flex-wrap">
+                <h2 class="service-title editable-field m-0" id="detailTitle" contenteditable="true" spellcheck="false" onblur="handleServiceFieldSave('title', this.innerText.trim())">
                   Basic Package
                 </h2>
-                <div class="service-package-price-wrap mt-2 mb-2" id="detailPriceContainer" style="display: flex; align-items: baseline; gap: 8px;">
+                <div class="service-package-price-wrap m-0" id="detailPriceContainer" style="display: flex; align-items: baseline; gap: 8px;">
                   <span 
                     class="editable-field" 
                     id="detailPrice" 
@@ -1217,7 +1217,7 @@
             <div class="features-checklist-section">
               <div class="d-flex align-items-center justify-content-between mb-2">
                 <h5 class="fw-bold editable-field m-0" style="color: #2b2219; font-size: 1.1rem;" id="detailIncludedHeading" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.included.heading', this.innerText.trim())">
-                  What's Included:
+                  Begin your publishing journey with the package that lets you take the extra mile.
                 </h5>
                 <button type="button" class="btn-add-feature" onclick="addFeatureBullet()">
                   <i class="bi bi-plus-circle-fill"></i> Add Feature
@@ -1860,8 +1860,13 @@
         }
         renderCategories();
         persistCatalog(selectedService.title);
-        if (selectedService.slug === 'publishing-packages' && field === 'lead') {
-          handleHeaderSave('service.publishing-packages.lead', val);
+        if (field === 'lead') {
+          handleHeaderSave(`service.${selectedService.slug}.lead`, val);
+          handleHeaderSave(`service.${selectedService.slug}.summary`, val);
+        } else if (field === 'price') {
+          handleHeaderSave(`service.${selectedService.slug}.price`, val);
+        } else if (field === 'title') {
+          handleHeaderSave(`service.${selectedService.slug}.title`, val);
         }
       };
 

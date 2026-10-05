@@ -180,7 +180,7 @@ export default function ServicesPage() {
     };
   }, []);
 
-  // Synchronize individual service block overrides in real-time
+  // Synchronize individual service block overrides in real-time only if catalog didn't already supply value
   useEffect(() => {
     setSelectedService((current) => {
       if (!current || !blocks) return current;
@@ -193,21 +193,21 @@ export default function ServicesPage() {
       let changed = false;
       const updated = { ...current };
 
-      if (titleOverride !== undefined && titleOverride !== current.title) {
+      if (titleOverride && !current.title) {
         updated.title = titleOverride;
         changed = true;
       }
-      if (priceOverride !== undefined && priceOverride !== current.price) {
+      if (priceOverride && !current.price) {
         updated.price = priceOverride;
         updated.price_display = priceOverride;
         changed = true;
       }
-      if (leadOverride !== undefined && leadOverride !== current.lead) {
+      if (leadOverride && !current.lead) {
         updated.lead = leadOverride;
         updated.lead_paragraph = leadOverride;
         changed = true;
       }
-      if (featOverride !== undefined) {
+      if (featOverride !== undefined && (!current.features || current.features.length === 0)) {
         const parsedFeats = Array.isArray(featOverride)
           ? featOverride
           : (typeof featOverride === 'string' ? JSON.parse(featOverride) : null);
@@ -284,7 +284,7 @@ export default function ServicesPage() {
   const badgeText = t('services.badge.text', 'Omni Specialist Service');
   const priceSubText = t('services.price.sub', 'Transparent Pricing');
   const overviewHeading = t('services.overview.heading', 'Service Overview');
-  const includedHeading = t('services.included.heading', "What's Included:");
+  const includedHeading = t('services.included.heading', 'Begin your publishing journey with the package that lets you take the extra mile.');
   const ctaSubtitle = t('services.cta.subtitle', 'Get a free consultation, custom quote, and turnaround timeline today.');
   const ctaBtnText = t('services.cta.btn_text', 'Inquire About This Service');
   const ctaEmail = t('services.cta.email', t('footer.email', company?.email || company?.recipient_email || 'admin@omnivirtualsolution.com'));
@@ -292,31 +292,43 @@ export default function ServicesPage() {
   const publishingOptionsTitle = t('service.publishing-options.title', 'Publishing Options');
   const publishingOptionsDesc = t('service.publishing-options.desc', 'Our packages offer various combinations of our publishing, editorial, and marketing services for a truly customized publishing experience. With Omni, you can choose the package that best suits your literary goals.');
 
-  const publishingPackagesList = [
-    {
-      slug: 'basic-package',
-      title: t('service.basic-package.title', 'Basic Package'),
-      price: t('service.basic-package.price', '$899.00'),
-      summary: t('service.basic-package.summary', 'The Basic package is designed for authors seeking basic publishing needs. It includes digital formatting and distribution for e-books, paperback publishing, and customization options for the interior and cover.'),
-    },
-    {
-      slug: 'standard-package',
-      title: t('service.standard-package.title', 'Standard Package'),
-      price: t('service.standard-package.price', '$1,599.00'),
-      summary: t('service.standard-package.summary', 'Building on the Basic, the Standard package adds hardcover publishing to the mix, enhancing the physical presence of your book. This package maintains all the services of the Basic package, including the customization, support, and online distribution features.'),
-    },
-    {
-      slug: 'advanced-package',
-      title: t('service.advanced-package.title', 'Advanced Package'),
-      price: t('service.advanced-package.price', '$4,999.00'),
-      summary: t('service.advanced-package.summary', 'The Advanced package is the most comprehensive, designed for authors who want extensive support and marketing tools. It includes everything from the Standard package, but boosts the number of copies provided to 20 paperbacks and 5 hardcovers.'),
-    },
-  ];
+  const publishingPackagesList = useMemo(() => {
+    const defaultPkgs = [
+      {
+        slug: 'basic-package',
+        title: 'Basic Package',
+        price: '$899.00',
+        summary: 'The Basic package is designed for authors seeking basic publishing needs. It includes digital formatting and distribution for e-books, paperback publishing, and customization options for the interior and cover.',
+      },
+      {
+        slug: 'standard-package',
+        title: 'Standard Package',
+        price: '$1,599.00',
+        summary: 'Building on the Basic, the Standard package adds hardcover publishing to the mix, enhancing the physical presence of your book. This package maintains all the services of the Basic package, including the customization, support, and online distribution features.',
+      },
+      {
+        slug: 'advanced-package',
+        title: 'Advanced Package',
+        price: '$4,999.00',
+        summary: 'The Advanced package is the most comprehensive, designed for authors who want extensive support and marketing tools. It includes everything from the Standard package, but boosts the number of copies provided to 20 paperbacks and 5 hardcovers.',
+      },
+    ];
 
-  // Active selected service display values with fallback to t() overrides
-  const displayTitle = selectedService ? t(`service.${selectedService.slug}.title`, selectedService.title) : '';
-  const displayPrice = selectedService ? t(`service.${selectedService.slug}.price`, selectedService.price || selectedService.price_display || '') : '';
-  const displayLead = selectedService ? t(`service.${selectedService.slug}.lead`, selectedService.lead || selectedService.lead_paragraph) : '';
+    return defaultPkgs.map((dp) => {
+      const liveSvc = allServicesList.find((s) => s.slug === dp.slug);
+      return {
+        slug: dp.slug,
+        title: liveSvc?.title || t(`service.${dp.slug}.title`, dp.title),
+        price: liveSvc?.price || liveSvc?.price_display || t(`service.${dp.slug}.price`, dp.price),
+        summary: liveSvc?.lead || liveSvc?.lead_paragraph || t(`service.${dp.slug}.summary`, t(`service.${dp.slug}.lead`, dp.summary)),
+      };
+    });
+  }, [allServicesList, t]);
+
+  // Active selected service display values: catalog data is source of truth, fallback to CMS t()
+  const displayTitle = selectedService ? (selectedService.title || t(`service.${selectedService.slug}.title`, '')) : '';
+  const displayPrice = selectedService ? (selectedService.price || selectedService.price_display || t(`service.${selectedService.slug}.price`, '')) : '';
+  const displayLead = selectedService ? (selectedService.lead || selectedService.lead_paragraph || t(`service.${selectedService.slug}.lead`, '')) : '';
   const ctaHeading = t('services.cta.heading', selectedService ? `Ready to start with ${displayTitle}?` : 'Ready to get started?');
 
   const displayFeatures = useMemo(() => {
@@ -500,8 +512,8 @@ export default function ServicesPage() {
                                   handleSelectService(
                                     {
                                       ...pubSvc,
-                                      title: t(`service.${pubSvc.slug}.title`, pubSvc.title),
-                                      lead: t(`service.${pubSvc.slug}.lead`, pubSvc.lead),
+                                      title: pubSvc.title || t(`service.${pubSvc.slug}.title`, ''),
+                                      lead: pubSvc.lead || pubSvc.lead_paragraph || t(`service.${pubSvc.slug}.lead`, ''),
                                     },
                                     cat,
                                     cat.subcategories[0]
@@ -509,7 +521,7 @@ export default function ServicesPage() {
                                 }
                               } else if (cat.subcategories[0]?.services[0]) {
                                 const targetSvc = cat.subcategories[0].services[0];
-                                handleSelectService({ ...targetSvc, title: t(`service.${targetSvc.slug}.title`, targetSvc.title) }, cat, cat.subcategories[0]);
+                                handleSelectService({ ...targetSvc, title: targetSvc.title || t(`service.${targetSvc.slug}.title`, '') }, cat, cat.subcategories[0]);
                               }
                             }}
                           >
@@ -580,20 +592,20 @@ export default function ServicesPage() {
                     <span className="text-dark fw-semibold" data-block-key={selectedService ? `service.${selectedService.slug}.title` : undefined}>{displayTitle}</span>
                   </div>
 
-                  {/* Header row: Badge, Title */}
-                  <div className="d-flex align-items-start justify-content-between flex-wrap gap-2">
-                    <div>
-                      <div className="service-tag-badge">
-                        <i className="bi bi-award-fill"></i>
-                        <span data-block-key="services.badge.text">{badgeText}</span>
-                      </div>
-                      <h2 className="service-title" data-block-key={selectedService ? `service.${selectedService.slug}.title` : undefined}>
+                  {/* Header row: Badge, Title & Price */}
+                  <div>
+                    <div className="service-tag-badge">
+                      <i className="bi bi-award-fill"></i>
+                      <span data-block-key="services.badge.text">{badgeText}</span>
+                    </div>
+                    <div className="d-flex align-items-baseline gap-3 flex-wrap">
+                      <h2 className="service-title m-0" data-block-key={selectedService ? `service.${selectedService.slug}.title` : undefined}>
                         {displayTitle}
                       </h2>
                       {displayPrice && (
-                        <div className="service-package-price-display">
+                        <div className="service-package-price-display m-0">
                           <span 
-                            className="editable-field"
+                            className="service-price-amount"
                             data-block-key={selectedService ? `service.${selectedService.slug}.price` : undefined}
                             style={{ display: 'inline-block', minWidth: '50px' }}
                           >
@@ -641,19 +653,9 @@ export default function ServicesPage() {
                             }}
                           >
                             <div className="publishing-package-card-header">
-                              <div className="d-flex align-items-center gap-2 flex-wrap">
-                                <h5 className="publishing-package-card-title">
-                                  {pkg.title}
-                                </h5>
-                                {pkg.price && (
-                                  <span 
-                                    className="publishing-package-price-badge"
-                                    data-block-key={`service.${pkg.slug}.price`}
-                                  >
-                                    {pkg.price}
-                                  </span>
-                                )}
-                              </div>
+                              <h5 className="publishing-package-card-title m-0">
+                                {pkg.title}
+                              </h5>
                               <span className="publishing-package-arrow-badge">
                                 <i className="bi bi-arrow-right-short"></i>
                               </span>
@@ -816,8 +818,8 @@ export default function ServicesPage() {
                           handleSelectService(
                             {
                               ...pubSvc,
-                              title: t(`service.${pubSvc.slug}.title`, pubSvc.title),
-                              lead: t(`service.${pubSvc.slug}.lead`, pubSvc.lead),
+                              title: pubSvc.title || t(`service.${pubSvc.slug}.title`, ''),
+                              lead: pubSvc.lead || pubSvc.lead_paragraph || t(`service.${pubSvc.slug}.lead`, ''),
                             },
                             cat,
                             cat.subcategories[0]
@@ -826,7 +828,7 @@ export default function ServicesPage() {
                         }
                       } else if (cat.subcategories[0]?.services[0]) {
                         const targetSvc = cat.subcategories[0].services[0];
-                        handleSelectService({ ...targetSvc, title: t(`service.${targetSvc.slug}.title`, targetSvc.title) }, cat, cat.subcategories[0]);
+                        handleSelectService({ ...targetSvc, title: targetSvc.title || t(`service.${targetSvc.slug}.title`, '') }, cat, cat.subcategories[0]);
                         setDrawerOpen(false);
                       }
                     }}
