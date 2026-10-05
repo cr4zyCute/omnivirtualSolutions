@@ -493,6 +493,53 @@
       border-left: 2px solid rgba(173, 125, 66, 0.25);
       margin: 4px 0 12px 12px;
     }
+    .subcategory-group {
+      margin-bottom: 6px;
+    }
+    .subcategory-accordion-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 8px;
+      margin: 4px 0 2px 0;
+      background: rgba(173, 125, 66, 0.05);
+      border: 1px solid rgba(173, 125, 66, 0.16);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .subcategory-accordion-row:hover {
+      background: rgba(173, 125, 66, 0.12);
+      border-color: rgba(173, 125, 66, 0.35);
+    }
+    .subcategory-accordion-row.expanded {
+      background: rgba(173, 125, 66, 0.1);
+      border-color: rgba(173, 125, 66, 0.3);
+    }
+    .subcategory-accordion-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #8c5d28;
+      flex-grow: 1;
+      cursor: pointer;
+    }
+    .subcat-chevron {
+      font-size: 0.72rem;
+      color: #ad7d42;
+      transition: transform 0.2s ease;
+    }
+    .subcategory-services-box {
+      padding-left: 6px;
+      margin-top: 2px;
+      margin-bottom: 6px;
+      border-left: 2px solid rgba(173, 125, 66, 0.2);
+      margin-left: 6px;
+    }
     .subcategory-label {
       font-size: 0.76rem;
       font-weight: 700;
@@ -1640,13 +1687,20 @@
           if (q && matchingServices.length === 0) return '';
 
           const totalCount = (cat.subcategories || []).reduce(
-            (acc, sub) => acc + (sub.services || []).filter(s => !(cat.id === 'publishing-packages' && s.slug === 'publishing-packages')).length,
+            (acc, sub) => acc + (sub.services || []).filter(s => 
+              !(cat.id === 'publishing-packages' && s.slug === 'publishing-packages') &&
+              !(cat.id === 'evaluation-services' && s.slug === 'evaluation-services')
+            ).length,
             0
           );
 
+          const isRowActive =
+            (selectedService?.slug === 'publishing-packages' && cat.id === 'publishing-packages') ||
+            (selectedService?.slug === 'evaluation-services' && cat.id === 'evaluation-services');
+
           return `
             <div class="sidebar-category-group mb-2" data-cat-id="${cat.id}">
-              <div class="category-accordion-row ${isExpanded ? 'expanded' : ''} ${selectedService?.slug === 'publishing-packages' && cat.id === 'publishing-packages' ? 'active-cat-selected' : ''}" id="cat-row-${cat.id}">
+              <div class="category-accordion-row ${isExpanded ? 'expanded' : ''} ${isRowActive ? 'active-cat-selected' : ''}" id="cat-row-${cat.id}">
                 <div class="category-accordion-label" onclick="handleCategoryClick('${cat.id}')">
                   <i class="bi ${cat.icon || cat.icon_class || 'bi-bookmark-star'} text-warning cat-icon" onclick="openIconPicker('${cat.id}', event)" title="Click to change icon"></i>
                   <span class="category-name-text editable-field" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleRenameCategory('${cat.id}', this.innerText.trim())" onclick="event.stopPropagation()">${escapeHtml(cat.title)}</span>
@@ -1663,29 +1717,55 @@
               </div>
 
               <div class="subcategories-list" id="subcat-box-${cat.id}" style="display: ${isExpanded ? 'block' : 'none'};">
-                ${(q ? matchingServices : (cat.subcategories || [])).map(sub => `
-                  <div class="mb-2">
-                    <div class="d-flex align-items-center justify-content-between mb-1 pe-2">
-                      <div class="subcategory-label editable-field m-0" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleRenameSubcat('${cat.id}', '${sub.id}', this.innerText.trim())">${escapeHtml(sub.title)}</div>
-                      <button type="button" class="btn-sub-add-service" onclick="openAddServiceModalForSubcat('${cat.id}', '${sub.id}', event)" title="Add service to ${escapeHtml(sub.title)}">
-                        <i class="bi bi-plus"></i>
-                      </button>
+                ${(q ? matchingServices : (cat.subcategories || [])).map(sub => {
+                  const filteredServices = (sub.services || []).filter(svc => 
+                    !(cat.id === 'publishing-packages' && svc.slug === 'publishing-packages') &&
+                    !(cat.id === 'evaluation-services' && svc.slug === 'evaluation-services')
+                  );
+                  if (filteredServices.length === 0) return '';
+                  const isSubOpen = q.length > 0 || (selectedService && filteredServices.some(s => s.slug === selectedService.slug)) || (cat.subcategories.length === 1);
+                  return `
+                  <div class="subcategory-group mb-2" data-sub-id="${sub.id}">
+                    <div class="subcategory-accordion-row ${isSubOpen ? 'expanded' : ''}" id="sub-row-${sub.id}" onclick="toggleSubcatAccordion('${sub.id}')">
+                      <div class="subcategory-accordion-label">
+                        <i class="bi bi-chevron-${isSubOpen ? 'down' : 'right'} subcat-chevron" id="sub-chevron-${sub.id}"></i>
+                        <span class="subcategory-name-text editable-field" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleRenameSubcat('${cat.id}', '${sub.id}', this.innerText.trim())" onclick="event.stopPropagation()">${escapeHtml(sub.title)}</span>
+                      </div>
+                      <div class="subcategory-accordion-controls d-flex align-items-center gap-1" onclick="event.stopPropagation()">
+                        <span class="badge bg-light text-muted border subcat-count-badge" style="font-size: 0.68rem; padding: 1px 6px; border-radius: 10px;">${filteredServices.length}</span>
+                        <button type="button" class="btn-sub-add-service" onclick="openAddServiceModalForSubcat('${cat.id}', '${sub.id}', event)" title="Add service to ${escapeHtml(sub.title)}">
+                          <i class="bi bi-plus"></i>
+                        </button>
+                      </div>
                     </div>
-                    ${(sub.services || [])
-                      .filter(svc => !(cat.id === 'publishing-packages' && svc.slug === 'publishing-packages'))
-                      .map(svc => `
-                      <button type="button" class="service-nav-item ${selectedService?.slug === svc.slug ? 'active' : ''}" onclick="selectServiceBySlug('${svc.slug}')">
-                        <span class="text-truncate">${escapeHtml(svc.title)}</span>
-                        ${selectedService?.slug === svc.slug ? '<i class="bi bi-check2"></i>' : ''}
-                      </button>
-                    `).join('')}
+                    <div class="subcategory-services-box" id="sub-services-box-${sub.id}" style="display: ${isSubOpen ? 'block' : 'none'};">
+                      ${filteredServices.map(svc => `
+                        <button type="button" class="service-nav-item ${selectedService?.slug === svc.slug ? 'active' : ''}" onclick="selectServiceBySlug('${svc.slug}')">
+                          <span class="text-truncate">${escapeHtml(svc.title)}</span>
+                          ${selectedService?.slug === svc.slug ? '<i class="bi bi-check2"></i>' : ''}
+                        </button>
+                      `).join('')}
+                    </div>
                   </div>
-                `).join('')}
+                `}).join('')}
               </div>
             </div>
           `;
         }).join('');
       }
+
+      window.toggleSubcatAccordion = function(subId) {
+        const box = document.getElementById('sub-services-box-' + subId);
+        const row = document.getElementById('sub-row-' + subId);
+        const chevron = document.getElementById('sub-chevron-' + subId);
+        if (!box) return;
+        const isOpen = box.style.display !== 'none';
+        box.style.display = isOpen ? 'none' : 'block';
+        if (row) row.classList.toggle('expanded', !isOpen);
+        if (chevron) {
+          chevron.className = `bi bi-chevron-${isOpen ? 'right' : 'down'} subcat-chevron`;
+        }
+      };
 
       window.toggleCatAccordion = function(catId) {
         const box = document.getElementById('subcat-box-' + catId);
@@ -1730,6 +1810,30 @@
           selectService(pubSvc, cat ? cat.title : 'Publishing Packages');
           return;
         }
+        if (catId === 'evaluation-services') {
+          let evalSvc = null;
+          for (const sub of (cat?.subcategories || [])) {
+            evalSvc = (sub.services || []).find(s => s.slug === 'evaluation-services');
+            if (evalSvc) break;
+          }
+          if (!evalSvc) {
+            evalSvc = {
+              slug: 'evaluation-services',
+              title: 'Evaluation Services',
+              lead: "One of the key features that makes an Omni book distinct from other self-published books is our professional editorial evaluation. The evaluation is included in certain publishing packages and is available to purchase separately as well.",
+              features: [
+                'Editorial Rx Referral: Evaluator recommendation of an appropriate editorial specialist',
+                'Manuscript examination to pinpoint areas in need of improvement',
+                'Comprehensive assessment for works up to 100,000 words',
+                'Constructive commentary and critique across all literary elements',
+                '$299 credit deducted from future Omni Editorial Services',
+                'Turnaround duration: 2-3 Weeks'
+              ]
+            };
+          }
+          selectService(evalSvc, cat ? cat.title : 'Evaluation Services');
+          return;
+        }
         if (cat && cat.subcategories[0]?.services[0]) {
           selectService(cat.subcategories[0].services[0], cat.title);
         }
@@ -1757,9 +1861,12 @@
         if (svc.slug === 'publishing-packages') {
           const catRow = document.getElementById('cat-row-publishing-packages');
           if (catRow) catRow.classList.add('active-cat-selected');
+        } else if (svc.slug === 'evaluation-services') {
+          const catRow = document.getElementById('cat-row-evaluation-services');
+          if (catRow) catRow.classList.add('active-cat-selected');
         }
 
-        // Ensure category is expanded
+        // Ensure category and subcategory are expanded
         for (const cat of catalog) {
           for (const sub of (cat.subcategories || [])) {
             if ((sub.services || []).some(s => s.slug === svc.slug)) {
@@ -1769,6 +1876,14 @@
               if (box) box.style.display = 'block';
               if (row) row.classList.add('expanded');
               if (chevron) chevron.className = 'bi bi-chevron-down small';
+
+              const subBox = document.getElementById('sub-services-box-' + sub.id);
+              const subRow = document.getElementById('sub-row-' + sub.id);
+              const subChevron = document.getElementById('sub-chevron-' + sub.id);
+              if (subBox) subBox.style.display = 'block';
+              if (subRow) subRow.classList.add('expanded');
+              if (subChevron) subChevron.className = 'bi bi-chevron-down subcat-chevron';
+
               if (!catTitle) catTitle = cat.title;
               break;
             }
@@ -1786,7 +1901,7 @@
           detailPriceEl.textContent = pVal || 'Set Price';
           detailPriceEl.style.opacity = pVal ? '1' : '0.5';
           if (detailPriceContainer) {
-            detailPriceContainer.style.display = svc.slug === 'publishing-packages' ? 'none' : 'flex';
+            detailPriceContainer.style.display = (svc.slug === 'publishing-packages' || svc.slug === 'evaluation-services') ? 'none' : 'flex';
           }
         }
         document.getElementById('detailLead').textContent = svc.lead || svc.lead_paragraph || '';
