@@ -270,60 +270,35 @@
             "title": "Small Book Review with Editing (Under 5,000 Words)",
             "price": "",
             "lead": "We know you’ve put a lot of energy and dedication into your manuscript, but even experienced authors overlook their own mistakes sometimes. Since the editorial quality of your book will have an impact on your readers and its ultimate success, it’s important to have another set of professional eyes look over your book before it’s published.",
-            "features": [
-              "Editing: We perfect your spelling, punctuation, capitalization, grammar, and syntax",
-              "Content Editing",
-              "Our editors use Microsoft Word® to track their changes, so you always retain",
-              "Our editors typically turn your manuscript around in three to four weeks",
-              "Please Note",
-              "Omni accepts a very low margin of error in each completed edit"
-            ]
+            "features": []
           },
           {
             "slug": "copyediting",
             "title": "Copyediting",
             "price": "",
             "lead": "Prescribed by Editorial Evaluation only. Please do not order without first speaking with your editorial consultant.",
-            "features": [
-              "Professional Copyediting tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "features": []
           },
           {
             "slug": "line-editing",
             "title": "Line Editing",
             "price": "",
             "lead": "Some manuscripts simply require more work than others. When heavy copyediting is required, an editor will check the manuscript for more pervasive errors in spelling, grammar, and punctuation. The editor will also address syntax and word choice and make light recommendations for improving the overall readability of the work.",
-            "features": [
-              "Professional Line Editing tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "features": []
           },
           {
             "slug": "content-editing",
             "title": "Content Editing",
             "price": "",
             "lead": "Prescribed by Editorial Evaluation only. Please do not order without first speaking with your editorial consultant.",
-            "features": [
-              "For fiction titles, the editor will focus on maintaining consistency of details",
-              "For nonfiction titles, the editor will monitor consistency of information and ideas."
-            ]
+            "features": []
           },
           {
             "slug": "content-editing-plus",
             "title": "Content Editing Plus",
             "price": "",
             "lead": "Prescribed by Editorial Evaluation only. Please do not order without first speaking with your editorial consultant.",
-            "features": [
-              "Professional Content Editing Plus tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "features": []
           }
         ]
       },
@@ -336,12 +311,7 @@
             "title": "Cover Copy Polish",
             "price": "",
             "lead": "With Omni Cover Copy Polishing, the ideas you provide will allow us to create intriguing copy that can help you clinch the sale. Our professional copywriting staff will mold the text that you provide into marketable material by polishing the hardcover flaps, back cover copy, author bio and keynote, in addition to any other cover material you have submitted.",
-            "features": [
-              "Professional Cover Copy Polish tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "features": []
           }
         ]
       },

@@ -23,11 +23,7 @@ function formatCatalog(rawList) {
         price_display: s.price || s.price_display || '',
         lead: s.lead || s.lead_paragraph || '',
         lead_paragraph: s.lead || s.lead_paragraph || '',
-        features: Array.isArray(s.features) && s.features.length > 0 ? s.features : [
-          'Full editorial and publishing consultation',
-          'Dedicated project manager assignment',
-          '100% author rights and royalty retention',
-        ],
+        features: Array.isArray(s.features) ? s.features : [],
       })),
     })),
   }));
@@ -443,8 +439,30 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   // Determine if currently selected item is a Subcategory Overview
   const isCurrentSubcategoryOverview = useMemo(() => {
     if (!selectedService || !currentSubcategory) return false;
-    return Boolean(selectedService.isSubcategoryOverview || (selectedService.slug === currentSubcategory.id && selectedService.slug !== selectedCategory?.id));
+    if (selectedService.isSubcategoryOverview !== undefined) {
+      return Boolean(selectedService.isSubcategoryOverview);
+    }
+    return Boolean(selectedService.slug === currentSubcategory.id && selectedService.slug !== selectedCategory?.id);
   }, [selectedService, selectedCategory, currentSubcategory]);
+
+  // Determine if currently selected service has a custom tailored editorial layout
+  const hasCustomDetailView = useMemo(() => {
+    if (!selectedService) return false;
+    const slug = selectedService.slug;
+    return Boolean(
+      slug === 'editorial-evaluation' ||
+      slug === 'developmental-editing' ||
+      slug === 'book-doctor' ||
+      slug?.startsWith('quality-review-') ||
+      slug?.startsWith('editorial-assistant-') ||
+      slug === 'small-book-review-with-editing-under-5-000-words' ||
+      slug === 'copyediting' ||
+      slug === 'line-editing' ||
+      slug === 'content-editing' ||
+      slug === 'content-editing-plus' ||
+      (slug === 'cover-copy-polish' && !selectedService.isSubcategoryOverview)
+    );
+  }, [selectedService]);
 
   const displayFeatures = useMemo(() => {
     if (!selectedService) return [];
@@ -474,7 +492,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
     setExpandedSubcategories((prev) => ({ ...prev, [sub.id]: true }));
 
     const subLead = SUBCATEGORY_LEADS[sub.id] || SUBCATEGORY_DESCRIPTIONS[sub.id] || sub.lead || `Explore all specialized services under ${sub.title}.`;
-    const subServices = (sub.services || []).filter(s => s.slug !== cat.id && s.slug !== sub.id);
+    const subServices = (sub.services || []).filter(s => s.slug !== cat.id);
 
     setSelectedService({
       slug: sub.id,
@@ -487,12 +505,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       categoryTag: cat.tag,
       lead: subLead,
       services: subServices,
-      features: [
-        `Dedicated specialist support across all ${sub.title} offerings`,
-        'Professional project consultation and turnaround management',
-        'Transparent pricing and author royalty retention',
-        'Full compliance with industry publishing standards'
-      ]
+      features: []
     });
 
     setDrawerOpen(false);
@@ -543,6 +556,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
     }
     setSelectedService({
       ...service,
+      isSubcategoryOverview: false,
       categoryId: catId,
       categoryTitle: cat?.title || service.categoryTitle,
       subcategoryId: subId,
@@ -727,7 +741,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                   ? expandedSubcategories[sub.id]
                                   : defaultSubOpen;
 
-                              const isSubOverviewSelected = selectedService?.slug === sub.id;
+                              const isSubOverviewSelected = Boolean(selectedService?.isSubcategoryOverview && selectedService?.slug === sub.id);
 
                               return (
                                 <div key={sub.id} className="subcategory-group mb-2">
@@ -760,7 +774,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                   {isSubExpanded && (
                                     <div className="subcategory-services-list">
                                       {filteredServices.map((svc) => {
-                                        const isSelected = selectedService?.slug === svc.slug;
+                                        const isSelected = !selectedService?.isSubcategoryOverview && selectedService?.slug === svc.slug;
                                         const svcTitle = t(`service.${svc.slug}.title`, svc.title);
                                         return (
                                           <button
@@ -870,13 +884,15 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
 
                   <hr className="service-divider" />
 
-                  {/* Service Overview Box */}
-                  <div className="service-lead-box">
-                    <h5 data-block-key="services.overview.heading">{overviewHeading}</h5>
-                    <p className="service-lead-text" data-block-key={selectedService ? `service.${selectedService.slug}.lead` : undefined}>
-                      {displayLead}
-                    </p>
-                  </div>
+                  {/* Service Overview Box (Only shown if NOT a custom layout and NOT publishing packages / evaluation-services overview) */}
+                  {!hasCustomDetailView && selectedService?.slug !== 'publishing-packages' && selectedService?.slug !== 'evaluation-services' && (
+                    <div className="service-lead-box">
+                      <h5 data-block-key="services.overview.heading">{overviewHeading}</h5>
+                      <p className="service-lead-text" data-block-key={selectedService ? `service.${selectedService.slug}.lead` : undefined}>
+                        {displayLead}
+                      </p>
+                    </div>
+                  )}
 
                   {/* Bottom section: Specific layout for Publishing Packages, Evaluation Services, Editorial Evaluation, or What's Included */}
                   {selectedService?.slug === 'publishing-packages' ? (
@@ -1078,21 +1094,6 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                           {t('service.editorial-evaluation.duration', 'Duration: 2-3 Weeks')}
                         </div>
                       </div>
-
-                      {/* Feature bullets */}
-                      <div className="features-checklist-section">
-                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
-                          {includedHeading}
-                        </h5>
-                        <div className="service-features-list">
-                          {displayFeatures.map((feat, idx) => (
-                            <div className="feature-checkpoint-item" key={idx}>
-                              <i className="bi bi-patch-check-fill feature-check-icon"></i>
-                              <span>{feat}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
                     </div>
                   ) : selectedService?.slug === 'developmental-editing' ? (
                     /* Developmental Editing (Matching Screenshot 1 - NO PRICE) */
@@ -1146,21 +1147,6 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                           </footer>
                         </blockquote>
                       </div>
-
-                      {/* Feature bullets */}
-                      <div className="features-checklist-section">
-                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
-                          {includedHeading}
-                        </h5>
-                        <div className="service-features-list">
-                          {displayFeatures.map((feat, idx) => (
-                            <div className="feature-checkpoint-item" key={idx}>
-                              <i className="bi bi-patch-check-fill feature-check-icon"></i>
-                              <span>{feat}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
                     </div>
                   ) : selectedService?.slug === 'book-doctor' ? (
                     /* Book Doctor (Matching Screenshot 2 - NO PRICE) */
@@ -1187,28 +1173,13 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                           <span style={{ color: '#57534e' }}>Estimate based on work required and detailed through the Developmental Edit.</span>
                         </div>
                       </div>
-
-                      {/* Feature bullets */}
-                      <div className="features-checklist-section">
-                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
-                          {includedHeading}
-                        </h5>
-                        <div className="service-features-list">
-                          {displayFeatures.map((feat, idx) => (
-                            <div className="feature-checkpoint-item" key={idx}>
-                              <i className="bi bi-patch-check-fill feature-check-icon"></i>
-                              <span>{feat}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
                     </div>
-                  ) : (selectedService?.slug?.startsWith('quality-review-') || selectedService?.slug?.startsWith('editorial-assistant-')) ? (
-                    /* Quality Review & Editorial Assistant Series (Matching Screenshots 3, 4, 5 - NO PRICE) */
+                  ) : selectedService?.slug?.startsWith('quality-review-') ? (
+                    /* Quality Review Series (Matching Screenshots 3, 4, 5 - NO PRICE, NO CHECKLIST) */
                     <div className="quality-review-detail-content">
                       <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
                         <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
-                          Prerequisite: Omni {selectedService.title.replace('Quality Review - ', '').replace('Editorial Assistant - ', '')}. Please speak with your editorial consultant for more information.
+                          Prerequisite: Omni {selectedService.title.replace('Quality Review - ', '')}. Please speak with your editorial consultant for more information.
                         </p>
                       </div>
 
@@ -1242,28 +1213,320 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                           </blockquote>
                         )}
 
-                        <p className="mb-3">
-                          With the Quality Review, an editor will not only review the work you've done on the manuscript in response to the editing, but ensure that you've adequately addressed all of the queries and comments.
-                        </p>
+                        {(selectedService.slug === 'quality-review-content-editing' || selectedService.slug === 'quality-review-content-editing-plus') ? (
+                          <p className="mb-3">
+                            Content Editing, by its very nature, involves extensive revisions to your manuscript — for example, restructuring sentences and adding material. With the Quality Review, an editor will not only review the work you've done on the manuscript in response to the editing, but ensure that you've adequately addressed all of the queries and comments.
+                          </p>
+                        ) : (
+                          <p className="mb-3">
+                            With the Quality Review, an editor will not only review the work you've done on the manuscript in response to the editing, but ensure that you've adequately addressed all of the queries and comments.
+                          </p>
+                        )}
 
                         <p className="fst-italic mb-0 text-muted" style={{ fontSize: '0.9rem' }}>
                           *There is a 5,000-word minimum charge for all editing services.
                         </p>
                       </div>
+                    </div>
+                  ) : selectedService?.slug?.startsWith('editorial-assistant-') ? (
+                    /* Editorial Assistant Series (Matching Screenshots - NO PRICE, NO CHECKLIST) */
+                    <div className="editorial-assistant-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Prerequisite: Omni {selectedService.title.replace('Editorial Assistant - ', '')}. Please speak with your editorial consultant for more information.
+                        </p>
+                      </div>
 
-                      {/* Feature bullets */}
-                      <div className="features-checklist-section">
-                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
-                          {includedHeading}
-                        </h5>
-                        <div className="service-features-list">
-                          {displayFeatures.map((feat, idx) => (
-                            <div className="feature-checkpoint-item" key={idx}>
-                              <i className="bi bi-patch-check-fill feature-check-icon"></i>
-                              <span>{feat}</span>
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Your editorial assistant will review each change and suggestion given during the {selectedService.title.replace('Editorial Assistant - ', '')} service and take action on each one.
+                        </p>
+                        <p className="mb-3">
+                          Going through an edited manuscript can sometimes be a time-consuming process for even the most experienced author, as it requires decisions be made regarding each of the revisions, comments, and recommendations. For our busiest authors and for authors who may be unsure of their own ability to make the needed changes, Omni offers the Editorial Assistant service, in which a professional editor handles the editing work for the author.
+                        </p>
+
+                        {selectedService.slug === 'editorial-assistant-copyediting' && (
+                          <>
+                            <p className="mb-3">
+                              Your editorial assistant will review each change and suggestion given during the copyediting and take action on each one, accepting changes, rewriting sentences, resolving queries and handling other revisions suggested by the original copyeditor. This service is ideal for authors who approve of most of the editor's work on their manuscript and do not wish to work with tracked changes in their manuscript.
+                            </p>
+                            <p className="mb-3 fw-medium" style={{ color: '#2b2219' }}>
+                              Estimate of cost is provided with your completed Copyedit.
+                            </p>
+                          </>
+                        )}
+
+                        {selectedService.slug === 'editorial-assistant-line-edit' && (
+                          <>
+                            <p className="mb-3">
+                              Your editorial assistant will review each change and suggestion given during the line edit and take action on each one, accepting changes, rewriting sentences, resolving queries and handling other revisions as suggested by the line editor. This service is ideal for authors who approve of most of the editor's work on their manuscript and do not wish to work with tracked changes in their manuscript.
+                            </p>
+                            <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                              <p className="mb-1"><strong style={{ color: '#ad7d42' }}>Duration: </strong> 2-3 weeks</p>
+                              <p className="mb-0"><strong style={{ color: '#ad7d42' }}>Cost: </strong> Estimate provided with your completed Line Edit.</p>
                             </div>
-                          ))}
+                          </>
+                        )}
+
+                        {selectedService.slug === 'editorial-assistant-content-edit' && (
+                          <>
+                            <p className="mb-3">
+                              Your editorial assistant will review each change and suggestion given during the Content Edit and take action on each one, accepting changes, rewriting sentences, resolving queries and handling other revisions as suggested by the content editor. This service is ideal for authors who approve of most of the editor's work on their manuscript and do not wish to work with tracked changes in their manuscript.
+                            </p>
+                            <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                              <p className="mb-1"><strong style={{ color: '#ad7d42' }}>Duration: </strong> 2-3 weeks</p>
+                              <p className="mb-0"><strong style={{ color: '#ad7d42' }}>Cost: </strong> Estimate provided with your completed content edit.</p>
+                            </div>
+                          </>
+                        )}
+
+                        {selectedService.slug === 'editorial-assistant-content-edit-plus' && (
+                          <>
+                            <p className="mb-3">
+                              Your editorial assistant will review each change and suggestion given during the Content Editor Plus service and take action on each one, accepting changes, rewriting sentences, resolving queries ,and handling other revisions as suggested by the Content Editor Plus service. This service is ideal for authors who approve of most of the editor's work on their manuscript and do not wish to work with tracked changes in their manuscript.
+                            </p>
+                            <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                              <p className="mb-1"><strong style={{ color: '#ad7d42' }}>Duration: </strong> 2-3 weeks</p>
+                              <p className="mb-0"><strong style={{ color: '#ad7d42' }}>Cost: </strong> Estimate provided with your completed content edit plus.</p>
+                            </div>
+                          </>
+                        )}
+
+                        <p className="fst-italic mb-0 text-muted" style={{ fontSize: '0.9rem' }}>
+                          Please note: There may be some questions or comments from the editor that you, the author, will need to address before moving forward with this service.
+                        </p>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'small-book-review-with-editing-under-5-000-words' ? (
+                    /* Small Book Review with Editing (Matching Screenshot 1 - NO PRICE, NO CHECKLIST) */
+                    <div className="small-book-review-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          We know you’ve put a lot of energy and dedication into your manuscript, but even experienced authors overlook their own mistakes sometimes. Since the editorial quality of your book will have an impact on your readers and its ultimate success, it’s important to have another set of professional eyes look over your book before it’s published.
+                        </p>
+                        <p className="mb-3">
+                          The Omni editors carefully review your full manuscript (under 5,000 words) and provide you with the edits best suited to your book. This all-inclusive service is an excellent option for children’s books. We won’t just point out what’s not working; we can help you decide exactly how to fix it.
+                        </p>
+
+                        <p className="fw-semibold mb-2" style={{ color: '#2b2219' }}>
+                          Here’s what to expect:
+                        </p>
+                        <ul className="mb-4 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>
+                            <strong>Line Editing: </strong>We perfect your spelling, punctuation, capitalization, grammar, and syntax. And we’ll provide recommendations for word choice and improving overall readability.
+                          </li>
+                          <li>
+                            <strong>Content Editing: </strong>We confirm the consistency of information and ideas throughout the whole book, and we also focus on more extensive sentence restructuring.
+                          </li>
+                          <li>
+                            Our editors use Microsoft Word® to track their changes, so you always <strong>retain control over final edits.</strong>
+                          </li>
+                          <li>
+                            Our editors typically turn your manuscript around in <strong>three to four weeks.</strong> After that time, your editor will reach out with their edits and suggestions for improvement.
+                          </li>
+                        </ul>
+
+                        <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="fst-italic mb-0" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                            <strong>Please Note: </strong>This service does not include our advanced editorial services, such as Developmental Editing. Rather, it is a combination of our Line Editing and Content Editing services with a report from the editor.
+                          </p>
                         </div>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }}>
+                          More About | Small Book Review with Editing (Under 5,000 Words)
+                        </h5>
+
+                        <p className="mb-3">
+                          Almost nothing compares to publishing a book that is polished and clear. Choose to make your book the best it can be with our combined review and editing service. The typical timeline for this service is <strong>three to four weeks</strong>, depending on the work queue and the complexity of your manuscript. Call <strong>1-800-AUTHORS (288-4677)</strong> for more information, or to purchase this service.
+                        </p>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="fst-italic fw-medium mb-2" style={{ color: '#78716c', fontSize: '0.92rem' }}>
+                            *Please note:
+                          </p>
+                          <ul className="mb-0 ps-3 d-flex flex-column gap-2 fst-italic" style={{ color: '#57534e', fontSize: '0.9rem' }}>
+                            <li>
+                              Omni accepts a very low margin of error in each completed edit. Our professional in-house editorial staff reviews each editorial service for quality assurance – an edit won’t be returned to an author until fewer than three percent of the original errors remain.
+                            </li>
+                            <li>
+                              Upon reviewing your edited manuscript, if you believe that an unsatisfactory number of errors have been addressed, please create a list of the errors and the page numbers on which they appear and email it to <a href="mailto:editorial@omnivirtualsolution.com" style={{ color: '#ad7d42', textDecoration: 'underline' }}>editorial@omnivirtualsolution.com</a>. We will review the list with you and address your concern.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'copyediting' ? (
+                    /* Copyediting (Matching Screenshot 2 - NO PRICE, NO CHECKLIST) */
+                    <div className="copyediting-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Prescribed by Editorial Evaluation only. Please do not order without first speaking with your editorial consultant.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          An experienced copyeditor will check your manuscript carefully, correcting errors in spelling, grammar, and punctuation. In addition, the copyeditor will verify cross-references and impose an industry-standard style.
+                        </p>
+
+                        <blockquote 
+                          className="editorial-testimonial-quote"
+                          style={{
+                            margin: '22px 0',
+                            padding: '16px 22px',
+                            borderLeft: '4px solid #ad7d42',
+                            background: 'rgba(173, 125, 66, 0.05)',
+                            borderRadius: '0 8px 8px 0',
+                            fontStyle: 'italic',
+                            color: '#333'
+                          }}
+                        >
+                          <p className="mb-2" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+                            "I took my editorial consultant's comment to heart that regardless of the quality of the book's content and message, grammatical errors will cause the public to lose respect for it. As a structural engineer, I can appreciate that since I regularly submit documents and have them submitted to me. The presentation is as important as the content. The editor's contribution has greatly enhanced my manuscript and was well worth the cost. I would recommend the use of an editor to any serious author."
+                          </p>
+                          <footer style={{ fontStyle: 'normal', fontWeight: '600', color: '#78716c', fontSize: '0.88rem' }}>
+                            - Bill Stahl, author of <em>The Bible's Story of Salvation</em>
+                          </footer>
+                        </blockquote>
+
+                        <p className="fst-italic mb-0 text-muted" style={{ fontSize: '0.9rem' }}>
+                          *There is a 5,000-word minimum charge for all editing services.
+                        </p>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'line-editing' ? (
+                    /* Line Editing (Matching Screenshot 3 - NO PRICE, NO CHECKLIST) */
+                    <div className="line-editing-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Some manuscripts simply require more work than others. When heavy copyediting is required, an editor will check the manuscript for more pervasive errors in spelling, grammar, and punctuation. The editor will also address syntax and word choice and make light recommendations for improving the overall readability of the work.
+                        </p>
+
+                        <blockquote 
+                          className="editorial-testimonial-quote"
+                          style={{
+                            margin: '22px 0',
+                            padding: '16px 22px',
+                            borderLeft: '4px solid #ad7d42',
+                            background: 'rgba(173, 125, 66, 0.05)',
+                            borderRadius: '0 8px 8px 0',
+                            fontStyle: 'italic',
+                            color: '#333'
+                          }}
+                        >
+                          <p className="mb-2" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+                            "I would like to thank the editor for a heroic job. My mother was apprehensive ... her book is intended to convey the thoughts of a child. The quirky language reflects this, and she was afraid the child's \"voice\" might be lost in the editing. I read the first few chapters of the edited manuscript to her. She was delighted! It is clear that this is a very conscientious editor and one to be trusted."
+                          </p>
+                          <footer style={{ fontStyle: 'normal', fontWeight: '600', color: '#78716c', fontSize: '0.88rem' }}>
+                            Virginia Merrill, author of <em>Believe in Guardian Angels</em>
+                          </footer>
+                        </blockquote>
+
+                        <p className="fst-italic mb-2" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          * Note: Line Editing is also available in Spanish. For more information, speak with your publishing consultant.
+                        </p>
+
+                        <p className="fst-italic mb-3 text-muted" style={{ fontSize: '0.9rem' }}>
+                          *There is a 5,000-word minimum charge for all editing services.
+                        </p>
+
+                        <p className="mb-4" style={{ fontSize: '0.95rem' }}>
+                          Leave it to our editorial specialists to take your book to the next level. The typical timeline for this service is <strong>six to eight weeks</strong>, depending on our queue and the complexity of your work.
+                        </p>
+
+                        <p className="fst-italic text-muted mb-0" style={{ fontSize: '0.82rem', lineHeight: '1.6' }}>
+                          Disclaimer: Prices listed do not include applicable taxes (such as sales, use, excise, value-added, goods and services, or other tax), which will be added to the total at the time of purchase. Prices listed do include the copies of the book; the cost of shipping and handling will be calculated and charged after your book is made available for sale.
+                        </p>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'content-editing' ? (
+                    /* Content Editing (Matching authentic catalog - NO PRICE, NO CHECKLIST) */
+                    <div className="content-editing-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Prescribed by Editorial Evaluation only. Please do not order without first speaking with your editorial consultant.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          In addition to performing the functions of a line edit, a content editor will work to ensure the general accuracy and consistency of content and focus on more extensive restructuring of sentences.
+                        </p>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fcfbf9', border: '1px solid #ebd9c4' }}>
+                          <ul className="mb-0 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.94rem' }}>
+                            <li>
+                              <strong>For fiction titles, </strong>the editor will focus on maintaining consistency of details in the plot, characters and setting.
+                            </li>
+                            <li>
+                              <strong>For nonfiction titles, </strong>the editor will monitor consistency of information and ideas.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <p className="fst-italic mb-3 text-muted" style={{ fontSize: '0.9rem' }}>
+                          *There is a 5,000-word minimum charge for all editing services.
+                        </p>
+
+                        <p className="mb-0" style={{ fontSize: '0.95rem' }}>
+                          Leave it to our editorial specialists to take your book to the next level. The typical timeline for this service is <strong>six to eight weeks</strong>, depending on our queue and the complexity of your work.
+                        </p>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'content-editing-plus' ? (
+                    /* Content Editing Plus (Matching Screenshot 4 - NO PRICE, NO CHECKLIST) */
+                    <div className="content-editing-plus-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Prescribed by Editorial Evaluation only. Please do not order without first speaking with your editorial consultant.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          This service is ideal for manuscripts that need more work on sentence structure and grammar than basic Content Editing can provide. Content Editing Plus is especially suitable for translations or manuscripts written by authors whose second language is English.
+                        </p>
+
+                        <blockquote 
+                          className="editorial-testimonial-quote"
+                          style={{
+                            margin: '22px 0',
+                            padding: '16px 22px',
+                            borderLeft: '4px solid #ad7d42',
+                            background: 'rgba(173, 125, 66, 0.05)',
+                            borderRadius: '0 8px 8px 0',
+                            fontStyle: 'italic',
+                            color: '#333'
+                          }}
+                        >
+                          <p className="mb-2" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+                            "It is difficult to imagine the best editor at HarperCollins doing a better job than my Omni editor. Editing services through Omni are equal to the finest brick and mortar publishing houses and far more timely."
+                          </p>
+                          <footer style={{ fontStyle: 'normal', fontWeight: '600', color: '#78716c', fontSize: '0.88rem' }}>
+                            -Michael R Zomber, author of <em>Shogun Iemitsu</em>
+                          </footer>
+                        </blockquote>
+
+                        <p className="fst-italic mb-3 text-muted" style={{ fontSize: '0.9rem' }}>
+                          *There is a 5,000-word minimum charge for all editing services.
+                        </p>
+
+                        <p className="mb-0" style={{ fontSize: '0.95rem' }}>
+                          Leave it to our editorial specialists to take your book to the next level. The typical timeline for this service is <strong>six to eight weeks</strong>, depending on our queue and the complexity of your work.
+                        </p>
+                      </div>
+                    </div>
+                  ) : (selectedService?.slug === 'cover-copy-polish' && !isCurrentSubcategoryOverview) ? (
+                    /* Cover Copy Polish Service (Matching Screenshot 5 - NO PRICE, NO CHECKLIST) */
+                    <div className="cover-copy-polish-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          With Omni Cover Copy Polishing, the ideas you provide will allow us to create intriguing copy that can help you clinch the sale. Our professional copywriting staff will mold the text that you provide into marketable material by polishing the hardcover flaps, back cover copy, author bio and keynote, in addition to any other cover material you have submitted.
+                        </p>
+
+                        <p className="mb-0">
+                          Create intriguing cover text and catch the attention of book buyers with this professional copywriting service. The typical timeline for this service is <strong>one week</strong>, depending on our queue and the complexity of your work.
+                        </p>
                       </div>
                     </div>
                   ) : isCurrentSubcategoryOverview ? (
@@ -1278,7 +1541,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                             Available Services in {selectedService.title}
                           </h4>
                           <span className="badge rounded-pill bg-light text-muted border px-2.5 py-1" style={{ fontSize: '0.78rem' }}>
-                            {(selectedService.services || currentSubcategory?.services || []).filter(s => s.slug !== selectedCategory?.id && s.slug !== selectedService.slug).length} Offerings
+                            {(selectedService.services || (currentSubcategory?.services || []).filter(s => s.slug !== selectedCategory?.id)).length} {(selectedService.services || (currentSubcategory?.services || []).filter(s => s.slug !== selectedCategory?.id)).length === 1 ? 'Offering' : 'Offerings'}
                           </span>
                         </div>
                         <p className="text-muted mb-4" style={{ fontSize: '0.92rem' }}>
@@ -1287,8 +1550,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
 
                         {/* List of services in this subcategory */}
                         <div className="d-flex flex-column gap-3 mb-4">
-                          {(selectedService.services || currentSubcategory?.services || [])
-                            .filter(s => s.slug !== selectedCategory?.id && s.slug !== selectedService.slug)
+                          {(selectedService.services || (currentSubcategory?.services || []).filter(s => s.slug !== selectedCategory?.id))
                             .map((svc) => {
                               const svcTitle = t(`service.${svc.slug}.title`, svc.title);
                               const svcLead = AUTHENTIC_SERVICE_SUMMARIES[svc.slug] || t(`service.${svc.slug}.lead`, svc.lead || svc.lead_paragraph || svc.summary || '');
@@ -1329,21 +1591,6 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                 </div>
                               );
                             })}
-                        </div>
-                      </div>
-
-                      {/* What's Included Feature Checklist for Subcategory */}
-                      <div className="features-checklist-section">
-                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
-                          {includedHeading}
-                        </h5>
-                        <div className="service-features-list">
-                          {displayFeatures.map((feat, idx) => (
-                            <div className="feature-checkpoint-item" key={idx}>
-                              <i className="bi bi-patch-check-fill feature-check-icon"></i>
-                              <span>{feat}</span>
-                            </div>
-                          ))}
                         </div>
                       </div>
                     </div>
@@ -1511,24 +1758,9 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                           </div>
                         </div>
                       )}
-
-                      {/* What's Included / Key Category Highlights */}
-                      <div className="features-checklist-section">
-                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
-                          {includedHeading}
-                        </h5>
-                        <div className="service-features-list">
-                          {displayFeatures.map((feat, idx) => (
-                            <div className="feature-checkpoint-item" key={idx}>
-                              <i className="bi bi-patch-check-fill feature-check-icon"></i>
-                              <span>{feat}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
                     </div>
-                  ) : (
-                    /* What's Included Feature Checklist for Individual Services */
+                  ) : (selectedCategory?.id === 'publishing-packages' || selectedService?.categoryId === 'publishing-packages' || selectedService?.isPackage) && displayFeatures && displayFeatures.length > 0 ? (
+                    /* What's Included Feature Checklist only for Publishing Packages */
                     <div className="features-checklist-section">
                       <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.1rem' }} data-block-key="services.included.heading">
                         {includedHeading}
@@ -1543,7 +1775,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         ))}
                       </div>
                     </div>
-                  )}
+                  ) : null}
 
                   {/* Direct Action Card (Book / Consult) */}
                   <div className="service-cta-card">
@@ -1715,7 +1947,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                             ? expandedSubcategories[sub.id]
                             : defaultSubOpen;
 
-                        const isSubOverviewSelected = selectedService?.slug === sub.id;
+                        const isSubOverviewSelected = Boolean(selectedService?.isSubcategoryOverview && selectedService?.slug === sub.id);
 
                         return (
                           <div key={sub.id} className="subcategory-group mb-2">
@@ -1751,7 +1983,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                             {isSubExpanded && (
                               <div className="subcategory-services-list">
                                 {filteredServices.map((svc) => {
-                                  const isSelected = selectedService?.slug === svc.slug;
+                                  const isSelected = !selectedService?.isSubcategoryOverview && selectedService?.slug === svc.slug;
                                   const svcTitle = t(`service.${svc.slug}.title`, svc.title);
                                   return (
                                     <button
