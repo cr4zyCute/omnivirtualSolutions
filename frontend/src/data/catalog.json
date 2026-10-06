@@ -1009,40 +1009,22 @@
             "slug": "radio-book-talk",
             "title": "Radio Book Talk",
             "price": "",
-            "lead": "Introduce your book to the literary world with Emmy Award-winning host Kate Delaney. Plus, reach thousands of engaged booklovers through two popular literary podcasts: Books on Air and Newsgram.",
-            "features": [
-              "8 to 12-minute interview on America Tonight with Kate Delaney",
-              "15-minute in-depth online interview featured on Books on Air",
-              "Feature segment on WebTalkRadio’s syndicated Newsgram show",
-              "Digital audio file provided for author promotional use",
-              "Syndicated broadcast reaching nationwide listeners"
-            ]
+            "lead": "You'll never run out of places to talk about books. With our Radio Book Talk service, you’ll get both online and terrestrial radio coverage: talk about your book on a radio show hosted by Emmy Award-winning broadcaster Kate Delaney, get interviewed on Books on Air, and get featured on Newsgram.",
+            "features": []
           },
           {
             "slug": "audio-snip",
             "title": "Audio Snip",
             "price": "",
-            "lead": "The Audio Snip service serves as a high-impact audio trailer of your book. With this service, you take your story directly to the airwaves with a professionally produced 30-second teaser talking about your work.",
-            "features": [
-              "30-second professionally produced audio teaser commercial",
-              "Broadcast on popular radio stations and digital streaming channels",
-              "Direct purchase information and author website call-to-action",
-              "Digital audio file provided for author social media promotion",
-              "High-impact promotional reach"
-            ]
+            "lead": "Thirty seconds may seem like an insignificant amount of time, but in half a minute you can connect with your target readers. With the Audio Snip service, you get a 30-second professionally produced audio teaser for your book that you can use to launch or enhance your campaign.",
+            "features": []
           },
           {
             "slug": "online-interview",
             "title": "Online Interview",
             "price": "",
-            "lead": "Position yourself as an authority in your genre with a dedicated online radio interview. Digitally recorded and syndicated across podcast platforms, this interview provides evergreen marketing collateral.",
-            "features": [
-              "In-depth recorded radio interview focused on you and your book",
-              "Syndicated distribution across Apple Podcasts, Spotify, and Toginet",
-              "Master digital audio copy provided for author website and marketing",
-              "Social media promotional assets highlighting the broadcast",
-              "Evergreen audio asset to build author credibility"
-            ]
+            "lead": "Position yourself as an expert on your book’s subject matter and put your voice on the radio. The Online Interview service provides a recorded 10- to 15-minute radio interview aired on Omni Radio with J. Douglas Barker, syndicated via iTunes and Toginet.com.",
+            "features": []
           }
         ]
       }

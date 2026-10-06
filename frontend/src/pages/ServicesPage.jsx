@@ -487,6 +487,9 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'author-website-setup': 'Custom responsive author website with up to 10 tailored pages, professional HTML design, and 1 full year of free domain registration and web hosting.',
   'press-release-essential-edition': 'Expertly crafted one-page press release distributed to 500+ targeted media outlets with one month of media tracking via Meltwater.',
   'press-release-web-optimized-edition': 'SEO-optimized press release distributed to 30,000 opt-in journalists and 250,000 news subscribers via PRWeb with full tracking.',
+  'radio-book-talk': 'Multi-platform broadcast package featuring an 8–12 min interview with Emmy-winner Kate Delaney on America Tonight, plus interviews on Books on Air and Newsgram.',
+  'audio-snip': 'A 30-second professionally produced audio teaser commercial about your book, perfect for radio broadcast, podcast spots, and social media campaigns.',
+  'online-interview': 'A 10–15 min phone-recorded radio interview on Omni Radio with broadcast veteran J. Douglas Barker, syndicated via iTunes and Toginet.com.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -615,7 +618,10 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'sem-specialist-campaign' ||
       slug === 'author-website-setup' ||
       slug === 'press-release-essential-edition' ||
-      slug === 'press-release-web-optimized-edition'
+      slug === 'press-release-web-optimized-edition' ||
+      slug === 'radio-book-talk' ||
+      slug === 'audio-snip' ||
+      slug === 'online-interview'
     );
   }, [selectedService]);
 
@@ -4526,6 +4532,172 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         </div>
                       </div>
                     </div>
+                  ) : selectedService?.slug === 'radio-book-talk' ? (
+                    /* Radio Book Talk (NO PRICE, NO CHECKLIST) */
+                    <div className="radio-book-talk-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Talk about what you love and introduce your book to listeners nationwide. Combine terrestrial radio reach with prominent bookish podcast features on America Tonight, Books on Air, and Newsgram.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          You'll never run out of places to talk about books. There are cafés, libraries, bookstores, and you can chat about it on the radio. As an author, you can use the airwaves not only to talk about what you love, but to promote your book to interested listeners across the country.
+                        </p>
+                        <p className="mb-3">
+                          With our Radio Book Talk service, you get both online and terrestrial radio coverage: talk about your book on a radio show hosted by Kate Delaney, an Emmy award-winning broadcaster, and get interviewed on WebTalkRadio’s Books on Air. Plus, your book will be announced to the avid listeners of Newsgram, a show that highlights trends and popular recommendations.
+                        </p>
+
+                        <div className="p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.88rem' }}>
+                            <strong>Genre Recommendation:</strong> Radio Book Talk is highly recommended for literary novels, memoirs, business books, and nonfiction titles such as self-help and personal growth.
+                          </p>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Radio Book Talk Package Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>8 to 12-Minute Interview on America Tonight:</strong> In-depth interview with Emmy Award-winning host Kate Delaney. America Tonight airs across approximately 100 stations nationwide and reaches around 2.9 million listeners. You will receive an MP3 audio file following the interview.
+                            </li>
+                            <li>
+                              <strong>15-Minute Online Interview on Books on Air:</strong> Featured with host Suzanne Harris on WebTalkRadio, and syndicated across Apple Podcasts, iHeartRadio, Spotify, and major podcast aggregators.
+                            </li>
+                            <li>
+                              <strong>Book Feature on Newsgram:</strong> Featured spotlight on WebTalkRadio's Newsgram show hosted by seasoned newsroom personality Sam Youmans, distributed across Apple, iHeartRadio, and Spotify.
+                            </li>
+                            <li>
+                              <strong>Digital Master Copies:</strong> Digital copies of all radio interviews with full commercial rights for your author website, social media promotions, speaking engagements, and press kits.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#ad7d42', fontSize: '0.95rem' }}>
+                            About the Hosts & Broadcasters
+                          </h6>
+                          <div className="d-flex flex-column gap-2" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.6' }}>
+                            <p className="mb-0">
+                              <strong>Kate Delaney:</strong> An award-winning and respected national broadcaster with 20 years in television and radio, having interviewed over 16,000 guests. She garnered a Television Emmy for her special report on the AIDS epidemic and several Golden Mics for her investigative series.
+                            </p>
+                            <p className="mb-0">
+                              <strong>Suzanne Harris (Books on Air):</strong> An experienced media personality who guides authors in sharing their creative journey with passionate readers worldwide.
+                            </p>
+                            <p className="mb-0">
+                              <strong>Sam Youmans (Newsgram):</strong> A seasoned newsroom veteran who curates standout book releases and creative work for dedicated weekly listeners.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Broadcast Policy: </span>
+                          <span style={{ color: '#57534e', fontSize: '0.88rem' }}>
+                            Featured books are subject to network review and approval. Certain themes, genres, or explicit topics may not be suitable for terrestrial broadcast syndication.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'audio-snip' ? (
+                    /* Audio Snip (NO PRICE, NO CHECKLIST) */
+                    <div className="audio-snip-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Thirty seconds may seem like an insignificant amount of time, but in half a minute you can grab reader attention, present your hook, and direct listeners right to where your book is sold.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Yes, you read that right—it's entirely possible to reach out to prospective readers in such a short window. All you need is the right marketing vehicle. The Audio Snip service serves as a high-impact audio trailer of your book to announce its release, create intrigue, and inform listeners where they can purchase their copy.
+                        </p>
+                        <p className="mb-3">
+                          With this service, you take your story directly to the airwaves and digital audio channels with a professionally voiced and engineered audio teaser designed to integrate seamlessly into your author platform.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            The Audio Snip Package Includes:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>30-Second Professionally Produced Audio Commercial:</strong> Crisp, studio-engineered audio teaser highlighting your book title, logline, author identity, and retail availability.
+                            </li>
+                            <li>
+                              <strong>Studio Voiceover & Sound Design:</strong> Professional voice talent and licensed background music tuned to match your book's mood and genre.
+                            </li>
+                            <li>
+                              <strong>Multi-Platform Digital Asset:</strong> Complete digital master copy formatted for radio rotation, podcast preroll/midroll ads, Instagram reels, YouTube shorts, and author website landing pages.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Tip: An Audio Snip is an ideal promotional companion to pair with social media advertising, website header media, and newsletter releases.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'online-interview' ? (
+                    /* Online Interview (NO PRICE, NO CHECKLIST) */
+                    <div className="online-interview-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Position yourself as an expert on your book’s subject matter and put your voice on the radio. Gain a powerful promotional push and an evergreen audio asset with broadcast veteran J. Douglas Barker.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Position yourself as an authority in your genre and share the heart of your message with eager listeners. The Online Interview service is a strategic marketing tool designed to enhance your promotional plan. With the rise in streaming audio and satellite radio, listeners have more choices and more ways to access content than ever before, and streaming radio is an exceptional way to reach new audiences.
+                        </p>
+                        <p className="mb-3">
+                          Plus, you can use your high-quality recorded interview as a launch pad for your next big promotional push across social media, author blogs, and speaking engagements.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Online Interview Package Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>10- to 15-Minute Online Radio Interview:</strong> Recorded comfortably over the phone, focused on your book, writing process, and expertise.
+                            </li>
+                            <li>
+                              <strong>Broadcast on Omni Radio Stations:</strong>
+                              <ul className="mt-1 mb-1 ps-3" style={{ fontSize: '0.88rem' }}>
+                                <li><strong>Omni Radio:</strong> Airs Saturdays at 3:00 p.m. CT (encore Thursdays at 11:00 p.m. CT)</li>
+                                <li><strong>Omni Radio 2:</strong> Airs Saturdays at 1:00 p.m. CT (encore Sundays at 1:00 p.m. CT)</li>
+                              </ul>
+                            </li>
+                            <li>
+                              <strong>Global Syndication:</strong> Syndicated via iTunes and Toginet.com, digitally retrievable for on-demand playback on mobile devices (iPhone, iPad, Android).
+                            </li>
+                            <li>
+                              <strong>Master Digital Audio Copy:</strong> Unlimited rights to burn, distribute, play at speaking engagements, or embed on your author website, blog, and email promotions.
+                            </li>
+                            <li>
+                              <strong>Pre-Show Questionnaire & Guided Warm-Up:</strong> A thorough pre-show questionnaire and warm-up conversation with host J. Douglas Barker to ensure you are confident and comfortable with the interview topics.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#ad7d42', fontSize: '0.95rem' }}>
+                            About Host J. Douglas Barker
+                          </h6>
+                          <p className="mb-2" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            With a passion for all things creative, J. Douglas Barker is an accomplished actor, singer, and audio producer with over 35 years of studio excellence. He can be heard worldwide as producer and talent for Toginet Radio Network, with voice actor credits in the CBS "Movie of the Week," along with commercial and studio work for national accounts including Disney, Church's Chicken, and United Technologies.
+                          </p>
+                          <p className="fst-italic mb-0" style={{ color: '#78716c', fontSize: '0.86rem' }}>
+                            Never been interviewed for radio before? No problem. The interview is structured to be fun, relaxing, and collaborative. J. Douglas Barker guides you through every step so you shine on the airwaves.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   ) : isCurrentSubcategoryOverview ? (
                     /* Subcategory Overview matching user's screenshots (Image 1 - Image 5) */
                     <div className="subcategory-overview-content">
@@ -4752,6 +4924,37 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                 <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Permanent SEO Footprint & Discoverability</strong>
                                 <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
                                   Web-optimized distribution generates permanent backlinks, Google News indexing, and higher search result rankings for your name and title.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {currentSubcategory?.id === 'radio-services' && (
+                          <div className="radio-services-advantages-box p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                            <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                              Advantages of Radio Services for Authors:
+                            </h6>
+                            <p className="mb-3" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                              Have you ever considered how a radio interview might affect your book’s marketing plan? Omni can make your voice available on the airwaves to reach new audiences and build lasting authority.
+                            </p>
+                            <div className="d-flex flex-column gap-2.5">
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>1. Expands Audience Reach</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Radio stations, including local, national, and online platforms, expose your book to thousands or even millions of listeners across diverse demographics who may not actively browse bookstore shelves online.
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>2. Builds Credibility & Authority</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Being featured on radio shows or podcasts establishes you as an expert in your genre. Conversational interviews allow authors to personally connect with listeners and earn their trust.
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Cost-Effective, High-ROI Promotion</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Compared to television or large print ad campaigns, radio marketing is exceptionally accessible and yields evergreen digital recordings for website embedding and ongoing social campaigns.
                                 </p>
                               </div>
                             </div>
