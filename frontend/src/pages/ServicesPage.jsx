@@ -462,6 +462,11 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'bookblast-video-marketing-premium': 'Combines a cinematic Premium Book Video with voiceover narration, a 30-second campaign cut, and a targeted 30-day YouTube ad campaign.',
   '15-sec-video-marketing': 'Get your book in front of huge, engaged audiences with a 15-second uninterrupted ad shown 350,000 times on YouTube, plus companion desktop banners.',
   'video-book-talk': 'Stream your 15-20 minute author interview with JT Crowley across Roku, Amazon Fire TV, YouTube, plus major podcast networks like Apple and Spotify.',
+  'indie-book-review-bundle': 'Comprehensive BookLife (Publishers Weekly) review with comp titles and letter grades, plus digital banner ads and a PW print supplement ad slot.',
+  'literary-gateway-bundle': 'Combines 6 months of Awards Finder platform matching with an objective BlueInk Review, BookMad feature eligibility, and cover resubmission.',
+  'review-duo': 'Receive dual respected reviews from Pacific Book Review (PBR) and The US Review of Books (USRB), plus entry into Eric Hoffer and Pacific Book Awards.',
+  'review-duo-plus': 'Everything in Review Duo (PBR + USRB + Hoffer & Pacific awards) plus a syndicated 10-15 minute online radio interview and 1-month featured placement.',
+  'the-trifecta-review-service': 'Triple professional critique package featuring Kirkus Indie, Clarion Review (ForeWord), and BlueInk Review, plus an ad in Kirkus Reviews magazine.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -565,7 +570,12 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'bookblast-video-marketing-standard' ||
       slug === 'bookblast-video-marketing-premium' ||
       slug === '15-sec-video-marketing' ||
-      slug === 'video-book-talk'
+      slug === 'video-book-talk' ||
+      slug === 'indie-book-review-bundle' ||
+      slug === 'literary-gateway-bundle' ||
+      slug === 'review-duo' ||
+      slug === 'review-duo-plus' ||
+      slug === 'the-trifecta-review-service'
     );
   }, [selectedService]);
 
@@ -3379,6 +3389,242 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         </div>
                       </div>
                     </div>
+                  ) : selectedService?.slug === 'indie-book-review-bundle' ? (
+                    /* Indie Book Review Bundle (NO PRICE, NO CHECKLIST) */
+                    <div className="indie-book-review-bundle-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          As a self-published author in the competitive literary industry, securing as many book reviews as you can get helps you stand out. Partner with the pros at BookLife by Publishers Weekly.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          BookLife is a website created by <em>Publishers Weekly</em> that focuses on supporting independent authors. The Indie Book Review Bundle gives you a comprehensive review crafted by professional <em>Publishers Weekly</em> reviewers under the BookLife Reviews brand, paired with high-impact industry marketing campaigns.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Extensive BookLife Review Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Comprehensive 300-Word Review:</strong> Covers plot summary, critique, and in-depth analysis of your book, including an assessment of target readership.
+                            </li>
+                            <li>
+                              <strong>One-Sentence Takeaway:</strong> An honest, positive headline takeaway summarizing the reviewer's opinion of your book's best aspects.
+                            </li>
+                            <li>
+                              <strong>Comparison (Comp) Titles & Authors:</strong> Strategic list of comparable books and authors for commercial positioning.
+                            </li>
+                            <li>
+                              <strong>Production Letter Grades (A+ to C):</strong> Objective grading across five production elements: cover art, interior design and typography, illustrations, editing, and marketing copy.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Digital & Print Advertising Campaigns:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>PublishersWeekly.com Banner Ad:</strong> 10,000 guaranteed impressions across PublishersWeekly.com, which reaches over 14 million annual unique visitors.
+                            </li>
+                            <li>
+                              <strong>Publishers Weekly Supplement Ad (1 of 8 slot):</strong> Your book ad appears in an official stand-alone conference supplement (e.g. Winter Institute, Children’s Institute, Star Watch, or AAR & SBL) and is center-stitched to the print magazine reaching 68,000 subscribers.
+                            </li>
+                            <li>
+                              <strong>Database Archiving:</strong> Review submitted to major book trade databases including EBSCO, Ingram, and ProQuest, accessible to bookstores and libraries globally.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Guidelines: Suitable for English-language books up to 150,000 words that are commercially available in the US. Author maintains complete publishing control on BookLife.com.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'literary-gateway-bundle' ? (
+                    /* Literary Gateway Bundle (NO PRICE, NO CHECKLIST) */
+                    <div className="literary-gateway-bundle-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          With Literary Gateway, get a mix of services designed to put you at the forefront of award opportunities to help build your author brand.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          A book award is more than a feather in your cap—it makes books noticeably more valuable in the eyes of consumers, media, and retailers. Omni simplifies award matching and submission while securing professional editorial praise for your title.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Literary Gateway Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>6 Months Access to Awards Finder:</strong> Intelligent award-matching platform identifying 1 award opportunity weekly (24+ opportunities). Each month, Awards Finder selects the best match, prepares your nomination package, and handles entry submission on your behalf.
+                            </li>
+                            <li>
+                              <strong>Objective BlueInk Review:</strong> A 250–300 word professional critique by BlueInk Review—founded by an internationally known literary agent and an award-winning review editor to celebrate the best of independent publishing.
+                            </li>
+                            <li>
+                              <strong>BookMad Magazine Feature Eligibility:</strong> Award-winning titles are eligible for a spotlight feature in BookMad Magazine and announced across official social media pages.
+                            </li>
+                            <li>
+                              <strong>Cover Resubmission Included:</strong> Free cover revision to proudly integrate your review pull quotes and/or official award seals.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'review-duo' ? (
+                    /* Review Duo (NO PRICE, NO CHECKLIST) */
+                    <div className="review-duo-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Spark readers’ interest and build credibility for your book with the Review Duo service. Receive professional, unbiased assessments from two esteemed industry review platforms.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Reviews from trusted industry professionals establish essential social proof for your title across retail and distribution channels.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Review Duo Package Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Pacific Book Review (PBR):</strong> Authoritative, objective critique written by specialists selected for their genre expertise, circulated to industry professionals via monthly newsletter and social networks.
+                            </li>
+                            <li>
+                              <strong>The US Review of Books (USRB):</strong> Professional review introduced to more than 14,000 subscribers in the USRB monthly newsletter and showcased on their website.
+                            </li>
+                            <li>
+                              <strong>Entry to the Eric Hoffer Award:</strong> Entry to one of the most prestigious independent book awards recognizing salient writing and small-publisher spirit.
+                            </li>
+                            <li>
+                              <strong>Entry to the Pacific Book Awards:</strong> Celebrates outstanding excellence across print and electronic literature.
+                            </li>
+                            <li>
+                              <strong>Free Cover Revision Option:</strong> Update your cover layout to incorporate excerpted review quotes at no additional charge.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>Please Note: If a returned review is unfavorable, you may choose not to use it in your promotional materials; review service fees are non-refundable.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'review-duo-plus' ? (
+                    /* Review Duo Plus (NO PRICE, NO CHECKLIST) */
+                    <div className="review-duo-plus-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Spark readers’ interest and build credibility for your book with the Review Duo Plus service, featuring dual authoritative reviews, two award entries, and a syndicated radio broadcast.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Review Duo Plus builds upon our popular review package by adding premier digital visibility and syndicated audio broadcast reach.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Review Duo Plus Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Pacific Book Review (PBR):</strong> Objective, specialist review promoted across industry networks and monthly newsletters.
+                            </li>
+                            <li>
+                              <strong>The US Review of Books (USRB):</strong> Review sent to 14,000+ newsletter subscribers plus <strong>one month featured placement</strong> in the Featured Book Reviews section of USRB.
+                            </li>
+                            <li>
+                              <strong>10-15 Minute Online Radio Interview:</strong> Syndicated broadcast via iTunes and Toginet.com, available for download on mobile devices and repurposing across your author marketing.
+                            </li>
+                            <li>
+                              <strong>Entry to the Eric Hoffer Award:</strong> Official nomination for the prestigious Hoffer Award.
+                            </li>
+                            <li>
+                              <strong>Entry to the Pacific Book Awards:</strong> Official nomination celebrating excellence in modern publishing.
+                            </li>
+                            <li>
+                              <strong>Free Cover Revision:</strong> Complimentary cover redesign to include review pull quotes and award honors.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>Please Note: If a returned review is unfavorable, you may choose not to use it in your promotional materials; review service fees are non-refundable.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'the-trifecta-review-service' ? (
+                    /* The Trifecta Review Service (NO PRICE, NO CHECKLIST) */
+                    <div className="the-trifecta-review-service-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Get unbiased and professional reviews from three esteemed publications. With the Omni Trifecta Review Service, your marketing efforts receive an elite boost in the competitive marketplace.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          A review can profoundly influence the market’s awareness toward your book. The Trifecta Review Service brings together three of the most influential authorities in the literary review landscape.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            The Three Esteemed Reviews:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Kirkus Indie:</strong> Among the world’s most acclaimed and authoritative book review providers, delivering honest, fair, and respected critiques that open doors to bookstore shelves and media attention.
+                            </li>
+                            <li>
+                              <strong>Clarion Review-for-Fee:</strong> ForeWord Magazine’s prestigious review service that heavily influences buying decisions of booksellers and public librarians across the country.
+                            </li>
+                            <li>
+                              <strong>BlueInk Review:</strong> Founded by an internationally respected literary agent and an award-winning book review editor to provide honest, vetting-driven reviews exclusively for independent authors.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Print Magazine Placement & Cover Update:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Kirkus Reviews Magazine (1 of 8 slot):</strong> National print visibility with a black-and-white advertisement inside the pages of <em>Kirkus Reviews</em> magazine.
+                            </li>
+                            <li>
+                              <strong>Complimentary Cover Revision:</strong> Update your cover layout to feature excerpts from your reviews at no additional cost.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>Please Note: If a returned review is unfavorable, the author can choose not to use it in marketing efforts; review fees are non-refundable.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   ) : isCurrentSubcategoryOverview ? (
                     /* Subcategory Overview matching user's screenshots (Image 1 - Image 5) */
                     <div className="subcategory-overview-content">
@@ -3412,6 +3658,42 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                               <li>Short, cinematic previews draw in audiences who may not usually read long text book summaries.</li>
                               <li>A high-quality book trailer establishes credibility and professionalism, attracting literary agents, publishers, and media attention.</li>
                             </ul>
+                          </div>
+                        )}
+
+                        {currentSubcategory?.id === 'book-reviews' && (
+                          <div className="book-reviews-advantages-box p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                            <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                              Advantages of Editorial Book Reviews:
+                            </h6>
+                            <p className="mb-2" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                              A book review is an excellent way to generate interest for your title. Book readers, buyers, and retailers rely on the opinion of experts when considering which titles are worth purchasing and reading.
+                            </p>
+                            <div className="row g-3 mt-1">
+                              <div className="col-md-6">
+                                <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                  <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>For Authors & Publishers:</strong>
+                                  <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.6' }}>
+                                    <li>Boosts credibility, trust, and author reputation</li>
+                                    <li>Increases book sales through social proof</li>
+                                    <li>Improves online discoverability and search ranking</li>
+                                    <li>Provides constructive feedback to refine future works</li>
+                                    <li>Encourages word-of-mouth recommendations and organic buzz</li>
+                                    <li>Attracts media attention and bookstore distribution opportunities</li>
+                                  </ul>
+                                </div>
+                              </div>
+                              <div className="col-md-6">
+                                <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                  <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>For Book Buyers & Readers:</strong>
+                                  <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.6' }}>
+                                    <li>Provides reliable insights on book quality, themes, and writing style</li>
+                                    <li>Saves time and money by matching personal reading preferences</li>
+                                    <li>Fosters literary discussion and reader community engagement</li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         )}
 

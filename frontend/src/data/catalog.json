@@ -805,64 +805,35 @@
             "title": "Indie Book Review Bundle",
             "price": "",
             "lead": "As a self-published author in the competitive literary industry, securing as many book reviews as you can get helps you stand out. Your potential readers look to professional reviews to get an indication of the quality of a book, so you need to partner with the pros – like BookLife Reviews.",
-            "features": [
-              "An extensive book review by BookLife that includes",
-              "An honest, positive one-sentence takeaway that summarizes the reviewer's opinion",
-              "A list of comparison (comp) titles and/or authors.",
-              "Letter grades (from A+ to C) for five production elements",
-              "Online banner ad campaign on PublishersWeekly",
-              "1 out of 8 ad slot in a Publishers Weekly Supplement Depending on your book’s"
-            ]
+            "features": []
           },
           {
             "slug": "literary-gateway-bundle",
             "title": "Literary Gateway Bundle",
             "price": "",
-            "lead": "A book award is more than a feather in your cap or an emblem on the front cover. Awards make books more valuable in the eyes of the ordinary consumer. It helps boost credibility, create awareness of the book, and even grow one’s audience. It’s a marketing tool not often explored but one that you, as an author, shouldn’t overlook.",
-            "features": [
-              "6 months access to Awards Finder AwardsFinder is a book award-matching platform",
-              "Eligibility for a feature on BookMad If you win an award, it will be featured in",
-              "Option for Cover Resubmission to add the review blurb and/or any award seals to your book cover"
-            ]
+            "lead": "With Literary Gateway, get a mix of services designed to put you at the forefront of award opportunities to help build your author brand. Find award opportunities and submit your nomination easily using the intelligent matching platform, Awards Finder, and get your book reviewed by the pros with BlueInk Reviews.",
+            "features": []
           },
           {
             "slug": "review-duo",
             "title": "Review Duo",
             "price": "",
-            "lead": "Spark reader’s interest and build credibility for your book with the Review Duo service. Receive professional, unbiased assessments for your book from these esteemed book reviewers:",
-            "features": [
-              "PBR Book Review",
-              "USRB Book Review",
-              "Entry to the Eric Hoffer Award",
-              "Entry to the Pacific Book Awards",
-              "Free cover revision option to include a portion of the reviews on the cover"
-            ]
+            "lead": "Spark reader’s interest and build credibility for your book with the Review Duo service. Receive professional, unbiased assessments for your book from these esteemed book reviewers.",
+            "features": []
           },
           {
             "slug": "review-duo-plus",
             "title": "Review Duo Plus",
             "price": "",
-            "lead": "Spark reader’s interest and build credibility for your book with the Review Duo Plus service. Receive professional, unbiased assessments for your book from these esteemed book reviewers:",
-            "features": [
-              "PBR Book Review",
-              "USRB Book Review, including placement in their Featured Book Reviews section for one month",
-              "10-15 minute Online Radio Interview, available for download on popular sites such as iTunes",
-              "Entry to the Eric Hoffer Award",
-              "Entry to the Pacific Book Awards",
-              "Free cover revision option to include a portion of the reviews on the cover"
-            ]
+            "lead": "Spark reader’s interest and build credibility for your book with the Review Duo Plus service. Receive professional, unbiased assessments for your book from these esteemed book reviewers.",
+            "features": []
           },
           {
             "slug": "the-trifecta-review-service",
             "title": "The Trifecta Review Service",
             "price": "",
-            "lead": "Get unbiased and professional reviews from three different esteemed publications. With the Omni Trifecta Review Service* your marketing efforts will receive an extra boost and give your book that much-needed edge.",
-            "features": [
-              "Kirkus Indie Among the world’s highly acclaimed book review providers, Kirkus",
-              "Clarion Review-for-Fee ForeWord Magazine’s paid review service heavily",
-              "BlueInk Review Dedicated to exclusively providing honest, unbiased reviews,",
-              "A review can influence the market’s awareness towards your book"
-            ]
+            "lead": "Get unbiased and professional reviews from three different esteemed publications. With the Omni Trifecta Review Service your marketing efforts will receive an extra boost and give your book that much-needed edge.",
+            "features": []
           }
         ]
       },
