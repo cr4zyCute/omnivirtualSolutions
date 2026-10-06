@@ -453,6 +453,8 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'graphic-file-conversions-quantity-25': 'When authors send in graphic files, they sometimes require an extensive amount of work. With this service, Omni will work to ensure graphics appear correctly in the final product.',
   'file-merging': 'If the standard manuscript submission process of sending one file is not followed, files must be merged or combined in order to ensure a correct outcome.',
   'image-extraction': 'If you choose to submit your manuscript with the images included in the body of your work, Omni must extract these images to properly create a professional layout of your book. This service will cover the cost of extracting the images to ensure proper interior layout.',
+  'resubmission-one-version': 'Once your book has gone live and is for sale, you can still correct errors or other issues that might have been missed. Choose this service if you only have either a softcover or a hardcover that needs to be updated.',
+  'resubmission-two-version': 'Choose this service if you have a softcover and hardcover book that needs to be updated.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -547,7 +549,9 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'manuscript-file-conversion' ||
       slug === 'graphic-file-conversions-quantity-25' ||
       slug === 'file-merging' ||
-      slug === 'image-extraction'
+      slug === 'image-extraction' ||
+      slug === 'resubmission-one-version' ||
+      slug === 'resubmission-two-version'
     );
   }, [selectedService]);
 
@@ -2975,6 +2979,106 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
                           <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
                             <strong style={{ color: '#2b2219' }}>Duration:</strong> 1-2 weeks
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'resubmission-one-version' ? (
+                    /* Resubmission (One Version) (NO PRICE, NO CHECKLIST) */
+                    <div className="resubmission-one-version-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Once your book has gone live and is for sale, you can still correct errors or other issues that might have been missed. Choose this service if you only have either a softcover or a hardcover that needs to be updated.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          When a book has gone live and the author finds problems, errors, or other issues that need to be corrected, we can re-submit the file to the printer to update future copies.
+                        </p>
+
+                        <div className="p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219' }}>
+                            Resubmission Discount:
+                          </h6>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            If the author is resubmitting to do a retech, then the price of the retech is reduced when purchased with the resubmission.
+                          </p>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Permitted Resubmission Changes:
+                          </h6>
+                          <p className="mb-2" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                            Authors are able to:
+                          </p>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>Make changes to text in galley</li>
+                            <li>Make changes to cover text or design</li>
+                            <li>Change subtitle</li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fff9f0', border: '1px solid #f0dfc8' }}>
+                          <p className="mb-0" style={{ color: '#7c5e2a', fontSize: '0.9rem', lineHeight: '1.65' }}>
+                            <strong style={{ color: '#5c431b' }}>Important Policy Notice:</strong> Please remember that the title and the price (Omni bookstore or retail) for a book going through resubmission cannot be changed after it has gone live.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Multiple Formats?</strong> If you have both a paperback and a hardcover version you want to update, please explore our service for <strong>Resubmission (Two Versions)</strong>.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'resubmission-two-version' ? (
+                    /* Resubmission (Two Version) (NO PRICE, NO CHECKLIST) */
+                    <div className="resubmission-two-version-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Choose this service if you have a softcover and hardcover book that needs to be updated.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          When a book has gone live and the author finds problems, errors, or other issues that need to be corrected, we can re-submit the file to the printer to update future copies.
+                        </p>
+
+                        <div className="p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219' }}>
+                            Resubmission Discount:
+                          </h6>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            If the author is resubmitting to do a retech, then the price of the retech is reduced when purchased with the resubmission.
+                          </p>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Permitted Resubmission Changes:
+                          </h6>
+                          <p className="mb-2" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                            Authors are able to:
+                          </p>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>Make changes to text in galley</li>
+                            <li>Make changes to cover text or design</li>
+                            <li>Change subtitle</li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fff9f0', border: '1px solid #f0dfc8' }}>
+                          <p className="mb-0" style={{ color: '#7c5e2a', fontSize: '0.9rem', lineHeight: '1.65' }}>
+                            <strong style={{ color: '#5c431b' }}>Important Policy Notice:</strong> Please remember that the title and the price (Omni bookstore or retail) for a book going through resubmission cannot be changed after it has gone live.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Single Format?</strong> If your book is available in only one format, such as paperback only or hardcover only, please select our service for <strong>Resubmission (One Version)</strong>.
                           </p>
                         </div>
                       </div>

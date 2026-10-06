@@ -721,23 +721,15 @@
             "slug": "resubmission-one-version",
             "title": "Resubmission (One Version)",
             "price": "",
-            "lead": "When a book has gone live and the author finds problems, errors, or other issues that need to be corrected, we can re-submit the file to the printer to update future copies.",
-            "features": [
-              "Make changes to text in galley",
-              "Make changes to cover text or design",
-              "Change subtitle"
-            ]
+            "lead": "Once your book has gone live and is for sale, you can still correct errors or other issues that might have been missed. Choose this service if you only have either a softcover or a hardcover that needs to be updated.",
+            "features": []
           },
           {
             "slug": "resubmission-two-version",
             "title": "Resubmission (Two Version)",
             "price": "",
-            "lead": "When a book has gone live and the author finds problems, errors, or other issues that need to be corrected, we can re-submit the file to the printer to update future copies.",
-            "features": [
-              "Make changes to text in galley",
-              "Make changes to cover text or design",
-              "Change subtitle"
-            ]
+            "lead": "Choose this service if you have a softcover and hardcover book that needs to be updated. When a book has gone live and errors need to be corrected, we re-submit the updated files to the printer for future copies.",
+            "features": []
           }
         ]
       }
