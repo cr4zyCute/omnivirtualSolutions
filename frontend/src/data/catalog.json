@@ -858,37 +858,22 @@
             "slug": "hollywood-coverage",
             "title": "Hollywood Coverage",
             "price": "",
-            "lead": "Even with the Internet, it can be quite difficult for most readers to find their next favorite book. But for Ingram’s subscribers, fresh stories aren’t really hard to come by. They know that they can always expect interesting titles from its trusted source: Ingram Advance Catalog Supplements.",
-            "features": [
-              "A thorough synopsis that highlights the main characters and events in your story",
-              "A critical analysis that addresses key story points as well as how your book",
-              "If 5 More Minutes is interested in working with you, they will contact you",
-              "If after reviewing your screenplay 5 More Minutes decides not to engage on your"
-            ]
+            "lead": "A cost-effective way to get a professionally written synopsis and critical analysis of your book in a database where Hollywood decision-makers search for new material to adapt into a feature film or television series.",
+            "features": []
           },
           {
             "slug": "hollywood-treatment",
             "title": "Hollywood Treatment",
             "price": "",
-            "lead": "Your book has all the elements Hollywood wants—an exciting plot, well-developed characters and fresh content—yet there’s still a crucial piece you need in order to be taken seriously by established entertainment executives.",
-            "features": [
-              "From our network of screenwriters, we’ll match you with the one who best",
-              "Your professional screenwriter will provide a thorough five to ten-page",
-              "If after reviewing your treatment 5 More Minutes decides not to engage with your",
-              "The screenwriter waives all rights to the treatment, so you maintain full"
-            ]
+            "lead": "The framework used to transform your work into a screenplay, Hollywood Treatment is an aggressive approach to making your work available to Hollywood with a thoroughly developed five to ten-page adaptation guide.",
+            "features": []
           },
           {
             "slug": "hollywood-screenplay",
             "title": "Hollywood Screenplay",
             "price": "",
-            "lead": "Don't just dream about it—take action. If you’re determined to turn your book into a movie or television series, a screenplay is the way to get noticed by Hollywood executives. A screenplay is a fully fleshed out script that television and movie producers can use as a means of evaluating if an adaptation of your book is something they want to produce. With a professionally adapted screenplay, you will let Hollywood know you're serious about breaking into the entertainment business.",
-            "features": [
-              "A screenwriter will complete a screenplay based on your approved Hollywood Treatment.",
-              "Screenplay elements will include character dialogue and detailed action of the story.",
-              "If after reviewing your screenplay 5 More Minutes decides not to engage on your",
-              "The screenwriter waives all rights to your screenplay, so you maintain full"
-            ]
+            "lead": "Don't just dream about it—take action. If you’re determined to turn your book into a movie or television series, a screenplay is the way to get noticed by Hollywood executives with a fully fleshed out script complete with dialogue and dramatic action.",
+            "features": []
           }
         ]
       },

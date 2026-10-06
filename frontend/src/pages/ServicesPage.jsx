@@ -468,6 +468,9 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'review-duo-plus': 'Everything in Review Duo (PBR + USRB + Hoffer & Pacific awards) plus a syndicated 10-15 minute online radio interview and 1-month featured placement.',
   'the-trifecta-review-service': 'Triple professional critique package featuring Kirkus Indie, Clarion Review (ForeWord), and BlueInk Review, plus an ad in Kirkus Reviews magazine.',
   'join-the-la-times-festival-of-books-2025': 'Exhibit your book in the Author Solutions Bookstore Gallery or host your own live book signing at the 30th anniversary LA Times Festival of Books.',
+  'hollywood-coverage': 'Independent studio reader coverage with synopsis and screen adaptation analysis, reviewed by 5 More Minutes and archived in the Hollywood Database.',
+  'hollywood-treatment': 'A 5-to-10 page professional adaptation blueprint crafted by an industry screenwriter, considered for production by 5 More Minutes.',
+  'hollywood-screenplay': 'A full-length adapted screenplay complete with character dialogue and scene action, reviewed by Lionsgate veteran John Sacchi at 5 More Minutes.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -577,7 +580,10 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'review-duo' ||
       slug === 'review-duo-plus' ||
       slug === 'the-trifecta-review-service' ||
-      slug === 'join-the-la-times-festival-of-books-2025'
+      slug === 'join-the-la-times-festival-of-books-2025' ||
+      slug === 'hollywood-coverage' ||
+      slug === 'hollywood-treatment' ||
+      slug === 'hollywood-screenplay'
     );
   }, [selectedService]);
 
@@ -3699,6 +3705,168 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         </div>
                       </div>
                     </div>
+                  ) : selectedService?.slug === 'hollywood-coverage' ? (
+                    /* Hollywood Coverage (NO PRICE, NO CHECKLIST) */
+                    <div className="hollywood-coverage-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          If you’ve ever wondered—even for a moment—if your book could be turned into a movie, Hollywood Coverage is the most cost-effective service that will help you answer that question.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          A professional reader will develop your book’s coverage, the standard evaluation format used across the movie and television industry. Coverage provides studio executives, producers, and literary agents with a clear, concise appraisal of your story’s cinematic viability.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Your Hollywood Coverage Elements:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Thorough Synopsis:</strong> Highlights the main characters, pivotal plot points, dramatic arc, and major events in your story.
+                            </li>
+                            <li>
+                              <strong>Critical Analysis:</strong> Professional evaluation addressing key story mechanics, thematic resonance, character development, and specific recommendations on how your manuscript can be adapted for the screen.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Studio Consideration & Database Placement:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>5 More Minutes First-Look Consideration:</strong> Once completed, your coverage is submitted to our first-look production partner, 5 More Minutes, led by veteran studio executive John Sacchi. If interested, they will reach out directly to discuss potential adaptation.
+                            </li>
+                            <li>
+                              <strong>Hollywood Database Access:</strong> If 5 More Minutes chooses not to option your project, your coverage is archived into our exclusive Hollywood Database where certified directors, producers, actors, and agents actively scout for fresh literary concepts.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219', fontSize: '0.92rem' }}>
+                            About 5 More Minutes & John Sacchi:
+                          </h6>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            5 More Minutes is a full-service production shingle run by veteran Hollywood executive John Sacchi, who spent 15 years as a senior production and development executive at Lionsgate Films. His career credits include <em>Akeelah and the Bee</em>, <em>Confidence</em>, <em>Employee of the Month</em>, <em>The Possession</em>, <em>Punisher</em>, as well as current adaptations like Lionsgate’s <em>Dork Diaries</em> and <em>Rogues Gallery</em>.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Your Hollywood Coverage will be fulfilled by an independent industry professional who conducts evaluations for major agencies and studios. Omni Virtual Solutions has no input regarding the critical analysis and cannot guarantee specific option results.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'hollywood-treatment' ? (
+                    /* Hollywood Treatment (NO PRICE, NO CHECKLIST) */
+                    <div className="hollywood-treatment-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Your book has all the elements Hollywood wants—an exciting plot, well-developed characters, and fresh content—yet there’s still a crucial piece you need in order to be taken seriously by established entertainment executives: a professional treatment.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          A treatment is a thoroughly developed guide that outlines how a screenwriter would adapt your book into a fully-developed screenplay. As the framework used to transform your work into another medium, Hollywood Treatment is the essential first step to drafting a screenplay. By defining exactly how a screenwriter will approach the adaptation, you give agents, studios, and producers a direct shortcut to the cinematic essence of your book.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            How Hollywood Treatment Works:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Screenwriter Matching:</strong> We match you with an experienced professional screenwriter from our industry network whose background best complements your book’s genre and voice.
+                            </li>
+                            <li>
+                              <strong>Comprehensive 5 to 10-Page Treatment:</strong> Your screenwriter crafts a detailed treatment outlining the three-act structure, scene progressions, and character dynamics tailored for feature film or television.
+                            </li>
+                            <li>
+                              <strong>100% Rights & Story Ownership:</strong> The screenwriter waives all rights to the treatment, ensuring you maintain full, complete ownership of your story and conceptual property.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Studio Consideration & Database Placement:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>5 More Minutes First Look:</strong> Upon completion, your treatment is submitted to our first-look partner, 5 More Minutes (headed by veteran Lionsgate executive John Sacchi), for TV or film adaptation consideration.
+                            </li>
+                            <li>
+                              <strong>Exclusive Hollywood Database:</strong> If 5 More Minutes does not engage with your concept, your treatment is uploaded to our secure Hollywood Database accessible by entertainment industry producers, directors, agents, and writers.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Please Note: Hollywood Treatment provides an adaptation blueprint based on your book. Details in plot, pacing, and characters may be adjusted to fit cinematic storytelling. Please do not attempt to contact 5 More Minutes directly, as unauthorized inquiries will result in immediate disqualification from consideration.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'hollywood-screenplay' ? (
+                    /* Hollywood Screenplay (NO PRICE, NO CHECKLIST) */
+                    <div className="hollywood-screenplay-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Don't just dream about it—take action. If you’re determined to turn your book into a movie or television series, a screenplay is the way to get noticed by Hollywood executives.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          A screenplay is a fully fleshed out script that television and movie producers use to evaluate whether an adaptation of your book is something they want to produce. With a professionally adapted screenplay, you make the ultimate marketing push into the entertainment business and demonstrate that your story is production-ready.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Full Screenplay Adaptation Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Script Adapted from Approved Treatment:</strong> A seasoned industry screenwriter crafts a feature-length or television pilot script adhering strictly to your approved Hollywood Treatment.
+                            </li>
+                            <li>
+                              <strong>Dialogue & Dramatic Action:</strong> Fully formatted script with authentic character dialogue, scene transitions, dramatic tension, and atmospheric scene descriptions meeting Hollywood studio standards.
+                            </li>
+                            <li>
+                              <strong>Complete Author Ownership:</strong> The screenwriter waives all copyright and writing rights to the screenplay; you retain 100% intellectual property ownership.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Hollywood Studio Evaluation & Database Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>5 More Minutes First Look:</strong> Your completed script is delivered directly to John Sacchi’s production shingle, 5 More Minutes, for adaptation consideration.
+                            </li>
+                            <li>
+                              <strong>Exclusive Hollywood Database:</strong> If 5 More Minutes decides not to acquire your screenplay, it is entered into our industry database accessible to verified producers, directors, agents, and studio representatives.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Prerequisite Notice: An approved Hollywood Treatment is a required prerequisite for Hollywood Screenplay. Please speak with your consultant if you have not yet completed a treatment. Please do not attempt to contact 5 More Minutes directly.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   ) : isCurrentSubcategoryOverview ? (
                     /* Subcategory Overview matching user's screenshots (Image 1 - Image 5) */
                     <div className="subcategory-overview-content">
@@ -3808,6 +3976,49 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                 <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>5. Social Media Content & Marketing Opportunities</strong>
                                 <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
                                   Photos, videos, and behind-the-scenes moments attract new readers online. <em>Events with live social media updates see a 35% increase in online engagement (Event Marketing Institute, 2023).</em>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {currentSubcategory?.id === 'hollywood-book-to-screen' && (
+                          <div className="hollywood-advantages-box p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                            <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                              Advantages of Hollywood Book-to-Screen Adaptation:
+                            </h6>
+                            <p className="mb-3" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                              Have you ever considered for even a moment that your book could be adapted into a movie or television series? Omni makes your book accessible to agents, producers, directors, writers, and actors through specialized industry pathways.
+                            </p>
+                            <div className="d-flex flex-column gap-2.5">
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>1. Increases the Book’s Marketability</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  A book backed by a professional screen adaptation evaluation or treatment is exponentially more appealing to Hollywood studios and production companies.
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>2. Provides a Clear Path to Adaptation</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Our services provide structured coverage, treatment outlines, and complete screenplays, guiding authors step-by-step through the film and TV development pipeline.
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Attracts Filmmakers & Studios</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  A polished screenplay or treatment dramatically raises the likelihood of catching the attention of directors, showrunners, and streaming networks.
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>4. Expands the Book’s Global Audience</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  A film or television adaptation can introduce your story to millions of viewers who haven’t yet discovered the print edition, creating surging book sales.
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>5. Enhances Author Credibility & Brand Prestige</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Being associated with Hollywood development talks elevates your reputation and opens substantial opportunities with literary agents and publishers.
                                 </p>
                               </div>
                             </div>
