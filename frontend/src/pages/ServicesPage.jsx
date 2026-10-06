@@ -514,7 +514,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   // Determine if currently selected item is a Category Overview
   const isCurrentCategoryOverview = useMemo(() => {
     if (!selectedService || !selectedCategory) return false;
-    return selectedService.slug === selectedCategory.id;
+    return selectedService.slug === selectedCategory.id || Boolean(selectedService.isCategoryOverview);
   }, [selectedService, selectedCategory]);
 
   // Find the current subcategory
@@ -894,22 +894,25 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                 [cat.id]: true,
                                 [cat.tag]: true,
                               }));
-                              const catOverviewSvc = allServicesList.find((s) => s.slug === cat.id);
-                              if (catOverviewSvc) {
-                                handleSelectService(
-                                  {
-                                    ...catOverviewSvc,
-                                    title: catOverviewSvc.title || t(`service.${catOverviewSvc.slug}.title`, cat.title),
-                                    lead: catOverviewSvc.lead || catOverviewSvc.lead_paragraph || t(`service.${catOverviewSvc.slug}.lead`, ''),
-                                  },
-                                  cat,
-                                  cat.subcategories[0],
-                                  true
-                                );
-                              } else if (cat.subcategories[0]?.services[0]) {
-                                const targetSvc = cat.subcategories[0].services[0];
-                                handleSelectService({ ...targetSvc, title: targetSvc.title || t(`service.${targetSvc.slug}.title`, '') }, cat, cat.subcategories[0], true);
-                              }
+                              const catOverviewSvc = allServicesList.find((s) => s.slug === cat.id) || {
+                                slug: cat.id,
+                                title: cat.title,
+                                lead: cat.lead || cat.description || '',
+                                categoryId: cat.id,
+                                categoryTitle: cat.title,
+                                categoryTag: cat.tag,
+                                isCategoryOverview: true
+                              };
+                              handleSelectService(
+                                {
+                                  ...catOverviewSvc,
+                                  title: catOverviewSvc.title || t(`service.${catOverviewSvc.slug}.title`, cat.title),
+                                  lead: catOverviewSvc.lead || catOverviewSvc.lead_paragraph || t(`service.${catOverviewSvc.slug}.lead`, ''),
+                                },
+                                cat,
+                                cat.subcategories[0],
+                                true
+                              );
                             }}
                           >
                             <span className="d-flex align-items-center gap-2">
@@ -1033,18 +1036,24 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                       style={{ cursor: selectedCategory ? 'pointer' : 'default' }}
                       onClick={() => {
                         if (selectedCategory) {
-                          const catOverviewSvc = allServicesList.find((s) => s.slug === selectedCategory.id);
-                          if (catOverviewSvc) {
-                            handleSelectService(
-                              {
-                                ...catOverviewSvc,
-                                title: catOverviewSvc.title || t(`service.${catOverviewSvc.slug}.title`, selectedCategory.title),
-                                lead: catOverviewSvc.lead || catOverviewSvc.lead_paragraph || t(`service.${catOverviewSvc.slug}.lead`, ''),
-                              },
-                              selectedCategory,
-                              selectedCategory.subcategories?.[0]
-                            );
-                          }
+                          const catOverviewSvc = allServicesList.find((s) => s.slug === selectedCategory.id) || {
+                            slug: selectedCategory.id,
+                            title: selectedCategory.title,
+                            lead: selectedCategory.lead || selectedCategory.description || '',
+                            categoryId: selectedCategory.id,
+                            categoryTitle: selectedCategory.title,
+                            categoryTag: selectedCategory.tag,
+                            isCategoryOverview: true
+                          };
+                          handleSelectService(
+                            {
+                              ...catOverviewSvc,
+                              title: catOverviewSvc.title || t(`service.${catOverviewSvc.slug}.title`, selectedCategory.title),
+                              lead: catOverviewSvc.lead || catOverviewSvc.lead_paragraph || t(`service.${catOverviewSvc.slug}.lead`, ''),
+                            },
+                            selectedCategory,
+                            selectedCategory.subcategories?.[0]
+                          );
                         }
                       }}
                     >
@@ -1114,7 +1123,9 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                   )}
 
                   {/* Bottom section: Specific layout for Publishing Packages, Evaluation Services, Editorial Evaluation, or What's Included */}
-                  {selectedService?.slug === 'publishing-packages' ? (
+                  {blocks && blocks[`service.${selectedService?.slug}.custom_html`] ? (
+                    <div dangerouslySetInnerHTML={{ __html: blocks[`service.${selectedService?.slug}.custom_html`] }} />
+                  ) : selectedService?.slug === 'publishing-packages' ? (
                     <div className="publishing-options-section">
                       <h4 
                         className="publishing-options-title" 
