@@ -438,7 +438,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'custom-headers': 'If at any time during the submission process you would like to change a header within your work, you simply need to purchase our Custom Headers service.',
   'b-w-image-insertion': 'If you want to include graphics in your book, please follow our guidelines.',
   'interior-revisions-block-of-25': 'Omni gives you one opportunity to examine your book proofs and make up to 50 corrections for free. If you wish to make further proofreading corrections after the initial free 50, there is a charge for every group of 25 changes.',
-  'stock-image-processing': 'Professional licensing and processing for high-resolution Getty Images on your cover and interior.',
+  'stock-image-processing': 'If you wish to include more than two images on your cover, a Stock Image Processing fee will be assessed. This fee will also be placed on any images found through Getty Images you wish to use in the interior of your book.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -2564,8 +2564,11 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         </p>
 
                         <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
-                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.65' }}>
+                          <p className="mb-2" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.65' }}>
                             To avoid these fees please adhere to the manuscript submission guidelines. Speak to an Omni team member for more information about this service.
+                          </p>
+                          <p className="fst-italic mb-0" style={{ color: '#78716c', fontSize: '0.86rem', lineHeight: '1.6' }}>
+                            Disclaimer: Prices listed do not include applicable taxes, which will be added at the time of purchase. Shipping and handling will be calculated and charged after your book is made available for sale.
                           </p>
                         </div>
                       </div>
