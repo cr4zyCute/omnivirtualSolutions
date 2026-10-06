@@ -11,11 +11,15 @@ function formatCatalog(rawList) {
   return rawList.map((cat) => ({
     id: cat.id || cat.slug || '',
     title: cat.title || '',
+    lead: cat.lead || cat.description || '',
+    description: cat.lead || cat.description || '',
     tag: cat.tag || cat.slug || '',
     icon: cat.icon || cat.icon_class || 'bi-bookmark-star',
     subcategories: (cat.subcategories || []).map((sub) => ({
       id: sub.id || sub.slug || '',
       title: sub.title || '',
+      lead: sub.lead || sub.description || '',
+      description: sub.lead || sub.description || '',
       services: (sub.services || []).map((s) => ({
         slug: s.slug || '',
         title: s.title || '',
@@ -234,6 +238,16 @@ export default function ServicesPage() {
   const allServicesList = useMemo(() => {
     const list = [];
     catalog.forEach((cat) => {
+      list.push({
+        slug: cat.id,
+        title: cat.title,
+        lead: cat.lead || cat.description || '',
+        lead_paragraph: cat.lead || cat.description || '',
+        categoryId: cat.id,
+        categoryTitle: cat.title,
+        categoryTag: cat.tag,
+        isCategoryOverview: true,
+      });
       cat.subcategories.forEach((sub) => {
         sub.services.forEach((s) => {
           list.push({ ...s, categoryId: cat.id, categoryTitle: cat.title, subcategoryId: sub.id, subcategoryTitle: sub.title, categoryTag: cat.tag });
@@ -306,19 +320,19 @@ export default function ServicesPage() {
       {
         slug: 'basic-package',
         title: 'Basic Package',
-        price: '$899.00',
+        price: '',
         summary: 'The Basic package is designed for authors seeking basic publishing needs. It includes digital formatting and distribution for e-books, paperback publishing, and customization options for the interior and cover.',
       },
       {
         slug: 'standard-package',
         title: 'Standard Package',
-        price: '$1,599.00',
+        price: '',
         summary: 'Building on the Basic, the Standard package adds hardcover publishing to the mix, enhancing the physical presence of your book. This package maintains all the services of the Basic package, including the customization, support, and online distribution features.',
       },
       {
         slug: 'advanced-package',
         title: 'Advanced Package',
-        price: '$4,999.00',
+        price: '',
         summary: 'The Advanced package is the most comprehensive, designed for authors who want extensive support and marketing tools. It includes everything from the Standard package, but boosts the number of copies provided to 20 paperbacks and 5 hardcovers.',
       },
     ];
@@ -1115,7 +1129,9 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                   {/* Service Overview Box (Only shown if NOT a custom layout and NOT publishing packages / evaluation-services overview) */}
                   {!hasCustomDetailView && selectedService?.slug !== 'publishing-packages' && selectedService?.slug !== 'evaluation-services' && (
                     <div className="service-lead-box">
-                      <h5 data-block-key="services.overview.heading">{overviewHeading}</h5>
+                      <h5 data-block-key={isCurrentCategoryOverview ? `service.${selectedService?.slug}.overview_heading` : "services.overview.heading"}>
+                        {isCurrentCategoryOverview ? t(`service.${selectedService?.slug}.overview_heading`, 'Category Overview') : overviewHeading}
+                      </h5>
                       <p className="service-lead-text" data-block-key={selectedService ? `service.${selectedService.slug}.lead` : undefined}>
                         {displayLead}
                       </p>
@@ -5451,100 +5467,722 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                       )}
 
                       {selectedService?.slug === 'formats' && (
-                        <div 
-                          className="editorial-note-callout p-3 mb-4 rounded-3"
-                          style={{
-                            background: '#faf6f0',
-                            border: '1px solid rgba(173, 125, 66, 0.3)',
-                            borderLeft: '5px solid #ad7d42'
-                          }}
-                        >
-                          <div className="fw-bold mb-1" style={{ color: '#2b2219', fontSize: '0.98rem' }}>
-                            Industry-Standard Print & Digital Formats
+                        <div className="category-formats-overview">
+                          <div 
+                            className="editorial-note-callout p-3 mb-4 rounded-3"
+                            style={{
+                              background: '#faf6f0',
+                              border: '1px solid rgba(173, 125, 66, 0.3)',
+                              borderLeft: '5px solid #ad7d42'
+                            }}
+                          >
+                            <div 
+                              className="fw-bold mb-1" 
+                              style={{ color: '#2b2219', fontSize: '0.98rem' }}
+                              data-block-key="service.formats.industry_note_title"
+                            >
+                              {t('service.formats.industry_note_title', 'Industry-Standard Print & Digital Formats')}
+                            </div>
+                            <p 
+                              className="mb-0" 
+                              style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}
+                              data-block-key="service.formats.industry_note"
+                            >
+                              {t('service.formats.industry_note', 'All manuscripts submitted to Omni are formatted as trade paperbacks and printed on high-quality, acid-free, book-grade opaque paper stock. Standard with our publishing packages, with options for hardcover cloth bindings and professional audiobook production.')}
+                            </p>
                           </div>
-                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
-                            All manuscripts submitted to Omni are formatted as trade paperbacks and printed on high-quality, acid-free, book-grade opaque paper stock. Standard with our publishing packages, with options for hardcover cloth bindings and professional audiobook production.
-                          </p>
+
+                          <div className="d-flex flex-column gap-3 mb-4">
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'audiobook-publishing');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.formats.electronic_title"
+                                >
+                                  <i className="bi bi-tablet me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.formats.electronic_title', 'Electronic Format')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.formats.electronic_desc"
+                              >
+                                {t('service.formats.electronic_desc', 'With the increasing number of readers who prefer a digital format, it’s important that your book is accessible to these tech-savvy booklovers too. With our Digital Formatting and Distribution service, your book will be available for sale as an e-book.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'audiobook-publishing');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.formats.audiobook_title"
+                                >
+                                  <i className="bi bi-headphones me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.formats.audiobook_title', 'AudioBook Publishing')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.formats.audiobook_desc"
+                              >
+                                {t('service.formats.audiobook_desc', 'Over the years, the demand for audiobooks has significantly increased because readers are now able to easily download books and listen to them while they are on the move. Through audiobooks, stories are shared in a convenient way. Let your words unfold in your readers’ imagination through Omni audiobook publishing. Lift your story from its pages and let your readers listen to it.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'print-formats');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.formats.print_title"
+                                >
+                                  <i className="bi bi-book me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.formats.print_title', 'Print Formats')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.formats.print_desc"
+                              >
+                                {t('service.formats.print_desc', 'All manuscripts submitted to Omni are formatted as trade paperbacks and printed on high-quality, acid-free, book-grade opaque paper stock.')}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       )}
 
                       {selectedService?.slug === 'design-services' && (
-                        <div 
-                          className="editorial-note-callout p-3 mb-4 rounded-3"
-                          style={{
-                            background: '#faf6f0',
-                            border: '1px solid rgba(173, 125, 66, 0.3)',
-                            borderLeft: '5px solid #ad7d42'
-                          }}
-                        >
-                          <div className="fw-bold mb-1" style={{ color: '#2b2219', fontSize: '0.98rem' }}>
-                            First Impressions That Sell
+                        <div className="category-design-overview">
+                          <div 
+                            className="editorial-note-callout p-3 mb-4 rounded-3"
+                            style={{
+                              background: '#faf6f0',
+                              border: '1px solid rgba(173, 125, 66, 0.3)',
+                              borderLeft: '5px solid #ad7d42'
+                            }}
+                          >
+                            <div 
+                              className="fw-bold mb-1" 
+                              style={{ color: '#2b2219', fontSize: '0.98rem' }}
+                              data-block-key="service.design-services.impressions_title"
+                            >
+                              {t('service.design-services.impressions_title', 'First Impressions That Sell')}
+                            </div>
+                            <p 
+                              className="mb-0" 
+                              style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}
+                              data-block-key="service.design-services.impressions_note"
+                            >
+                              {t('service.design-services.impressions_note', 'The cover is the first opportunity you have to connect with potential readers. That\'s why at Omni we make sure that your cover and interior layout meet the professional standards for commercially successful books.')}
+                            </p>
                           </div>
-                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
-                            The cover is the first opportunity you have to connect with potential readers. That's why at Omni we make sure that your cover and interior layout meet the professional standards for commercially successful books.
-                          </p>
+
+                          <div className="d-flex flex-column gap-3 mb-4">
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'interior-page-layout');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.design-services.layout_title"
+                                >
+                                  <i className="bi bi-layout-text-window-reverse me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.design-services.layout_title', 'Interior Page Layout')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.design-services.layout_desc"
+                              >
+                                {t('service.design-services.layout_desc', 'Careful planning and execution of the layout of your book is very important. Readers need to be able to easily follow the text of your book. Our professionals will help you create the best layout for your book.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'cover-design');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.design-services.cover_title"
+                                >
+                                  <i className="bi bi-image me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.design-services.cover_title', 'Cover Design')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.design-services.cover_desc"
+                              >
+                                {t('service.design-services.cover_desc', 'The cover is the first opportunity you have to connect with potential readers. That\'s why at Omni we make sure that your cover will meet the professional standards for commercially successful books. After all, when a book is sitting on the shelf, potential readers don\'t look to see how a book is published. They only know whether the cover image draws their attention or the back cover copy makes them to want to read more. These elements make a great cover, and that is why we pay attention to these details when we are publishing your book.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'cover-design');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.design-services.stock_title"
+                                >
+                                  <i className="bi bi-images me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.design-services.stock_title', 'Stock Images')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.design-services.stock_desc"
+                              >
+                                {t('service.design-services.stock_desc', 'All books published via the Omni standard publishing packages receive custom-designed covers, produced in full color. Within the realm of this custom-designed cover, you have the option to choose two images, free of charge, from the millions found through Getty Images.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'black-and-white-illustrations');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.design-services.bw_illustrations_title"
+                                >
+                                  <i className="bi bi-brush me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.design-services.bw_illustrations_title', 'Interior Black-and-White Illustrations')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.design-services.bw_illustrations_desc"
+                              >
+                                {t('service.design-services.bw_illustrations_desc', 'Elevate your book to the next creative level with custom artwork produced in our in-house art studio. The Omni team of seasoned studio artists will work with you to produce striking black-and-white illustrations that add visual interest to your book’s content.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'color-illustrations');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.design-services.color_illustrations_title"
+                                >
+                                  <i className="bi bi-palette me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.design-services.color_illustrations_title', 'Interior Color Illustrations')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.design-services.color_illustrations_desc"
+                              >
+                                {t('service.design-services.color_illustrations_desc', 'One of Omni\'s talented studio artists will use your descriptions and feedback to create custom color illustrations that reflect your book’s unique style.')}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       )}
 
                       {selectedService?.slug === 'production' && (
-                        <div 
-                          className="editorial-note-callout p-3 mb-4 rounded-3"
-                          style={{
-                            background: '#faf6f0',
-                            border: '1px solid rgba(173, 125, 66, 0.3)',
-                            borderLeft: '5px solid #ad7d42'
-                          }}
-                        >
-                          <div className="fw-bold mb-1" style={{ color: '#2b2219', fontSize: '0.98rem' }}>
-                            Seamless Publishing Workflow
+                        <div className="category-production-overview">
+                          <div 
+                            className="editorial-note-callout p-3 mb-4 rounded-3"
+                            style={{
+                              background: '#faf6f0',
+                              border: '1px solid rgba(173, 125, 66, 0.3)',
+                              borderLeft: '5px solid #ad7d42'
+                            }}
+                          >
+                            <div 
+                              className="fw-bold mb-1" 
+                              style={{ color: '#2b2219', fontSize: '0.98rem' }}
+                              data-block-key="service.production.workflow_title"
+                            >
+                              {t('service.production.workflow_title', 'Seamless Publishing Workflow')}
+                            </div>
+                            <p 
+                              className="mb-0" 
+                              style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}
+                              data-block-key="service.production.workflow_note"
+                            >
+                              {t('service.production.workflow_note', 'Preparing your manuscript for submission and publishing is a whole lot easier when we do it for you. Omni handles everything from raw document conversion to post-layout revisions and catalog resubmissions.')}
+                            </p>
                           </div>
-                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
-                            Preparing your manuscript for submission and publishing is a whole lot easier when we do it for you. Omni handles everything from raw document conversion to post-layout revisions and catalog resubmissions.
-                          </p>
+
+                          <div className="d-flex flex-column gap-3 mb-4">
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'pre-manuscript-services');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.production.pre_manuscript_title"
+                                >
+                                  <i className="bi bi-file-earmark-text me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.production.pre_manuscript_title', 'Pre-Manuscript Services')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.production.pre_manuscript_desc"
+                              >
+                                {t('service.production.pre_manuscript_desc', 'Preparing your manuscript for submission and for publishing is a whole lot easier when we do it for you. Omni can convert your typewritten manuscript, or previously published book, to a word-processed format.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'post-page-layout-services');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.production.post_page_title"
+                                >
+                                  <i className="bi bi-pencil-square me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.production.post_page_title', 'Post-Page Layout Services')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.production.post_page_desc"
+                              >
+                                {t('service.production.post_page_desc', 'Omni allows you to make changes to your book after the manuscript has been laid out by our designers. Charges will be applied.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'resubmission');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.production.resubmission_title"
+                                >
+                                  <i className="bi bi-arrow-repeat me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.production.resubmission_title', 'Resubmission')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.production.resubmission_desc"
+                              >
+                                {t('service.production.resubmission_desc', 'Once your book has gone live and is for sale, you can still correct errors or other issues that might have been missed. Resubmission services are available for a fee.')}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       )}
 
                       {selectedService?.slug === 'marketing-services' && (
-                        <blockquote 
-                          className="editorial-testimonial-quote"
-                          style={{
-                            margin: '18px 0 24px',
-                            padding: '16px 20px',
-                            borderLeft: '4px solid #ad7d42',
-                            background: 'rgba(173, 125, 66, 0.05)',
-                            borderRadius: '0 8px 8px 0',
-                            fontStyle: 'italic',
-                            color: '#444'
-                          }}
-                        >
-                          <p className="mb-2" style={{ fontSize: '0.95rem', lineHeight: '1.6' }} data-block-key="service.marketing-services.quote">
-                            {t('service.marketing-services.quote', '"Once my book was released, I had to think about marketing and publicity. I received tremendous guidance from my marketing consultant and publicist! They made my life easy and worry-free. Thank you Omni for helping independent authors publish and market their books with confidence!"')}
-                          </p>
-                          <footer 
-                            className="editorial-quote-author" 
-                            style={{ fontStyle: 'normal', fontWeight: '600', color: '#666', fontSize: '0.88rem' }}
-                            data-block-key="service.marketing-services.quote_author"
+                        <div className="category-marketing-overview">
+                          <blockquote 
+                            className="editorial-testimonial-quote"
+                            style={{
+                              margin: '0 0 24px',
+                              padding: '16px 20px',
+                              borderLeft: '4px solid #ad7d42',
+                              background: 'rgba(173, 125, 66, 0.05)',
+                              borderRadius: '0 8px 8px 0',
+                              fontStyle: 'italic',
+                              color: '#444'
+                            }}
                           >
-                            {t('service.marketing-services.quote_author', '—Carisia Switala, author of Eternity\'s Secret')}
-                          </footer>
-                        </blockquote>
+                            <p className="mb-2" style={{ fontSize: '0.95rem', lineHeight: '1.6' }} data-block-key="service.marketing-services.quote">
+                              {t('service.marketing-services.quote', '"Once my book was released, I had to think about marketing and publicity. I received tremendous guidance from my marketing consultant and publicist! They made my life easy and worry-free. Thank you Omni for helping independent authors publish and market their books with confidence!"')}
+                            </p>
+                            <footer 
+                              className="editorial-quote-author" 
+                              style={{ fontStyle: 'normal', fontWeight: '600', color: '#666', fontSize: '0.88rem' }}
+                              data-block-key="service.marketing-services.quote_author"
+                            >
+                              {t('service.marketing-services.quote_author', '—Carisia Switala, author of Eternity\'s Secret')}
+                            </footer>
+                          </blockquote>
+
+                          <div className="mb-4">
+                            <p 
+                              className="mb-0" 
+                              style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}
+                              data-block-key="service.marketing-services.intro_p1"
+                            >
+                              {t('service.marketing-services.intro_p1', 'If you want your book to sell, you’ll want to do more than just hope for the best. Our selection of promotional products and services allows authors to build a dynamic platform from which they can effectively promote and sell their books. Create your marketing plan and materials with our simple step-by-step tools.')}
+                            </p>
+                          </div>
+
+                          <div className="d-flex flex-column gap-3 mb-4">
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'video-book-trailer');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.marketing-services.videos_title"
+                                >
+                                  <i className="bi bi-camera-video me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.marketing-services.videos_title', 'Author and Book Videos')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.marketing-services.videos_desc"
+                              >
+                                {t('service.marketing-services.videos_desc', 'Give a mass audience a look inside your story. With your professional book video or author interview, you can captivate your audience visually while your story unfolds before their eyes.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'publicity-services');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.marketing-services.publicity_title"
+                                >
+                                  <i className="bi bi-megaphone me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.marketing-services.publicity_title', 'Publicity Services')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.marketing-services.publicity_desc"
+                              >
+                                {t('service.marketing-services.publicity_desc', 'Get your book noticed from a unique platform created by our publicity and media services.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'book-reviews');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.marketing-services.reviews_title"
+                                >
+                                  <i className="bi bi-star-half me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.marketing-services.reviews_title', 'Book Reviews')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.marketing-services.reviews_desc"
+                              >
+                                {t('service.marketing-services.reviews_desc', 'A book review is an excellent way to generate interest for your title. Book readers, buyers, and retailers rely on the opinion of experts when considering which titles are worth purchasing and reading. Omni offers four distinct review services to help you elevate your book’s credibility and raise its marketing potential.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'book-signings-and-galleries');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.marketing-services.signings_title"
+                                >
+                                  <i className="bi bi-calendar-event me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.marketing-services.signings_title', 'Book Signings and Galleries')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.marketing-services.signings_desc"
+                              >
+                                {t('service.marketing-services.signings_desc', 'A book exhibition or book signing event can be a terrific way to create buzz around your book. As an exhibitor at many of the largest trade shows and book events, we\'ve put our books in the hands of booklovers and industry insiders through Omni book exhibition services.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'hollywood-book-to-screen');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.marketing-services.hollywood_title"
+                                >
+                                  <i className="bi bi-film me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.marketing-services.hollywood_title', 'Hollywood Book-to-Screen')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.marketing-services.hollywood_desc"
+                              >
+                                {t('service.marketing-services.hollywood_desc', 'Have you ever considered for even a moment that your book could be adapted into a movie or television series? If the answer is yes, then Omni can make your book available to agents, producers, directors, writers and actors through multiple new services available to our authors.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'internet-marketing');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.marketing-services.internet_title"
+                                >
+                                  <i className="bi bi-globe me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.marketing-services.internet_title', 'Internet Marketing')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.marketing-services.internet_desc"
+                              >
+                                {t('service.marketing-services.internet_desc', 'Having your own website, internet search, or preview tools are effective and economical ways to promote your book, enhance your image as an author, and communicate with prospective readers around the world.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'radio-services');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.marketing-services.radio_title"
+                                >
+                                  <i className="bi bi-broadcast me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.marketing-services.radio_title', 'Radio Services')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.marketing-services.radio_desc"
+                              >
+                                {t('service.marketing-services.radio_desc', 'Have you ever considered how a radio interview might affect your book’s marketing plan? If the answer is yes, then Omni can make your voice available on the airwaves to help you reach new audiences and further your cause.')}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       )}
 
                       {selectedService?.slug === 'bookselling' && (
-                        <div 
-                          className="editorial-note-callout p-3 mb-4 rounded-3"
-                          style={{
-                            background: '#faf6f0',
-                            border: '1px solid rgba(173, 125, 66, 0.3)',
-                            borderLeft: '5px solid #ad7d42'
-                          }}
-                        >
-                          <div className="fw-bold mb-1" style={{ color: '#2b2219', fontSize: '0.98rem' }}>
-                            Worldwide Retail Distribution & Legal Protection
+                        <div className="category-bookselling-overview">
+                          <div 
+                            className="editorial-note-callout p-3 mb-4 rounded-3"
+                            style={{
+                              background: '#faf6f0',
+                              border: '1px solid rgba(173, 125, 66, 0.3)',
+                              borderLeft: '5px solid #ad7d42'
+                            }}
+                          >
+                            <div 
+                              className="fw-bold mb-1" 
+                              style={{ color: '#2b2219', fontSize: '0.98rem' }}
+                              data-block-key="service.bookselling.distribution_title"
+                            >
+                              {t('service.bookselling.distribution_title', 'Worldwide Retail Distribution & Legal Protection')}
+                            </div>
+                            <p 
+                              className="mb-0" 
+                              style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}
+                              data-block-key="service.bookselling.distribution_note"
+                            >
+                              {t('service.bookselling.distribution_note', 'Once your book is published, we make it available for order online with retail outlets worldwide. Our bookselling promotional services provide you the opportunity to actively promote and protect your book.')}
+                            </p>
                           </div>
-                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
-                            Once your book is published, we make it available for order online with retail outlets worldwide. Our bookselling promotional services provide you the opportunity to actively promote and protect your book.
-                          </p>
+
+                          <div className="d-flex flex-column gap-3 mb-4">
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'bookstore-essentials');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.bookselling.essentials_title"
+                                >
+                                  <i className="bi bi-shop me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.bookselling.essentials_title', 'Bookstore Essentials')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.bookselling.essentials_desc"
+                              >
+                                {t('service.bookselling.essentials_desc', 'Through Omni Bookstore Essentials, your book receives professional bookselling services that make your book even more attractive to bookstores. By making your book returnable or adding preview services to your book, bookstores and other book buyers receive additional incentives to stock or purchase your book.')}
+                              </p>
+                            </div>
+
+                            <div 
+                              className="p-3.5 rounded-3 border"
+                              style={{ background: '#ffffff', borderColor: '#ebd9c4', cursor: 'pointer' }}
+                              onClick={() => {
+                                const sub = selectedCategory?.subcategories?.find(s => s.id === 'registration');
+                                if (sub) handleJumpToSubcategory(selectedCategory, sub);
+                              }}
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <h5 
+                                  className="fw-bold m-0" 
+                                  style={{ color: '#2b2219', fontSize: '1.08rem' }}
+                                  data-block-key="service.bookselling.registration_title"
+                                >
+                                  <i className="bi bi-shield-check me-2" style={{ color: '#ad7d42' }}></i>
+                                  {t('service.bookselling.registration_title', 'Registration')}
+                                </h5>
+                                <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
+                              </div>
+                              <p 
+                                className="mb-0" 
+                                style={{ color: '#57534e', fontSize: '0.93rem', lineHeight: '1.7' }}
+                                data-block-key="service.bookselling.registration_desc"
+                              >
+                                {t('service.bookselling.registration_desc', 'As you make your work available to the public, you want to make sure you have the appropriate protection. There are two ways we can help you with that. The first is registering your copyright with the U.S. Copyright Office. Second, a Library of Congress Control Number makes your book more accessible to librarians and book vendors.')}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       )}
 

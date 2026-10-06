@@ -623,6 +623,15 @@
       color: #ad7d42;
       letter-spacing: -0.02em;
     }
+    #detailPrice:empty::before {
+      content: "Set Price";
+      color: #ad7d42;
+      opacity: 0.55;
+      font-size: 1.15rem;
+      font-weight: 600;
+      font-style: italic;
+      cursor: text;
+    }
     .service-price-sub {
       display: block;
       font-size: 0.75rem;
@@ -1585,7 +1594,7 @@
 
             <!-- Service Overview Box (Default/Packages) -->
             <div class="service-lead-box" id="serviceDefaultLeadBox">
-              <h5 class="editable-field" id="detailOverviewHeading" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.overview.heading', this.innerText.trim())">
+              <h5 class="editable-field" id="detailOverviewHeading" contenteditable="true" spellcheck="false" onblur="handleHeaderSave(this.getAttribute('data-block-key') || 'services.overview.heading', this.innerText.trim())">
                 Service Overview
               </h5>
               <p class="service-lead-text editable-field" id="detailLead" contenteditable="true" spellcheck="false" onblur="handleServiceFieldSave('lead', this.innerText.trim())">
@@ -2241,7 +2250,7 @@
 
         const titleEl = document.getElementById('detailTitle');
         if (titleEl) {
-          titleEl.textContent = cat.title;
+          titleEl.textContent = (currentBlockMap && currentBlockMap[`service.${cat.id}.title`]) || cat.title;
           titleEl.setAttribute('data-block-key', `service.${cat.id}.title`);
         }
 
@@ -2265,16 +2274,22 @@
 
         if (featSec) featSec.style.display = 'none';
 
-        const catLead = cat.lead || cat.description || `Explore our comprehensive range of ${cat.title.toLowerCase()} tailored to authors at every stage of their publishing journey.`;
+        const catLead = (currentBlockMap && currentBlockMap[`service.${cat.id}.lead`]) ||
+                        cat.lead || cat.description ||
+                        `Explore our comprehensive range of ${cat.title.toLowerCase()} tailored to authors at every stage of their publishing journey.`;
         if (leadBox) {
           leadBox.style.display = 'block';
           const headingEl = document.getElementById('detailOverviewHeading');
-          if (headingEl) headingEl.textContent = 'Category Overview';
+          if (headingEl) {
+            headingEl.textContent = (currentBlockMap && currentBlockMap[`service.${cat.id}.overview_heading`]) || 'Category Overview';
+            headingEl.setAttribute('data-block-key', `service.${cat.id}.overview_heading`);
+          }
           const leadEl = document.getElementById('detailLead');
           if (leadEl) {
             leadEl.textContent = catLead;
             leadEl.setAttribute('data-block-key', `service.${cat.id}.lead`);
           }
+          attachEditableFields(leadBox, cat.id);
         }
 
         if (customContainer) {
@@ -2451,7 +2466,7 @@
 
         const titleEl = document.getElementById('detailTitle');
         if (titleEl) {
-          titleEl.textContent = sub.title;
+          titleEl.textContent = (currentBlockMap && currentBlockMap[`service.${sub.id}.title`]) || sub.title;
           titleEl.setAttribute('data-block-key', `service.${sub.id}.title`);
         }
 
@@ -2475,19 +2490,24 @@
 
         if (featSec) featSec.style.display = 'none';
 
-        const subLead = (window.SUBCATEGORY_LEADS && window.SUBCATEGORY_LEADS[sub.id]) ||
+        const subLead = (currentBlockMap && currentBlockMap[`service.${sub.id}.lead`]) ||
+                        (window.SUBCATEGORY_LEADS && window.SUBCATEGORY_LEADS[sub.id]) ||
                         (window.SUBCATEGORY_DESCRIPTIONS && window.SUBCATEGORY_DESCRIPTIONS[sub.id]) ||
                         sub.lead ||
                         `Explore all specialized services under ${sub.title}.`;
         if (leadBox) {
           leadBox.style.display = 'block';
           const headingEl = document.getElementById('detailOverviewHeading');
-          if (headingEl) headingEl.textContent = 'Subcategory Overview';
+          if (headingEl) {
+            headingEl.textContent = (currentBlockMap && currentBlockMap[`service.${sub.id}.overview_heading`]) || 'Subcategory Overview';
+            headingEl.setAttribute('data-block-key', `service.${sub.id}.overview_heading`);
+          }
           const leadEl = document.getElementById('detailLead');
           if (leadEl) {
             leadEl.textContent = subLead;
             leadEl.setAttribute('data-block-key', `service.${sub.id}.lead`);
           }
+          attachEditableFields(leadBox, sub.id);
         }
 
         if (customContainer) {
@@ -2662,7 +2682,7 @@
         // Title and badge
         const titleEl = document.getElementById('detailTitle');
         if (titleEl) {
-          titleEl.textContent = svc.title;
+          titleEl.textContent = (currentBlockMap && currentBlockMap[`service.${svc.slug}.title`]) || svc.title;
           titleEl.setAttribute('data-block-key', `service.${svc.slug}.title`);
         }
         const badgeEl = document.getElementById('detailBadge');
@@ -2674,27 +2694,28 @@
         const dangerZone = document.getElementById('dangerZoneBox');
         if (dangerZone) dangerZone.style.display = 'block';
 
-        // Check if service actually has a price
-        const hasPrice = Boolean(svc.price || svc.price_display);
+        // Price container - visible for all individual services so admin can edit
         const detailPriceEl = document.getElementById('detailPrice');
         const detailPriceContainer = document.getElementById('detailPriceContainer');
         if (detailPriceContainer) {
-          detailPriceContainer.style.display = (hasPrice && svc.slug !== 'publishing-packages' && svc.slug !== 'evaluation-services') ? 'flex' : 'none';
+          detailPriceContainer.style.display = (svc.slug !== 'publishing-packages' && svc.slug !== 'evaluation-services') ? 'flex' : 'none';
         }
         if (detailPriceEl) {
-          detailPriceEl.textContent = svc.price || svc.price_display || '';
+          const displayPrice = (currentBlockMap && currentBlockMap[`service.${svc.slug}.price`]) || svc.price || svc.price_display || '';
+          detailPriceEl.textContent = displayPrice;
           detailPriceEl.setAttribute('data-block-key', `service.${svc.slug}.price`);
         }
 
         // Lead / overview
         const leadEl = document.getElementById('detailLead');
         if (leadEl) {
-          leadEl.textContent = svc.lead || svc.lead_paragraph || '';
+          leadEl.textContent = (currentBlockMap && currentBlockMap[`service.${svc.slug}.lead`]) || svc.lead || svc.lead_paragraph || '';
           leadEl.setAttribute('data-block-key', `service.${svc.slug}.lead`);
         }
         const overviewHeadingEl = document.getElementById('detailOverviewHeading');
         if (overviewHeadingEl) {
-          overviewHeadingEl.textContent = 'Service Overview';
+          overviewHeadingEl.textContent = (currentBlockMap && currentBlockMap['services.overview.heading']) || 'Service Overview';
+          overviewHeadingEl.setAttribute('data-block-key', 'services.overview.heading');
         }
 
         const ctaHeadingEl = document.getElementById('detailCtaHeading');
@@ -2743,6 +2764,10 @@
           if (customContainer) customContainer.style.display = 'none';
           if (leadBox) leadBox.style.display = 'block';
           if (featSec) featSec.style.display = 'none';
+        }
+
+        if (leadBox && leadBox.style.display !== 'none') {
+          attachEditableFields(leadBox, svc.slug);
         }
 
         updatePaginationControls();
@@ -2872,7 +2897,21 @@
         selectedService[field] = val;
         // Update in catalog tree
         for (const cat of catalog) {
+          if (cat.id === selectedService.slug) {
+            cat[field] = val;
+            if (field === 'lead') {
+              cat.lead = val;
+              cat.description = val;
+            }
+          }
           for (const sub of (cat.subcategories || [])) {
+            if (sub.id === selectedService.slug) {
+              sub[field] = val;
+              if (field === 'lead') {
+                sub.lead = val;
+                sub.description = val;
+              }
+            }
             for (const s of (sub.services || [])) {
               if (s.slug === selectedService.slug) {
                 s[field] = val;
@@ -2936,6 +2975,10 @@
       };
 
       window.handleHeaderSave = async function(blockKey, val) {
+        if (!blockKey) return;
+        if (currentBlockMap) {
+          currentBlockMap[blockKey] = val;
+        }
         setSaving(true);
         try {
           await fetch(`/api/v1/cms/blocks/${encodeURIComponent(blockKey)}`, {
