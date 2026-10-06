@@ -635,6 +635,208 @@
       border-color: rgba(194, 154, 107, 0.2);
     }
 
+    /* ── Rich Narrative & Editorial Layout Styles (matching ServicesPage.css) ── */
+    .editorial-callout-notice {
+      background: #faf6f0;
+      border-left: 4px solid #ad7d42;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 18px;
+      margin-bottom: 20px;
+    }
+    .editorial-callout-notice p {
+      margin: 0;
+      font-size: 0.92rem;
+      color: #57534e;
+      line-height: 1.6;
+    }
+    .editorial-narrative {
+      color: #44403c;
+      font-size: 0.98rem;
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+    .editorial-testimonial-quote {
+      margin: 22px 0;
+      padding: 16px 22px;
+      border-left: 4px solid #ad7d42;
+      background: rgba(173, 125, 66, 0.05);
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+      color: #333;
+    }
+    .editorial-testimonial-quote p {
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    .editorial-testimonial-quote footer {
+      font-style: normal;
+      font-weight: 600;
+      color: #78716c;
+      font-size: 0.88rem;
+    }
+
+    /* Refined Warm Bronze Halo Bullets for Lists in Service Detail */
+    .service-detail-card ul,
+    .service-detail-card ul.ps-3,
+    .service-detail-card ul.ps-4 {
+      list-style: none !important;
+      padding-left: 0.25rem !important;
+      margin-left: 0 !important;
+      margin-top: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+    .service-detail-card ul.mb-0 {
+      margin-bottom: 0 !important;
+    }
+    .service-detail-card ul li {
+      position: relative;
+      list-style: none !important;
+      padding-left: 1.45rem !important;
+      line-height: 1.68;
+      color: #44403c;
+      transition: color 0.18s ease;
+    }
+    .service-detail-card ul li::before {
+      content: '';
+      position: absolute;
+      left: 0.15rem;
+      top: 0.72em;
+      transform: translateY(-50%);
+      width: 6.5px;
+      height: 6.5px;
+      border-radius: 50%;
+      background: #ad7d42;
+      box-shadow: 0 0 0 3px rgba(173, 125, 66, 0.18);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .service-detail-card ul li:hover {
+      color: #1c1917;
+    }
+    .service-detail-card ul li:hover::before {
+      transform: translateY(-50%) scale(1.25);
+      background: #8a5c28;
+      box-shadow: 0 0 0 4px rgba(173, 125, 66, 0.3);
+    }
+    .service-detail-card ul li strong {
+      color: #2b2219;
+      font-weight: 600;
+    }
+    .service-detail-card ul:not([class*="gap-"]) > li + li {
+      margin-top: 0.45rem;
+    }
+
+    /* Ordered Lists (Numbered Steps) */
+    .service-detail-card ol,
+    .service-detail-card ol.ps-3,
+    .service-detail-card ol.ps-4 {
+      list-style: none !important;
+      counter-reset: omni-service-counter;
+      padding-left: 0.25rem !important;
+      margin-left: 0 !important;
+      margin-top: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+    .service-detail-card ol li {
+      counter-increment: omni-service-counter;
+      position: relative;
+      list-style: none !important;
+      padding-left: 2rem !important;
+      line-height: 1.68;
+      color: #44403c;
+    }
+    .service-detail-card ol li::before {
+      content: counter(omni-service-counter);
+      position: absolute;
+      left: 0;
+      top: 0.22em;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(173, 125, 66, 0.12);
+      border: 1px solid rgba(173, 125, 66, 0.32);
+      color: #8a5c28;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    /* Publishing Packages Container & Cards */
+    .publishing-packages-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .publishing-package-card {
+      background: #fdfbf7;
+      border: 1px solid rgba(194, 154, 107, 0.25);
+      border-radius: 12px;
+      padding: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .publishing-package-card:hover {
+      border-color: #ad7d42;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(173, 125, 66, 0.15);
+      background: #fffdfa;
+    }
+    .publishing-package-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .publishing-package-card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #2b2219;
+      margin: 0;
+    }
+    .publishing-package-arrow-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(173, 125, 66, 0.12);
+      color: #ad7d42;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    .publishing-package-card-summary {
+      color: #57534e;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    /* In-Place Editing Outlines */
+    body.mode-edit .editable-field {
+      outline: 1px dashed rgba(235, 162, 45, 0.55);
+      outline-offset: 3px;
+      cursor: text;
+      border-radius: 3px;
+    }
+    body.mode-edit .editable-field:hover {
+      outline: 2px dashed #eba22d;
+      background: rgba(235, 162, 45, 0.05);
+    }
+    body.mode-edit .editable-field:focus {
+      outline: 2px solid #eba22d;
+      background: rgba(235, 162, 45, 0.09);
+    }
+    body.mode-preview .editable-field {
+      outline: none !important;
+      background: transparent !important;
+      cursor: default;
+    }
+
     .service-lead-box {
       background: #faf6f0;
       border-left: 4px solid #ad7d42;
@@ -1250,8 +1452,11 @@
 
             <hr class="service-divider">
 
-            <!-- Service Overview Box -->
-            <div class="service-lead-box">
+            <!-- Container for rich custom detail content (Narratives, Callouts, Tables, Quotes) -->
+            <div id="serviceCustomDetailContainer" style="display: none;"></div>
+
+            <!-- Service Overview Box (Default/Packages) -->
+            <div class="service-lead-box" id="serviceDefaultLeadBox">
               <h5 class="editable-field" id="detailOverviewHeading" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.overview.heading', this.innerText.trim())">
                 Service Overview
               </h5>
@@ -1261,7 +1466,7 @@
             </div>
 
             <!-- What's Included Feature Checklist -->
-            <div class="features-checklist-section">
+            <div class="features-checklist-section" id="serviceFeaturesSection">
               <div class="d-flex align-items-center justify-content-between mb-2">
                 <h5 class="fw-bold editable-field m-0" style="color: #2b2219; font-size: 1.1rem;" id="detailIncludedHeading" contenteditable="true" spellcheck="false" onblur="handleHeaderSave('services.included.heading', this.innerText.trim())">
                   Begin your publishing journey with the package that lets you take the extra mile.
@@ -1425,6 +1630,9 @@
     </div>
   </div>
 
+  <!-- ── Services Rich Content Registry ── -->
+  <script src="admin/services-content-registry.js"></script>
+
   <!-- ── Scripts ── -->
   <script>
     (function () {
@@ -1437,6 +1645,7 @@
       let activeIconCatId = null;
       let debounceTimer = null;
       let toastTimer = null;
+      let currentBlockMap = {};
 
       const AVAILABLE_ICONS = [
         { name: 'Book', icon: 'bi-book-half' },
@@ -1536,6 +1745,7 @@
           const metaRes = await fetch('/api/v1/site-meta');
           const metaData = await metaRes.json();
           if (metaData && metaData.blockMap) {
+            currentBlockMap = metaData.blockMap;
             if (metaData.blockMap['services.header.title']) {
               document.getElementById('editableHeaderTitle').textContent = metaData.blockMap['services.header.title'];
             }
@@ -1855,6 +2065,47 @@
         }
       };
 
+      function applyLoadedBlocks(container) {
+        const root = container || document;
+        root.querySelectorAll('[data-block-key]').forEach(el => {
+          const key = el.getAttribute('data-block-key');
+          if (key && currentBlockMap && currentBlockMap[key] !== undefined && currentBlockMap[key] !== null) {
+            el.textContent = currentBlockMap[key];
+          }
+        });
+      }
+
+      window.handleContentBlockSave = function(slug, el) {
+        if (!el) return;
+        const blockKey = el.getAttribute('data-block-key') || `service.${slug}.block`;
+        const val = el.innerText.trim();
+        if (currentBlockMap) {
+          currentBlockMap[blockKey] = val;
+        }
+        setSaving(true);
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(async () => {
+          try {
+            await fetch(`/api/v1/cms/blocks/${encodeURIComponent(blockKey)}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+              body: JSON.stringify({ value: val })
+            });
+
+            // Also keep in-memory custom view updated
+            const customContainer = document.getElementById('serviceCustomDetailContainer');
+            if (customContainer && customContainer.style.display !== 'none' && window.SERVICE_CUSTOM_VIEWS) {
+              window.SERVICE_CUSTOM_VIEWS[slug] = customContainer.innerHTML;
+            }
+
+            setSaving(false);
+            showToast(`Saved: ${blockKey}`);
+          } catch (_) {
+            setSaving(false);
+          }
+        }, 600);
+      };
+
       function selectService(svc, catTitle = '') {
         selectedService = svc;
         document.querySelectorAll('.service-nav-item').forEach(btn => {
@@ -1900,28 +2151,224 @@
         document.getElementById('detailTitle').textContent = svc.title;
         const detailPriceEl = document.getElementById('detailPrice');
         const detailPriceContainer = document.getElementById('detailPriceContainer');
-        if (detailPriceEl) {
-          const pVal = svc.price || svc.price_display || '';
-          detailPriceEl.textContent = pVal || 'Set Price';
-          detailPriceEl.style.opacity = pVal ? '1' : '0.5';
-          if (detailPriceContainer) {
-            detailPriceContainer.style.display = (svc.slug === 'publishing-packages' || svc.slug === 'evaluation-services') ? 'none' : 'flex';
-          }
+
+        // Check if service actually has a price
+        const hasPrice = Boolean(svc.price || svc.price_display);
+        if (detailPriceContainer) {
+          detailPriceContainer.style.display = (hasPrice && svc.slug !== 'publishing-packages' && svc.slug !== 'evaluation-services') ? 'flex' : 'none';
         }
+        if (detailPriceEl) {
+          detailPriceEl.textContent = svc.price || svc.price_display || '';
+        }
+
         document.getElementById('detailLead').textContent = svc.lead || svc.lead_paragraph || '';
         document.getElementById('detailCtaHeading').textContent = `Ready to start with ${svc.title}?`;
 
-        renderFeaturesList();
+        const customContainer = document.getElementById('serviceCustomDetailContainer');
+        const leadBox = document.getElementById('serviceDefaultLeadBox');
+        const featSec = document.getElementById('serviceFeaturesSection');
+
+        if (svc.slug === 'publishing-packages') {
+          if (customContainer) {
+            customContainer.style.display = 'block';
+            customContainer.innerHTML = `
+              <div class="publishing-options-section">
+                <h4 class="fw-bold mb-2 editable-field" style="color: #2b2219; font-size: 1.25rem;" data-block-key="service.publishing-options.title" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleHeaderSave('service.publishing-options.title', this.innerText.trim())">
+                  Publishing Options
+                </h4>
+                <p class="mb-4 editable-field" style="color: #57534e; font-size: 0.96rem; line-height: 1.65;" data-block-key="service.publishing-options.desc" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleHeaderSave('service.publishing-options.desc', this.innerText.trim())">
+                  Our packages offer various combinations of our publishing, editorial, and marketing services for a truly customized publishing experience. With Omni, you can choose the package that best suits your literary goals.
+                </p>
+                <div class="publishing-packages-container">
+                  <div class="publishing-package-card" onclick="selectServiceBySlug('basic-package')">
+                    <div class="publishing-package-card-header">
+                      <h5 class="publishing-package-card-title">Basic Package</h5>
+                      <span class="publishing-package-arrow-badge"><i class="bi bi-arrow-right-short"></i></span>
+                    </div>
+                    <p class="publishing-package-card-summary">
+                      The Basic package is designed for authors seeking basic publishing needs. It includes digital formatting and distribution for e-books, paperback publishing, and customization options for the interior and cover.
+                    </p>
+                  </div>
+                  <div class="publishing-package-card" onclick="selectServiceBySlug('standard-package')">
+                    <div class="publishing-package-card-header">
+                      <h5 class="publishing-package-card-title">Standard Package</h5>
+                      <span class="publishing-package-arrow-badge"><i class="bi bi-arrow-right-short"></i></span>
+                    </div>
+                    <p class="publishing-package-card-summary">
+                      Building on the Basic, the Standard package adds hardcover publishing to the mix, enhancing the physical presence of your book. This package maintains all the services of the Basic package, including the customization, support, and online distribution features.
+                    </p>
+                  </div>
+                  <div class="publishing-package-card" onclick="selectServiceBySlug('advanced-package')">
+                    <div class="publishing-package-card-header">
+                      <h5 class="publishing-package-card-title">Advanced Package</h5>
+                      <span class="publishing-package-arrow-badge"><i class="bi bi-arrow-right-short"></i></span>
+                    </div>
+                    <p class="publishing-package-card-summary">
+                      The Advanced package is the most comprehensive, designed for authors who want extensive support and marketing tools. It includes everything from the Standard package, but boosts the number of copies provided to 20 paperbacks and 5 hardcovers.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+          if (leadBox) leadBox.style.display = 'none';
+          if (featSec) featSec.style.display = 'none';
+        } else if (svc.slug === 'evaluation-services') {
+          if (customContainer) {
+            customContainer.style.display = 'block';
+            customContainer.innerHTML = `
+              <div class="evaluation-services-overview-content">
+                <div class="mb-4">
+                  <h4 class="fw-bold mb-2 editable-field" style="color: #d9534f; font-size: 1.25rem;" data-block-key="service.evaluation-services.rx_title" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleHeaderSave('service.evaluation-services.rx_title', this.innerText.trim())">
+                    Editorial Rx Referral
+                  </h4>
+                  <p class="mb-3 editable-field" style="color: #57534e; font-size: 0.98rem; line-height: 1.7;" data-block-key="service.evaluation-services.rx_desc" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleHeaderSave('service.evaluation-services.rx_desc', this.innerText.trim())">
+                    Through this service, an evaluator will recommend the services of an appropriate editorial specialist—from a copyeditor or content editor to a developmental editor or book doctor.
+                  </p>
+                  <blockquote class="editorial-testimonial-quote" style="border-left-color: #d9534f; background: rgba(217, 83, 79, 0.04);">
+                    <p class="mb-2 editable-field" data-block-key="service.evaluation-services.rx_quote" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleHeaderSave('service.evaluation-services.rx_quote', this.innerText.trim())">
+                      "With the various points to examine and adjust in mind, I re-read This Golden Land and made changes along the way. These were excellent points, by the way, and very helpful to me for cleaning up the manuscript."
+                    </p>
+                    <footer class="editable-field" data-block-key="service.evaluation-services.rx_author" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleHeaderSave('service.evaluation-services.rx_author', this.innerText.trim())">
+                      -Barbara Wood, author of This Golden Land
+                    </footer>
+                  </blockquote>
+                </div>
+                <div class="mb-4">
+                  <h4 class="fw-bold mb-2 editable-field" style="color: #d9534f; font-size: 1.25rem;" data-block-key="service.evaluation-services.eval_title" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleHeaderSave('service.evaluation-services.eval_title', this.innerText.trim())">
+                    Editorial Evaluation Services
+                  </h4>
+                  <p class="mb-0 editable-field" style="color: #57534e; font-size: 0.98rem; line-height: 1.7;" data-block-key="service.evaluation-services.eval_desc" contenteditable="${isEditMode ? 'true' : 'false'}" spellcheck="false" onblur="handleHeaderSave('service.evaluation-services.eval_desc', this.innerText.trim())">
+                    Regardless of your publishing goals, the editorial quality of your work matters—no one wants to read a book that's riddled with typos and grammatical errors. However, even the best writers make occasional mistakes. Omni provides editorial services that will help you make your book the best it can be.
+                  </p>
+                </div>
+                <div class="publishing-packages-container mt-4">
+                  <div class="publishing-package-card" onclick="selectServiceBySlug('editorial-evaluation')">
+                    <div class="publishing-package-card-header">
+                      <h5 class="publishing-package-card-title">Editorial Evaluation</h5>
+                      <span class="publishing-package-arrow-badge"><i class="bi bi-arrow-right-short"></i></span>
+                    </div>
+                    <p class="publishing-package-card-summary">
+                      Explore our complete manuscript diagnostic checkup, detailed observations report, and $299 credit toward professional editorial services.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+          if (leadBox) leadBox.style.display = 'none';
+          if (featSec) featSec.style.display = 'none';
+        } else if (svc.slug === 'basic-package' || svc.slug === 'standard-package' || svc.slug === 'advanced-package') {
+          if (customContainer) customContainer.style.display = 'none';
+          if (leadBox) leadBox.style.display = 'block';
+          if (featSec) featSec.style.display = 'block';
+          document.getElementById('detailIncludedHeading').textContent = 'Begin your publishing journey with the package that lets you take the extra mile.';
+          renderFeaturesList();
+        } else if (window.SERVICE_CUSTOM_VIEWS && window.SERVICE_CUSTOM_VIEWS[svc.slug]) {
+          if (customContainer) {
+            customContainer.style.display = 'block';
+            customContainer.innerHTML = window.SERVICE_CUSTOM_VIEWS[svc.slug];
+            customContainer.querySelectorAll('.editable-field').forEach(el => {
+              el.contentEditable = isEditMode ? 'true' : 'false';
+            });
+            applyLoadedBlocks(customContainer);
+          }
+          if (leadBox) leadBox.style.display = 'none';
+          if (featSec) featSec.style.display = 'none';
+        } else if (svc.features && svc.features.length > 0) {
+          if (customContainer) customContainer.style.display = 'none';
+          if (leadBox) leadBox.style.display = 'block';
+          if (featSec) featSec.style.display = 'block';
+          document.getElementById('detailIncludedHeading').textContent = 'What Is Included In This Service';
+          renderFeaturesList();
+        } else {
+          if (customContainer) customContainer.style.display = 'none';
+          if (leadBox) leadBox.style.display = 'block';
+          if (featSec) featSec.style.display = 'none';
+        }
+
         updatePaginationControls();
       }
 
       function renderFeaturesList() {
         const list = document.getElementById('detailFeaturesList');
-        const feats = selectedService?.features || [
-          'Full dedicated publishing consultation',
-          'Professional design and formatting',
-          '100% author rights and royalty retention'
-        ];
+        let feats = selectedService?.features;
+        if (!feats || feats.length === 0) {
+          if (selectedService?.slug === 'basic-package') {
+            feats = [
+              "Digital Formatting and Distribution (E-Book)",
+              "Paperback Publishing",
+              "Customization of Interior and Cover",
+              "Image Insertions Up to 25",
+              "Electronic Proofs of Your Book",
+              "Interior Revisions – One Block of 50",
+              "One-On-One Author Support",
+              "Omni Bookstore Availability",
+              "Online Distribution through Amazon, Barnes & Noble, and Other Book Retailers",
+              "ISBN Assignment",
+              "U.S. Copyright",
+              "Library of Congress Control Number",
+              "3 Paperback Copies",
+              "Amazon Look Inside",
+              "Google Preview",
+              "Barnes & Noble Read Instantly",
+              "12-Month Bookseller Return Program"
+            ];
+          } else if (selectedService?.slug === 'standard-package') {
+            feats = [
+              "Digital Formatting and Distribution (E-Book)",
+              "Paperback Publishing",
+              "Hardcover Publishing",
+              "Customization of Interior and Cover",
+              "Image Insertions Up to 50",
+              "Electronic Proofs of Your Book",
+              "Interior Revisions – One Block of 50",
+              "One-On-One Author Support",
+              "Omni Bookstore Availability",
+              "Online Distribution through Amazon, Barnes & Noble, and Other Book Retailers",
+              "ISBN Assignment",
+              "U.S. Copyright",
+              "Library of Congress Control Number",
+              "5 Paperback Copies",
+              "5 Hardcover Copies",
+              "Amazon Look Inside",
+              "Google Preview",
+              "Barnes & Noble Read Instantly",
+              "12-Month Bookseller Return Program"
+            ];
+          } else if (selectedService?.slug === 'advanced-package') {
+            feats = [
+              "Digital Formatting and Distribution (E-Book)",
+              "Paperback Publishing",
+              "Hardcover Publishing",
+              "Customization of Interior and Cover",
+              "Image Insertions Up to 75",
+              "Electronic Proofs of Your Book",
+              "Interior Revisions – One Block of 50",
+              "One-On-One Author Support",
+              "Omni Bookstore Availability",
+              "Online Distribution through Amazon, Barnes & Noble, and Other Book Retailers",
+              "ISBN Assignment",
+              "U.S. Copyright",
+              "Library of Congress Control Number",
+              "20 Paperback Copies",
+              "5 Hardcover Copies",
+              "Amazon Look Inside",
+              "Google Preview",
+              "Barnes & Noble Read Instantly",
+              "12-Month Bookseller Return Program",
+              "Press Release Essential Edition",
+              "Website Setup Standard",
+              "Social Media Setup"
+            ];
+          } else {
+            feats = [
+              'Full dedicated publishing consultation',
+              'Professional design and formatting',
+              '100% author rights and royalty retention'
+            ];
+          }
+        }
 
         list.innerHTML = feats.map((feat, idx) => `
           <div class="feature-checkpoint-item">
