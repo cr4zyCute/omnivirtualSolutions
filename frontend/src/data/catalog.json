@@ -324,57 +324,35 @@
             "title": "Professional Indexing",
             "price": "",
             "lead": "To maximize the usability of a nonfiction title, readers, book buyers, librarians, and reviewers expect a comprehensive index. An Omni professional indexer reads your manuscript thoroughly to create a complete alphabetical index.",
-            "features": [
-              "Comprehensive manual indexing by an experienced professional indexer",
-              "Thorough analysis of main topics, subtopics, and key conceptual terms",
-              "Cross-referencing and see/see also locator entries",
-              "Chicago Manual of Style compliant formatting",
-              "Essential for academic, historical, and professional nonfiction works"
-            ]
+            "features": []
           },
           {
             "slug": "computer-generated-keyword-indexing-up-to-500-entries",
             "title": "Computer Generated Keyword Indexing - Up to 500 Entries",
             "price": "",
             "lead": "A computer-generated keyword index lists a page number for a key term each time it occurs in the book. You simply provide Omni with a list of words that you want to appear in the index. Omni will create an index by tagging the selected words during the production process. The resulting alphabetical list of keywords gives the page numbers for each occurrence of the word.",
-            "features": [
-              "The success of this type of index depends entirely on the key words you chose",
-              "Please note",
-              "Timing: Adds two weeks to the design process"
-            ]
+            "features": []
           },
           {
             "slug": "computer-generated-keyword-indexing-up-to-700-entries",
             "title": "Computer Generated Keyword Indexing - Up to 700 Entries",
             "price": "",
             "lead": "A computer-generated keyword index lists a page number for a key term each time it occurs in the book. You simply provide Omni with a list of words that you want to appear in the index. Omni will create an index by tagging the selected words during the production process. The resulting alphabetical list of keywords gives the page numbers for each occurrence of the word.",
-            "features": [
-              "The success of this type of index depends entirely on the key words you chose",
-              "Please note",
-              "Timing: Adds two weeks to the design process"
-            ]
+            "features": []
           },
           {
             "slug": "computer-generated-keyword-indexing-up-to-1-000-entries",
             "title": "Computer Generated Keyword Indexing - Up to 1,000 Entries",
             "price": "",
             "lead": "A computer-generated keyword index lists a page number for a key term each time it occurs in the book. You simply provide Omni with a list of words that you want to appear in the index. Omni will create an index by tagging the selected words during the production process. The resulting alphabetical list of keywords gives the page numbers for each occurrence of the word.",
-            "features": [
-              "The success of this type of index depends entirely on the key words you chose",
-              "Please note",
-              "Timing: Adds two weeks to the design process"
-            ]
+            "features": []
           },
           {
             "slug": "computer-generated-keyword-indexing-custom-quote",
             "title": "Computer Generated Keyword Indexing - Custom Quote",
             "price": "",
             "lead": "An index of over 1,000 will require a custom quote. Contact your PSA for more information.",
-            "features": [
-              "A computer-generated keyword index lists a page number for a key term each time",
-              "The success of this type of index depends entirely on the key words you chose",
-              "Please note"
-            ]
+            "features": []
           }
         ]
       },

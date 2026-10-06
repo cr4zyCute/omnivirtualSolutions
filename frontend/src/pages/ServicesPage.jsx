@@ -409,7 +409,11 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'content-editing': 'The Content Editing service provides extensive restructuring for manuscripts that need more attention than Line Editing provides.',
   'content-editing-plus': 'This service is ideal for manuscripts that need more work on sentence structure and grammar than basic Content Editing can provide.',
   'cover-copy-polish': 'With Omni Cover Copy Polish, ideas you provide allow us to create intriguing copy that can help you clinch the sale.',
-  'professional-indexing': "Our professional indexers will provide you with an industry-standard, two-level topical index that is personalized to provide maximum usability for the book's target audience. The professional indexer analyzes your entire book, anticipating line items your reader will most likely want to find and listing them in an intuitive, accessible manner. This high-quality index is the standard found throughout the publishing industry."
+  'professional-indexing': "Our professional indexers will provide you with an industry-standard, two-level topical index that is personalized to provide maximum usability for the book's target audience. The professional indexer analyzes your entire book, anticipating line items your reader will most likely want to find and listing them in an intuitive, accessible manner. This high-quality index is the standard found throughout the publishing industry.",
+  'computer-generated-keyword-indexing-up-to-500-entries': 'A computer-generated keyword index lists a page number for a key term each time it occurs in the book (up to 500 entries).',
+  'computer-generated-keyword-indexing-up-to-700-entries': 'A computer-generated keyword index lists a page number for a key term each time it occurs in the book (up to 700 entries).',
+  'computer-generated-keyword-indexing-up-to-1-000-entries': 'A computer-generated keyword index lists a page number for a key term each time it occurs in the book (up to 1,000 entries).',
+  'computer-generated-keyword-indexing-custom-quote': 'A computer-generated keyword index for over 1,000 entries requiring a custom quotation.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -460,7 +464,12 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'line-editing' ||
       slug === 'content-editing' ||
       slug === 'content-editing-plus' ||
-      (slug === 'cover-copy-polish' && !selectedService.isSubcategoryOverview)
+      (slug === 'cover-copy-polish' && !selectedService.isSubcategoryOverview) ||
+      slug === 'professional-indexing' ||
+      slug === 'computer-generated-keyword-indexing-up-to-500-entries' ||
+      slug === 'computer-generated-keyword-indexing-up-to-700-entries' ||
+      slug === 'computer-generated-keyword-indexing-up-to-1-000-entries' ||
+      slug === 'computer-generated-keyword-indexing-custom-quote'
     );
   }, [selectedService]);
 
@@ -1527,6 +1536,152 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         <p className="mb-0">
                           Create intriguing cover text and catch the attention of book buyers with this professional copywriting service. The typical timeline for this service is <strong>one week</strong>, depending on our queue and the complexity of your work.
                         </p>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'professional-indexing' ? (
+                    /* Professional Indexing (Matching Screenshot 1 - NO PRICE, NO CHECKLIST) */
+                    <div className="professional-indexing-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please speak with your editorial consultant for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Our professional indexers will provide you with an industry-standard, two-level topical index that is personalized to provide maximum usability for the book's target audience.
+                        </p>
+                        <p className="mb-3">
+                          The professional indexer analyzes your entire book, anticipating line items your reader will most likely want to find and listing them in an intuitive, accessible manner.
+                        </p>
+                        <p className="mb-2">
+                          Before handcrafting your one-of-a-kind index, our professional indexer considers the following four elements that make your book unique:
+                        </p>
+
+                        <ul className="mb-4 ps-3 d-flex flex-column gap-1" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>Focus</li>
+                          <li>Purpose</li>
+                          <li>Audience</li>
+                          <li>Organization</li>
+                        </ul>
+
+                        <p className="mb-3">
+                          The resulting high-quality index is the standard found throughout the publishing industry.
+                        </p>
+
+                        <p className="fst-italic mb-3 text-muted" style={{ fontSize: '0.9rem' }}>
+                          *There is a 5,000-word minimum charge for all editing services.
+                        </p>
+
+                        <p className="fst-italic text-muted mb-0" style={{ fontSize: '0.9rem', lineHeight: '1.65' }}>
+                          Please note: We craft indexes from the final, formatted, author-approved pages. Changes made after indexing may alter the pagination and detract from the index's usability or may lead to additional charges to correct the index.
+                        </p>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'computer-generated-keyword-indexing-up-to-500-entries' ? (
+                    /* Computer Generated Keyword Indexing - Up to 500 Entries (Matching Screenshot 2 - NO PRICE, NO CHECKLIST) */
+                    <div className="keyword-indexing-500-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          A computer-generated keyword index lists a page number for a key term each time it occurs in the book. You simply provide Omni with a list of words that you want to appear in the index. Omni will create an index by tagging the selected words during the production process. The resulting alphabetical list of keywords gives the page numbers for each occurrence of the word.
+                        </p>
+                        <p className="mb-3">
+                          The success of this type of index depends entirely on the key words you chose. The choice of words needs to be carefully thought through. Do not use simple words or words that repeat constantly throughout the text. For example, if you are writing a cookbook, do not index the word egg. Every time the word "egg" is mentioned, the computer will index that page. We presume that egg would show up on many recipe pages. If words are not chosen carefully, the resulting index can be overly long and unusable.
+                        </p>
+
+                        <p className="fst-italic mb-3" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please note: a concordance-type index has no logical organization other than alphabetization, and only exact word matches can be indexed using the approach.
+                        </p>
+
+                        <p className="mb-3" style={{ fontSize: '0.93rem', lineHeight: '1.68' }}>
+                          *We highly recommend our Professional Index service if you require an industry-standard index. A computer cannot do what a professional, human indexer can—evaluate the significance of each occurrence of a word and whether it's really important to list, develop appropriate cross references and sub-entries, phrase entries in the most useful way, and more.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Timing: </span>
+                          <span style={{ color: '#57534e' }}>Adds two weeks to the design process</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'computer-generated-keyword-indexing-up-to-700-entries' ? (
+                    /* Computer Generated Keyword Indexing - Up to 700 Entries (Matching Screenshot 3 - NO PRICE, NO CHECKLIST) */
+                    <div className="keyword-indexing-700-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          A computer-generated keyword index lists a page number for a key term each time it occurs in the book. You simply provide Omni with a list of words that you want to appear in the index. Omni will create an index by tagging the selected words during the production process. The resulting alphabetical list of keywords gives the page numbers for each occurrence of the word.
+                        </p>
+                        <p className="mb-3">
+                          The success of this type of index depends entirely on the key words you chose. The choice of words needs to be carefully thought through. Do not use simple words or words that repeat constantly throughout the text. For example, if you are writing a cookbook, do not index the word egg. Every time the word "egg" is mentioned, the computer will index that page. We presume that egg would show up on many recipe pages. If words are not chosen carefully, the resulting index can be overly long and unusable.
+                        </p>
+
+                        <p className="fst-italic mb-3" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please note: a concordance-type index has no logical organization other than alphabetization, and only exact word matches can be indexed using the approach.
+                        </p>
+
+                        <p className="mb-3" style={{ fontSize: '0.93rem', lineHeight: '1.68' }}>
+                          *We highly recommend our Professional Index service if you require an industry-standard index. A computer cannot do what a professional, human indexer can—evaluate the significance of each occurrence of a word and whether it's really important to list, develop appropriate cross references and sub-entries, phrase entries in the most useful way, and more. Librarians and reviewers consider a computer-generated word list not simply less useful but a liability to a book.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Timing: </span>
+                          <span style={{ color: '#57534e' }}>Adds two weeks to the design process</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'computer-generated-keyword-indexing-up-to-1-000-entries' ? (
+                    /* Computer Generated Keyword Indexing - Up to 1,000 Entries (Matching Screenshot 4 - NO PRICE, NO CHECKLIST) */
+                    <div className="keyword-indexing-1000-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          A computer-generated keyword index lists a page number for a key term each time it occurs in the book. You simply provide Omni with a list of words that you want to appear in the index. Omni will create an index by tagging the selected words during the production process. The resulting alphabetical list of keywords gives the page numbers for each occurrence of the word.
+                        </p>
+                        <p className="mb-3">
+                          The success of this type of index depends entirely on the key words you chose. The choice of words needs to be carefully thought through. Do not use simple words or words that repeat constantly throughout the text. For example, if you are writing a cookbook, do not index the word egg. Every time the word "egg" is mentioned, the computer will index that page. We presume that egg would show up on many recipe pages. If words are not chosen carefully, the resulting index can be overly long and unusable.
+                        </p>
+
+                        <p className="fst-italic mb-3" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please note: a concordance-type index has no logical organization other than alphabetization, and only exact word matches can be indexed using the approach.
+                        </p>
+
+                        <p className="mb-3" style={{ fontSize: '0.93rem', lineHeight: '1.68' }}>
+                          *We highly recommend our Professional Index service if you require an industry-standard index. A computer cannot do what a professional, human indexer can—evaluate the significance of each occurrence of a word and whether it's really important to list, develop appropriate cross references and sub-entries, phrase entries in the most useful way, and more. Librarians and reviewers consider a computer-generated word list not simply less useful but a liability to a book.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Timing: </span>
+                          <span style={{ color: '#57534e' }}>Adds two weeks to the design process</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'computer-generated-keyword-indexing-custom-quote' ? (
+                    /* Computer Generated Keyword Indexing - Custom Quote (Matching Screenshot 5 - NO PRICE, NO CHECKLIST) */
+                    <div className="keyword-indexing-custom-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          An index of over 1,000 will require a custom quote. Contact your PSA for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          A computer-generated keyword index lists a page number for a key term each time it occurs in the book. You simply provide Omni with a list of words that you want to appear in the index. Omni will create an index by tagging the selected words during the production process. The resulting alphabetical list of keywords gives the page numbers for each occurrence of the word.
+                        </p>
+                        <p className="mb-3">
+                          The success of this type of index depends entirely on the key words you chose. The choice of words needs to be carefully thought through. Do not use simple words or words that repeat constantly throughout the text. For example, if you are writing a cookbook, do not index the word egg. Every time the word "egg" is mentioned, the computer will index that page. We presume that egg would show up on many recipe pages. If words are not chosen carefully, the resulting index can be overly long and unusable.
+                        </p>
+
+                        <p className="fst-italic mb-3" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please note: a concordance-type index has no logical organization other than alphabetization, and only exact word matches can be indexed using the approach.
+                        </p>
+
+                        <p className="mb-3" style={{ fontSize: '0.93rem', lineHeight: '1.68' }}>
+                          *We highly recommend our Professional Index service if you require an industry-standard index. A computer cannot do what a professional, human indexer can—evaluate the significance of each occurrence of a word and whether it's really important to list, develop appropriate cross references and sub-entries, phrase entries in the most useful way, and more. Librarians and reviewers consider a computer-generated word list not simply less useful but a liability to a book.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Timing: </span>
+                          <span style={{ color: '#57534e' }}>Adds two weeks to the design process</span>
+                        </div>
                       </div>
                     </div>
                   ) : isCurrentSubcategoryOverview ? (
