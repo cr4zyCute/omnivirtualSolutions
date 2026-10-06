@@ -467,6 +467,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'review-duo': 'Receive dual respected reviews from Pacific Book Review (PBR) and The US Review of Books (USRB), plus entry into Eric Hoffer and Pacific Book Awards.',
   'review-duo-plus': 'Everything in Review Duo (PBR + USRB + Hoffer & Pacific awards) plus a syndicated 10-15 minute online radio interview and 1-month featured placement.',
   'the-trifecta-review-service': 'Triple professional critique package featuring Kirkus Indie, Clarion Review (ForeWord), and BlueInk Review, plus an ad in Kirkus Reviews magazine.',
+  'join-the-la-times-festival-of-books-2025': 'Exhibit your book in the Author Solutions Bookstore Gallery or host your own live book signing at the 30th anniversary LA Times Festival of Books.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -575,7 +576,8 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'literary-gateway-bundle' ||
       slug === 'review-duo' ||
       slug === 'review-duo-plus' ||
-      slug === 'the-trifecta-review-service'
+      slug === 'the-trifecta-review-service' ||
+      slug === 'join-the-la-times-festival-of-books-2025'
     );
   }, [selectedService]);
 
@@ -3625,6 +3627,78 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         </div>
                       </div>
                     </div>
+                  ) : selectedService?.slug === 'join-the-la-times-festival-of-books-2025' ? (
+                    /* Join the LA Times Festival of Books 2025! (NO PRICE, NO CHECKLIST) */
+                    <div className="la-times-festival-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Get ready to celebrate the 30th anniversary of the L.A. Times Festival of Books on April 26–27, 2025 at the University of Southern California campus in Los Angeles.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          The Los Angeles Times Festival of Books is one of the largest and most prestigious book festivals in the United States, attracting more than 150,000 booklovers and media members each year. Since its debut in 1996, the festival has joined literature lovers with hundreds of booksellers, publishers, and literary organizations. The LA Times Festival of Books 2025 is your chance to meet face-to-face with potential readers and promote your book at this major industry event.
+                        </p>
+
+                        <div className="row g-3 mb-4">
+                          <div className="col-md-6">
+                            <div className="p-3 rounded-3 h-100" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                              <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.94rem' }}>
+                                <i className="bi bi-calendar-event me-2 text-warning"></i>Event Information
+                              </h6>
+                              <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                                <li><strong>Occasion:</strong> 30th Anniversary Celebration</li>
+                                <li><strong>Dates:</strong> April 26–27, 2025</li>
+                                <li><strong>Location:</strong> University of Southern California (USC) Campus, Los Angeles, CA</li>
+                                <li><strong>Audience:</strong> 150,000+ avid readers, authors, publishers, and media members</li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div className="col-md-6">
+                            <div className="p-3 rounded-3 h-100" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                              <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.94rem' }}>
+                                <i className="bi bi-geo-alt me-2 text-warning"></i>Major Industry Event
+                              </h6>
+                              <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                                A premier cultural gathering since 1996, uniting readers, independent authors, national retailers, and literary tastemakers in the heart of Southern California.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Participation Options Available:
+                          </h6>
+                          <div className="d-flex flex-column gap-3">
+                            <div className="p-3 rounded-2" style={{ background: '#ffffff', border: '1px solid #ebd9c4' }}>
+                              <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.92rem' }}>
+                                <i className="bi bi-book me-2 text-warning"></i>Author Solutions Bookstore Gallery
+                              </strong>
+                              <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.6' }}>
+                                Showcase your book for crowds of avid readers to discover by displaying it in the official Bookstore Gallery throughout the two-day festival. Attendees can browse, examine your book, and purchase copies on-site.
+                              </p>
+                            </div>
+
+                            <div className="p-3 rounded-2" style={{ background: '#ffffff', border: '1px solid #ebd9c4' }}>
+                              <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.92rem' }}>
+                                <i className="bi bi-pen me-2 text-warning"></i>Live Author Book Signing
+                              </strong>
+                              <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.6' }}>
+                                Be the star of your own book signing at the Author Solutions booth. Engage directly with book lovers, answer questions, pose for photos, and personalize autographs for your readers.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Notice: Contact your marketing consultant to find out more about these options. Spots will be filled on a first-come, first-served basis, so don't wait.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   ) : isCurrentSubcategoryOverview ? (
                     /* Subcategory Overview matching user's screenshots (Image 1 - Image 5) */
                     <div className="subcategory-overview-content">
@@ -3692,6 +3766,49 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                     <li>Fosters literary discussion and reader community engagement</li>
                                   </ul>
                                 </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {currentSubcategory?.id === 'book-signings-and-galleries' && (
+                          <div className="book-signings-advantages-box p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                            <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                              Why Book Signings & Gallery Exhibitions Matter:
+                            </h6>
+                            <p className="mb-3" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                              A book exhibition or book signing event can be a terrific way to create buzz around your book. As an exhibitor at many of the largest trade shows and book events, Omni puts books directly into the hands of booklovers and industry insiders.
+                            </p>
+                            <div className="d-flex flex-column gap-2.5">
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>1. Direct Reader Engagement & Community Building</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Meeting readers in person builds stronger connections and increases reader loyalty. <em>74% of consumers say they are more likely to buy from brands they personally interact with (Eventbrite, 2023).</em>
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>2. Increased Book Sales & Revenue</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Personalized, signed copies encourage higher purchases compared to online sales. <em>Authors can sell 20–50% more books at live events compared to online promotions (Public Forum Expo 2023).</em>
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Strengthens Author Brand & Credibility</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Meeting an author in person creates deep emotional resonance. <em>82% of consumers trust a brand more if it hosts in-person events and interactions (Forbes, 2024).</em>
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>4. Networking with Industry Professionals</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Authors can connect directly with bookstore owners, literary agents, publishers, and fellow authors. <em>68% of business professionals say networking at live events helps build long-term partnerships (Harvard Business Review, 2023).</em>
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>5. Social Media Content & Marketing Opportunities</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Photos, videos, and behind-the-scenes moments attract new readers online. <em>Events with live social media updates see a 35% increase in online engagement (Event Marketing Institute, 2023).</em>
+                                </p>
                               </div>
                             </div>
                           </div>
