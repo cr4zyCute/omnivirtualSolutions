@@ -490,6 +490,13 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'radio-book-talk': 'Multi-platform broadcast package featuring an 8–12 min interview with Emmy-winner Kate Delaney on America Tonight, plus interviews on Books on Air and Newsgram.',
   'audio-snip': 'A 30-second professionally produced audio teaser commercial about your book, perfect for radio broadcast, podcast spots, and social media campaigns.',
   'online-interview': 'A 10–15 min phone-recorded radio interview on Omni Radio with broadcast veteran J. Douglas Barker, syndicated via iTunes and Toginet.com.',
+  'set-your-own-price': 'Flexibility to adjust the retail price of your hardcover and paperback formats to optimize royalty earnings or sales volume.',
+  'author-advantage-royalty-program': '3-year program maximizing print royalties (up to 60% on Omni Bookstore, 15% through channel retailers) plus deeply discounted author copies.',
+  'retail-focus': 'Direct pitch to 25 independent bookstores across the US over 3 months, print ads in Advance Catalog and ForeWord Magazine, with 12 months returnability.',
+  'retail-focus-for-childrens-books': 'Direct pitch to 25 children’s specialty bookstores, print ads in Children’s Advance Catalog and ForeWord Magazine, with 12 months returnability.',
+  'library-focus': 'Direct pitch to Collection Development & Acquisition Librarians of 25 public libraries, print ads in Forecast Catalog and ForeWord Magazine, with returnability.',
+  'booksellers-return-program': 'Designates your book as "Returnable" in Ingram ipage and Baker & Taylor systems for 12 months with no royalty chargebacks on returned copies.',
+  'booksellers-return-program-renewal': '1-year annual extension of active "Returnable" status across Ingram and Baker & Taylor systems, protecting retail stocking eligibility.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -621,7 +628,14 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'press-release-web-optimized-edition' ||
       slug === 'radio-book-talk' ||
       slug === 'audio-snip' ||
-      slug === 'online-interview'
+      slug === 'online-interview' ||
+      slug === 'set-your-own-price' ||
+      slug === 'author-advantage-royalty-program' ||
+      slug === 'retail-focus' ||
+      slug === 'retail-focus-for-childrens-books' ||
+      slug === 'library-focus' ||
+      slug === 'booksellers-return-program' ||
+      slug === 'booksellers-return-program-renewal'
     );
   }, [selectedService]);
 
@@ -4698,6 +4712,327 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         </div>
                       </div>
                     </div>
+                  ) : selectedService?.slug === 'set-your-own-price' ? (
+                    /* Set Your Own Price (NO PRICE, NO CHECKLIST) */
+                    <div className="set-your-own-price-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Take control of your book's retail price and the royalties you earn. Set Your Own Price gives you the flexibility to adjust the retail price of the hardcover and paperback formats of your book.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Pricing is a fundamental component of book marketing. Whether your objective is to set an enticing promotional price to drive maximum unit sales or to establish a premium price point that yields higher royalties per copy, the Set Your Own Price service puts you in the driver’s seat.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Key Benefits & Strategic Power:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Format Flexibility:</strong> Adjust the retail price of both hardcover and paperback editions of your title.
+                            </li>
+                            <li>
+                              <strong>Strategic Pricing Alignment:</strong> Position your title competitively within your genre against competing commercial releases.
+                            </li>
+                            <li>
+                              <strong>Synergy with Author Advantage:</strong> Combine with the Author Advantage Royalty Program to set a competitive retail price while harvesting maximum royalty margins.
+                            </li>
+                            <li>
+                              <strong>Full Distribution Synchronization:</strong> Price updates are distributed across major online booksellers and global distributor networks including Amazon, Barnes & Noble, and Ingram.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Consultation Note: Contact your Publishing Consultant to analyze print-on-demand base production costs and identify optimal price thresholds for your page count.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'author-advantage-royalty-program' ? (
+                    /* Author Advantage Royalty Program (NO PRICE, NO CHECKLIST) */
+                    <div className="author-advantage-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          The Author Advantage Royalty Program empowers you to earn substantial financial gains with every print book sold. This 3-Year Program ensures you receive maximum profits and deeply discounted author copies.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Figuring out how much your book will cost and how much you will receive from each sale is easy and transparent. The retail price is based on your final manuscript's page count, and your royalty is determined by clean, industry-leading payout percentages.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Royalty Calculations:
+                          </h6>
+                          <div className="d-flex flex-column gap-2" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.7' }}>
+                            <div className="p-2.5 rounded-2" style={{ background: '#fff', border: '1px solid #e7ded5' }}>
+                              <strong className="d-block text-dark">Online Bookstore Sales:</strong>
+                              <span>Your Book’s List Price × <strong>60%</strong> = Your Royalty</span>
+                            </div>
+                            <div className="p-2.5 rounded-2" style={{ background: '#fff', border: '1px solid #e7ded5' }}>
+                              <strong className="d-block text-dark">Channel Retailers (Amazon, Barnes & Noble, etc.):</strong>
+                              <span>Your Book’s List Price × <strong>15%</strong> = Your Royalty</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#ad7d42', fontSize: '0.95rem' }}>
+                            Enrollment Start Dates:
+                          </h6>
+                          <p className="mb-2" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            The Work will be enrolled on the earlier of the following:
+                          </p>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <li>
+                              <strong>Already available for sale:</strong> On the first day of the next calendar quarter following receipt by Company of both the signed Agreement and payment of the applicable fee.
+                            </li>
+                            <li>
+                              <strong>Not yet available for sale:</strong> On the first day of the next calendar quarter after the Work becomes available for sale, provided payment has been received prior to that time.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Please Note: To be eligible for the Author Advantage Royalty Program, your publishing package must have been purchased on or after January 2023. Combining this program with Set Your Own Price enables maximum author earnings.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'retail-focus' ? (
+                    /* Retail Focus (NO PRICE, NO CHECKLIST) */
+                    <div className="retail-focus-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          If your dream is to see your work displayed on a bookstore shelf, Retail Focus provides direct pitching to 25 independent bookstores across the US, premier trade publication ads, and a 2-bookstore stocking test guarantee.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Although self-published titles are gaining popularity, authors often face hurdles getting brick-and-mortar stores to stock their books. Retailers consider factors like sales potential, subject matter, and returnability. The Retail Focus Service combines direct sales pitching with premier trade publication advertising to make your book stand out.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Retail Focus Package Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Direct Pitching to 25 Independent Bookstores:</strong> Pitched across the US (with focus on a specific area or state) over the span of 3 months using a customized sales kit.
+                            </li>
+                            <li>
+                              <strong>Ingram Advance Catalog Ad:</strong> Single-slot print ad in Ingram’s Advance Catalog buying guide, read by over 7,000 print and 27,000 digital retailers, librarians, and international buyers.
+                            </li>
+                            <li>
+                              <strong>ForeWord Magazine Ad:</strong> Single-slot print ad in the quarterly ForeWord Magazine, reaching more than 30,000 librarians and booksellers (including 1,100 ABA members).
+                            </li>
+                            <li>
+                              <strong>Booksellers Return Program for 12 Months:</strong> Full 1-year returnable status ensuring bookstores can stock your title risk-free.
+                            </li>
+                            <li>
+                              <strong>Retailer Test Guarantee:</strong> A guarantee that at least two (2) bookstores or retailers will agree to test your book.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#ad7d42', fontSize: '0.95rem' }}>
+                            Program Guidelines & Prerequisites:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <li>Option to extend your campaign by adding 25 more independent bookstores.</li>
+                            <li>Retail-ready review: Complimentary cover enhancements may be recommended to meet bookstore standards; professional copyediting is advised.</li>
+                            <li>Publication timeline: Official publication date must not be more than two (2) years ago, or the book must have received an award, 5-star review, or media recognition in the last 24 months.</li>
+                            <li>Active retail availability: Your book must already be available for sale prior to campaign launch.</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'retail-focus-for-childrens-books' ? (
+                    /* Retail Focus for Children's Books (NO PRICE, NO CHECKLIST) */
+                    <div className="retail-focus-children-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Tailored specifically for children's literature, this service pitches your title to 25 independent bookstores, features your book in Children's Advance Catalog and ForeWord Magazine, and includes a 2-bookstore test guarantee.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Children’s books are perennially in demand, but children’s bookstore buyers have particular criteria regarding illustration quality, age grading, and subject matter. The Retail Focus for Children’s Books service is customized from the ground up to address what independent children’s book buyers look for.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Package Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Direct Pitching to 25 Independent Bookstores:</strong> Pitched across the US (with focus on your target region or state) over 3 months using a tailored children's sales kit.
+                            </li>
+                            <li>
+                              <strong>Ingram Children's Advance Catalog Ad:</strong> Single-slot print ad in the dedicated bimonthly children's buying guide read by 7,000 print and 29,000 digital retailers and librarians.
+                            </li>
+                            <li>
+                              <strong>ForeWord Magazine Ad:</strong> Single-slot print ad reaching over 30,000 librarians and booksellers.
+                            </li>
+                            <li>
+                              <strong>Booksellers Return Program for 12 Months:</strong> 1 full year of returnable status eliminating retailer stocking risk.
+                            </li>
+                            <li>
+                              <strong>Retailer Test Guarantee:</strong> A guarantee that at least two (2) bookstores or retailers will agree to test your book.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#ad7d42', fontSize: '0.95rem' }}>
+                            Program Guidelines & Prerequisites:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <li>Option to extend your campaign to 25 additional independent bookstores.</li>
+                            <li>Complimentary cover adjustments may be provided by design professionals if needed to satisfy children's retailer expectations.</li>
+                            <li>Book must be published within the last two (2) years or have received recent recognition (award, review, media coverage) within 24 months.</li>
+                            <li>Book must already be available for sale before the campaign launches.</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'library-focus' ? (
+                    /* Library Focus (NO PRICE, NO CHECKLIST) */
+                    <div className="library-focus-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Make your book available in public libraries across the United States. Omni pitches your title directly to Collection Development Departments and Acquisition Librarians of 25 public libraries, with ads in Forecast Catalog and ForeWord Magazine.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Libraries are beloved sites of community, history, and education. Getting libraries to stock your book connects you directly to enthusiastic readers, book clubs, and students. The Library Focus Service pairs institutional trade advertising with direct acquisition pitching.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Library Focus Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Direct Pitching to 25 Public Libraries:</strong> Presented directly to Collection Development Departments and Acquisition Librarians across the US over 3 months using a customized sales kit.
+                            </li>
+                            <li>
+                              <strong>Baker & Taylor Forecast Catalog Ad:</strong> Single-slot print ad in the most widely circulated library buying publication, mailed to 45,000 librarians in the US.
+                            </li>
+                            <li>
+                              <strong>ForeWord Magazine Ad:</strong> Single-slot print ad reaching over 30,000 librarians and booksellers.
+                            </li>
+                            <li>
+                              <strong>Booksellers Return Program for 12 Months:</strong> Returnable status across wholesale distributors.
+                            </li>
+                            <li>
+                              <strong>Library Test Guarantee:</strong> A guarantee that at least two (2) libraries will agree to test your book.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#ad7d42', fontSize: '0.95rem' }}>
+                            Library Guidelines & Prerequisites:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <li>Option to extend the campaign by pitching 25 additional public libraries.</li>
+                            <li>Complimentary cover design adjustments and copyediting recommendations to ensure your book is library-ready.</li>
+                            <li>Official publication date must not be more than two (2) years ago, or the book must have received recent recognition (awards, reviews, press) in the last 24 months.</li>
+                            <li>Title must already be live and available for sale before the campaign starts.</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'booksellers-return-program' ? (
+                    /* Booksellers Return Program (NO PRICE, NO CHECKLIST) */
+                    <div className="booksellers-return-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          The ability to return unsold books is a standard publishing practice since the Great Depression. Designate your book as "Returnable" in Ingram ipage and Baker & Taylor systems for 12 months with no royalty chargebacks.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Often, booksellers will hesitate to order and stock books when they aren’t “Returnable.” Booksellers mitigate their own financial risk by relying on publishers to credit returned copies. If getting your title stocked on bookstore shelves or booking in-store book signings is part of your marketing plan, the Booksellers Return Program is an essential element to earning shelf space.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            When You Enroll in the Booksellers Return Program:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Designated "Returnable" in Ingram's ipage:</strong> Visible to retailers and libraries worldwide through the world's largest wholesaler and distributor of books.
+                            </li>
+                            <li>
+                              <strong>Designated "Returnable" in Baker & Taylor:</strong> Listed in the ordering system of a leading book distributor with over 180 years of industry leadership.
+                            </li>
+                            <li>
+                              <strong>No Royalty Chargebacks:</strong> You will not be charged back for royalties earned on sales to stores if copies are returned.
+                            </li>
+                            <li>
+                              <strong>One-Year Protection:</strong> Valid for one full year (12 months) from the date your book goes live.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Timeline: Your book will be designated on ipage within two to seven weeks. It can then take 30 to 60 days for returnability status to appear within individual retailers’ systems. Confirmation of your title's listing in ipage is available upon request.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'booksellers-return-program-renewal' ? (
+                    /* Booksellers Return Program Renewal (NO PRICE, NO CHECKLIST) */
+                    <div className="booksellers-return-renewal-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Renew your book’s participation in the Booksellers Return Program for one year. Keep your book "Returnable" in distributor ordering systems so retailers continue stocking and re-ordering without risk.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          When you purchase this program renewal, your book will remain “Returnable” in major book distributor ordering systems (Ingram and Baker & Taylor), reassuring bookstores that they can return any unsold copies without loss of profit.
+                        </p>
+                        <p className="mb-3">
+                          Renew your valuable Booksellers Return Program for another year and help your title continue to meet commercial bookseller standards for physical retail stocking and in-store events.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Renewal Highlights:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Uninterrupted Listing:</strong> Seamlessly maintains active "Returnable" status in Ingram and Baker & Taylor catalogs without lapse.
+                            </li>
+                            <li>
+                              <strong>No Royalty Chargebacks:</strong> Retains complete protection against royalty deductions for returned retail inventory.
+                            </li>
+                            <li>
+                              <strong>Annual Increment Flexibility:</strong> Valid for one full year and renewable annually to match your long-term promotional campaign.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
                   ) : isCurrentSubcategoryOverview ? (
                     /* Subcategory Overview matching user's screenshots (Image 1 - Image 5) */
                     <div className="subcategory-overview-content">
@@ -4955,6 +5290,37 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                 <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Cost-Effective, High-ROI Promotion</strong>
                                 <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
                                   Compared to television or large print ad campaigns, radio marketing is exceptionally accessible and yields evergreen digital recordings for website embedding and ongoing social campaigns.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {currentSubcategory?.id === 'bookstore-essentials' && (
+                          <div className="bookstore-essentials-advantages-box p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                            <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                              Why Bookstore Essentials Matter:
+                            </h6>
+                            <p className="mb-3" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                              Through Omni Bookstore Essentials, your book receives professional bookselling services that make your title attractive to independent bookstores, national retail chains, and public libraries.
+                            </p>
+                            <div className="d-flex flex-column gap-2.5">
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>1. Overcomes the Primary Barrier to Bookstore Stocking</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Physical retailers rarely stock non-returnable titles. The Booksellers Return Program eliminates inventory risk for bookstore buyers.
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>2. Direct Trade Pitches to Decision-Makers</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Presents your book directly to independent booksellers and acquisition librarians with professional sales kits and trade catalog ads.
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Maximum Profit Margins & Pricing Control</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Empowers authors to set competitive retail prices and earn up to 60% royalties on sales through the Author Advantage Royalty Program.
                                 </p>
                               </div>
                             </div>

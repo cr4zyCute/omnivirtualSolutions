@@ -1041,109 +1041,53 @@
         "title": "Bookstore Essentials",
         "services": [
           {
-            "slug": "bookselling",
-            "title": "Bookselling",
-            "price": "",
-            "lead": "Once your book is published, we will make your book available for order online with retail outlets worldwide. Our bookselling promotional services provide you the opportunity to actively promote and protect your book.",
-            "features": [
-              "Booksellers Return Program for risk-free physical bookstore stocking",
-              "Custom retail pricing control through Set Your Own Price",
-              "Author Advantage Royalty Program maximizing print earnings",
-              "Targeted retail pitches to 25 independent bookstores and libraries",
-              "Official U.S. Copyright Office registration and Certificate of Registration",
-              "Library of Congress Control Number (LCCN) for national library indexing"
-            ]
-          },
-          {
             "slug": "set-your-own-price",
             "title": "Set Your Own Price",
             "price": "",
-            "lead": "Take control of your book's retail price and the royalties you earn. The Set Your Own Price service allows authors to establish custom retail pricing for paperback and hardcover editions, giving you complete flexibility to optimize book sales volume or royalty margins across global book distribution networks.",
-            "features": [
-              "Custom retail pricing control for paperback and hardcover editions",
-              "Flexibility to optimize author royalty margins or promotional volume",
-              "Direct distribution updates across Ingram, Amazon, and global retailers",
-              "Price modification support with guidance from your publishing consultant",
-              "100% author rights and royalty retention"
-            ]
+            "lead": "Take control of your book's retail price and the royalties you earn. The Set Your Own Price service gives you the flexibility to adjust the retail price of the hardcover and paperback formats of your book.",
+            "features": []
           },
           {
             "slug": "author-advantage-royalty-program",
             "title": "Author Advantage Royalty Program",
             "price": "",
-            "lead": "The Author Advantage Royalty Program empowers you to earn substantial financial gains with every print book sold. This 3-year term program maximizes your profit margin on all retail distribution channels.",
-            "features": [
-              "3-Year Term maximizing author royalty margins on print sales",
-              "Substantially higher royalty payouts across global retailers",
-              "Comprehensive sales and royalty reporting portal",
-              "Eligible for softcover and hardcover retail editions",
-              "Dedicated author account support"
-            ]
+            "lead": "The Author Advantage Royalty Program empowers you to earn substantial financial gains with every print book sold. This program runs for a 3-Year Term and ensures you receive maximum profits from sales of your book.",
+            "features": []
           },
           {
             "slug": "retail-focus",
             "title": "Retail Focus",
             "price": "",
-            "lead": "Have your book pitched directly to 25 independent bookstores across the United States. Our retail sales specialists actively present your book to regional booksellers to secure shelf space and local bookstore stocking.",
-            "features": [
-              "Direct pitch to 25 curated independent bookstores across the US",
-              "Targeted regional focus tailored to your book genre and themes",
-              "Guaranteed retailer evaluation and stocking consideration",
-              "Professional sales sheet and sell-sheet distribution",
-              "Follow-up reporting on bookseller interest and placement"
-            ]
+            "lead": "Promote your book and let it be seen by independent bookstores with strategic print ads in Advance Catalog and ForeWord Magazine, and a customized sales kit pitched directly to 25 independent bookstores across the US.",
+            "features": []
           },
           {
             "slug": "retail-focus-for-childrens-books",
             "title": "Retail Focus for Children's Books",
             "price": "",
-            "lead": "Targeted bookstore pitching specifically designed for children's picture books, middle grade, and young adult titles. We pitch directly to 25 independent children's book retailers and specialty stores nationwide.",
-            "features": [
-              "Direct pitch to 25 specialty children's bookstores across the US",
-              "Focus on independent children’s book buyers and school suppliers",
-              "Customized sales presentation highlighting illustrations and age range",
-              "Professional sell-sheet highlighting themes and reading level",
-              "Detailed outreach reporting"
-            ]
+            "lead": "Promote your children's book and let it be seen by independent bookstores with strategic print ads in Children's Advance Catalog and ForeWord Magazine, and a customized sales kit pitched to 25 independent bookstores.",
+            "features": []
           },
           {
             "slug": "library-focus",
             "title": "Library Focus",
             "price": "",
-            "lead": "Get your book into the hands of librarians and acquisition specialists. Omni pitches your title directly to Collection Development Departments and Acquisition Librarians across public and academic library systems.",
-            "features": [
-              "Direct pitch to Acquisition Librarians and Collection Development Departments",
-              "Custom cataloging presentation compliant with library standards",
-              "Wholesale availability verification via Ingram and Baker & Taylor",
-              "Detailed library outreach and interest reporting",
-              "Enhanced institutional discoverability"
-            ]
+            "lead": "Make your book available in libraries through strategic print ads in Baker & Taylor's Forecast Catalog and ForeWord Magazine, paired with direct pitching to Acquisition Librarians of 25 public libraries.",
+            "features": []
           },
           {
             "slug": "booksellers-return-program",
             "title": "Booksellers Return Program",
             "price": "",
-            "lead": "Bookstores are reluctant to stock titles from independent authors unless they are returnable. The Booksellers Return Program designates your book as 'Returnable' in Ingram and Baker & Taylor systems, eliminating risk for retail buyers.",
-            "features": [
-              "Designated as \"Returnable\" in Ingram ipage ordering system",
-              "Designated as \"Returnable\" in Baker & Taylor ordering system",
-              "Removes financial risk for physical bookstore purchasing",
-              "12-Month coverage period with automatic renewal options",
-              "Dramatically increases probability of physical bookstore shelf stocking"
-            ]
+            "lead": "Make your title meet bookseller standards for retail stocking with the Booksellers Return Program. Your book is designated as \"Returnable\" in Ingram's ipage and Baker & Taylor's ordering systems for 12 months with no royalty chargebacks.",
+            "features": []
           },
           {
             "slug": "booksellers-return-program-renewal",
             "title": "Booksellers Return Program Renewal",
             "price": "",
-            "lead": "Renew your valuable Booksellers Return Program for an additional year to maintain active returnable status across Ingram and Baker & Taylor, ensuring bookstores continue stocking your book without hesitation.",
-            "features": [
-              "12-Month extension of active returnable status",
-              "Continuous uninterrupted listing in Ingram and Baker & Taylor",
-              "Ongoing physical bookstore purchase eligibility",
-              "Dedicated distribution account management",
-              "Transparent inventory reporting"
-            ]
+            "lead": "Renew your book’s participation in the Booksellers Return Program for one year. Your book remains \"Returnable\" in Ingram and Baker & Taylor ordering systems, ensuring bookstores continue stocking your book without risk.",
+            "features": []
           }
         ]
       },
