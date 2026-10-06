@@ -441,6 +441,18 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'stock-image-processing': 'If you wish to include more than two images on your cover, a Stock Image Processing fee will be assessed. This fee will also be placed on any images found through Getty Images you wish to use in the interior of your book.',
   'retech': 'If there are a significant number of author errors in the first galley, then you can supply us with a revised manuscript that we can reformat into a new galley through this service.',
   'title-change-after-setup': 'Changing the title of your book impacts many elements within the book. This service deals with handling those elements across production, catalog registration, and distribution.',
+  'color-image-scanning': 'Authors who send in hard copies of original color images can have them scanned and placed into the correct place in your work.',
+  'basic-manuscript-formatting-corrections': 'Necessary corrections will be made before the manuscript can be put through the editorial and layout processes.',
+  'extensive-customized-formatting': 'More extensive corrections will be made before the manuscript is put through the editorial and layout processes.',
+  'data-entry-standard': 'With Standard Data Entry, you can send us your printed manuscript and we will convert it into a working digital file. This excludes any handwritten documents or newspaper-type articles.',
+  'data-entry-spanish': 'Spanish-language materials you provide are converted into an electronic format for publication with our Spanish Data Entry service.',
+  'data-entry-handwritten': 'Relieve yourself from the tedious task of encoding multiple pages and let us do all the manual encoding for you. This service is only applicable to handwritten documents.',
+  'large-image-scanning': 'Images larger than 11" x 17" can be scanned by Omni and placed in your book.',
+  'b-w-image-scanning': 'Authors who send in hard copies of original black and white images can have them scanned and placed into the correct place in your work.',
+  'manuscript-file-conversion': 'If this service is chosen, Omni will make every effort to work with manuscripts created using any of a wide variety of software packages.',
+  'graphic-file-conversions-quantity-25': 'When authors send in graphic files, they sometimes require an extensive amount of work. With this service, Omni will work to ensure graphics appear correctly in the final product.',
+  'file-merging': 'If the standard manuscript submission process of sending one file is not followed, files must be merged or combined in order to ensure a correct outcome.',
+  'image-extraction': 'If you choose to submit your manuscript with the images included in the body of your work, Omni must extract these images to properly create a professional layout of your book. This service will cover the cost of extracting the images to ensure proper interior layout.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -523,7 +535,19 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'interior-revisions-block-of-25' ||
       slug === 'stock-image-processing' ||
       slug === 'retech' ||
-      slug === 'title-change-after-setup'
+      slug === 'title-change-after-setup' ||
+      slug === 'color-image-scanning' ||
+      slug === 'basic-manuscript-formatting-corrections' ||
+      slug === 'extensive-customized-formatting' ||
+      slug === 'data-entry-standard' ||
+      slug === 'data-entry-spanish' ||
+      slug === 'data-entry-handwritten' ||
+      slug === 'large-image-scanning' ||
+      slug === 'b-w-image-scanning' ||
+      slug === 'manuscript-file-conversion' ||
+      slug === 'graphic-file-conversions-quantity-25' ||
+      slug === 'file-merging' ||
+      slug === 'image-extraction'
     );
   }, [selectedService]);
 
@@ -2631,6 +2655,326 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
                           <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
                             Changing the title of your book impacts the cover design, interior layout, ISBN assignment, copyright records, and metadata across worldwide retail channels. Contact your Publishing Services Associate to coordinate a seamless title update.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'color-image-scanning' ? (
+                    /* Color Image Scanning (NO PRICE, NO CHECKLIST) */
+                    <div className="color-image-scanning-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Authors who send in hard copies of original color images can have them scanned and placed into the correct place in your work.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Omni allows usage of original color art to be placed within a manuscript. Authors who send in hard copies may purchase the Color Image Scanning service. Omni will take the original image and scan it into the correct place in your work.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Duration:</strong> 1-2 Weeks dependent on quantity
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'basic-manuscript-formatting-corrections' ? (
+                    /* Basic Manuscript Formatting Corrections (NO PRICE, NO CHECKLIST) */
+                    <div className="basic-manuscript-formatting-corrections-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please speak with your publishing services associate for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          We often receive manuscripts that require formatting corrections before we can start the editorial and layout processes. These include:
+                        </p>
+
+                        <ul className="mb-4 ps-3" style={{ color: '#57534e', fontSize: '0.94rem', lineHeight: '1.8' }}>
+                          <li>Removing headers, footers, page numbering, etc.</li>
+                          <li>Inserting page breaks appropriately</li>
+                          <li>Correcting soft and hard returns</li>
+                          <li>Correcting line and paragraph formatting</li>
+                        </ul>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Submission Tip:</strong> To avoid these fees please adhere to the manuscript submission guidelines.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'extensive-customized-formatting' ? (
+                    /* Extensive Customized Formatting (NO PRICE, NO CHECKLIST) */
+                    <div className="extensive-customized-formatting-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please speak with your publishing services associate for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Occasionally we receive manuscripts that require an extensive amount of formatting before we can start the editorial and layout process.
+                        </p>
+
+                        <p className="fw-semibold mb-2" style={{ color: '#2b2219', fontSize: '0.95rem' }}>
+                          This includes:
+                        </p>
+                        <ul className="mb-4 ps-3" style={{ color: '#57534e', fontSize: '0.94rem', lineHeight: '1.8' }}>
+                          <li>Removing text boxes</li>
+                          <li>Removing embedded graphics</li>
+                          <li>Removing wrapped text, etc.</li>
+                        </ul>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Submission Tip:</strong> To avoid these fees please adhere to the manuscript submission guidelines.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Duration & Scope:</strong> Duration and cost are dependent on quantity and complexity.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'data-entry-standard' ? (
+                    /* Data Entry - Standard (NO PRICE, NO CHECKLIST) */
+                    <div className="data-entry-standard-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          With Standard Data Entry, you can send us your printed manuscript and we will convert it into a working digital file. This excludes any handwritten documents or newspaper-type articles.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          In order for our professional staff to efficiently work on your manuscript, Omni must have a digital file to manipulate. Leave it to the Omni team of professionals to convert your printed document.
+                        </p>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Notice:</strong> This excludes any handwritten documents or newspaper-type articles. For handwritten works, please select our Data Entry - Handwritten service.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Duration:</strong> 30-45 business days dependent on page count
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'data-entry-spanish' ? (
+                    /* Data Entry - Spanish (NO PRICE, NO CHECKLIST) */
+                    <div className="data-entry-spanish-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Spanish-language materials you provide are converted into an electronic format for publication with our Spanish Data Entry service.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          In order for our professional staff to efficiently work on your manuscript, Omni must have a digital file to manipulate. The Data Entry - Spanish service will convert typed Spanish-language material that you have provided into an electronic format for publication.
+                        </p>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Notice:</strong> This excludes any handwritten documents or newspaper-type articles.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Duration:</strong> 60-75 days
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'data-entry-handwritten' ? (
+                    /* Data Entry - Handwritten (NO PRICE, NO CHECKLIST) */
+                    <div className="data-entry-handwritten-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Relieve yourself from the tedious task of encoding multiple pages and let us do all the manual encoding for you. This service is only applicable to handwritten documents.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Is your manuscript handwritten? Now you have the option to have your book converted into a digital file. In order for our professional staff to efficiently work on your manuscript, Omni must have a digital file to manipulate. Leave it to the Omni team of professionals to manually type and convert your document.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Service Note:</strong> This service will only be applied to handwritten documents.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'large-image-scanning' ? (
+                    /* Large Image Scanning (NO PRICE, NO CHECKLIST) */
+                    <div className="large-image-scanning-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please contact your publishing services consultant for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          The Large Image Scanning services include images that are larger than 11" x 17". Omni will professionally scan your oversized artwork and visuals to ensure crystal clarity when printed in your book.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Duration:</strong> 2-3 weeks
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'b-w-image-scanning' ? (
+                    /* B&W Image Scanning (NO PRICE, NO CHECKLIST) */
+                    <div className="b-w-image-scanning-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Authors who send in hard copies of original black and white images can have them scanned and placed into the correct place in your work.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Omni allows usage of original black and white art to be placed within a manuscript. Authors who send in hard copies may purchase the Black and White Image Scanning service. Omni will take the original image and scan it into the correct place in your work.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Duration:</strong> 1-2 Weeks dependent on quantity
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'manuscript-file-conversion' ? (
+                    /* Manuscript File Conversion (NO PRICE, NO CHECKLIST) */
+                    <div className="manuscript-file-conversion-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please speak with your publishing services associate for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Omni will make every effort to work with manuscripts created using a wide variety of software packages. We will charge a small conversion fee for documents created under such formats as WordPerfect, WordPad, and Microsoft Works.
+                        </p>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Submission Tip:</strong> To avoid these fees please adhere to the manuscript submission guidelines.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Duration:</strong> 1 week
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'graphic-file-conversions-quantity-25' ? (
+                    /* Graphic File Conversions (Quantity: 25) (NO PRICE, NO CHECKLIST) */
+                    <div className="graphic-file-conversions-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please speak with your publishing services associate for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Authors often send in graphic files (these include graphics, tables, text boxes) that require an extensive amount of work. These include:
+                        </p>
+
+                        <ul className="mb-3 ps-3" style={{ color: '#57534e', fontSize: '0.94rem', lineHeight: '1.8' }}>
+                          <li>Cropping graphics as requested by the author</li>
+                          <li>Extracting graphics from the manuscript</li>
+                          <li>Converting line art to TIFF (.tif) files</li>
+                        </ul>
+
+                        <p className="mb-3" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          Your graphic files will be reviewed and a price quoted based on a price per block of 25 graphic files. The author will have the option of making the changes themselves or paying for Omni staff to make the changes.
+                        </p>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Submission Tip:</strong> To avoid these fees please adhere to the image submission guidelines.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Duration:</strong> 1-2 weeks
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'file-merging' ? (
+                    /* File Merging (NO PRICE, NO CHECKLIST) */
+                    <div className="file-merging-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please speak with your publishing services associate for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          The standard manuscript submission process is based around Omni receiving the manuscript as one file. Some authors may choose to send their manuscript to Omni in several files. The File Merging service is used to merge these files into one document for both editorial services and layout.
+                        </p>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Submission Tip:</strong> To avoid these fees please adhere to the manuscript submission guidelines.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Duration:</strong> 1 week
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'image-extraction' ? (
+                    /* Image Extraction (NO PRICE, NO CHECKLIST) */
+                    <div className="image-extraction-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please speak with your publishing services associate for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          If you choose to submit your manuscript with the images included in the body of your work, Omni must extract these images to properly create a professional layout of your book. The images will be placed back into the manuscript once the layout is complete.
+                        </p>
+
+                        <div className="p-3 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Interior Layout Protection:</strong> This service will cover the cost of extracting the images to ensure proper interior layout.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            <strong style={{ color: '#2b2219' }}>Duration:</strong> 1-2 weeks
                           </p>
                         </div>
                       </div>

@@ -631,140 +631,85 @@
             "slug": "color-image-scanning",
             "title": "Color Image Scanning",
             "price": "",
-            "lead": "Omni allows usage of original color art to be placed within a manuscript. Authors who send in hard copies may purchase the Color Image Scanning service. Omni will take the original image and scan it into the correct place in your work.",
-            "features": [
-              "Professional Color Image Scanning tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "lead": "Authors who send in hard copies of original color images can have them scanned and placed into the correct place in your work.",
+            "features": []
           },
           {
             "slug": "basic-manuscript-formatting-corrections",
             "title": "Basic Manuscript Formatting Corrections",
             "price": "",
-            "lead": "Please speak with your publishing services associate for more information.",
-            "features": [
-              "Removing headers, footers, page numbering, etc.",
-              "Insertingpage breaks appropriately",
-              "Correctingsoft and hard returns",
-              "Correcting line and paragraph formatting"
-            ]
+            "lead": "Necessary corrections will be made before the manuscript can be put through the editorial and layout processes.",
+            "features": []
           },
           {
             "slug": "extensive-customized-formatting",
             "title": "Extensive Customized Formatting",
             "price": "",
-            "lead": "Please speak with your publishing services associate for more information.",
-            "features": [
-              "Removing text boxes",
-              "Removing embedded graphics",
-              "Removing wrapped text, etc."
-            ]
+            "lead": "More extensive corrections will be made before the manuscript is put through the editorial and layout processes.",
+            "features": []
           },
           {
             "slug": "data-entry-standard",
             "title": "Data Entry - Standard",
-            "price": "$1,599.00",
-            "lead": "$1,599.00 Begin your publishing journey with the package that lets you take the extra mile.",
-            "features": [
-              "Digital Formatting and Distribution (E-Book)",
-              "Paperback Publishing",
-              "Hardcover Publishing",
-              "Customization of Interior and Cover",
-              "Image Insertions Up to 25",
-              "Electronic Proofs of Your Book"
-            ]
+            "price": "",
+            "lead": "With Standard Data Entry, you can send us your printed manuscript and we will convert it into a working digital file. This excludes any handwritten documents or newspaper-type articles.",
+            "features": []
           },
           {
             "slug": "data-entry-spanish",
             "title": "Data Entry - Spanish",
             "price": "",
-            "lead": "In order for our professional staff to efficiently work on your manuscript, Omni must have a digital file to manipulate. The Data Entry - Spanish service will convert typed Spanish-language material that you have provided into an electronic format for publication. This excludes any handwritten documents or newspaper-type articles.",
-            "features": [
-              "Professional Data Entry - Spanish tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "lead": "Spanish-language materials you provide are converted into an electronic format for publication with our Spanish Data Entry service.",
+            "features": []
           },
           {
             "slug": "data-entry-handwritten",
             "title": "Data Entry - Handwritten",
             "price": "",
-            "lead": "Is your manuscript handwritten? Now you have the option to have your book converted into a digital file. In order for our professional staff to efficiently work on your manuscript, Omni must have a digital file to manipulate. Leave it to the Omni team of professionals to manually type and convert your document.",
-            "features": [
-              "Professional Data Entry - Handwritten tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "lead": "Relieve yourself from the tedious task of encoding multiple pages and let us do all the manual encoding for you. This service is only applicable to handwritten documents.",
+            "features": []
           },
           {
             "slug": "large-image-scanning",
             "title": "Large Image Scanning",
             "price": "",
-            "lead": "Please contact your publishing services consultant for more information.",
-            "features": [
-              "The Large Image Scanning services include images that are larger than 11\"x17\".",
-              "Duration: 2-3 weeks"
-            ]
+            "lead": "Images larger than 11\" x 17\" can be scanned by Omni and placed in your book.",
+            "features": []
           },
           {
             "slug": "b-w-image-scanning",
             "title": "B&W Image Scanning",
             "price": "",
-            "lead": "Omni allows usage of original black and white art to be placed within a manuscript. Authors who send in hard copies may purchase the Black and White Image Scanning service. Omni will take the original image and scan it into the correct place in your work.",
-            "features": [
-              "Professional B&W Image Scanning tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "lead": "Authors who send in hard copies of original black and white images can have them scanned and placed into the correct place in your work.",
+            "features": []
           },
           {
             "slug": "manuscript-file-conversion",
             "title": "Manuscript File Conversion",
             "price": "",
-            "lead": "Please speak with your publishing services associate for more information.",
-            "features": [
-              "Omni will make every effort to work with manuscripts created using a wide",
-              "To avoid these fees please adhere to the manuscript submission guidelines.",
-              "Duration: 1 week"
-            ]
+            "lead": "If this service is chosen, Omni will make every effort to work with manuscripts created using any of a wide variety of software packages.",
+            "features": []
           },
           {
             "slug": "graphic-file-conversions-quantity-25",
             "title": "Graphic File Conversions (Quantity: 25)",
             "price": "",
-            "lead": "Please speak with your publishing services associate for more information.",
-            "features": [
-              "Cropping graphics as requested by the author",
-              "To avoid these fees please adhere to the image submission guidelines.",
-              "Duration: 1-2 weeks"
-            ]
+            "lead": "When authors send in graphic files, they sometimes require an extensive amount of work. With this service, Omni will work to ensure graphics appear correctly in the final product.",
+            "features": []
           },
           {
             "slug": "file-merging",
             "title": "File Merging",
             "price": "",
-            "lead": "Please speak with your publishing services associate for more information.",
-            "features": [
-              "If you choose to submit your manuscript with the images included in the body of",
-              "This service will cover the cost of extracting the images to ensure proper interior layout..",
-              "Duration: 1-2 weeks"
-            ]
+            "lead": "If the standard manuscript submission process of sending one file is not followed, files must be merged or combined in order to ensure a correct outcome.",
+            "features": []
           },
           {
             "slug": "image-extraction",
             "title": "Image Extraction",
             "price": "",
-            "lead": "Please speak with your publishing services associate for more information.",
-            "features": [
-              "The standard manuscript submission process is based around Omni receiving the",
-              "To avoid these fees please adhere to the image submission guidelines.",
-              "Duration: 1 week"
-            ]
+            "lead": "If you choose to submit your manuscript with the images included in the body of your work, Omni must extract these images to properly create a professional layout of your book. This service will cover the cost of extracting the images to ensure proper interior layout.",
+            "features": []
           }
         ]
       },
