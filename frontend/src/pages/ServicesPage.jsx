@@ -425,10 +425,10 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'color-illustrations-intricate-design': 'Handcrafted illustrations with defining outlines, varying line details, and greater shading to create stunning three-dimensional full-color artwork.',
   'color-illustrations-fine-detail': 'Drawn by hand and colored digitally with basic shadows and highlights to give artwork greater depth and dimension.',
   'color-illustrations-personalized': 'Drawn by hand and colored digitally with clean lines and uniform colors for a simple, classic full-color presentation.',
-  'elite-cover-design': 'Work one-on-one with a professional cover designer who conducts genre-specific market research and crafts three tailored concepts.',
-  'custom-cover-illustration': 'Original cover artwork created by experienced studio artists to give your book a unique, eye-catching visual identity.',
-  'cover-revisions-text': 'Professional text modifications to your cover layout after the initial complimentary revision round.',
-  'cover-revisions-images-design': 'Expert modifications to imagery, photo touch-ups, image blending, and design elements on your cover layout.',
+  'elite-cover-design': 'When you choose Elite Cover Design, you will have more creative options than if you stay with our Custom Cover Design service.',
+  'custom-cover-illustration': 'Our team of experienced in-house artists will work with you to produce a striking custom cover illustration that will help your book stand out.',
+  'cover-revisions-text': 'Text changes range from replacing a few words, correcting punctuation, adding additional quotes and other information, to completely replacing sections of cover text.',
+  'cover-revisions-images-design': 'Changes to imagery and design elements on the cover layout that are not text changes can be completed through this service.',
   'elite-interior-design': 'One-on-one consultation with a layout specialist trained in your book’s genre to craft custom interior typography, chapter heads, and margins.',
   'color-image-insertion': 'Professional insertion of interior full-color photographs, graphics, charts, and diagrams with high-resolution output.',
   'custom-layout-tech': 'Dedicated layout technician assistance for manuscripts with specialized formatting, equations, or complex multi-column structures.',
@@ -2267,13 +2267,17 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                           </ol>
                         </div>
 
-                        <div className="text-center my-4">
-                          <img src="/assets/img/colored.jpg" alt="Cover Illustration Sample" className="img-fluid rounded-3 shadow-sm" style={{ maxHeight: '380px' }} />
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h5 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                            More About | Custom Cover Illustration
+                          </h5>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.95rem', lineHeight: '1.65' }}>
+                            Illustrations usually take <strong>6 to 12 weeks</strong> to complete depending on our work queue and the complexity of your project.
+                          </p>
                         </div>
 
-                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
-                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Timeline: </span>
-                          <span style={{ color: '#57534e' }}>Illustrations usually take 6 to 12 weeks to complete depending on work queue and project complexity.</span>
+                        <div className="text-center my-4">
+                          <img src="/assets/img/colored.jpg" alt="Cover Illustration Sample" className="img-fluid rounded-3 shadow-sm" style={{ maxHeight: '380px' }} />
                         </div>
                       </div>
                     </div>
