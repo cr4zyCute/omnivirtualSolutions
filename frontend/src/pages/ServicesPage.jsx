@@ -429,15 +429,15 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'custom-cover-illustration': 'Our team of experienced in-house artists will work with you to produce a striking custom cover illustration that will help your book stand out.',
   'cover-revisions-text': 'Text changes range from replacing a few words, correcting punctuation, adding additional quotes and other information, to completely replacing sections of cover text.',
   'cover-revisions-images-design': 'Changes to imagery and design elements on the cover layout that are not text changes can be completed through this service.',
-  'elite-interior-design': 'One-on-one consultation with a layout specialist trained in your book’s genre to craft custom interior typography, chapter heads, and margins.',
-  'color-image-insertion': 'Professional insertion of interior full-color photographs, graphics, charts, and diagrams with high-resolution output.',
-  'custom-layout-tech': 'Dedicated layout technician assistance for manuscripts with specialized formatting, equations, or complex multi-column structures.',
-  'table-of-contents-two-or-more': 'Professional creation and organization of multiple tables of contents for complex works.',
-  'table-creation': 'Custom formatting and insertion of clear, professionally designed tables throughout your manuscript.',
-  'footnote-formatting': 'Accurate citation and footnote formatting adhering strictly to Chicago Manual of Style standards.',
-  'custom-headers': 'Custom header design and formatting across sections and chapters during the book design process.',
-  'b-w-image-insertion': 'Precision placement and formatting of interior black-and-white or grayscale photographs, charts, and diagrams.',
-  'interior-revisions-block-of-25': 'Comprehensive interior layout revisions and proof adjustments in affordable blocks of 25 changes.',
+  'elite-interior-design': "Hold a one-on-one consultation with an Omni book layout specialist who has special training in designing for your book's genre.",
+  'color-image-insertion': 'If you want to include color graphics in your book, please follow our guidelines.',
+  'custom-layout-tech': 'An Omni layout specialist will help customize your book.',
+  'table-of-contents-two-or-more': 'At times, to better organize your work, multiple tables of contents are needed. After the first free table of contents, Omni can create your additional tables of contents with this service.',
+  'table-creation': 'An Omni layout specialist can create tables needed to convey information to readers.',
+  'footnote-formatting': 'Most often, footnotes are used as a replacement for long, explanatory notes. Omni follows the Chicago Manual of Style citation guidelines when formatting and inserting footnotes for you.',
+  'custom-headers': 'If at any time during the submission process you would like to change a header within your work, you simply need to purchase our Custom Headers service.',
+  'b-w-image-insertion': 'If you want to include graphics in your book, please follow our guidelines.',
+  'interior-revisions-block-of-25': 'Omni gives you one opportunity to examine your book proofs and make up to 50 corrections for free. If you wish to make further proofreading corrections after the initial free 50, there is a charge for every group of 25 changes.',
   'stock-image-processing': 'Professional licensing and processing for high-resolution Getty Images on your cover and interior.',
 };
 
@@ -2353,16 +2353,28 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                           <li>After your designer incorporates any changes, you’ll receive your final galley as a PDF (Please Note: Any changes requested after the initial round of free corrections will incur a fee).</li>
                         </ul>
 
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219' }}>
+                            Margin Guidance:
+                          </h6>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            During this process, the designer will change your manuscript’s margins to fit your chosen book size. We strongly recommend changing the margins yourself so you can see how the text will look in your book’s final dimensions. This will help you catch any formatting errors caused by text shifts or line breaks that might otherwise result in a delay in your book’s production.
+                          </p>
+                        </div>
+
                         <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
                           <h6 className="fw-bold mb-2" style={{ color: '#2b2219' }}>
                             Image and Non-Text Submission Requirements:
                           </h6>
-                          <ul className="mb-0 ps-3 d-flex flex-column gap-1.5" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          <ul className="mb-2 ps-3 d-flex flex-column gap-1.5" style={{ color: '#57534e', fontSize: '0.92rem' }}>
                             <li>Submitted separately from your manuscript as a TIFF (.tif) file format</li>
                             <li>CMYK colorspace</li>
                             <li>300-dpi resolution</li>
                             <li>Written copyright permission from the creator (artist, photographer, etc.) to use the work in your book</li>
                           </ul>
+                          <p className="fst-italic mb-0" style={{ color: '#78716c', fontSize: '0.86rem' }}>
+                            Exception: Sample graphics and other illustrations used only as ideas or guidelines for the design team can be submitted in any format.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -2510,8 +2522,13 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         </ul>
 
                         <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
-                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Duration: </span>
-                          <span style={{ color: '#57534e' }}>During design process</span>
+                          <div className="mb-2">
+                            <span className="fw-bold" style={{ color: '#ad7d42' }}>Duration: </span>
+                            <span style={{ color: '#57534e' }}>During design process</span>
+                          </div>
+                          <p className="fst-italic mb-0" style={{ color: '#78716c', fontSize: '0.86rem', lineHeight: '1.6' }}>
+                            Disclaimer: Prices listed do not include applicable taxes, which will be added at the time of purchase. Shipping and handling will be calculated and charged after your book is made available for sale.
+                          </p>
                         </div>
                       </div>
                     </div>
