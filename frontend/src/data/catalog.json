@@ -406,39 +406,21 @@
             "title": "Softcover Publishing",
             "price": "",
             "lead": "Softcover Format is already included in select publishing packages and cannot be purchased separately. This page is designed to give you more information about the service and why it’s important for your book.",
-            "features": [
-              "5.5\" x 8.5\"",
-              "7.5\" x 9.25\"",
-              "8.25\" x 11\"",
-              "8.5\" x 8.5\"",
-              "8.5\" x 11\""
-            ]
+            "features": []
           },
           {
             "slug": "hardcover-publishing",
             "title": "Hardcover Publishing",
             "price": "",
             "lead": "For durability and class, our black & white hardcover publishing is available in your choice of two formats: glossy casebound or dust jacket. The casebound option features a full-color glossy cover image adhered directly to the cover. The dust jacket option features a blue digital cloth cover with a digitally printed non-metallic gold-colored ink onto the spine and a full-color dust jacket with flaps. The full-color dust jacket allows us to print your author biography and a description of your book on the inside flaps, freeing up the back cover to print reviews and endorsements. Your hardcover edition will also be assigned a unique ISBN. In addition to the paperback copies included in your publishing package, you will receive one free author copy of your hardcover edition.",
-            "features": [
-              "Page count range of 108-800",
-              "You can choose between these two trim sizes: 5.5” × 8.5”",
-              "When publishing a hardcover book, the softcover trim size must match that of the hardcover.",
-              "You can provide additional text for the interior flaps of the case-laminated",
-              "During book production, you will be given the opportunity to proof both the",
-              "Due to the higher production costs, the retail price for hardcover books may be"
-            ]
+            "features": []
           },
           {
             "slug": "book-binding-sizes-and-types",
             "title": "Book Binding Sizes and Types",
             "price": "",
             "lead": "Please note: These binding and paper options cannot be purchased separately. This page is designed to give you more information about the service and why it’s important for your book.",
-            "features": [
-              "Professional Book Binding Sizes and Types tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "features": []
           }
         ]
       }
@@ -455,43 +437,18 @@
         "title": "Black-and-White Illustrations",
         "services": [
           {
-            "slug": "design-services",
-            "title": "Design Services",
-            "price": "",
-            "lead": "Our team will work with you—incorporating your photos, graphics, sketches, and ideas—to create a professional book cover and interior layout that beautifully represents your book's contents.",
-            "features": [
-              "Custom-designed full-color covers tailored to commercial bookstore standards",
-              "Precision interior typesetting, typography, and page layout formatting",
-              "Access to millions of high-resolution images via Getty Images",
-              "Custom in-house black-and-white and color illustrations by studio artists",
-              "Comprehensive design revisions and high-resolution electronic proofs",
-              "100% author creative control and rights retention"
-            ]
-          },
-          {
             "slug": "black-and-white-illustrations-fine-detail",
             "title": "Black-and-White Illustrations - Fine Detail",
             "price": "",
             "lead": "Introduce a new level of artistry to your book by including beautiful black-and-white imagery that will enhance your readers’ experience of your book. With Omni's Fine Detail line of custom black-and-white illustrations, basic highlights and shadows will be added to illustrated objects and sceneries to add a greater level of depth and dimension. Our talented team of in-house studio artists will use your ideas and creative direction to produce images that can help strengthen both your book’s message and marketability.",
-            "features": [
-              "Juvenile/Whimsical (a sweet, cute style)",
-              "Cartoon/Humor (a humorous, funny style)",
-              "Fantasy (a comic-book or mythical style)",
-              "Science Fiction (a futuristic or technological style)",
-              "Naturalistic (a true-to-life style)"
-            ]
+            "features": []
           },
           {
             "slug": "black-and-white-illustrations-personalized",
             "title": "Black-and-White Illustrations - Personalized",
             "price": "",
             "lead": "You already did the impressive work of writing a book. Now let Omni help you enhance it with custom black-and-white illustrations. Our talented artists will use your ideas and creative direction to create unique illustrations that will fit perfectly with your book. The clean lines and uniform shading used in creating Personalized illustrations are perfect for a simple, classic look. These black-and-white illustrations can be created in a wide variety of styles and subject matter, from people and landscapes to technical drawings and maps.",
-            "features": [
-              "Juvenile/Whimsical (a sweet, cute style)",
-              "Cartoon/Humor (a humorous, funny style)",
-              "Fantasy (a comic-book or mythical style)",
-              "Science Fiction (a futuristic or technological style)"
-            ]
+            "features": []
           }
         ]
       },
@@ -504,38 +461,21 @@
             "title": "Color Illustrations - Intricate Design",
             "price": "",
             "lead": "Intricate Design color illustrations are created by hand and still consist of defining outlines but with varying degrees of line details. By giving greater levels of shading and highlights within the line art, the artist creates more three-dimensional illustrations. This is the only level where the art can be colored digitally or by hand.",
-            "features": [
-              "Juvenile/Whimsical (a sweet, cute style)",
-              "Cartoon/Humor (a humorous, funny style)",
-              "Fantasy (a comic-book or mythical style)",
-              "Science Fiction (a futuristic or technological style)",
-              "Naturalistic (a true-to-life style)"
-            ]
+            "features": []
           },
           {
             "slug": "color-illustrations-fine-detail",
             "title": "Color Illustrations - Fine Detail",
             "price": "",
             "lead": "Introduce a new level of artistry to your book by including beautiful black-and-white imagery that will enhance your readers’ experience of your book. With Omni's Fine Detail line of custom black-and-white illustrations, basic highlights and shadows will be added to illustrated objects and sceneries to add a greater level of depth and dimension. Our talented team of in-house studio artists will use your ideas and creative direction to produce images that can help strengthen both your book’s message and marketability.",
-            "features": [
-              "Juvenile/Whimsical (a sweet, cute style)",
-              "Cartoon/Humor (a humorous, funny style)",
-              "Fantasy (a comic-book or mythical style)",
-              "Science Fiction (a futuristic or technological style)",
-              "Naturalistic (a true-to-life style)"
-            ]
+            "features": []
           },
           {
             "slug": "color-illustrations-personalized",
             "title": "Color Illustrations - Personalized",
             "price": "",
             "lead": "Elevate your book to the next creative level with artwork produced by our talented illustration team. Omni's in-house studio artists will follow your ideas and direction to produce striking artwork that accentuates your carefully crafted book.",
-            "features": [
-              "Juvenile/Whimsical (a sweet, cute style)",
-              "Cartoon/Humor (a humorous, funny style)",
-              "Fantasy (a comic-book or mythical style)",
-              "Science Fiction (a futuristic or technological style)"
-            ]
+            "features": []
           }
         ]
       },
@@ -548,52 +488,28 @@
             "title": "Elite Cover Design",
             "price": "",
             "lead": "Please Note: Elite Cover Design is included in select publishing packages and cannot be purchased separately. This page is designed to give you more information about the service and why it is important for your book.",
-            "features": [
-              "Your Omni cover designer will conduct creative research on genre-specific cover",
-              "Your designer will propose three front cover concepts that reflect the feel of your book",
-              "Once you choose your favorite concept, you and your designer will confirm the",
-              "You will receive the first draft of the cover and have one free round of corrections"
-            ]
+            "features": []
           },
           {
             "slug": "custom-cover-illustration",
             "title": "Custom Cover Illustration",
             "price": "",
             "lead": "If you want your idea translated into an original piece of art, you've come to the right place. Our team of experienced in-house artists will work with you to produce a striking custom cover illustration that will help your book stand out.",
-            "features": [
-              "People really do judge a book by its cover—first and foremost, the purpose of",
-              "The artwork created is unique to your book, which both readers and booksellers will notice.",
-              "Artwork can be created in a variety of mediums depending on what you think will",
-              "You’ll connect with our art team to discuss the initial book cover concept and timelines.",
-              "They’ll create a sketch from your instructions and work with you through two",
-              "You’ll work with our design team to create a finished book cover using the final artwork."
-            ]
+            "features": []
           },
           {
             "slug": "cover-revisions-text",
             "title": "Cover Revisions (Text)",
             "price": "",
             "lead": "Cover Revisions (Text) are corrections that are made to the text on the cover layout. During your publication process, you are given one round of revisions to the cover at no charge. If after this initial round of edits you would like some additional modifications, this design service enables you to make text changes to your cover for a fee.",
-            "features": [
-              "replacing a few words",
-              "correcting punctuation",
-              "adding additional quotes and other information",
-              "completely replacing sections of cover text"
-            ]
+            "features": []
           },
           {
             "slug": "cover-revisions-images-design",
             "title": "Cover Revisions (Images/Design)",
             "price": "",
             "lead": "Cover Revisions (Images/Design) are changes to imagery and design elements on the cover layout that are NOT text changes. The following services are just a few of many that Omni can complete for an author:",
-            "features": [
-              "Touch-up photographs",
-              "Blend several images together",
-              "Remove components of an image",
-              "Combine elements from several different images into one scene",
-              "Changing/manipulating skin color, eye color, scene color",
-              "Red-eye reduction"
-            ]
+            "features": []
           }
         ]
       },
@@ -606,104 +522,63 @@
             "title": "Elite Interior Design",
             "price": "",
             "lead": "Please Note: Elite Interior Design is included in select publishing packages and cannot be purchased separately. This page is designed to give you more information about the service and why it’s important for your book.",
-            "features": [
-              "Your Omni designer will conduct creative research on genre-specific book layout",
-              "Your designer will discuss concepts that reflect the feel of your book (such as",
-              "Your designer will then create three mock-ups of the front matter, including the",
-              "Once you choose your favorite concept, we will confirm the details about the design elements.",
-              "You will receive the first draft of the completed layout as a PDF and have one",
-              "After your designer incorporates any changes, you’ll receive your final galley as a PDF (Please Note"
-            ]
+            "features": []
           },
           {
             "slug": "color-image-insertion",
             "title": "Color Image Insertion",
             "price": "",
             "lead": "If you want to insert additional graphics beyond the allotted number of image insertions of your chosen package, follow the guidelines below. Note that images refer to color photos, tables, charts, diagrams, etc.",
-            "features": [
-              "All interior color graphics (including photos, tables, charts, diagrams,",
-              "The manuscript should identify placeholders for each of the interior graphics.",
-              "There is a fee for each additional image inserted into the manuscript.",
-              "The book cover does not \"count\" as a graphic. It is in full color for no additional charge.",
-              "Printer slang for \"full color\" is \"four color\"; this means the full range of"
-            ]
+            "features": []
           },
           {
             "slug": "custom-layout-tech",
             "title": "Custom Layout Tech",
             "price": "",
             "lead": "Please speak with your publishing services associate for more information.",
-            "features": [
-              "Certain books may require a specialized layout technician to work with you on",
-              "Duration and cost is dependent on complexity."
-            ]
+            "features": []
           },
           {
             "slug": "table-of-contents-two-or-more",
             "title": "Table of Contents (Two or More)",
             "price": "",
             "lead": "Please speak to your publishing services associate for more information.",
-            "features": [
-              "Creating a table of contents for your work will demonstrate to your reader how",
-              "Duration: Dependent on quantity and complexity"
-            ]
+            "features": []
           },
           {
             "slug": "table-creation",
             "title": "Table Creation",
             "price": "",
             "lead": "Please do not order without first speaking with your publishing services associate.",
-            "features": [
-              "Our designers can create and format professional tables to be inserted into your",
-              "Duration and cost dependent on quantity and complexity."
-            ]
+            "features": []
           },
           {
             "slug": "footnote-formatting",
             "title": "Footnote Formatting",
             "price": "",
             "lead": "Adding footnotes to your manuscript can be very useful. Omni follows the Chicago Manual of Style citation guidelines when inserting footnotes for you. Most often, footnotes are used as a replacement for long, explanatory notes.They can also be used for other various reasons:",
-            "features": [
-              "To direct the reader to more information pertaining to the subject in the main text;",
-              "To reference a quote or viewpoint; or",
-              "To use as an alternative to parenthetical references."
-            ]
+            "features": []
           },
           {
             "slug": "custom-headers",
             "title": "Custom Headers",
             "price": "",
             "lead": "You may find it important to create custom headers within your book. If at any time during the submission process you would like to change a header within your work, you simply need to purchase our Custom Header service.",
-            "features": [
-              "Professional Custom Headers tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "features": []
           },
           {
             "slug": "b-w-image-insertion",
             "title": "B&W Image Insertion",
             "price": "",
             "lead": "If you want to insert additional graphics beyond the allotted number of image insertions of your chosen package, follow the guidelines below. Note that images refer to photos, tables, charts, diagrams, etc.",
-            "features": [
-              "All interior graphics (including photos, tables, charts, diagrams, drawings,",
-              "The manuscript should identify placeholders for each of the interior graphics.",
-              "There is a fee per additional image inserted into the manuscript.",
-              "All illustrations are produced in black and white or grayscale; we cannot",
-              "The book cover does not \"count\" as a graphic. It is in full color for no additional charge.",
-              "Printer slang for \"full color\" is \"four color\"; this means the full range of"
-            ]
+            "features": []
           },
           {
             "slug": "interior-revisions-block-of-25",
             "title": "Interior Revisions (Block of 25)",
             "price": "",
             "lead": "Omni gives you one opportunity to examine your book proofs and make up to 50 corrections for free. It is imperative that you list these corrections on the proof form provided in order for the changes to be made. Publisher errors such as hyphenation errors, formatting issues or misplaced graphics which occurred during production must also be noted on the proof from, but will not count against the first free 50 corrections.",
-            "features": [
-              "Remember to carefully review each page of your proofs for any formatting or",
-              "If you wish to make further proofreading corrections after the initial free 50,"
-            ]
+            "features": []
           }
         ]
       },
@@ -716,10 +591,7 @@
             "title": "Stock Image Processing",
             "price": "",
             "lead": "All books published via the Omni standard publishing packages receive custom-designed covers, produced in full color. Within the realm of this custom-designed cover, you have the option to choose two images, free of charge, from the millions found through Getty Images. If you wish to include more than two images on your cover, a Stock Image Processing fee will be assessed. This fee will also be placed on any images found through Getty Images you wish to use in the interior of your book.",
-            "features": [
-              "or speak to an Omni team member for more information about this service Disclaimer",
-              "To avoid these fees please adhere to the manuscript submission guidelines."
-            ]
+            "features": []
           }
         ]
       }

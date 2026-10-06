@@ -417,6 +417,28 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'proofreading': 'As any publishing professional knows, the process of converting a manuscript into a published book is not 100 percent foolproof. Even manuscripts that have undergone a Quality Review can have the occasional remaining error, as even the best copyeditor in the business or the most careful author can inadvertently overlook or create a few mistakes. In fact, for this reason, traditional publishers usually proofread a manuscript twice. This final polish is highly recommended.',
   'do-it-yourself-audiobook': 'Expand your audience and reach with the power of audiobooks, an increasingly popular and preferred format. Effortlessly transform your written words into an immersive audiobook using our partner DIY Audiobook platform, Myaudiobookrecorder.com.',
   'professional-audiobook-package': 'Readers have spoken—and we have listened. These days, they prefer books in a format that will easily fit their busy lifestyle. This is why Omni offers you a solution that allows you to tap into your readers’ multitasking ways: audiobooks. Now they can “read” your book while they commute, work out or even as they do their chores.',
+  'softcover-publishing': 'Omni softcover books are formatted as trade paperbacks meeting high production standards and printed on high-quality, acid-free, book-grade opaque paper stock with full-color covers.',
+  'hardcover-publishing': 'For durability and class, black & white hardcover publishing is available in glossy casebound or cloth with a full-color dust jacket, creating an enduring keepsake for generations.',
+  'book-binding-sizes-and-types': 'Omni publishes softcover books in perfect-bound format and hardcover books in standard trim sizes with industry-grade, acid-free, lignin-free paper stock.',
+  'black-and-white-illustrations-fine-detail': 'With Omni’s Fine Detail custom black-and-white illustrations, basic highlights and shadows add depth and dimension to objects and sceneries.',
+  'black-and-white-illustrations-personalized': 'Clean lines and uniform shading provide a simple, classic look across various styles from whimsical to technical drawings.',
+  'color-illustrations-intricate-design': 'Handcrafted illustrations with defining outlines, varying line details, and greater shading to create stunning three-dimensional full-color artwork.',
+  'color-illustrations-fine-detail': 'Drawn by hand and colored digitally with basic shadows and highlights to give artwork greater depth and dimension.',
+  'color-illustrations-personalized': 'Drawn by hand and colored digitally with clean lines and uniform colors for a simple, classic full-color presentation.',
+  'elite-cover-design': 'Work one-on-one with a professional cover designer who conducts genre-specific market research and crafts three tailored concepts.',
+  'custom-cover-illustration': 'Original cover artwork created by experienced studio artists to give your book a unique, eye-catching visual identity.',
+  'cover-revisions-text': 'Professional text modifications to your cover layout after the initial complimentary revision round.',
+  'cover-revisions-images-design': 'Expert modifications to imagery, photo touch-ups, image blending, and design elements on your cover layout.',
+  'elite-interior-design': 'One-on-one consultation with a layout specialist trained in your book’s genre to craft custom interior typography, chapter heads, and margins.',
+  'color-image-insertion': 'Professional insertion of interior full-color photographs, graphics, charts, and diagrams with high-resolution output.',
+  'custom-layout-tech': 'Dedicated layout technician assistance for manuscripts with specialized formatting, equations, or complex multi-column structures.',
+  'table-of-contents-two-or-more': 'Professional creation and organization of multiple tables of contents for complex works.',
+  'table-creation': 'Custom formatting and insertion of clear, professionally designed tables throughout your manuscript.',
+  'footnote-formatting': 'Accurate citation and footnote formatting adhering strictly to Chicago Manual of Style standards.',
+  'custom-headers': 'Custom header design and formatting across sections and chapters during the book design process.',
+  'b-w-image-insertion': 'Precision placement and formatting of interior black-and-white or grayscale photographs, charts, and diagrams.',
+  'interior-revisions-block-of-25': 'Comprehensive interior layout revisions and proof adjustments in affordable blocks of 25 changes.',
+  'stock-image-processing': 'Professional licensing and processing for high-resolution Getty Images on your cover and interior.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -475,7 +497,29 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'computer-generated-keyword-indexing-custom-quote' ||
       (slug === 'proofreading' && !selectedService.isSubcategoryOverview) ||
       slug === 'do-it-yourself-audiobook' ||
-      slug === 'professional-audiobook-package'
+      slug === 'professional-audiobook-package' ||
+      slug === 'softcover-publishing' ||
+      slug === 'hardcover-publishing' ||
+      slug === 'book-binding-sizes-and-types' ||
+      slug === 'black-and-white-illustrations-fine-detail' ||
+      slug === 'black-and-white-illustrations-personalized' ||
+      slug === 'color-illustrations-intricate-design' ||
+      slug === 'color-illustrations-fine-detail' ||
+      slug === 'color-illustrations-personalized' ||
+      slug === 'elite-cover-design' ||
+      slug === 'custom-cover-illustration' ||
+      slug === 'cover-revisions-text' ||
+      slug === 'cover-revisions-images-design' ||
+      slug === 'elite-interior-design' ||
+      slug === 'color-image-insertion' ||
+      slug === 'custom-layout-tech' ||
+      slug === 'table-of-contents-two-or-more' ||
+      slug === 'table-creation' ||
+      slug === 'footnote-formatting' ||
+      slug === 'custom-headers' ||
+      slug === 'b-w-image-insertion' ||
+      slug === 'interior-revisions-block-of-25' ||
+      slug === 'stock-image-processing'
     );
   }, [selectedService]);
 
@@ -1819,6 +1863,689 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                             <li>Your manuscript should only have a maximum of 30,000 words.</li>
                             <li>You need to approve the audiobook sample we will send you before we can get started on your audiobook. Your 30-day countdown will start from the day we receive your demo approval.</li>
                           </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'softcover-publishing' ? (
+                    /* Softcover Publishing (NO PRICE, NO CHECKLIST) */
+                    <div className="softcover-publishing-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Softcover Format is already included in select publishing packages and cannot be purchased separately. This page is designed to give you more information about the service and why it’s important for your book.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Omni softcover books are formatted as trade paperbacks. Trade paperback is an industry term that describes a book that is of better production quality. These books are produced in a larger size and offered at a higher price than a mass-market paperback format. Mass-market paperbacks are generally cheaply made and printed on newsprint or other low-quality paper, which will discolor and disintegrate over time. Trade paperbacks, on the other hand, meet a higher standard and are printed on high-quality paper.
+                        </p>
+                        <p className="mb-4">
+                          Omni offers trade paperbacks in the following trim sizes:
+                        </p>
+
+                        <div className="row g-4 mb-4">
+                          <div className="col-12 col-md-6">
+                            <div className="p-3.5 rounded-3 h-100" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                              <h5 className="fw-bold mb-3 d-flex align-items-center gap-2" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                                <i className="bi bi-book-half" style={{ color: '#ad7d42' }}></i>
+                                Black & White Trim sizes
+                              </h5>
+                              <ul className="mb-0 ps-3 d-flex flex-column gap-1.5" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                                <li>5" x 8"</li>
+                                <li>5.5" x 8.5"</li>
+                                <li>6" x 9"</li>
+                                <li>7.5" x 9.25"</li>
+                                <li>8.25" x 11"</li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div className="col-12 col-md-6">
+                            <div className="p-3.5 rounded-3 h-100" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                              <h5 className="fw-bold mb-3 d-flex align-items-center gap-2" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                                <i className="bi bi-palette-fill" style={{ color: '#ad7d42' }}></i>
+                                Color Trim Sizes
+                              </h5>
+                              <ul className="mb-0 ps-3 d-flex flex-column gap-1.5" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                                <li>8.5" x 8.5"</li>
+                                <li>8.5" x 11"</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+
+                        <p className="mb-3">
+                          Omni softcover books are printed on high-quality, acid-free, book-grade opaque paper stock in black and white or grayscale halftones. Softcovers are printed on a bright white cover stock in full color.
+                        </p>
+
+                        <p className="fst-italic mb-0" style={{ color: '#57534e', fontSize: '0.91rem' }}>
+                          *Books included in publishing packages will be shipped at standard shipping rates.
+                        </p>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'hardcover-publishing' ? (
+                    /* Hardcover Publishing (NO PRICE, NO CHECKLIST) */
+                    <div className="hardcover-publishing-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-4">
+                          For durability and class, our black & white hardcover publishing is available in your choice of two formats: glossy casebound or dust jacket. The casebound option features a full-color glossy cover image adhered directly to the cover. The dust jacket option features a blue digital cloth cover with a digitally printed non-metallic gold-colored ink onto the spine and a full-color dust jacket with flaps. The full-color dust jacket allows us to print your author biography and a description of your book on the inside flaps, freeing up the back cover to print reviews and endorsements. Your hardcover edition will also be assigned a unique ISBN. In addition to the paperback copies included in your publishing package, you will receive one free author copy of your hardcover edition.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h5 className="fw-bold mb-3 d-flex align-items-center gap-2" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                            <i className="bi bi-journal-bookmark-fill" style={{ color: '#ad7d42' }}></i>
+                            Black & White Specifications
+                          </h5>
+                          <ul className="mb-0 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                            <li>Page count range of 108-800</li>
+                            <li>
+                              You can choose between these two trim sizes:
+                              <ul className="ps-3 mt-1 d-flex flex-column gap-1">
+                                <li>5.5” × 8.5”</li>
+                                <li>6” × 9”</li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold fst-italic mb-2" style={{ color: '#ad7d42', fontSize: '0.95rem' }}>
+                            Please note:
+                          </h6>
+                          <ul className="fst-italic mb-0 ps-3 d-flex flex-column gap-1.5" style={{ color: '#57534e', fontSize: '0.91rem', lineHeight: '1.6' }}>
+                            <li>When publishing a hardcover book, the softcover trim size must match that of the hardcover.</li>
+                            <li>You can provide additional text for the interior flaps of the case-laminated cover, such as an excerpt of a book review or endorsement.</li>
+                            <li>During book production, you will be given the opportunity to proof both the softcover and hardcover editions of your cover and suggest changes as appropriate.</li>
+                            <li>Due to the higher production costs, the retail price for hardcover books may be more than softcover books.</li>
+                            <li>The delivery time for hardcover book orders is about seven days longer than for softcover books.</li>
+                            <li>Author pen name must not exceed 38 characters.</li>
+                            <li>Prices are subject to change without prior notice. Some restrictions may apply.</li>
+                          </ul>
+                        </div>
+
+                        <p className="mb-0 fw-medium" style={{ color: '#2b2219' }}>
+                          Your book will be a keepsake for generations to come when you choose to preserve your book in long-lasting hardcover format.
+                        </p>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'book-binding-sizes-and-types' ? (
+                    /* Book Binding Sizes and Types (NO PRICE, NO CHECKLIST) */
+                    <div className="book-binding-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please note: These binding and paper options cannot be purchased separately. This page is designed to give you more information about the service and why it’s important for your book.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Omni publishes softcover books in perfect-bound format, a type of book binding that uses glue to hold the pages and cover together (typical of most professional books found in stores). We also publish hardcover books in two trim sizes: 5.5" x 8.5" or 6" x 9". We do not publish wire-o, plasticomb, three-ring, nor spiral-bound books.
+                        </p>
+                        <p className="mb-4">
+                          The chart below lists the binding and paper options available to you at Omni:
+                        </p>
+
+                        <div className="mb-4">
+                          <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                            Softcover Sizes and Options
+                          </h5>
+                          <div className="table-responsive rounded-3 border" style={{ borderColor: '#ebd9c4' }}>
+                            <table className="table table-hover mb-0" style={{ fontSize: '0.92rem' }}>
+                              <thead style={{ background: '#f8f4ee', color: '#2b2219' }}>
+                                <tr>
+                                  <th className="py-2.5 px-3">Trim Size</th>
+                                  <th className="py-2.5 px-3">Paper Specifications</th>
+                                  <th className="py-2.5 px-3">Paper Color</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr><td className="py-2.5 px-3 fw-medium">5" × 8"</td><td className="py-2.5 px-3">50 lb, acid-free, lignin-free</td><td className="py-2.5 px-3">White or Crème</td></tr>
+                                <tr><td className="py-2.5 px-3 fw-medium">5.5" × 8.5"</td><td className="py-2.5 px-3">50 lb, acid-free, lignin-free</td><td className="py-2.5 px-3">White or Crème</td></tr>
+                                <tr><td className="py-2.5 px-3 fw-medium">6" × 9"</td><td className="py-2.5 px-3">50 lb, acid-free, lignin-free</td><td className="py-2.5 px-3">White or Crème</td></tr>
+                                <tr><td className="py-2.5 px-3 fw-medium">7.5" × 9.25"</td><td className="py-2.5 px-3">50 lb, acid-free, lignin-free</td><td className="py-2.5 px-3">White</td></tr>
+                                <tr><td className="py-2.5 px-3 fw-medium">8.25" × 11"</td><td className="py-2.5 px-3">50 lb, acid-free, lignin-free</td><td className="py-2.5 px-3">White</td></tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <div className="mb-4">
+                          <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                            Color Softcover Sizes and Options
+                          </h5>
+                          <div className="table-responsive rounded-3 border" style={{ borderColor: '#ebd9c4' }}>
+                            <table className="table table-hover mb-0" style={{ fontSize: '0.92rem' }}>
+                              <thead style={{ background: '#f8f4ee', color: '#2b2219' }}>
+                                <tr>
+                                  <th className="py-2.5 px-3">Trim Size</th>
+                                  <th className="py-2.5 px-3">Paper Specifications</th>
+                                  <th className="py-2.5 px-3">Paper Color</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr><td className="py-2.5 px-3 fw-medium">8.5" × 8.5"</td><td className="py-2.5 px-3">70 lb, acid-free</td><td className="py-2.5 px-3">White</td></tr>
+                                <tr><td className="py-2.5 px-3 fw-medium">8.5" × 11"</td><td className="py-2.5 px-3">70 lb, acid-free</td><td className="py-2.5 px-3">White</td></tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        <div className="mb-3">
+                          <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                            Hardcover Sizes and Options
+                          </h5>
+                          <div className="table-responsive rounded-3 border" style={{ borderColor: '#ebd9c4' }}>
+                            <table className="table table-hover mb-0" style={{ fontSize: '0.92rem' }}>
+                              <thead style={{ background: '#f8f4ee', color: '#2b2219' }}>
+                                <tr>
+                                  <th className="py-2.5 px-3">Trim Size</th>
+                                  <th className="py-2.5 px-3">Paper Specifications</th>
+                                  <th className="py-2.5 px-3">Paper Color</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr><td className="py-2.5 px-3 fw-medium">5.5" × 8.5"</td><td className="py-2.5 px-3">50 lb, acid-free, lignin-free</td><td className="py-2.5 px-3">Crème</td></tr>
+                                <tr><td className="py-2.5 px-3 fw-medium">6" × 9"</td><td className="py-2.5 px-3">50 lb, acid-free, lignin-free</td><td className="py-2.5 px-3">Crème</td></tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'black-and-white-illustrations-fine-detail' ? (
+                    /* Black-and-White Illustrations - Fine Detail (NO PRICE, NO CHECKLIST) */
+                    <div className="illustration-fine-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Introduce a new level of artistry to your book by including beautiful black-and-white imagery that will enhance your readers’ experience of your book. With Omni's Fine Detail line of custom black-and-white illustrations, basic highlights and shadows will be added to illustrated objects and sceneries to add a greater level of depth and dimension. Our talented team of in-house studio artists will use your ideas and creative direction to produce images that can help strengthen both your book’s message and marketability.
+                        </p>
+                        
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          Your black-and-white illustrations can be produced in the following styles:
+                        </h5>
+                        <ul className="mb-4 ps-3 d-flex flex-column gap-1.5" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>Juvenile/Whimsical (a sweet, cute style)</li>
+                          <li>Cartoon/Humor (a humorous, funny style)</li>
+                          <li>Fantasy (a comic-book or mythical style)</li>
+                          <li>Science Fiction (a futuristic or technological style)</li>
+                          <li>Naturalistic (a true-to-life style)</li>
+                        </ul>
+
+                        <div className="text-center my-4">
+                          <img src="/assets/img/illustration.jpg" alt="Fine Detail Illustration Sample" className="img-fluid rounded-3 shadow-sm" style={{ maxHeight: '380px' }} />
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Timeline: </span>
+                          <span style={{ color: '#57534e' }}>Six to 12 weeks depending on work queue and project complexity</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'black-and-white-illustrations-personalized' ? (
+                    /* Black-and-White Illustrations - Personalized (NO PRICE, NO CHECKLIST) */
+                    <div className="illustration-personalized-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          You already did the impressive work of writing a book. Now let Omni help you enhance it with custom black-and-white illustrations. Our talented artists will use your ideas and creative direction to create unique illustrations that will fit perfectly with your book. The clean lines and uniform shading used in creating Personalized illustrations are perfect for a simple, classic look. These black-and-white illustrations can be created in a wide variety of styles and subject matter, from people and landscapes to technical drawings and maps.
+                        </p>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          Your black-and-white illustrations can be produced in the following styles:
+                        </h5>
+                        <ul className="mb-3 ps-3 d-flex flex-column gap-1.5" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>Juvenile/Whimsical (a sweet, cute style)</li>
+                          <li>Cartoon/Humor (a humorous, funny style)</li>
+                          <li>Fantasy (a comic-book or mythical style)</li>
+                          <li>Science Fiction (a futuristic or technological style)</li>
+                        </ul>
+
+                        <p className="fst-italic mb-3" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Our artists can also create illustrations in a realistic style; however, you'll need to select our Fine Detail illustration service.
+                        </p>
+
+                        <div className="text-center my-4">
+                          <img src="/assets/img/illustration.jpg" alt="Personalized Illustration Sample" className="img-fluid rounded-3 shadow-sm" style={{ maxHeight: '380px' }} />
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Timeline: </span>
+                          <span style={{ color: '#57534e' }}>Six to 12 weeks depending on work queue and project complexity</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'color-illustrations-intricate-design' ? (
+                    /* Color Illustrations - Intricate Design (NO PRICE, NO CHECKLIST) */
+                    <div className="color-illustrations-intricate-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Intricate Design color illustrations are created by hand and still consist of defining outlines but with varying degrees of line details. By giving greater levels of shading and highlights within the line art, the artist creates more three-dimensional illustrations. This is the only level where the art can be colored digitally or by hand.
+                        </p>
+                        <p className="mb-3">
+                          By adding details and textures and varying color values, your illustrator will add a high level of 3-dimensionality to your color illustrations. Omni's in-house studio artists will use your ideas and description of your characters and storyline to create unique artwork that is appropriate your book and its target audience.
+                        </p>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          Your full-color illustrations can be produced in the following styles:
+                        </h5>
+                        <ul className="mb-4 ps-3 d-flex flex-column gap-1.5" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>Juvenile/Whimsical (a sweet, cute style)</li>
+                          <li>Cartoon/Humor (a humorous, funny style)</li>
+                          <li>Fantasy (a comic-book or mythical style)</li>
+                          <li>Science Fiction (a futuristic or technological style)</li>
+                          <li>Naturalistic (a true-to-life style)</li>
+                        </ul>
+
+                        <div className="text-center my-4">
+                          <img src="/assets/img/colored.jpg" alt="Intricate Color Illustration Sample" className="img-fluid rounded-3 shadow-sm" style={{ maxHeight: '380px' }} />
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Timeline: </span>
+                          <span style={{ color: '#57534e' }}>Six to 12 weeks depending on work queue and project complexity</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'color-illustrations-fine-detail' ? (
+                    /* Color Illustrations - Fine Detail (NO PRICE, NO CHECKLIST) */
+                    <div className="color-illustrations-fine-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Enhance your readers' experience with detailed and vibrant illustrations. The Fine Detail illustrations created for your book will be drawn by hand and colored digitally. At this level of artistry, your Omni illustrator will add basic shadows and highlights to objects and scenery, giving your book’s artwork a greater level of depth and dimension.
+                        </p>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          Your full-color illustrations can be produced in the following styles:
+                        </h5>
+                        <ul className="mb-4 ps-3 d-flex flex-column gap-1.5" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>Juvenile/Whimsical (a sweet, cute style)</li>
+                          <li>Cartoon/Humor (a humorous, funny style)</li>
+                          <li>Fantasy (a comic-book or mythical style)</li>
+                          <li>Science Fiction (a futuristic or technological style)</li>
+                          <li>Naturalistic (a true-to-life style)</li>
+                        </ul>
+
+                        <div className="text-center my-4">
+                          <img src="/assets/img/colored.jpg" alt="Fine Detail Color Illustration Sample" className="img-fluid rounded-3 shadow-sm" style={{ maxHeight: '380px' }} />
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Timeline: </span>
+                          <span style={{ color: '#57534e' }}>Six to 12 weeks depending on work queue and project complexity</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'color-illustrations-personalized' ? (
+                    /* Color Illustrations - Personalized (NO PRICE, NO CHECKLIST) */
+                    <div className="color-illustrations-personalized-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Elevate your book to the next creative level with artwork produced by our talented illustration team. Omni's in-house studio artists will follow your ideas and direction to produce striking artwork that accentuates your carefully crafted book.
+                        </p>
+                        <p className="mb-3">
+                          With Personalized illustrations, art is drawn by hand and colored digitally. The clean lines and uniform colors create a simple style that will add a classic look to your book. These full-color illustrations can be created in a wide variety of styles and subject matter, from people and landscapes to technical drawings and maps.
+                        </p>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          Your full-color illustrations can be produced in the following styles:
+                        </h5>
+                        <ul className="mb-3 ps-3 d-flex flex-column gap-1.5" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>Juvenile/Whimsical (a sweet, cute style)</li>
+                          <li>Cartoon/Humor (a humorous, funny style)</li>
+                          <li>Fantasy (a comic-book or mythical style)</li>
+                          <li>Science Fiction (a futuristic or technological style)</li>
+                        </ul>
+
+                        <p className="fst-italic mb-3" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Our artists can also create illustrations in a more realistic style; however, you'll need to select our Fine Detail or Intricate Design illustrations.
+                        </p>
+
+                        <div className="text-center my-4">
+                          <img src="/assets/img/colored.jpg" alt="Personalized Color Illustration Sample" className="img-fluid rounded-3 shadow-sm" style={{ maxHeight: '380px' }} />
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Timeline: </span>
+                          <span style={{ color: '#57534e' }}>Six to 12 weeks depending on work queue and project complexity</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'elite-cover-design' ? (
+                    /* Elite Cover Design (NO PRICE, NO CHECKLIST) */
+                    <div className="elite-cover-design-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please Note: Elite Cover Design is included in select publishing packages and cannot be purchased separately. This page is designed to give you more information about the service and why it is important for your book.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          A potential reader’s decision to learn more about your book is often determined by the appeal of your book’s cover. Although we’ve all been told to “never judge a book by its cover,” it’s hard not to let a book’s visual appearance sway our judgment when there are so many books to choose from. One of the primary ways to entice readers to discover and purchase your book over thousands of other books is by capturing their interest with a compelling cover design.
+                        </p>
+                        <p className="mb-4">
+                          With Omni’s Elite Cover Design, you will work one-on-one with a professional cover designer who will be committed to creating a cover that compliments your written work and gives your book its best shot at success in today’s competitive market.
+                        </p>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          The Elite Difference:
+                        </h5>
+                        <ul className="mb-0 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>Your Omni cover designer will conduct creative research on genre-specific cover trends to determine which design will maximize your book's impact in the marketplace.</li>
+                          <li>Your designer will propose three front cover concepts that reflect the feel of your book.</li>
+                          <li>Once you choose your favorite concept, you and your designer will confirm the details about the design elements.</li>
+                          <li>You will receive the first draft of the cover and have one free round of corrections.</li>
+                          <li>After your designer incorporates any changes per your request to your design, you’ll receive your final cover as a PDF (Please note: any changes requested after the initial round of free corrections will incur a fee).</li>
+                        </ul>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'custom-cover-illustration' ? (
+                    /* Custom Cover Illustration (NO PRICE, NO CHECKLIST) */
+                    <div className="custom-cover-illustration-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-4">
+                          If you want your idea translated into an original piece of art, you've come to the right place. Our team of experienced in-house artists will work with you to produce a striking custom cover illustration that will help your book stand out.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                            How Does a Custom Cover Illustration Benefit You and Your Book?
+                          </h5>
+                          <ul className="mb-0 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                            <li>People really do judge a book by its cover—first and foremost, the purpose of your book cover is to make people pick up your book, or click on the virtual version.</li>
+                            <li>The artwork created is unique to your book, which both readers and booksellers will notice.</li>
+                            <li>Artwork can be created in a variety of mediums depending on what you think will enhance your book.</li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                            How Does the Process Work?
+                          </h5>
+                          <ol className="mb-0 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                            <li>You’ll connect with our art team to discuss the initial book cover concept and timelines.</li>
+                            <li>They’ll create a sketch from your instructions and work with you through two free rounds of revisions if necessary to create a final illustration to your specifications.</li>
+                            <li>You’ll work with our design team to create a finished book cover using the final artwork.</li>
+                          </ol>
+                        </div>
+
+                        <div className="text-center my-4">
+                          <img src="/assets/img/colored.jpg" alt="Cover Illustration Sample" className="img-fluid rounded-3 shadow-sm" style={{ maxHeight: '380px' }} />
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Timeline: </span>
+                          <span style={{ color: '#57534e' }}>Illustrations usually take 6 to 12 weeks to complete depending on work queue and project complexity.</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'cover-revisions-text' ? (
+                    /* Cover Revisions (Text) (NO PRICE, NO CHECKLIST) */
+                    <div className="cover-revisions-text-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Cover Revisions (Text) are corrections that are made to the text on the cover layout. During your publication process, you are given one round of revisions to the cover at no charge. If after this initial round of edits you would like some additional modifications, this design service enables you to make text changes to your cover for a fee.
+                        </p>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          Text adjustments range from:
+                        </h5>
+                        <ul className="mb-4 ps-3 d-flex flex-column gap-1.5" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>replacing a few words</li>
+                          <li>correcting punctuation</li>
+                          <li>adding additional quotes and other information</li>
+                          <li>completely replacing sections of cover text</li>
+                        </ul>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.65' }}>
+                            It is the author's responsibility to supply Omni with the exact changes, location, and phrases that they would like to change or replace. It is also the responsibility of the author to proofread or edit these changes.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'cover-revisions-images-design' ? (
+                    /* Cover Revisions (Images/Design) (NO PRICE, NO CHECKLIST) */
+                    <div className="cover-revisions-images-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Cover Revisions (Images/Design) are changes to imagery and design elements on the cover layout that are NOT text changes. The following services are just a few of many that Omni can complete for an author:
+                        </p>
+
+                        <ul className="mb-0 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>Touch-up photographs</li>
+                          <li>Blend several images together</li>
+                          <li>Remove components of an image</li>
+                          <li>Combine elements from several different images into one scene</li>
+                          <li>Changing/manipulating skin color, eye color, scene color</li>
+                          <li>Red-eye reduction</li>
+                        </ul>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'elite-interior-design' ? (
+                    /* Elite Interior Design (NO PRICE, NO CHECKLIST) */
+                    <div className="elite-interior-design-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please Note: Elite Interior Design is included in select publishing packages and cannot be purchased separately. This page is designed to give you more information about the service and why it’s important for your book.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          With Elite Interior Design, you will hold a one-on-one consultation with an Omni book layout specialist who has special training in designing for your book’s genre. Using your ideas and input, your designer will create the interior page layout your book needs.
+                        </p>
+                        <p className="mb-4">
+                          This interior will include chapter titles, headings, page numbers and other layout details that will allow for easy reading and ensure your book meets industry standards. The layout designer will also insert photos or graphics and conduct minimal manuscript cleanup.
+                        </p>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          Here’s how it works:
+                        </h5>
+                        <ul className="mb-4 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>Your Omni designer will conduct creative research on genre-specific book layout trends to determine which design will maximize your book's impact in the marketplace.</li>
+                          <li>Your designer will discuss concepts that reflect the feel of your book (such as fonts, chapter starts, title page design, etc.).</li>
+                          <li>Your designer will then create three mock-ups of the front matter, including the first few pages of the first chapter.</li>
+                          <li>Once you choose your favorite concept, we will confirm the details about the design elements.</li>
+                          <li>You will receive the first draft of the completed layout as a PDF and have one round of 50 free corrections.</li>
+                          <li>After your designer incorporates any changes, you’ll receive your final galley as a PDF (Please Note: Any changes requested after the initial round of free corrections will incur a fee).</li>
+                        </ul>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219' }}>
+                            Image and Non-Text Submission Requirements:
+                          </h6>
+                          <ul className="mb-0 ps-3 d-flex flex-column gap-1.5" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                            <li>Submitted separately from your manuscript as a TIFF (.tif) file format</li>
+                            <li>CMYK colorspace</li>
+                            <li>300-dpi resolution</li>
+                            <li>Written copyright permission from the creator (artist, photographer, etc.) to use the work in your book</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'color-image-insertion' ? (
+                    /* Color Image Insertion (NO PRICE, NO CHECKLIST) */
+                    <div className="color-image-insertion-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          If you want to insert additional graphics beyond the allotted number of image insertions of your chosen package, follow the guidelines below. Note that images refer to color photos, tables, charts, diagrams, etc.
+                        </p>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          Submission Guidelines for Inserting Color Graphics into the Interior of Your Book:
+                        </h5>
+                        <ul className="mb-4 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>All interior color graphics (including photos, tables, charts, diagrams, drawings, foreign fonts, and anything else that is not text or would be considered a graphic) should be submitted as individual TIFF (.tif) files.</li>
+                          <li>The manuscript should identify placeholders for each of the interior graphics.</li>
+                          <li>There is a fee for each additional image inserted into the manuscript.</li>
+                          <li>The book cover does not "count" as a graphic. It is in full color for no additional charge.</li>
+                          <li>Printer slang for "full color" is "four color"; this means the full range of colors, not literally just four colors.</li>
+                        </ul>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Duration: </span>
+                          <span style={{ color: '#57534e' }}>During design process</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'custom-layout-tech' ? (
+                    /* Custom Layout Tech (NO PRICE, NO CHECKLIST) */
+                    <div className="custom-layout-tech-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please speak with your publishing services associate for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Certain books may require a specialized layout technician to work with you on your specific custom layout requirements.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Duration & Cost: </span>
+                          <span style={{ color: '#57534e' }}>Dependent on complexity</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'table-of-contents-two-or-more' ? (
+                    /* Table of Contents (Two or More) (NO PRICE, NO CHECKLIST) */
+                    <div className="toc-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please speak to your publishing services associate for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Creating a table of contents for your work will demonstrate to your reader how the information has been organized. In order to better organize your work, multiple tables of contents might be necessary. After the first free table of contents, Omni can create your additional tables of contents with this service.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Duration: </span>
+                          <span style={{ color: '#57534e' }}>Dependent on quantity and complexity</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'table-creation' ? (
+                    /* Table Creation (NO PRICE, NO CHECKLIST) */
+                    <div className="table-creation-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please do not order without first speaking with your publishing services associate.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Our designers can create and format professional tables to be inserted into your manuscript as needed.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Duration & Cost: </span>
+                          <span style={{ color: '#57534e' }}>Dependent on quantity and complexity</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'footnote-formatting' ? (
+                    /* Footnote Formatting (NO PRICE, NO CHECKLIST) */
+                    <div className="footnote-formatting-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Adding footnotes to your manuscript can be very useful. Omni follows the Chicago Manual of Style citation guidelines when inserting footnotes for you. Most often, footnotes are used as a replacement for long, explanatory notes. They can also be used for other various reasons:
+                        </p>
+
+                        <ul className="mb-3 ps-3 d-flex flex-column gap-1.5" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>To direct the reader to more information pertaining to the subject in the main text;</li>
+                          <li>To reference a quote or viewpoint; or</li>
+                          <li>To use as an alternative to parenthetical references.</li>
+                        </ul>
+
+                        <p className="mb-3" style={{ fontSize: '0.93rem', lineHeight: '1.68' }}>
+                          Footnotes are indicated by a superscript number that corresponds to a note at the bottom of the page that is written in a smaller font and labeled with the same number. It also includes the citation number in superscript and contains the full citation the first time the source is cited. Every subsequent citation of the source only requires an abbreviated citation. The first line of all footnotes is indented, single spaced, and without extra space between references.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Duration: </span>
+                          <span style={{ color: '#57534e' }}>During design process</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'custom-headers' ? (
+                    /* Custom Headers (NO PRICE, NO CHECKLIST) */
+                    <div className="custom-headers-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          You may find it important to create custom headers within your book. If at any time during the submission process you would like to change a header within your work, you simply need to purchase our Custom Header service.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Duration: </span>
+                          <span style={{ color: '#57534e' }}>During design process</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'b-w-image-insertion' ? (
+                    /* B&W Image Insertion (NO PRICE, NO CHECKLIST) */
+                    <div className="bw-image-insertion-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          If you want to insert additional graphics beyond the allotted number of image insertions of your chosen package, follow the guidelines below. Note that images refer to photos, tables, charts, diagrams, etc.
+                        </p>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          Submission Guidelines for Inserting Graphics into the Interior of Your Book:
+                        </h5>
+                        <ul className="mb-4 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>All interior graphics (including photos, tables, charts, diagrams, drawings, foreign fonts, and anything else that is not text or would be considered a graphic) should be submitted as individual TIFF (.tif) files.</li>
+                          <li>The manuscript should identify placeholders for each of the interior graphics.</li>
+                          <li>There is a fee per additional image inserted into the manuscript.</li>
+                          <li>All illustrations are produced in black and white or grayscale; we cannot process color inside the manuscript.</li>
+                          <li>The book cover does not "count" as a graphic. It is in full color for no additional charge.</li>
+                          <li>Printer slang for "full color" is "four color"; this means the full range of colors, not literally just four colors.</li>
+                        </ul>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Duration: </span>
+                          <span style={{ color: '#57534e' }}>During design process</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'interior-revisions-block-of-25' ? (
+                    /* Interior Revisions (Block of 25) (NO PRICE, NO CHECKLIST) */
+                    <div className="interior-revisions-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Omni gives you one opportunity to examine your book proofs and make up to 50 corrections for free. It is imperative that you list these corrections on the proof form provided in order for the changes to be made. Publisher errors such as hyphenation errors, formatting issues or misplaced graphics which occurred during production must also be noted on the proof from, but will not count against the first free 50 corrections.
+                        </p>
+                        <p className="mb-3">
+                          Remember to carefully review each page of your proofs for any formatting or typographical errors that were created by either you or Omni. Our proofing process is designed to give you the final say about your book’s appearance by allowing you to rectify any remaining problems or errors.
+                        </p>
+                        <p className="mb-3" style={{ color: '#57534e', fontSize: '0.94rem' }}>
+                          If you wish to make further proofreading corrections after the initial free 50, there is a charge for every group of 25 changes.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Duration: </span>
+                          <span style={{ color: '#57534e' }}>7-10 Business days</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'stock-image-processing' ? (
+                    /* Stock Image Processing (NO PRICE, NO CHECKLIST) */
+                    <div className="stock-image-processing-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          All books published via the Omni standard publishing packages receive custom-designed covers, produced in full color. Within the realm of this custom-designed cover, you have the option to choose two images, free of charge, from the millions found through Getty Images. If you wish to include more than two images on your cover, a Stock Image Processing fee will be assessed.
+                        </p>
+                        <p className="mb-3">
+                          This fee will also be placed on any images found through Getty Images you wish to use in the interior of your book.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.65' }}>
+                            To avoid these fees please adhere to the manuscript submission guidelines. Speak to an Omni team member for more information about this service.
+                          </p>
                         </div>
                       </div>
                     </div>
