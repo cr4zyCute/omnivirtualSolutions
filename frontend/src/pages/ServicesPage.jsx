@@ -715,18 +715,29 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   };
 
   // Toggle category expansion
-  const toggleCategoryAccordion = (tag) => {
-    setExpandedCategories((prev) => ({ ...prev, [tag]: !prev[tag] }));
+  const toggleCategoryAccordion = (catId, catTag, e) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    setExpandedCategories((prev) => {
+      const isExplicit = prev[catId] !== undefined ? prev[catId] : prev[catTag];
+      const isCurrentlyOpen = isExplicit !== undefined ? Boolean(isExplicit) : false;
+      const nextVal = !isCurrentlyOpen;
+      const updated = { ...prev };
+      if (catId) updated[catId] = nextVal;
+      if (catTag) updated[catTag] = nextVal;
+      return updated;
+    });
   };
 
-  const handleSelectService = (service, cat, sub) => {
+  const handleSelectService = (service, cat, sub, keepCategoryAccordionState = false) => {
     const subId = sub?.id || service.subcategoryId;
     if (subId) {
       setExpandedSubcategories((prev) => ({ ...prev, [subId]: true }));
     }
     const catId = cat?.id || service.categoryId;
     const catTag = cat?.tag || service.categoryTag;
-    if (catTag) {
+    if (catTag && !keepCategoryAccordionState) {
       setExpandedCategories((prev) => ({ ...prev, [catTag]: true, [catId]: true }));
     }
     setSelectedService({
@@ -848,7 +859,12 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
 
                 <div>
                   {catalog.map((cat) => {
-                    const isExpanded = expandedCategories[cat.id] || expandedCategories[cat.tag] || activeCategoryTag === cat.tag || activeCategoryTag === cat.id || searchQuery.length > 0;
+                    const isExplicit = expandedCategories[cat.id] !== undefined
+                      ? expandedCategories[cat.id]
+                      : expandedCategories[cat.tag];
+                    const isExpanded = isExplicit !== undefined
+                      ? Boolean(isExplicit)
+                      : (searchQuery.length > 0 || (selectedCategory && (selectedCategory.id === cat.id || selectedCategory.tag === cat.tag)));
                     const totalCount = cat.subcategories.reduce(
                       (acc, sub) => acc + (sub.services || []).filter((s) => s.slug !== cat.id).length,
                       0
@@ -863,7 +879,21 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                             type="button"
                             className={`category-accordion-btn ${isExpanded ? 'expanded' : ''} ${isCatOverviewSelected ? 'active-category' : ''}`}
                             onClick={() => {
-                              toggleCategoryAccordion(cat.tag);
+                              if (isExpanded) {
+                                // Close the category!
+                                setExpandedCategories((prev) => ({
+                                  ...prev,
+                                  [cat.id]: false,
+                                  [cat.tag]: false,
+                                }));
+                                return;
+                              }
+                              // Open category and select category overview
+                              setExpandedCategories((prev) => ({
+                                ...prev,
+                                [cat.id]: true,
+                                [cat.tag]: true,
+                              }));
                               const catOverviewSvc = allServicesList.find((s) => s.slug === cat.id);
                               if (catOverviewSvc) {
                                 handleSelectService(
@@ -873,11 +903,12 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                     lead: catOverviewSvc.lead || catOverviewSvc.lead_paragraph || t(`service.${catOverviewSvc.slug}.lead`, ''),
                                   },
                                   cat,
-                                  cat.subcategories[0]
+                                  cat.subcategories[0],
+                                  true
                                 );
                               } else if (cat.subcategories[0]?.services[0]) {
                                 const targetSvc = cat.subcategories[0].services[0];
-                                handleSelectService({ ...targetSvc, title: targetSvc.title || t(`service.${targetSvc.slug}.title`, '') }, cat, cat.subcategories[0]);
+                                handleSelectService({ ...targetSvc, title: targetSvc.title || t(`service.${targetSvc.slug}.title`, '') }, cat, cat.subcategories[0], true);
                               }
                             }}
                           >
@@ -891,7 +922,20 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                               <span className="badge bg-light text-muted border" style={{ fontSize: '0.7rem' }}>
                                 {totalCount}
                               </span>
-                              <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} small`}></i>
+                              <span
+                                className="cat-toggle-chevron-btn"
+                                title={isExpanded ? "Collapse category" : "Expand category"}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setExpandedCategories((prev) => ({
+                                    ...prev,
+                                    [cat.id]: !isExpanded,
+                                    [cat.tag]: !isExpanded,
+                                  }));
+                                }}
+                              >
+                                <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} small`}></i>
+                              </span>
                             </span>
                           </button>
                         </div>
@@ -5670,7 +5714,12 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
 
           <div className="drawer-body">
             {catalog.map((cat) => {
-              const isExpanded = expandedCategories[cat.id] || expandedCategories[cat.tag] || searchQuery.length > 0;
+              const isExplicit = expandedCategories[cat.id] !== undefined
+                ? expandedCategories[cat.id]
+                : expandedCategories[cat.tag];
+              const isExpanded = isExplicit !== undefined
+                ? Boolean(isExplicit)
+                : (searchQuery.length > 0 || (selectedCategory && (selectedCategory.id === cat.id || selectedCategory.tag === cat.tag)));
               const catTitle = t(`service.${cat.id}.title`, cat.title);
               const isCatOverviewSelected = selectedService?.slug === cat.id;
               return (
@@ -5679,7 +5728,19 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                     type="button"
                     className={`category-accordion-btn ${isExpanded ? 'expanded' : ''} ${isCatOverviewSelected ? 'active-category' : ''}`}
                     onClick={() => {
-                      toggleCategoryAccordion(cat.tag);
+                      if (isExpanded) {
+                        setExpandedCategories((prev) => ({
+                          ...prev,
+                          [cat.id]: false,
+                          [cat.tag]: false,
+                        }));
+                        return;
+                      }
+                      setExpandedCategories((prev) => ({
+                        ...prev,
+                        [cat.id]: true,
+                        [cat.tag]: true,
+                      }));
                       const catOverviewSvc = allServicesList.find((s) => s.slug === cat.id);
                       if (catOverviewSvc) {
                         handleSelectService(
@@ -5689,12 +5750,13 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                             lead: catOverviewSvc.lead || catOverviewSvc.lead_paragraph || t(`service.${catOverviewSvc.slug}.lead`, ''),
                           },
                           cat,
-                          cat.subcategories[0]
+                          cat.subcategories[0],
+                          true
                         );
                         setDrawerOpen(false);
                       } else if (cat.subcategories[0]?.services[0]) {
                         const targetSvc = cat.subcategories[0].services[0];
-                        handleSelectService({ ...targetSvc, title: targetSvc.title || t(`service.${targetSvc.slug}.title`, '') }, cat, cat.subcategories[0]);
+                        handleSelectService({ ...targetSvc, title: targetSvc.title || t(`service.${targetSvc.slug}.title`, '') }, cat, cat.subcategories[0], true);
                         setDrawerOpen(false);
                       }
                     }}
@@ -5703,7 +5765,20 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                       <i className={`bi ${cat.icon}`} style={{ color: '#ad7d42' }}></i>
                       <span data-block-key={`service.${cat.id}.title`}>{catTitle}</span>
                     </span>
-                    <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} small`}></i>
+                    <span
+                      className="cat-toggle-chevron-btn"
+                      title={isExpanded ? "Collapse category" : "Expand category"}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExpandedCategories((prev) => ({
+                          ...prev,
+                          [cat.id]: !isExpanded,
+                          [cat.tag]: !isExpanded,
+                        }));
+                      }}
+                    >
+                      <i className={`bi bi-chevron-${isExpanded ? 'down' : 'right'} small`}></i>
+                    </span>
                   </button>
 
                   {isExpanded && (

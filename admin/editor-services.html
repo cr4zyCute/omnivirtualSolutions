@@ -1782,6 +1782,10 @@
 
       window.handleCategoryClick = function(catId) {
         const box = document.getElementById('subcat-box-' + catId);
+        if (box && box.style.display !== 'none') {
+          toggleCatAccordion(catId);
+          return;
+        }
         if (box && box.style.display === 'none') {
           toggleCatAccordion(catId);
         }
