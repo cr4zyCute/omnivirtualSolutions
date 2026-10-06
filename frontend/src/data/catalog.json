@@ -989,27 +989,15 @@
             "slug": "press-release-essential-edition",
             "title": "Press Release - Essential Edition",
             "price": "",
-            "lead": "Let a media expert craft a compelling press release that promotes your book and distribute it to at least 500 media outlets nationwide, complete with one full month of comprehensive news tracking and clip reporting.",
-            "features": [
-              "Professionally written press release by an experienced publicist",
-              "Targeted distribution to a minimum of 500 media outlets",
-              "Targeting based on your book genre, subject, and geographic focus",
-              "One month of comprehensive media tracking and clip monitoring",
-              "Search engine indexing for immediate digital discoverability"
-            ]
+            "lead": "When done right, a press release is an effective way to get publicity. The Omni Press Release – Essential Edition helps you grab the media’s attention by promoting your book with an expertly crafted press release delivered to at least 500 media outlets with Meltwater tracking.",
+            "features": []
           },
           {
             "slug": "press-release-web-optimized-edition",
             "title": "Press Release - Web Optimized Edition",
             "price": "",
-            "lead": "A Web-optimized, professionally written press release distributed to as many as 30,000 opt-in journalists and more than 250,000 news subscribers through PRWeb, complete with permanent online archiving and news tracking.",
-            "features": [
-              "Web-optimized press release infused with high-value search keywords",
-              "Distribution to up to 30,000 opt-in journalists and newsrooms",
-              "Exposure to over 250,000 RSS news subscribers via PRWeb",
-              "Permanent hosting and high-domain-authority backlink generation",
-              "Detailed analytics reporting on impressions, reads, and clicks"
-            ]
+            "lead": "With a web-optimized press release, anyone who conducts a web search of you or your book can find you much easier. Professionally crafted and distributed to up to 30,000 opt-in journalists and over 250,000 subscribers via PRWeb with activity feedback.",
+            "features": []
           }
         ]
       },

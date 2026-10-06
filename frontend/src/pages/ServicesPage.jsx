@@ -485,6 +485,8 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'sem-advanced-campaign': 'Three-month Google search campaign with first-page ad placement, up to 30 tracked keywords, monthly reporting, and a deluxe author website.',
   'sem-specialist-campaign': 'Five-month premier Google search marketing featuring first-page ad placement, up to 50 keywords, bi-weekly reporting, and a website with an author blog.',
   'author-website-setup': 'Custom responsive author website with up to 10 tailored pages, professional HTML design, and 1 full year of free domain registration and web hosting.',
+  'press-release-essential-edition': 'Expertly crafted one-page press release distributed to 500+ targeted media outlets with one month of media tracking via Meltwater.',
+  'press-release-web-optimized-edition': 'SEO-optimized press release distributed to 30,000 opt-in journalists and 250,000 news subscribers via PRWeb with full tracking.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -611,7 +613,9 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'display-advertising-on-google-30-days-package' ||
       slug === 'sem-advanced-campaign' ||
       slug === 'sem-specialist-campaign' ||
-      slug === 'author-website-setup'
+      slug === 'author-website-setup' ||
+      slug === 'press-release-essential-edition' ||
+      slug === 'press-release-web-optimized-edition'
     );
   }, [selectedService]);
 
@@ -4432,6 +4436,96 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         </div>
                       </div>
                     </div>
+                  ) : selectedService?.slug === 'press-release-essential-edition' ? (
+                    /* Press Release - Essential Edition (NO PRICE, NO CHECKLIST) */
+                    <div className="press-release-essential-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          When done right, a press release is an effective way to get publicity. Grab the media’s attention and create widespread exposure for your title with an expertly crafted news release.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          The Omni Press Release – Essential Edition helps you grab the media’s attention by promoting your book with an expertly crafted press release. Prepared in a format to pique editors' interest in your book, your press release is delivered to numerous media outlets, creating the potential for increased coverage of you and your book. More coverage equals more exposure for your title.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            The Press Release – Essential Edition Includes:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Customized One-Page Press Release:</strong> Expertly crafted by a professional writer based on the detailed information and story background you provide about your book.
+                            </li>
+                            <li>
+                              <strong>Targeted Distribution to 500+ Media Outlets:</strong> Delivery of your press release to a minimum of 500 media outlets chosen strategically based on location, book genre, target audience, and subject matter; recipients may include magazines, newspapers, online publications, and radio and TV programs.
+                            </li>
+                            <li>
+                              <strong>One-Month Comprehensive PR Tracking via Meltwater:</strong> Active tracking for one month through Meltwater's industry-leading PR monitoring platform to monitor pickups and news clips.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#ad7d42', fontSize: '0.95rem' }}>
+                            About Meltwater
+                          </h6>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            Meltwater was founded in 2001 as the world’s first online media monitoring company. Today, Meltwater is a global leader in media intelligence and social analytics, helping to bridge the gap between Public Relations, Communications, and Marketing departments with an intuitive, all-in-one solution powered by AI-driven insights. Over 30,000 of the world’s most respected brands rely on Meltwater across more than 55 offices on six continents.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Note: </span>
+                          <span style={{ color: '#57534e', fontSize: '0.88rem' }}>
+                            Press release samples and distribution recommendations are provided during your campaign consultation.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'press-release-web-optimized-edition' ? (
+                    /* Press Release - Web Optimized Edition (NO PRICE, NO CHECKLIST) */
+                    <div className="press-release-web-optimized-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          With a web-optimized press release, anyone who conducts a web search of you or your book can find you much easier, including members of the press searching for story ideas.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          The Omni Press Release – Web-Optimized Edition is professionally crafted to include strategic search keywords that increase your release’s chances of being returned as a higher ranking search engine result. The easier your release is to find, the more likely you are to get promotional coverage and online discoverability for your book.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Press Release – Web-Optimized Edition Includes:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Keyword-Optimized Professional Writing:</strong> A professional writer crafts your press release and infuses strategic keywords to optimize it for search engine results, so your release has the highest probability of being found and read.
+                            </li>
+                            <li>
+                              <strong>Newswire Distribution via PRWeb:</strong> Distributed to as many as 30,000 opt-in journalists and more than 250,000 news subscribers through our newswire service partner, PRWeb. Distributed releases commonly appear on prominent news hubs including Google News, Yahoo News, and websites where journalists search daily for relevant news and topics.
+                            </li>
+                            <li>
+                              <strong>One-Month Press Release Tracking:</strong> Active monitoring for 30 days to measure digital pickups, indexing, and syndication across the web.
+                            </li>
+                            <li>
+                              <strong>Activity Feedback & Performance Reporting:</strong> Comprehensive activity feedback and analytics so you can track the reach, reads, clicks, and overall effectiveness of your web-optimized release.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <span className="fw-bold" style={{ color: '#ad7d42' }}>Note: </span>
+                          <span style={{ color: '#57534e', fontSize: '0.88rem' }}>
+                            Web-optimized press release samples and keyword strategy recommendations are available upon request.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   ) : isCurrentSubcategoryOverview ? (
                     /* Subcategory Overview matching user's screenshots (Image 1 - Image 5) */
                     <div className="subcategory-overview-content">
@@ -4627,6 +4721,37 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                 <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>5. Strengthens Brand & Author Credibility</strong>
                                 <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
                                   An active digital footprint (author website, blog, search footprint) builds lasting trust. <em>81% of consumers research a brand online before making a purchase (Edelman Trust Barometer, 2024).</em>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {currentSubcategory?.id === 'publicity-services' && (
+                          <div className="publicity-services-advantages-box p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                            <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                              The Power of Publicity & Media Services:
+                            </h6>
+                            <p className="mb-3" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                              Get your book noticed from a unique platform created by our publicity and media services. A targeted press release bridges the gap between authors and newsrooms, creating third-party validation that readers and industry influencers trust.
+                            </p>
+                            <div className="d-flex flex-column gap-2.5">
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>1. Media Credibility & Third-Party Validation</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Editorial and media coverage carries significantly higher trust than paid ads, elevating your author authority.
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>2. Targeted Newsroom & Journalist Distribution</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Direct delivery to journalists, editors, TV/radio producers, and publications matched to your book's specific genre and themes.
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Permanent SEO Footprint & Discoverability</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Web-optimized distribution generates permanent backlinks, Google News indexing, and higher search result rankings for your name and title.
                                 </p>
                               </div>
                             </div>
