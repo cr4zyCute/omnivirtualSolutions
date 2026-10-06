@@ -365,12 +365,7 @@
             "title": "Proofreading",
             "price": "",
             "lead": "Prerequisite: An Omni core editorial service, as recommended. Please speak with your editorial consultant for more information.",
-            "features": [
-              "Professional Proofreading tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "features": []
           }
         ]
       }
@@ -387,44 +382,18 @@
         "title": "AudioBook Publishing",
         "services": [
           {
-            "slug": "formats",
-            "title": "Formats",
-            "price": "",
-            "lead": "Omni offers versatile publishing formats designed to reach readers across print, digital, and audio landscapes with professional production standards.",
-            "features": [
-              "Trade paperback publishing on acid-free, book-grade opaque stock",
-              "Durable cloth-bound hardcover publishing with full-color dust jackets",
-              "Reflowable and fixed-layout e-book formatting for Kindle, Apple, and Nook",
-              "Professional and Do-It-Yourself audiobook production and distribution",
-              "Global distribution across Amazon, Barnes & Noble, Ingram, and Kobo",
-              "100% author rights and royalty retention"
-            ]
-          },
-          {
             "slug": "do-it-yourself-audiobook",
             "title": "Do-It-Yourself Audiobook",
             "price": "",
             "lead": "Expand your audience and reach with the power of audiobooks, an increasingly popular and preferred format.",
-            "features": [
-              "Easy-to-use recording and editing tools",
-              "Six months of access to the virtual recording studio",
-              "Availability of your audiobook through Overdrive, Audible.com, Amazon.com, and iTunes",
-              "ISBN registration"
-            ]
+            "features": []
           },
           {
             "slug": "professional-audiobook-package",
             "title": "Professional Audiobook Package",
             "price": "",
             "lead": "Readers have spoken—and we have listened. These days, they prefer books in a format that will easily fit their busy lifestyle. This is why Omni offers you a solution that allows you to tap into your readers’ multitasking ways: audiobooks. Now they can “read” your book while they commute, work out or even as they do their chores.",
-            "features": [
-              "Audiobook conversion of up to 5,000 words",
-              "Narration by a professional voice-over actor",
-              "Your own digital copy of the audiobook",
-              "Intro, beginning and end background music for your audiobook",
-              "Availability of your audiobook through Overdrive, Audible.com, Amazon.com and iTunes",
-              "ISBN Registration"
-            ]
+            "features": []
           }
         ]
       },

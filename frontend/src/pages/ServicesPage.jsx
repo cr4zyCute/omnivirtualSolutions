@@ -414,6 +414,9 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'computer-generated-keyword-indexing-up-to-700-entries': 'A computer-generated keyword index lists a page number for a key term each time it occurs in the book (up to 700 entries).',
   'computer-generated-keyword-indexing-up-to-1-000-entries': 'A computer-generated keyword index lists a page number for a key term each time it occurs in the book (up to 1,000 entries).',
   'computer-generated-keyword-indexing-custom-quote': 'A computer-generated keyword index for over 1,000 entries requiring a custom quotation.',
+  'proofreading': 'As any publishing professional knows, the process of converting a manuscript into a published book is not 100 percent foolproof. Even manuscripts that have undergone a Quality Review can have the occasional remaining error, as even the best copyeditor in the business or the most careful author can inadvertently overlook or create a few mistakes. In fact, for this reason, traditional publishers usually proofread a manuscript twice. This final polish is highly recommended.',
+  'do-it-yourself-audiobook': 'Expand your audience and reach with the power of audiobooks, an increasingly popular and preferred format. Effortlessly transform your written words into an immersive audiobook using our partner DIY Audiobook platform, Myaudiobookrecorder.com.',
+  'professional-audiobook-package': 'Readers have spoken—and we have listened. These days, they prefer books in a format that will easily fit their busy lifestyle. This is why Omni offers you a solution that allows you to tap into your readers’ multitasking ways: audiobooks. Now they can “read” your book while they commute, work out or even as they do their chores.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -469,7 +472,10 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'computer-generated-keyword-indexing-up-to-500-entries' ||
       slug === 'computer-generated-keyword-indexing-up-to-700-entries' ||
       slug === 'computer-generated-keyword-indexing-up-to-1-000-entries' ||
-      slug === 'computer-generated-keyword-indexing-custom-quote'
+      slug === 'computer-generated-keyword-indexing-custom-quote' ||
+      (slug === 'proofreading' && !selectedService.isSubcategoryOverview) ||
+      slug === 'do-it-yourself-audiobook' ||
+      slug === 'professional-audiobook-package'
     );
   }, [selectedService]);
 
@@ -1681,6 +1687,138 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
                           <span className="fw-bold" style={{ color: '#ad7d42' }}>Timing: </span>
                           <span style={{ color: '#57534e' }}>Adds two weeks to the design process</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'proofreading' && !selectedService?.isSubcategoryOverview ? (
+                    /* Proofreading (Matching Screenshot 1 - NO PRICE, NO CHECKLIST) */
+                    <div className="proofreading-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="fst-italic mb-3" style={{ color: '#57534e', fontSize: '0.94rem' }}>
+                          Prerequisite: An Omni core editorial service, as recommended. Please speak with your editorial consultant for more information.
+                        </p>
+
+                        <p className="mb-4">
+                          As any publishing professional knows, the process of converting a manuscript into a published book is not 100 percent foolproof. Even manuscripts that have undergone a Quality Review can have the occasional remaining error, as even the best copyeditor in the business or the most careful author can inadvertently overlook or create a few mistakes. In fact, for this reason, traditional publishers usually proofread a manuscript twice. This final polish is highly recommended.
+                        </p>
+
+                        <p className="fst-italic mb-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          "I must comment on the meticulous job done by all the editors, including the last. She found things that we all had missed ... It's downright scary that I teach ENGLISH!"
+                        </p>
+
+                        <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          -Robin M. Berard, author of King Tut and the Girl Who Loved Him
+                        </p>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'do-it-yourself-audiobook' ? (
+                    /* Do-It-Yourself Audiobook (Matching Screenshot 2 - NO PRICE, NO CHECKLIST) */
+                    <div className="diy-audiobook-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Expand your audience and reach with the power of audiobooks, an increasingly popular and preferred format.
+                        </p>
+                        <p className="mb-3">
+                          Now you can bring your book to life with your own voice.
+                        </p>
+                        <p className="mb-3">
+                          Effortlessly transform your written words into an immersive audiobook using our partner DIY Audiobook platform,{' '}
+                          <a 
+                            href="https://myaudiobookrecorder.com/" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            style={{ color: '#ad7d42', fontWeight: '600', textDecoration: 'underline' }}
+                          >
+                            Myaudiobookrecorder.com.
+                          </a>
+                        </p>
+                        <p className="mb-4">
+                          This service empowers you to record and produce your audiobook, without needing any audio editing experience.
+                        </p>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          Key Features:
+                        </h5>
+
+                        <ul className="mb-4 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>Easy-to-use recording and editing tools</li>
+                          <li>Six months of access to the virtual recording studio</li>
+                          <li>Availability of your audiobook through Overdrive, Audible.com, Amazon.com, and iTunes</li>
+                          <li>ISBN registration</li>
+                        </ul>
+
+                        <p className="fst-italic mb-0" style={{ color: '#57534e', fontSize: '0.91rem' }}>
+                          *Audiobook distribution partners require that the e-book version is in distribution and available for sale.
+                        </p>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'professional-audiobook-package' ? (
+                    /* Professional Audiobook Package (Matching authentic page - NO PRICE, NO CHECKLIST) */
+                    <div className="professional-audiobook-detail-content">
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Readers have spoken—and we have listened. These days, they prefer books in a format that will easily fit their busy lifestyle. This is why Omni offers you a solution that allows you to tap into your readers’ multitasking ways: audiobooks. Now they can “read” your book while they commute, work out or even as they do their chores.
+                        </p>
+                        <p className="mb-4">
+                          But exactly how popular are audiobooks among readers? The growing demand is evidently seen the rise of daily downloads of audiobooks year after year. Tap into that market by having your book available in audio format with our help.
+                        </p>
+
+                        <h5 className="fw-bold mb-3" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                          The Professional Audiobook service includes:
+                        </h5>
+
+                        <ul className="mb-4 ps-3 d-flex flex-column gap-2" style={{ color: '#44403c', fontSize: '0.95rem' }}>
+                          <li>Audiobook conversion of up to 5,000 words</li>
+                          <li>Narration by a professional voice-over actor</li>
+                          <li>Your own digital copy of the audiobook</li>
+                          <li>Intro, beginning and end background music for your audiobook</li>
+                          <li>Availability of your audiobook through Overdrive, Audible.com, Amazon.com and iTunes</li>
+                          <li>ISBN Registration</li>
+                        </ul>
+
+                        {/* Audio Samples Section */}
+                        <div className="audio-samples-card p-4 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <div className="mb-4">
+                            <h5 className="fw-bold mb-2 d-flex align-items-center gap-2" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                              <i className="bi bi-volume-up-fill" style={{ color: '#ad7d42' }}></i>
+                              Audiobook Sample: Male
+                            </h5>
+                            <audio controls className="w-100" style={{ maxWidth: '480px', height: '42px' }}>
+                              <source src="/assets/audio/Jewel in the Wake_Male.mp3" type="audio/mpeg" />
+                              Your browser does not support the audio element.
+                            </audio>
+                          </div>
+
+                          <div className="mb-2">
+                            <h5 className="fw-bold mb-2 d-flex align-items-center gap-2" style={{ color: '#2b2219', fontSize: '1.05rem' }}>
+                              <i className="bi bi-volume-up-fill" style={{ color: '#ad7d42' }}></i>
+                              Audiobook Sample: Female
+                            </h5>
+                            <audio controls className="w-100" style={{ maxWidth: '480px', height: '42px' }}>
+                              <source src="/assets/audio/Mask Weavers for Hire_Female.mp3" type="audio/mpeg" />
+                              Your browser does not support the audio element.
+                            </audio>
+                          </div>
+                        </div>
+
+                        <p className="fst-italic mb-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                          The default retail price set will be $9.99 minimum. Please take note that other distributors and resellers have the sole discretion to set the price of the audiobooks they sell.
+                        </p>
+
+                        <div className="p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42', padding: '16px 20px' }}>
+                          <p className="fw-semibold fst-italic mb-2" style={{ color: '#ad7d42', fontSize: '0.96rem' }}>
+                            Is your book more than 5,000 words?
+                          </p>
+                          <p className="fw-semibold fst-italic mb-2" style={{ color: '#ad7d42', fontSize: '0.96rem' }}>
+                            Need your audiobook converted right away?
+                          </p>
+                          <p className="mb-2" style={{ color: '#44403c', fontSize: '0.93rem', lineHeight: '1.65' }}>
+                            We can send you your audiobook in 30 days with our Rapid Release Audiobook service for an additional fee of $500. Please take note of the following conditions:
+                          </p>
+                          <ul className="mb-0 ps-3 d-flex flex-column gap-1" style={{ color: '#57534e', fontSize: '0.9rem' }}>
+                            <li>Your manuscript should only have a maximum of 30,000 words.</li>
+                            <li>You need to approve the audiobook sample we will send you before we can get started on your audiobook. Your 30-day countdown will start from the day we receive your demo approval.</li>
+                          </ul>
                         </div>
                       </div>
                     </div>
