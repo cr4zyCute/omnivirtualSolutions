@@ -675,6 +675,20 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
     });
   }, [selectedService, blocks]);
 
+  // Global helper for jumping to subcategories from custom HTML blocks
+  useEffect(() => {
+    window.omniJumpToSubcategory = (catId, subId) => {
+      const cat = catalog.find(c => c.id === catId);
+      const sub = cat?.subcategories?.find(s => s.id === subId);
+      if (cat && sub) {
+        handleSelectSubcategory(cat, sub);
+      }
+    };
+    return () => {
+      delete window.omniJumpToSubcategory;
+    };
+  }, [catalog]);
+
   // Select a subcategory overview
   const handleSelectSubcategory = (cat, sub) => {
     setExpandedCategories((prev) => ({ ...prev, [cat.tag]: true, [cat.id]: true }));
@@ -745,6 +759,14 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   };
 
   const handleSelectService = (service, cat, sub, keepCategoryAccordionState = false) => {
+    if (service.slug === 'basic-package' || service.slug === 'standard-package' || service.slug === 'advanced-package') {
+      const pubCat = catalog.find(c => c.id === 'publishing-packages') || cat;
+      const pubSub = pubCat?.subcategories?.find(s => s.id === 'publishing-options') || sub;
+      if (pubCat && pubSub) {
+        handleSelectSubcategory(pubCat, pubSub);
+        return;
+      }
+    }
     const subId = sub?.id || service.subcategoryId;
     if (subId) {
       setExpandedSubcategories((prev) => ({ ...prev, [subId]: true }));
@@ -961,6 +983,24 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                           <div className="subcategories-list">
                             {cat.subcategories.map((sub) => {
                               const subTitle = t(`service.${sub.id}.title`, sub.title);
+
+                              if (cat.id === 'publishing-packages') {
+                                const isSubOverviewSelected = Boolean(selectedService?.slug === sub.id || (selectedService?.isSubcategoryOverview && selectedService?.slug === sub.id));
+                                return (
+                                  <div key={sub.id} className="subcategory-group mb-2">
+                                    <button
+                                      type="button"
+                                      className={`subcategory-dropdown-btn ${isSubOverviewSelected ? 'active-subcategory' : ''}`}
+                                      onClick={() => handleSelectSubcategory(cat, sub)}
+                                    >
+                                      <span className="subcategory-label-text" data-block-key={`service.${sub.id}.title`}>
+                                        {subTitle}
+                                      </span>
+                                    </button>
+                                  </div>
+                                );
+                              }
+
                               const filteredServices = (sub.services || []).filter(
                                 (svc) => svc.slug !== cat.id
                               );
@@ -1127,7 +1167,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                   <hr className="service-divider" />
 
                   {/* Service Overview Box (Only shown if NOT a custom layout and NOT publishing packages / evaluation-services overview) */}
-                  {!hasCustomDetailView && selectedService?.slug !== 'publishing-packages' && selectedService?.slug !== 'evaluation-services' && (
+                  {!hasCustomDetailView && selectedService?.slug !== 'publishing-packages' && selectedService?.slug !== 'publishing-options' && selectedService?.slug !== 'evaluation-services' && (
                     <div className="service-lead-box">
                       <h5 data-block-key={isCurrentCategoryOverview ? `service.${selectedService?.slug}.overview_heading` : "services.overview.heading"}>
                         {isCurrentCategoryOverview ? t(`service.${selectedService?.slug}.overview_heading`, 'Category Overview') : overviewHeading}
@@ -1138,50 +1178,92 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                     </div>
                   )}
 
-                  {/* Bottom section: Specific layout for Publishing Packages, Evaluation Services, Editorial Evaluation, or What's Included */}
+                  {/* Bottom section: Specific layout for Publishing Packages, Publishing Options, Evaluation Services, Editorial Evaluation, or What's Included */}
                   {blocks && blocks[`service.${selectedService?.slug}.custom_html`] ? (
                     <div dangerouslySetInnerHTML={{ __html: blocks[`service.${selectedService?.slug}.custom_html`] }} />
                   ) : selectedService?.slug === 'publishing-packages' ? (
-                    <div className="publishing-options-section">
-                      <h4 
-                        className="publishing-options-title" 
-                        data-block-key="service.publishing-options.title"
-                      >
-                        {publishingOptionsTitle}
-                      </h4>
-                      <p 
-                        className="publishing-options-desc" 
-                        data-block-key="service.publishing-options.desc"
-                      >
-                        {publishingOptionsDesc}
-                      </p>
-
+                    /* Category Publishing Packages: Overview and Publishing Options card (NO Basic, Standard, or Advanced Package here!) */
+                    <div className="publishing-options-section mb-4">
                       <div className="publishing-packages-container">
-                        {publishingPackagesList.map((pkg) => (
-                          <div 
-                            key={pkg.slug} 
-                            className="publishing-package-card"
-                            onClick={() => {
-                              const found = allServicesList.find(s => s.slug === pkg.slug);
-                              if (found) setSelectedService(found);
-                            }}
-                          >
-                            <div className="publishing-package-card-header">
-                              <h5 className="publishing-package-card-title m-0">
-                                {pkg.title}
-                              </h5>
-                              <span className="publishing-package-arrow-badge">
-                                <i className="bi bi-arrow-right-short"></i>
-                              </span>
-                            </div>
-                            <p 
-                              className="publishing-package-card-summary" 
-                              data-block-key={`service.${pkg.slug}.summary`}
+                        <div 
+                          className="publishing-package-card"
+                          onClick={() => {
+                            const sub = selectedCategory?.subcategories?.find(s => s.id === 'publishing-options');
+                            if (sub) handleSelectSubcategory(selectedCategory, sub);
+                          }}
+                          role="button"
+                          tabIndex={0}
+                        >
+                          <div className="publishing-package-card-header">
+                            <h5 
+                              className="publishing-package-card-title m-0" 
+                              data-block-key="service.publishing-options.title"
                             >
-                              {pkg.summary}
-                            </p>
+                              {publishingOptionsTitle}
+                            </h5>
+                            <span className="publishing-package-arrow-badge"><i className="bi bi-arrow-right-short"></i></span>
                           </div>
-                        ))}
+                          <p 
+                            className="publishing-package-card-summary mb-0" 
+                            data-block-key="service.publishing-options.desc"
+                          >
+                            {publishingOptionsDesc}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'publishing-options' ? (
+                    /* Subcategory Publishing Options Page: Full Details of Basic, Standard, and Advanced Package */
+                    <div className="publishing-options-section">
+                      <div className="package-card-block mb-4">
+                        <h5 
+                          className="fw-bold mb-2" 
+                          style={{ color: '#d9534f', fontSize: '1.25rem' }}
+                          data-block-key="service.basic-package.title"
+                        >
+                          {t('service.basic-package.title', 'Basic Package')}
+                        </h5>
+                        <p 
+                          className="mb-0" 
+                          style={{ color: '#57534e', fontSize: '0.96rem', lineHeight: '1.72' }}
+                          data-block-key="service.basic-package.desc"
+                        >
+                          {t('service.basic-package.desc', 'The Basic package is designed for authors seeking basic publishing needs. It includes digital formatting and distribution for e-books, paperback publishing, and customization options for the interior and cover. This package supports up to 25 image insertions and provides one block of 50 interior revisions. Authors receive electronic proofs, one-on-one support, and distribution across major online retailers like Amazon and Barnes & Noble. The package also features ISBN assignment, U.S. Copyright registration, a Library of Congress Control Number, and three paperback copies. Additional perks include Amazon Look Inside, Google Preview, Barnes & Noble Read Instantly, and a 12-month bookseller return program.')}
+                        </p>
+                      </div>
+
+                      <div className="package-card-block mb-4">
+                        <h5 
+                          className="fw-bold mb-2" 
+                          style={{ color: '#d9534f', fontSize: '1.25rem' }}
+                          data-block-key="service.standard-package.title"
+                        >
+                          {t('service.standard-package.title', 'Standard Package')}
+                        </h5>
+                        <p 
+                          className="mb-0" 
+                          style={{ color: '#57534e', fontSize: '0.96rem', lineHeight: '1.72' }}
+                          data-block-key="service.standard-package.desc"
+                        >
+                          {t('service.standard-package.desc', 'Building on the Basic, the Standard package adds hardcover publishing to the mix, enhancing the physical presence of your book. This package maintains all the services of the Basic package, including the customization, support, and online distribution features. In addition to the three paperback copies, it also includes one hardcover copy. The bookseller return program is extended to 36 months, providing additional flexibility and support for bookstores to manage inventory.')}
+                        </p>
+                      </div>
+
+                      <div className="package-card-block mb-4">
+                        <h5 
+                          className="fw-bold mb-2" 
+                          style={{ color: '#d9534f', fontSize: '1.25rem' }}
+                          data-block-key="service.advanced-package.title"
+                        >
+                          {t('service.advanced-package.title', 'Advanced Package')}
+                        </h5>
+                        <p 
+                          className="mb-0" 
+                          style={{ color: '#57534e', fontSize: '0.96rem', lineHeight: '1.72' }}
+                          data-block-key="service.advanced-package.desc"
+                        >
+                          {t('service.advanced-package.desc', 'The Advanced package is the most comprehensive, designed for authors who want extensive support and marketing tools. It includes everything from the Standard package, but boosts the number of copies provided to 20 paperbacks and 5 hardcovers. This package distinguishes itself with marketing enhancements such as 30 days of online book ads via Google and a professional book review from Kirkus Reviews. Additionally, it includes a deluxe website setup to further promote the book. The return program is extended to 60 months, offering the maximum return flexibility for retailers.')}
+                        </p>
                       </div>
                     </div>
                   ) : selectedService?.slug === 'evaluation-services' ? (
@@ -6187,7 +6269,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                       )}
 
                       {/* Subcategories Options Grid */}
-                      {selectedCategory?.subcategories && selectedCategory.subcategories.length > 0 && (
+                      {selectedCategory?.subcategories && selectedCategory.subcategories.length > 0 && selectedCategory.id !== 'publishing-packages' && selectedCategory.id !== 'evaluation-services' && (
                         <div className="publishing-options-section mb-4">
                           <h4 className="publishing-options-title">
                             Explore {selectedCategory.title} Options
@@ -6434,6 +6516,27 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                     <div className="subcategories-list">
                       {cat.subcategories.map((sub) => {
                         const subTitle = t(`service.${sub.id}.title`, sub.title);
+
+                        if (cat.id === 'publishing-packages') {
+                          const isSubOverviewSelected = Boolean(selectedService?.slug === sub.id || (selectedService?.isSubcategoryOverview && selectedService?.slug === sub.id));
+                          return (
+                            <div key={sub.id} className="subcategory-group mb-2">
+                              <button
+                                type="button"
+                                className={`subcategory-dropdown-btn ${isSubOverviewSelected ? 'active-subcategory' : ''}`}
+                                onClick={() => {
+                                  handleSelectSubcategory(cat, sub);
+                                  setDrawerOpen(false);
+                                }}
+                              >
+                                <span className="subcategory-label-text" data-block-key={`service.${sub.id}.title`}>
+                                  {subTitle}
+                                </span>
+                              </button>
+                            </div>
+                          );
+                        }
+
                         const filteredServices = (sub.services || []).filter(
                           (svc) => svc.slug !== cat.id
                         );
