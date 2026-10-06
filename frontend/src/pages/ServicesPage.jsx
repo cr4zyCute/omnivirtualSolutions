@@ -455,6 +455,13 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'image-extraction': 'If you choose to submit your manuscript with the images included in the body of your work, Omni must extract these images to properly create a professional layout of your book. This service will cover the cost of extracting the images to ensure proper interior layout.',
   'resubmission-one-version': 'Once your book has gone live and is for sale, you can still correct errors or other issues that might have been missed. Choose this service if you only have either a softcover or a hardcover that needs to be updated.',
   'resubmission-two-version': 'Choose this service if you have a softcover and hardcover book that needs to be updated.',
+  'bookblast-video-marketing-stand-alone-30days': 'Seize the opportunity to have your book video introduced as an advertising break before or between YouTube videos, complete with purchase details.',
+  'standard-book-video': 'Create a meaningful 45-60 second online presence with custom 2-D visuals, YouTube distribution, and Hollywood TV/movie consideration.',
+  'premium-book-video': 'Give fans a sensational 60-90 second cinematic preview featuring professional voiceover acting, 3-D visual effects, live-action clips, and Hollywood consideration.',
+  'bookblast-video-marketing-standard': 'Combines a custom Standard Book Video with a 30-second campaign cut and 30-day targeted ad placement on YouTube.',
+  'bookblast-video-marketing-premium': 'Combines a cinematic Premium Book Video with voiceover narration, a 30-second campaign cut, and a targeted 30-day YouTube ad campaign.',
+  '15-sec-video-marketing': 'Get your book in front of huge, engaged audiences with a 15-second uninterrupted ad shown 350,000 times on YouTube, plus companion desktop banners.',
+  'video-book-talk': 'Stream your 15-20 minute author interview with JT Crowley across Roku, Amazon Fire TV, YouTube, plus major podcast networks like Apple and Spotify.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -551,7 +558,14 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'file-merging' ||
       slug === 'image-extraction' ||
       slug === 'resubmission-one-version' ||
-      slug === 'resubmission-two-version'
+      slug === 'resubmission-two-version' ||
+      slug === 'bookblast-video-marketing-stand-alone-30days' ||
+      slug === 'standard-book-video' ||
+      slug === 'premium-book-video' ||
+      slug === 'bookblast-video-marketing-standard' ||
+      slug === 'bookblast-video-marketing-premium' ||
+      slug === '15-sec-video-marketing' ||
+      slug === 'video-book-talk'
     );
   }, [selectedService]);
 
@@ -3083,6 +3097,288 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         </div>
                       </div>
                     </div>
+                  ) : selectedService?.slug === 'bookblast-video-marketing-stand-alone-30days' ? (
+                    /* Bookblast Video Marketing - Stand-alone (30days) (NO PRICE, NO CHECKLIST) */
+                    <div className="bookblast-video-marketing-stand-alone-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Go the extra mile with your marketing campaign, and place your video as an ad on YouTube. Seize the opportunity to have your book video introduced as an advertising break before, or in between, YouTube videos.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Catch the curiosity and interest of YouTube viewers to increase your reach – and potential book sales. Your book information, purchase, and availability details are displayed directly when the ad is clicked.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            What You Get:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              A 30-day ad placement campaign on YouTube that gives viewers a preview of your book. Your ad will appear at the beginning of a YouTube video, or in between videos.
+                            </li>
+                            <li>
+                              Interactive viewer engagement: Viewers can get more information about your book by clicking on the video, which redirects them to either your book’s online bookstore page or your personal author website.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-3 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219', fontSize: '0.92rem' }}>
+                            Prerequisite Notice:
+                          </h6>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.65' }}>
+                            Please note that you may sign up for this package only if you have purchased either the <strong>Standard Book Video</strong> or <strong>Premium Book Video</strong> service.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.65' }}>
+                            <em>*Want to have a longer campaign period? Contact your marketing consultant to get a custom campaign schedule for your video.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'standard-book-video' ? (
+                    /* Standard Book Video (NO PRICE, NO CHECKLIST) */
+                    <div className="standard-book-video-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          A Standard Book Video helps you create and maintain a meaningful presence online in the competitive marketplace. Video book trailers are an excellent addition to your press releases, social media sites, and author website.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          By posting your video on social media channels and personal websites, you can reach an influential audience of online video viewers and attract potential readers. Video marketing helps you engage your audience on a visual and emotional level they cannot ignore.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Standard Video Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>Creation of a custom-made video book trailer, approximately 45 to 60 seconds in length</li>
+                            <li>Storytelling through text, 2-D graphics, motion typography, and high-resolution imagery</li>
+                            <li>Distribution of your video to YouTube in order to maximize exposure</li>
+                            <li>Full web streaming capability and downloadable master file</li>
+                            <li>100% author rights retention to share with readers, media, friends, and family</li>
+                            <li>Review of your video for TV and film consideration by 5 More Minutes</li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219', fontSize: '0.92rem' }}>
+                            Revisions Policy:
+                          </h6>
+                          <p className="mb-2" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.65' }}>
+                            You will be able to make one round of revisions to your video at no additional cost. Acceptable changes include:
+                          </p>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <li>Simple text changes and font size adjustments</li>
+                            <li>Corrections or additions to book and author information</li>
+                            <li>Audio level balances and soundtrack adjustments</li>
+                            <li>Author-provided image adjustments</li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219', fontSize: '0.94rem' }}>
+                            Hollywood TV & Film Consideration (5 More Minutes):
+                          </h6>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.65' }}>
+                            Once your video is completed, it will be evaluated for television or feature film adaptation by 5 More Minutes, headed by veteran Hollywood executive John Sacchi (former Senior VP at Lionsgate Films). If not selected for immediate production, it is archived into our exclusive Hollywood Database for registered industry producers and directors.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'premium-book-video' ? (
+                    /* Premium Book Video (NO PRICE, NO CHECKLIST) */
+                    <div className="premium-book-video-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Give your fans a sensational preview of your book with the Premium Book Video. Complete with professional voiceover, your custom video will enhance your book marketing efforts and make your work stand out.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          A Premium Book Video provides a cinematic experience that captivates prospective readers. Combining expert narration, sophisticated visual effects, and live-action cinematography, your trailer becomes a cornerstone of your digital marketing.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Premium Video Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>Creation of an expanded cinematic video book trailer, approximately 60 to 90 seconds in length</li>
+                            <li>Audible storytelling through voiceover narration by a professional voice actor</li>
+                            <li>Complex visual design, including 3-D spatial effects, lighting effects, visual filters, and advanced motion graphics</li>
+                            <li>Two live-action video clips integrated seamlessly into the trailer</li>
+                            <li>Distribution of your video to YouTube to maximize global exposure</li>
+                            <li>Web streaming capability with complete author ownership and master file delivery</li>
+                            <li>Review of your video for TV and feature film consideration by 5 More Minutes</li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219', fontSize: '0.92rem' }}>
+                            Revisions Policy:
+                          </h6>
+                          <p className="mb-2" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.65' }}>
+                            One round of complimentary revisions is included to ensure complete satisfaction. Acceptable adjustments include:
+                          </p>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <li>Text corrections and typography refinements</li>
+                            <li>Updates to book specifications, awards, and author credentials</li>
+                            <li>Soundtrack and narration audio mixing adjustments</li>
+                            <li>Image updates and asset replacements</li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219', fontSize: '0.94rem' }}>
+                            Hollywood TV & Film Consideration:
+                          </h6>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.65' }}>
+                            Your finished trailer is submitted directly to Hollywood production company 5 More Minutes for development consideration, and indexed in our Hollywood Database accessible by entertainment industry decision-makers.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'bookblast-video-marketing-standard' ? (
+                    /* Bookblast Video Marketing - Standard (NO PRICE, NO CHECKLIST) */
+                    <div className="bookblast-video-marketing-standard-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          The appeal of a book video is undeniable. Make sure your book catches the attention of an engaged audience of online video viewers with the creation of your book video and your YouTube advertising campaign.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          YouTube has over a billion active video viewers watching hundreds of millions of hours of content daily. Bookblast Video Marketing - Standard pairs trailer production with strategic promotion, driving viewers straight to your purchase channels.
+                        </p>
+
+                        <div className="p-3.5 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            What You Get:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>One complete Standard Book Video marketing production</li>
+                            <li>A dedicated 30-second campaign version of the Standard Book Video optimized for YouTube advertising</li>
+                            <li>A 30-day ad placement campaign on YouTube that gives viewers a compelling preview of your book</li>
+                            <li>Direct click-through link redirecting viewers to your book’s online bookstore page or personal website</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'bookblast-video-marketing-premium' ? (
+                    /* Bookblast Video Marketing - Premium (NO PRICE, NO CHECKLIST) */
+                    <div className="bookblast-video-marketing-premium-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Strengthen your book’s presence in the marketplace and boost its selling potential by showcasing it on YouTube with a professional voice-narrated video advertising campaign.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Capture reader curiosity by combining high-end cinematic narration with targeted online advertising. Your campaign reaches audiences with keen interest in your book's genre, turning viewers into active buyers.
+                        </p>
+
+                        <div className="p-3.5 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            What You Get:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>One complete Premium Book Video marketing production featuring professional voiceover acting and live-action clips</li>
+                            <li>A specialized 30-second version of your Premium Book Video formatted specifically for YouTube pre-roll and mid-roll placement</li>
+                            <li>A 30-day targeted ad placement campaign on YouTube introducing your book to prospective readers</li>
+                            <li>Seamless interactive click redirection directly to your book’s retail ordering page or author website</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === '15-sec-video-marketing' ? (
+                    /* 15-sec Video Marketing (NO PRICE, NO CHECKLIST) */
+                    <div className="fifteen-sec-video-marketing-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Advertise your book on a widely-used platform. Get it in front of a huge and engaged audience with uninterrupted short ads on YouTube.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          With over two billion monthly visitors, YouTube is an unrivaled venue for digital marketing. Short-form video advertising delivers immediate impact, ensuring your book's message is delivered completely before viewers skip.
+                        </p>
+
+                        <div className="p-3.5 mb-3 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            15-Sec Video Marketing Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>A 15-second custom-made video ad of your book with professional voiceover narration</li>
+                            <li>Your video ad shown 350,000 times on YouTube</li>
+                            <li>Uninterrupted delivery: Your entire ad plays at the start, midway, or toward the end before the main video continues</li>
+                            <li>Custom companion banner of your book linking directly to your ordering page, displayed alongside your video ad on desktop</li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.65' }}>
+                            <strong style={{ color: '#2b2219' }}>Guaranteed Visibility:</strong> Non-skippable short-form placement ensures 100% of your message reaches readers every time.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'video-book-talk' ? (
+                    /* Video Book Talk / Video Marketing (NO PRICE, NO CHECKLIST) */
+                    <div className="video-book-talk-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Benefit from the rise of online streaming services with a video interview about your book and writing process, streamed on Roku, Amazon Fire TV, and top podcast networks.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Your book shouldn't be confined to a box, whether that's your bookshelf, a storage container, or the four walls of traditional media. Ride the streaming wave with Roku's 70M+ users, Amazon Fire TV's 50M+ users, and YouTube's 1B+ audience to connect with readers in a fresh, conversational format.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Video Book Talk Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Video Interview on the <em>Talking Books</em> Show:</strong> A pre-recorded 15-20 minute in-depth interview with British author and host JT Crowley. Streamed across top platforms including Roku, Amazon Fire TV, YouTube, ExpertsandAuthors.tv, and WebTalkRadio.net.
+                            </li>
+                            <li>
+                              <strong>Audio Podcast Distribution:</strong> An audio-only podcast version available on Apple Podcasts, Spotify, iHeartRadio, and major aggregators worldwide.
+                            </li>
+                            <li>
+                              <strong>Social Media Promotion:</strong> Dedicated social media spotlight featuring your interview across active community channels.
+                            </li>
+                            <li>
+                              <strong>Promotional Asset Delivery:</strong> A shareable link and video asset to embed on your website and use throughout your promotional campaigns.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3.5 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219', fontSize: '0.92rem' }}>
+                            About Host JT Crowley:
+                          </h6>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.65' }}>
+                            JT Crowley is a British author whose global adventures and storytelling passion shape every interview. Join him on <em>Talking Books</em> as he dives deep with authors into the inspiration and craft behind their stories.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   ) : isCurrentSubcategoryOverview ? (
                     /* Subcategory Overview matching user's screenshots (Image 1 - Image 5) */
                     <div className="subcategory-overview-content">
@@ -3101,6 +3397,23 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         <p className="text-muted mb-4" style={{ fontSize: '0.92rem' }}>
                           Select any service below to explore complete inclusions, pricing, and dedicated publishing assistance.
                         </p>
+
+                        {currentSubcategory?.id === 'video-book-trailer' && (
+                          <div className="video-trailer-reasons-box p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                            <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                              Reasons Why Video Book Trailers are Essential:
+                            </h6>
+                            <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.75' }}>
+                              <li>A book video trailer combines visuals, text, music, and voiceovers, making it appealing to people who prefer video content over traditional text-based marketing.</li>
+                              <li>Videos rank well on search engines and social media platforms, increasing the discoverability of your book.</li>
+                              <li>Platforms like YouTube, Facebook, Instagram, and TikTok favor video content, leading to higher shares, likes, and comments.</li>
+                              <li>The combination of visuals and sound evokes emotions, making your story more compelling and enticing to potential readers.</li>
+                              <li>A well-made trailer can be featured in online ads, author websites, newsletters, and book launch events to sustain interest.</li>
+                              <li>Short, cinematic previews draw in audiences who may not usually read long text book summaries.</li>
+                              <li>A high-quality book trailer establishes credibility and professionalism, attracting literary agents, publishers, and media attention.</li>
+                            </ul>
+                          </div>
+                        )}
 
                         {/* List of services in this subcategory */}
                         <div className="d-flex flex-column gap-3 mb-4">
