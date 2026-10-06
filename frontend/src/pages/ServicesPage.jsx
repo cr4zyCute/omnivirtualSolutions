@@ -439,6 +439,8 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'b-w-image-insertion': 'If you want to include graphics in your book, please follow our guidelines.',
   'interior-revisions-block-of-25': 'Omni gives you one opportunity to examine your book proofs and make up to 50 corrections for free. If you wish to make further proofreading corrections after the initial free 50, there is a charge for every group of 25 changes.',
   'stock-image-processing': 'If you wish to include more than two images on your cover, a Stock Image Processing fee will be assessed. This fee will also be placed on any images found through Getty Images you wish to use in the interior of your book.',
+  'retech': 'If there are a significant number of author errors in the first galley, then you can supply us with a revised manuscript that we can reformat into a new galley through this service.',
+  'title-change-after-setup': 'Changing the title of your book impacts many elements within the book. This service deals with handling those elements across production, catalog registration, and distribution.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -519,7 +521,9 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'custom-headers' ||
       slug === 'b-w-image-insertion' ||
       slug === 'interior-revisions-block-of-25' ||
-      slug === 'stock-image-processing'
+      slug === 'stock-image-processing' ||
+      slug === 'retech' ||
+      slug === 'title-change-after-setup'
     );
   }, [selectedService]);
 
@@ -2569,6 +2573,64 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                           </p>
                           <p className="fst-italic mb-0" style={{ color: '#78716c', fontSize: '0.86rem', lineHeight: '1.6' }}>
                             Disclaimer: Prices listed do not include applicable taxes, which will be added at the time of purchase. Shipping and handling will be calculated and charged after your book is made available for sale.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'retech' ? (
+                    /* Retech (NO PRICE, NO CHECKLIST) */
+                    <div className="retech-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please speak with your publishing services associate for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Once you have received your first interior proof from your design team, it is possible that the number of errors (usually more than 100 corrections) is such that it's in your best interest to supply us with a revised manuscript to reformat into a new interior proof for you to review. If the retech service is done at your request, there is an initial charge for the retech service and any applicable special formatting fees will need to be paid again (indexing, tables, etc.). Please contact your Publishing Services Associate for a complete quote.
+                        </p>
+
+                        <p className="mb-4">
+                          In addition to providing a new manuscript, you will also have another opportunity to re-select your book’s trim size and provide revised formatting suggestions to your Publishing Services Associate. This includes changes of typeface, type size, image treatments, and the overall style in which your book was formatted. It is important that you express these types of formatting requests to your Publishing Services Associate, or supply an interior proof form, along with your newly revised manuscript. If we do not receive revised formatting requests, then the design team will utilize the same styling as the first proof you received from us.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219' }}>
+                            Resubmission Discount:
+                          </h6>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            Please Note: If you are resubmitting to do a retech then the price of the retech is reduced when purchased with the resubmission.
+                          </p>
+                        </div>
+
+                        <div className="p-3.5 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-1" style={{ color: '#2b2219' }}>
+                            More About | Retech
+                          </h6>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            If additional revisions are needed, this is the perfect opportunity to make your book shine.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'title-change-after-setup' ? (
+                    /* Title Change After Setup (NO PRICE, NO CHECKLIST) */
+                    <div className="title-change-after-setup-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Please speak with your publishing services associate for more information.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          If an author wants to make changes to the title it impacts many elements within the book and through the registration and marketing of the book.
+                        </p>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.68' }}>
+                            Changing the title of your book impacts the cover design, interior layout, ISBN assignment, copyright records, and metadata across worldwide retail channels. Contact your Publishing Services Associate to coordinate a seamless title update.
                           </p>
                         </div>
                       </div>

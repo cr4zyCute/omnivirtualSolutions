@@ -608,42 +608,18 @@
         "title": "Post-Page Layout Services",
         "services": [
           {
-            "slug": "production",
-            "title": "Production Services",
-            "price": "",
-            "lead": "Preparing your manuscript for submission and publishing is seamless when we do it for you. Omni handles everything from raw document conversion to post-layout revisions and catalog resubmissions.",
-            "features": [
-              "Typewritten and handwritten manuscript data entry and transcription",
-              "High-resolution image scanning, extraction, and digital graphic conversions",
-              "Basic and extensive manuscript formatting corrections",
-              "Post-layout text and image revisions during proofing stages",
-              "Global title resubmission for live published books across retail channels",
-              "Dedicated production specialists managing your book setup"
-            ]
-          },
-          {
             "slug": "retech",
             "title": "Retech",
             "price": "",
-            "lead": "Please speak with your publishing services associate for more information.",
-            "features": [
-              "Once you have received your first interior proof from your design team, it is",
-              "In addition to providing a new manuscript, you will also have another",
-              "Please Note",
-              "More About | Retech"
-            ]
+            "lead": "If there are a significant number of author errors in the first galley, then you can supply us with a revised manuscript that we can reformat into a new galley through this service.",
+            "features": []
           },
           {
             "slug": "title-change-after-setup",
             "title": "Title Change After Setup",
             "price": "",
-            "lead": "Please speak with your publishing services associate for more information.",
-            "features": [
-              "Professional Title Change After Setup tailored to your publishing goals",
-              "Dedicated specialist consultation and project management",
-              "Full compliance with industry publishing standards",
-              "100% author rights and royalty retention"
-            ]
+            "lead": "Changing the title of your book impacts many elements within the book. This service deals with handling those elements across production, catalog registration, and distribution.",
+            "features": []
           }
         ]
       },
