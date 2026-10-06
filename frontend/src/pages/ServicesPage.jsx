@@ -471,6 +471,20 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'hollywood-coverage': 'Independent studio reader coverage with synopsis and screen adaptation analysis, reviewed by 5 More Minutes and archived in the Hollywood Database.',
   'hollywood-treatment': 'A 5-to-10 page professional adaptation blueprint crafted by an industry screenwriter, considered for production by 5 More Minutes.',
   'hollywood-screenplay': 'A full-length adapted screenplay complete with character dialogue and scene action, reviewed by Lionsgate veteran John Sacchi at 5 More Minutes.',
+  'sem-1000-clicks': 'Guaranteed 1,000 visitors to your website via strategic Google search ad placement with up to 20 tracked keywords and analytics reporting.',
+  'social-media-30-day-content-plan': 'Turnkey 30-day social media launch schedule including daily graphics, engaging post captions, snippets, hashtags, and engagement methods.',
+  'social-media-30-day-strategy': 'Step-by-step weekly social plan with daily theme ideas, curated hashtags, and community engagement tactics for an impactful book launch.',
+  'kirkus-title-express': 'Two-week Kirkus online giveaway with 100 digital BookStub™ download codes, homepage side box ad, and Critic’s Picks newsletter inclusion.',
+  'online-booksellers-advertising': 'Dual-platform banner ad campaigns delivering 500,000 guaranteed impressions on Amazon and targeted visibility to 50,000 retailers on Ingram ipage.',
+  'e-book-promo-venture-30-days': 'Limited-time 99¢ Kindle markdown promoted for 30 days across BookBub’s daily email blasts and targeted Facebook genre banner ads.',
+  'e-book-promo-launcher': 'Triple-channel bargain campaign pairing a limited-time 99¢ Kindle markdown with 30 days of ads across BookBub, Facebook, and Amazon.com.',
+  'social-media-advertising-basic': 'Targeted Facebook and Instagram newsfeed image ad campaign delivering at least 1 million guaranteed impressions to prospective readers.',
+  'social-media-advertising-essential': 'Expanded campaign featuring image and video ads displayed at least 2 million times across Facebook and Instagram feeds.',
+  'social-media-advertising-advanced': 'Multi-format campaign with image, video, and interactive mobile ads displayed at least 4 million times across Facebook, Instagram, and Audience Network.',
+  'display-advertising-on-google-30-days-package': '30-day display ad placement across Google’s 2-million partner site network including YouTube, Blogger, Gmail, and Google Finance.',
+  'sem-advanced-campaign': 'Three-month Google search campaign with first-page ad placement, up to 30 tracked keywords, monthly reporting, and a deluxe author website.',
+  'sem-specialist-campaign': 'Five-month premier Google search marketing featuring first-page ad placement, up to 50 keywords, bi-weekly reporting, and a website with an author blog.',
+  'author-website-setup': 'Custom responsive author website with up to 10 tailored pages, professional HTML design, and 1 full year of free domain registration and web hosting.',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -583,7 +597,21 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
       slug === 'join-the-la-times-festival-of-books-2025' ||
       slug === 'hollywood-coverage' ||
       slug === 'hollywood-treatment' ||
-      slug === 'hollywood-screenplay'
+      slug === 'hollywood-screenplay' ||
+      slug === 'sem-1000-clicks' ||
+      slug === 'social-media-30-day-content-plan' ||
+      slug === 'social-media-30-day-strategy' ||
+      slug === 'kirkus-title-express' ||
+      slug === 'online-booksellers-advertising' ||
+      slug === 'e-book-promo-venture-30-days' ||
+      slug === 'e-book-promo-launcher' ||
+      slug === 'social-media-advertising-basic' ||
+      slug === 'social-media-advertising-essential' ||
+      slug === 'social-media-advertising-advanced' ||
+      slug === 'display-advertising-on-google-30-days-package' ||
+      slug === 'sem-advanced-campaign' ||
+      slug === 'sem-specialist-campaign' ||
+      slug === 'author-website-setup'
     );
   }, [selectedService]);
 
@@ -3867,6 +3895,543 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         </div>
                       </div>
                     </div>
+                  ) : selectedService?.slug === 'sem-1000-clicks' ? (
+                    /* SEM - 1000 clicks (NO PRICE, NO CHECKLIST) */
+                    <div className="sem-1000-clicks-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          The digital age gives you the power of immediate connection. Attract potential readers and drive guaranteed visitors directly to your website with Google Search Engine Marketing.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          With our SEM service, you can attract potential readers and drive high-intent traffic to your website with the help of the world's leading search engine. Your ad will be strategically placed on Google search result pages when readers query words and phrases related to your book's themes and genre.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Campaign Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>1,000 Guaranteed Clicks:</strong> High-intent web users delivered directly to the author landing page or retail website of your choice.
+                            </li>
+                            <li>
+                              <strong>Up to 20 Tailored Keywords:</strong> Selection of up to 20 strategic search keywords and phrases aligned with your book’s genre and audience.
+                            </li>
+                            <li>
+                              <strong>Comprehensive Analytics Reporting:</strong> Detailed post-campaign reporting showing individual keyword performance, click-through metrics, and traffic volume to inform future marketing.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'social-media-30-day-content-plan' ? (
+                    /* Social Media 30-day Content Plan (NO PRICE, NO CHECKLIST) */
+                    <div className="social-content-plan-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Ready to ignite a dynamic conversation about your book's release? Our 30-Day Social Media Content Schedule provides turnkey collateral for each day leading up to your big launch.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Building a social media identity that encapsulates your book demands both time and expertise. This service delivers ready-made visual assets, compelling captions, and strategic roadmaps so you can focus entirely on your writing.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Content Schedule Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Weekly Goals:</strong> Scheduled milestones that dovetail with your promotional timeline to generate escalating curiosity.
+                            </li>
+                            <li>
+                              <strong>Daily Visuals & Graphics:</strong> Professionally designed custom graphics for all 30 days capturing your book’s unique branding.
+                            </li>
+                            <li>
+                              <strong>Engaging Captions:</strong> Compelling post copy with intuitive calls-to-action crafted to spark comments, shares, and reader connections.
+                            </li>
+                            <li>
+                              <strong>Book Snippets & Teasers:</strong> Highlight the most enticing passages of your story paired with striking visual cards.
+                            </li>
+                            <li>
+                              <strong>Hashtag Selection & Caption Guidance:</strong> Curated hashtag recommendations and personalization advice to expand discoverability.
+                            </li>
+                            <li>
+                              <strong>Engagement Strategies:</strong> Proven conversational prompts and community-building techniques.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Note: This service delivers complete creative collateral and scheduling; it does not cover manual account posting or daily management.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'social-media-30-day-strategy' ? (
+                    /* Social Media 30-day Strategy (NO PRICE, NO CHECKLIST) */
+                    <div className="social-strategy-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Maximize the impact and visibility of your book with our 30-Day Social Media Strategy—a step-by-step weekly plan rich with creative content suggestions and hashtags.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Ideal for authors launching a debut novel, revitalizing a backlist title, or preparing a sequel. We equip you with a magnetic content roadmap reflecting the latest social media trends.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Strategic Framework Elements:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Targeted Weekly Goals:</strong> Structured roadmap setting early anticipation and accelerating reader interest toward launch day.
+                            </li>
+                            <li>
+                              <strong>Daily Content Ideas:</strong> Individually crafted concepts showcasing story themes, character backstories, and behind-the-scenes insights.
+                            </li>
+                            <li>
+                              <strong>Bespoke Hashtag Guidance:</strong> Genre-specific hashtag recommendations to reach enthusiastic reader demographics across platforms.
+                            </li>
+                            <li>
+                              <strong>Audience Engagement Techniques:</strong> Practical techniques to cultivate conversations and convert casual followers into loyal readers.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Note: This strategy provides planning, calendars, and textual prompts; graphical design and individual post uploads are not included.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'kirkus-title-express' ? (
+                    /* Kirkus Title Express (NO PRICE, NO CHECKLIST) */
+                    <div className="kirkus-title-express-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Collaborating with a revered literary authority like Kirkus Reviews provides instant credibility and global reach for your online giveaway campaign.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Founded in 1933, Kirkus Reviews garners 2.6 million monthly website impressions and 65,000 email subscribers. Kirkus Title Express embeds your book into an official Kirkus online giveaway with full promotional support.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Service Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Two-Week Online Giveaway:</strong> Prominent listing inside Kirkus’s curated Online Giveaways section.
+                            </li>
+                            <li>
+                              <strong>100 Digital BookStub™ Codes:</strong> Secure download codes allowing 100 readers to claim a complimentary digital copy of your e-book.
+                            </li>
+                            <li>
+                              <strong>Homepage & Newsletter Ad:</strong> Standard side box advertisement on the Kirkus.com homepage and featured in one issue of Kirkus's <em>Critic’s Picks</em> email newsletter.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'online-booksellers-advertising' ? (
+                    /* Online Booksellers Advertising (NO PRICE, NO CHECKLIST) */
+                    <div className="online-booksellers-advertising-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Put your book in front of consumer readers on Amazon and professional trade buyers on Ingram's ipage platform.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Cover the most critical book-marketing ground by advertising across both consumer and trade retail hubs. Amazon reaches 181 million monthly unique visitors, while Ingram's ipage is accessed daily by over 50,000 retailers, librarians, and educators.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Dual-Channel Advertising Elements:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Banner Ad Campaign on Amazon:</strong> Showcase your book cover in a targeted banner ad delivering 500,000 guaranteed impressions across Amazon.
+                            </li>
+                            <li>
+                              <strong>Banner Ad Campaign on Ingram’s ipage:</strong> Featured cover placement on a specialized title landing page with a two-week accompanying banner ad on ipage, directly reaching retail booksellers and institutional acquisitions staff.
+                            </li>
+                          </ul>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Requirements: Best suited for books available in both paperback and ebook formats; title must be listed as returnable in the Ingram distribution catalog.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'e-book-promo-venture-30-days' ? (
+                    /* E-book Promo Venture - 30 days (NO PRICE, NO CHECKLIST) */
+                    <div className="ebook-promo-venture-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Tap into the excitement of bargain book sales. Mark down your Kindle edition for a limited promotional window and amplify discoverability with BookBub and Facebook.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Discount promotions trigger massive downloading velocity and improve sales ranking. We coordinate the price adjustment and deliver 30 days of continuous exposure to enthusiastic readers.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Venture Package Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Kindle Promotional Price Markdown:</strong> Coordinated limited-time discount on Amazon to drive rapid reader adoption.
+                            </li>
+                            <li>
+                              <strong>BookBub Daily Email Campaign (30 Days):</strong> Placement of your book ad in BookBub’s daily recommendation blasts reaching millions of subscriber inboxes.
+                            </li>
+                            <li>
+                              <strong>Facebook Genre Ad Campaign (30 Days):</strong> Your ebook ad featured alongside genre titles on Facebook for 30 consecutive days.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'e-book-promo-launcher' ? (
+                    /* E-book Promo Launcher (NO PRICE, NO CHECKLIST) */
+                    <div className="ebook-promo-launcher-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Triple-channel promotional power: combine a limited-time Kindle markdown with 30 days of continuous advertising across BookBub, Facebook, and Amazon.com.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          The Launcher package expands on our popular promo venture by putting your promotional bargain ad directly on the storefront of the world's largest online bookseller.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Launcher Package Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Kindle Promotional Markdown:</strong> Coordinated limited-time promotional pricing on Amazon.
+                            </li>
+                            <li>
+                              <strong>BookBub Daily Email Campaign (30 Days):</strong> Featured ad placement in BookBub's daily email blasts.
+                            </li>
+                            <li>
+                              <strong>Facebook Targeted Ad Campaign (30 Days):</strong> Genre-targeted ad rotation reaching active mobile and desktop readers.
+                            </li>
+                            <li>
+                              <strong>Amazon.com Direct Ad Placement (30 Days):</strong> Premium banner ad placement running natively on Amazon.com for 30 full days.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'social-media-advertising-basic' ? (
+                    /* Social Media Advertising Basic (NO PRICE, NO CHECKLIST) */
+                    <div className="social-ad-basic-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Put your book directly in front of targeted readers on Facebook and Instagram with at least 1 million guaranteed impressions.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Cut through online clutter with precise demographic and interest targeting across the world's most engaged social networks.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Basic Package Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Custom Target Audience:</strong> Tailored segmentation identifying potential readers interested in your genre, comparable authors, and subject matter.
+                            </li>
+                            <li>
+                              <strong>At Least 1 Million Impressions:</strong> Image ad displayed over 1,000,000 times in newsfeeds across Facebook and Instagram mobile.
+                            </li>
+                            <li>
+                              <strong>Campaign Monitoring & Optimization:</strong> Ongoing monitoring and campaign management by Omni digital marketing specialists.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'social-media-advertising-essential' ? (
+                    /* Social Media Advertising Essential (NO PRICE, NO CHECKLIST) */
+                    <div className="social-ad-essential-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Double your reach with multimedia storytelling: image and short video ads displayed at least 2 million times across Facebook and Instagram.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Video content evokes emotion and drives significantly higher engagement rates. The Essential package combines high-converting image creatives with dynamic video ads.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Essential Package Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Custom Targeted Audience:</strong> Granular audience curation tailored to match readers seeking new books in your genre.
+                            </li>
+                            <li>
+                              <strong>Dual Creative Formats:</strong> Both a custom image ad and a dynamic short video ad created for your book.
+                            </li>
+                            <li>
+                              <strong>At Least 2 Million Impressions:</strong> Minimum 2,000,000 verified impressions across Facebook and Instagram feeds.
+                            </li>
+                            <li>
+                              <strong>End-to-End Ad Campaign Management:</strong> Complete budget optimization, delivery tracking, and campaign oversight.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'social-media-advertising-advanced' ? (
+                    /* Social Media Advertising Advanced (NO PRICE, NO CHECKLIST) */
+                    <div className="social-ad-advanced-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Our most robust social advertising campaign: image, video, and interactive mobile ads delivered at least 4 million times across Facebook, Instagram, and the Audience Network.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Expand beyond traditional newsfeeds into thousands of high-traffic mobile applications via Facebook’s Audience Network, surrounding your audience with engaging multi-format creatives.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Advanced Package Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Custom Reader Audience:</strong> Deep-level behavioral and interest targeting to reach passionate book buyers.
+                            </li>
+                            <li>
+                              <strong>Three High-Impact Ad Formats:</strong> Custom image ad, engaging short video ad, and interactive mobile canvas ad.
+                            </li>
+                            <li>
+                              <strong>At Least 4 Million Impressions:</strong> Massive distribution across Facebook, Instagram, and Facebook Audience Network apps.
+                            </li>
+                            <li>
+                              <strong>Dedicated Management & Monitoring:</strong> Professional ad management from setup to campaign completion.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'display-advertising-on-google-30-days-package' ? (
+                    /* Display Advertising on Google - 30 days Package (NO PRICE, NO CHECKLIST) */
+                    <div className="google-display-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Consumers spend 95% of their online time exploring websites and content that interest them. Put your book on the Google Display Network across up to 2 million partner sites.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Your book ad is showcased across high-authority websites including YouTube, Gmail, Blogger, and Google Finance, as well as literary blogs and news outlets.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Display Package Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>Choice of Ad Formats:</strong> Responsive image with text, text-only, or multi-format display creatives.
+                            </li>
+                            <li>
+                              <strong>30-Day Targeted Placement:</strong> Continuous ad presence across partner websites on the vast Google Display Network.
+                            </li>
+                            <li>
+                              <strong>Precision Demographic Targeting:</strong> Filter by geographic location, age, language, audience interests, reading topics, and relevant keywords.
+                            </li>
+                            <li>
+                              <strong>Bandwidth Coverage Included:</strong> Up to 10 GB of excess monthly bandwidth supported when using your Omni-designed author website as the destination landing page.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'sem-advanced-campaign' ? (
+                    /* SEM - Advanced Campaign (NO PRICE, NO CHECKLIST) */
+                    <div className="sem-advanced-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          With millions of Google searches made every minute, seize the opportunity to capture high-intent readers with 3 months of premium first-page search ad placement.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          When readers search for themes, topics, and genres related to your book, your ad appears prominently on the first page of Google search results—driving visitors directly to your custom author website.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Advanced Campaign Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>3 Months Online Ad Presence:</strong> Sustained quarterly campaign driving steady organic-quality visitors to your book.
+                            </li>
+                            <li>
+                              <strong>First-Page Google Search Placement:</strong> High-visibility top-of-page search ad positioning for relevant keyword queries.
+                            </li>
+                            <li>
+                              <strong>Up to 30 Managed Keywords:</strong> In-house search engine marketing experts curate, test, and manage up to 30 targeted keywords.
+                            </li>
+                            <li>
+                              <strong>Monthly Strategy & Reporting:</strong> In-depth monthly performance reports with agile keyword tuning based on live search trends.
+                            </li>
+                            <li>
+                              <strong>Deluxe Author Website Setup:</strong> A custom-designed author website to serve as your brand headquarters and high-converting landing destination.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'sem-specialist-campaign' ? (
+                    /* SEM - Specialist Campaign (NO PRICE, NO CHECKLIST) */
+                    <div className="sem-specialist-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Our premier Google search engine marketing campaign: 5 months of first-page placement, up to 50 tracked keywords, bi-weekly analytics, and a website with an integrated author blog.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          The Specialist Campaign delivers maximum Google reach and proactive search dominance over a five-month span, paired with bi-weekly optimization meetings to keep you at the helm of your digital growth.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Specialist Campaign Inclusions:
+                          </h6>
+                          <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.92rem', lineHeight: '1.75' }}>
+                            <li>
+                              <strong>5 Months Premier Ad Presence:</strong> Extended multi-month campaign establishing dominant visibility on Google.
+                            </li>
+                            <li>
+                              <strong>First-Page Placement Throughout:</strong> Your book ads consistently show on page 1 of Google search results for target queries.
+                            </li>
+                            <li>
+                              <strong>Up to 50 Curated Keywords:</strong> Expanded keyword spectrum researched and optimized by senior search specialists.
+                            </li>
+                            <li>
+                              <strong>Bi-Weekly Reporting & Proactive Refinement:</strong> Frequent progress reviews and rapid campaign tuning every two weeks.
+                            </li>
+                            <li>
+                              <strong>Premier Website Design with Blog:</strong> Full author website setup including a dedicated blogging system to regularly update readers on your writing, events, and releases.
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  ) : selectedService?.slug === 'author-website-setup' ? (
+                    /* Author Website Setup (NO PRICE, NO CHECKLIST) */
+                    <div className="author-website-setup-detail-content">
+                      <div className="editorial-callout-notice p-3 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                        <p className="fst-italic mb-0 fw-medium" style={{ color: '#57534e', fontSize: '0.92rem' }}>
+                          Reach out to a worldwide audience with Omni's Author Website Setup service—your 24/7 digital storefront, resume, portfolio, and brand hub.
+                        </p>
+                      </div>
+
+                      <div className="editorial-narrative mb-4" style={{ color: '#44403c', fontSize: '0.98rem', lineHeight: '1.75' }}>
+                        <p className="mb-3">
+                          Having a personal website means readers, bookstores, and media can learn about you anytime, anywhere. We handle creative design, content layout, and technical setup from start to finish.
+                        </p>
+
+                        <div className="p-3.5 mb-4 rounded-3" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                            Website Packages & Structure:
+                          </h6>
+                          <div className="row g-3 mb-3">
+                            <div className="col-md-4">
+                              <div className="p-2.5 rounded-2 h-100" style={{ background: '#ffffff', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.92rem' }}>3-Page Setup</strong>
+                                <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  <li>Up to 3 custom pages</li>
+                                  <li>2 featured book images</li>
+                                  <li>1 dedicated email account</li>
+                                  <li>Contact form integration</li>
+                                </ul>
+                              </div>
+                            </div>
+                            <div className="col-md-4">
+                              <div className="p-2.5 rounded-2 h-100" style={{ background: '#ffffff', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.92rem' }}>6-Page Setup</strong>
+                                <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  <li>Up to 6 custom pages</li>
+                                  <li>10 featured book images</li>
+                                  <li>2 rotating header banners</li>
+                                  <li>2 dedicated email accounts</li>
+                                </ul>
+                              </div>
+                            </div>
+                            <div className="col-md-4">
+                              <div className="p-2.5 rounded-2 h-100" style={{ background: '#ffffff', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.92rem' }}>10-Page Setup</strong>
+                                <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  <li>Up to 10 custom pages</li>
+                                  <li>Up to 60 MB asset storage</li>
+                                  <li>4 rotating header banners</li>
+                                  <li>3 dedicated email accounts</li>
+                                  <li>Animated book excerpt area</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+
+                          <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.94rem' }}>
+                            Flexible Page Choices Available:
+                          </h6>
+                          <p className="mb-2" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.6' }}>
+                            Home, About the Book, About the Author, Order / Retailer Links, Excerpt, Contact Page, Reviews & Media, Events, and Photo Gallery.
+                          </p>
+                        </div>
+
+                        <div className="p-3 mb-0 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                          <p className="mb-0" style={{ color: '#57534e', fontSize: '0.88rem', lineHeight: '1.65' }}>
+                            <em>*Free Domain & Hosting: Custom domain name registration and high-speed web hosting are included completely free for an entire year.</em>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   ) : isCurrentSubcategoryOverview ? (
                     /* Subcategory Overview matching user's screenshots (Image 1 - Image 5) */
                     <div className="subcategory-overview-content">
@@ -4019,6 +4584,49 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                 <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>5. Enhances Author Credibility & Brand Prestige</strong>
                                 <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
                                   Being associated with Hollywood development talks elevates your reputation and opens substantial opportunities with literary agents and publishers.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {currentSubcategory?.id === 'internet-marketing' && (
+                          <div className="internet-marketing-advantages-box p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
+                            <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
+                              Advantages of Internet Marketing for Authors:
+                            </h6>
+                            <p className="mb-3" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                              Having your own website, internet search, or preview tools are effective and economical ways to promote your book, enhance your image as an author, and communicate with prospective readers around the world.
+                            </p>
+                            <div className="d-flex flex-column gap-2.5">
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>1. Global Reach & Increased Visibility</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  The internet provides direct access to billions of potential readers worldwide. <em>As of 2024, there are 5.35 billion internet users globally, creating a massive prospective readership (DataReportal, 2024).</em>
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>2. Cost-Effective Promotion Compared to Traditional Marketing</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Digital marketing delivers higher ROI than print ads or live tours. <em>Digital marketing costs 62% less than traditional marketing while generating three times more leads (HubSpot, 2023).</em>
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Higher Engagement & Reader Interaction</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Online channels foster genuine connections through comments, reviews, and interactive content. <em>72% of consumers prefer engaging with brands through digital channels (Salesforce, 2023).</em>
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>4. Boosts Book Sales via E-Commerce & Online Ads</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  Internet marketing drives immediate digital book sales. <em>Amazon accounts for 83% of the U.S. eBook market, making targeted online advertising essential (Author Earnings Report, 2023).</em>
+                                </p>
+                              </div>
+                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>5. Strengthens Brand & Author Credibility</strong>
+                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  An active digital footprint (author website, blog, search footprint) builds lasting trust. <em>81% of consumers research a brand online before making a purchase (Edelman Trust Barometer, 2024).</em>
                                 </p>
                               </div>
                             </div>
