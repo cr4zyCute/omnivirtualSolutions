@@ -462,7 +462,7 @@ export default function ServicesPage() {
     } else {
       window.scrollTo(0, 0);
     }
-  }, [selectedService?.slug]);
+  }, []);
 
   // Dynamic header, labels, and CTA bound directly to CMS t()
   const headerTitle = t('services.header.title', 'Omni Services Catalog');
@@ -570,7 +570,7 @@ const SUBCATEGORY_LEADS = {
   'book-signings-and-galleries': "A book exhibition or book signing event can be a terrific way to create buzz around your book. As an exhibitor at many of the largest trade shows and book events, we've put our books in the hands of booklovers and industry insiders through Omni book exhibition services.",
   'hollywood-book-to-screen': 'Have you ever considered for even a moment that your book could be adapted into a movie or television series? If the answer is yes, then Omni can make your book available to agents, producers, directors, writers, and actors through multiple services available to our authors.',
   'internet-marketing': 'Having your own website, internet search, or preview tools are effective and economical ways to promote your book, enhance your image as an author, and communicate with prospective readers around the world.',
-  'publicity-services': 'Get your book noticed from a unique platform created by our publicity and media services. When done right, a press release is an effective way to get publicity and build media relationships.',
+  'publicity-services': 'Get your book noticed from a unique platform created by our publicity and media services.',
   'radio-services': 'Have you ever considered how a radio interview might affect your book’s marketing plan? If the answer is yes, then Omni can make your voice available on the airwaves to help you reach new audiences and further your cause.',
   'bookstore-essentials': 'Through Omni Bookstore Essentials, your book receives professional bookselling services that make your book even more attractive to bookstores. By making your book returnable or adding preview services to your book, bookstores and other book buyers receive additional incentives to stock or purchase your book.',
   'registration': 'As you make your work available to the public, you want to make sure you have the appropriate protection. There are two ways we can help you with that. The first is registering your copyright with the U.S. Copyright Office. Second, a Library of Congress Control Number makes your book more accessible to librarians and book vendors.'
@@ -664,16 +664,16 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   'author-website-setup': 'Custom responsive author website with up to 10 tailored pages, professional HTML design, and 1 full year of free domain registration and web hosting.',
   'press-release-essential-edition': 'Expertly crafted one-page press release distributed to 500+ targeted media outlets with one month of media tracking via Meltwater.',
   'press-release-web-optimized-edition': 'SEO-optimized press release distributed to 30,000 opt-in journalists and 250,000 news subscribers via PRWeb with full tracking.',
-  'radio-book-talk': 'Multi-platform broadcast package featuring an 8–12 min interview with Emmy-winner Kate Delaney on America Tonight, plus interviews on Books on Air and Newsgram.',
-  'audio-snip': 'A 30-second professionally produced audio teaser commercial about your book, perfect for radio broadcast, podcast spots, and social media campaigns.',
-  'online-interview': 'A 10–15 min phone-recorded radio interview on Omni Radio with broadcast veteran J. Douglas Barker, syndicated via iTunes and Toginet.com.',
+  'radio-book-talk': 'Introduce your book to the literary world with Emmy Award-winning host, Kate Delaney. Plus, reach out to more interested readers through these two bookish podcasts—Books on Air and Newsgram.',
+  'audio-snip': 'The Audio Snip service serves as an audio trailer of your book to promote its presence and inform your audience where they can purchase it. With this service, you can take your story to the airwaves and talk about it yourself.',
+  'online-interview': 'Position yourself as an expert on your book’s subject matter and put your voice on the radio. Whatever your reason, getting on the radio can give you a powerful marketing push. The Online Interview service is a strategic marketing tool to enhance your marketing plan.',
   'set-your-own-price': 'Flexibility to adjust the retail price of your hardcover and paperback formats to optimize royalty earnings or sales volume.',
-  'author-advantage-royalty-program': '3-year program maximizing print royalties (up to 60% on Omni Bookstore, 15% through channel retailers) plus deeply discounted author copies.',
-  'retail-focus': 'Direct pitch to 25 independent bookstores across the US over 3 months, print ads in Advance Catalog and ForeWord Magazine, with 12 months returnability.',
-  'retail-focus-for-childrens-books': 'Direct pitch to 25 children’s specialty bookstores, print ads in Children’s Advance Catalog and ForeWord Magazine, with 12 months returnability.',
-  'library-focus': 'Direct pitch to Collection Development & Acquisition Librarians of 25 public libraries, print ads in Forecast Catalog and ForeWord Magazine, with returnability.',
-  'booksellers-return-program': 'Designates your book as "Returnable" in Ingram ipage and Baker & Taylor systems for 12 months with no royalty chargebacks on returned copies.',
-  'booksellers-return-program-renewal': '1-year annual extension of active "Returnable" status across Ingram and Baker & Taylor systems, protecting retail stocking eligibility.',
+  'author-advantage-royalty-program': 'The Author Advantage Royalty Program empowers you to earn substantial financial gains with every print book sold. This Program runs for a 3-Year Term and ensures that you receive maximum profits from sales of your book, and that you can also order copies of your own book at heavily discounted rates.',
+  'retail-focus': 'Although self-published titles are getting more and more popular these days, self-published authors still have a difficult time getting brick-and-mortar shops to stock their books. If your dream is to see your work displayed on a bookstore shelf, you can get the help you need with our Retail Focus Service!',
+  'retail-focus-for-childrens-books': 'Children’s books have always been popular on the book market, and independent titles for children are steadily gaining popularity too. However, it can still be a challenge for self-published authors to get brick-and-mortar bookstores to stock up on their books. If you want your book pitched to bookstores, you can get the help you need with our Retail Focus for Children’s Book service!',
+  'library-focus': 'The Omni Library Focus Service helps you with your goal of making your book available in libraries through a strategic combination of print ads in two publications popular with librarians and a customized sales kit.',
+  'booksellers-return-program': 'Help your title meet bookseller standards for retail stocking with Booksellers Return Program. If your book remains unsold, retailers will be able to return it without a loss of profit for them.',
+  'booksellers-return-program-renewal': 'Renew your book’s participation in the Booksellers Return Program for one year. When you purchase this program renewal, your book will remain “returnable” in book distributor ordering systems, ensuring bookstores that they can return any unsold copies (if they choose to stock your book).',
 };
 
   // Active selected service display values: catalog data is source of truth, fallback to CMS t()
@@ -770,19 +770,36 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
     };
   }, [catalog]);
 
-  // Helper to scroll ONLY the content side to the top of its content card, leaving the category cabinet scroll untouched
+  // Helper to always scroll the presentation content area to the start (top) smoothly
   const scrollToContentTop = () => {
+    sessionStorage.removeItem('omni_reading_scroll_y');
     if (sidebarRef.current) {
       keepCabinetScrollRef.current = sidebarRef.current.scrollTop;
     }
-    const targetEl = detailCardRef.current || contentColRef.current;
-    if (targetEl) {
-      const navOffset = 95;
-      const targetY = targetEl.getBoundingClientRect().top + window.scrollY - navOffset;
-      window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-    } else {
-      window.scrollTo({ top: 120, behavior: 'smooth' });
-    }
+
+    const performScroll = () => {
+      const targetEl = detailCardRef.current || contentColRef.current;
+      if (targetEl) {
+        const headerEl = document.querySelector('#header');
+        const headerHeight = headerEl ? headerEl.offsetHeight : 68;
+        const navOffset = headerHeight + 16;
+        const targetY = targetEl.getBoundingClientRect().top + window.scrollY - navOffset;
+        window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 100, behavior: 'smooth' });
+      }
+
+      if (detailCardRef.current) {
+        detailCardRef.current.scrollTop = 0;
+      }
+      if (contentColRef.current) {
+        contentColRef.current.scrollTop = 0;
+      }
+    };
+
+    performScroll();
+    requestAnimationFrame(performScroll);
+    setTimeout(performScroll, 50);
   };
 
   // Select a subcategory overview
@@ -918,7 +935,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
   return (
     <div className="services-page-wrapper">
       <main className="main services-catalog-page">
-        <div className="container" style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 clamp(16px, 3vw, 24px)' }}>
+        <div className="container-fluid services-main-container">
           
           {/* Top Header Bar (Centered) */}
           <div className="services-top-bar text-center">
@@ -975,10 +992,10 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
           </div>
 
           {/* Main Grid: Desktop Sidebar + Right Detail Card */}
-          <div className="row g-4">
+          <div className="row g-4 services-main-layout-row">
             
             {/* Desktop Persistent Sidebar */}
-            <div className="col-lg-4 d-none d-lg-block">
+            <div className="col-lg-4 col-xl-4 col-xxl-3 d-none d-lg-block services-sidebar-col">
               <div className="desktop-services-sidebar" ref={sidebarRef}>
                 <div className="sidebar-brand-box d-flex align-items-center justify-content-between">
                   <span className="fw-bold">
@@ -1015,16 +1032,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                               if (sidebarRef.current) {
                                 keepCabinetScrollRef.current = sidebarRef.current.scrollTop;
                               }
-                              if (isExpanded) {
-                                // Close the category!
-                                setExpandedCategories((prev) => ({
-                                  ...prev,
-                                  [cat.id]: false,
-                                  [cat.tag]: false,
-                                }));
-                                return;
-                              }
-                              // Open category and select category overview
+                              // Open category if not open
                               setExpandedCategories((prev) => ({
                                 ...prev,
                                 [cat.id]: true,
@@ -1049,6 +1057,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                                 cat.subcategories[0],
                                 true
                               );
+                              scrollToContentTop();
                             }}
                           >
                             <span className="d-flex align-items-center gap-2">
@@ -1176,7 +1185,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
             </div>
 
             {/* Right Presentation Detail Column */}
-            <div className="col-lg-8" ref={contentColRef}>
+            <div className="col-lg-8 col-xl-8 col-xxl-9" ref={contentColRef}>
               {selectedService ? (
                 <div className="service-detail-card" ref={detailCardRef}>
                   {/* Breadcrumbs */}
@@ -1759,94 +1768,31 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                           </div>
                         )}
 
-                        {currentSubcategory?.id === 'publicity-services' && (
-                          <div className="publicity-services-advantages-box p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
-                            <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
-                              The Power of Publicity & Media Services:
-                            </h6>
-                            <p className="mb-3" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                              Get your book noticed from a unique platform created by our publicity and media services. A targeted press release bridges the gap between authors and newsrooms, creating third-party validation that readers and industry influencers trust.
-                            </p>
-                            <div className="d-flex flex-column gap-2.5">
-                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
-                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>1. Media Credibility & Third-Party Validation</strong>
-                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
-                                  Editorial and media coverage carries significantly higher trust than paid ads, elevating your author authority.
-                                </p>
-                              </div>
-                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
-                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>2. Targeted Newsroom & Journalist Distribution</strong>
-                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
-                                  Direct delivery to journalists, editors, TV/radio producers, and publications matched to your book's specific genre and themes.
-                                </p>
-                              </div>
-                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
-                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Permanent SEO Footprint & Discoverability</strong>
-                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
-                                  Web-optimized distribution generates permanent backlinks, Google News indexing, and higher search result rankings for your name and title.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
+
 
                         {currentSubcategory?.id === 'radio-services' && (
                           <div className="radio-services-advantages-box p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
-                            <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
-                              Advantages of Radio Services for Authors:
-                            </h6>
-                            <p className="mb-3" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                              Have you ever considered how a radio interview might affect your book’s marketing plan? Omni can make your voice available on the airwaves to reach new audiences and build lasting authority.
-                            </p>
                             <div className="d-flex flex-column gap-2.5">
                               <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
                                 <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>1. Expands Audience Reach</strong>
-                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
-                                  Radio stations, including local, national, and online platforms, expose your book to thousands or even millions of listeners across diverse demographics who may not actively browse bookstore shelves online.
-                                </p>
+                                <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  <li>Radio stations, including local, national, and online platforms, can expose your book to thousands or even millions of listeners.</li>
+                                  <li>Reaches diverse demographics, including those who may not actively search for books online.</li>
+                                </ul>
                               </div>
                               <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
-                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>2. Builds Credibility & Authority</strong>
-                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
-                                  Being featured on radio shows or podcasts establishes you as an expert in your genre. Conversational interviews allow authors to personally connect with listeners and earn their trust.
-                                </p>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>2. Builds Credibility &amp; Authority</strong>
+                                <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  <li>Being featured on radio shows or podcasts establishes you as an expert in your genre or subject.</li>
+                                  <li>Interviews and discussions allow authors to personally connect with potential readers.</li>
+                                </ul>
                               </div>
                               <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
-                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Cost-Effective, High-ROI Promotion</strong>
-                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
-                                  Compared to television or large print ad campaigns, radio marketing is exceptionally accessible and yields evergreen digital recordings for website embedding and ongoing social campaigns.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {currentSubcategory?.id === 'bookstore-essentials' && (
-                          <div className="bookstore-essentials-advantages-box p-3.5 mb-4 rounded-3" style={{ background: '#faf6f0', borderLeft: '4px solid #ad7d42' }}>
-                            <h6 className="fw-bold mb-2" style={{ color: '#2b2219', fontSize: '0.96rem' }}>
-                              Why Bookstore Essentials Matter:
-                            </h6>
-                            <p className="mb-3" style={{ color: '#57534e', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                              Through Omni Bookstore Essentials, your book receives professional bookselling services that make your title attractive to independent bookstores, national retail chains, and public libraries.
-                            </p>
-                            <div className="d-flex flex-column gap-2.5">
-                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
-                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>1. Overcomes the Primary Barrier to Bookstore Stocking</strong>
-                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
-                                  Physical retailers rarely stock non-returnable titles. The Booksellers Return Program eliminates inventory risk for bookstore buyers.
-                                </p>
-                              </div>
-                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
-                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>2. Direct Trade Pitches to Decision-Makers</strong>
-                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
-                                  Presents your book directly to independent booksellers and acquisition librarians with professional sales kits and trade catalog ads.
-                                </p>
-                              </div>
-                              <div className="p-2.5 rounded-2" style={{ background: '#fdfaf5', border: '1px solid #ebd9c4' }}>
-                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Maximum Profit Margins & Pricing Control</strong>
-                                <p className="mb-0" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
-                                  Empowers authors to set competitive retail prices and earn up to 60% royalties on sales through the Author Advantage Royalty Program.
-                                </p>
+                                <strong className="d-block mb-1" style={{ color: '#2b2219', fontSize: '0.88rem' }}>3. Cost-Effective Promotion</strong>
+                                <ul className="mb-0 ps-3" style={{ color: '#57534e', fontSize: '0.84rem', lineHeight: '1.55' }}>
+                                  <li>Compared to TV and print ads, radio marketing is often more affordable with a high return on investment.</li>
+                                  <li>Many radio stations offer package deals, including interviews, advertisements, and social media promotion.</li>
+                                </ul>
                               </div>
                             </div>
                           </div>
@@ -2875,14 +2821,6 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                     type="button"
                     className={`category-accordion-btn ${isExpanded ? 'expanded' : ''} ${isCatOverviewSelected ? 'active-category' : ''}`}
                     onClick={() => {
-                      if (isExpanded) {
-                        setExpandedCategories((prev) => ({
-                          ...prev,
-                          [cat.id]: false,
-                          [cat.tag]: false,
-                        }));
-                        return;
-                      }
                       setExpandedCategories((prev) => ({
                         ...prev,
                         [cat.id]: true,
@@ -2906,6 +2844,7 @@ const AUTHENTIC_SERVICE_SUMMARIES = {
                         handleSelectService({ ...targetSvc, title: targetSvc.title || t(`service.${targetSvc.slug}.title`, '') }, cat, cat.subcategories[0], true);
                         setDrawerOpen(false);
                       }
+                      scrollToContentTop();
                     }}
                   >
                     <span className="d-flex align-items-center gap-2">
