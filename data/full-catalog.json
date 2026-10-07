@@ -889,16 +889,11 @@
           {
             "slug": "data-entry-standard",
             "title": "Data Entry - Standard",
-            "price": "$1,599.00",
-            "lead": "$1,599.00 Begin your publishing journey with the package that lets you take the extra mile.",
-            "features": [
-              "Digital Formatting and Distribution (E-Book)",
-              "Paperback Publishing",
-              "Hardcover Publishing",
-              "Customization of Interior and Cover",
-              "Image Insertions Up to 25",
-              "Electronic Proofs of Your Book"
-            ]
+            "price": "",
+            "lead": "At Omni we can take your printed manuscript and convert it into a working digital file. Our professional staff can then work on your manuscript more efficiently. Because we are a print-on-demand publishing company, we must have a digital file available.",
+            "features": [],
+            "price_display": "",
+            "description": "At Omni we can take your printed manuscript and convert it into a working digital file. Our professional staff can then work on your manuscript more efficiently. Because we are a print-on-demand publishing company, we must have a digital file available."
           },
           {
             "slug": "data-entry-spanish",
@@ -1005,7 +1000,8 @@
               "Make changes to text in galley",
               "Make changes to cover text or design",
               "Change subtitle"
-            ]
+            ],
+            "description": "When a book has gone live and the author finds problems, errors, or other issues that need to be corrected, we can re-submit the file to the printer to update future copies."
           },
           {
             "slug": "resubmission-two-version",
@@ -1016,7 +1012,8 @@
               "Make changes to text in galley",
               "Make changes to cover text or design",
               "Change subtitle"
-            ]
+            ],
+            "description": "When a book has gone live and the author finds problems, errors, or other issues that need to be corrected, we can re-submit the file to the printer to update future copies."
           }
         ]
       }
