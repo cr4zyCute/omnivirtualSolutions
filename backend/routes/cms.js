@@ -199,26 +199,15 @@ router.patch("/blocks/:key", requireAuth, async (req, res) => {
         sql: "INSERT INTO content_blocks (block_key, block_type, label, value, updated_by) VALUES (?, ?, ?, ?, ?)",
         args: [key, inferredType, key, newValue, editor],
       });
-      await db.execute({
-        sql: "INSERT INTO content_block_revisions (block_key, old_value, new_value, changed_by) VALUES (?, '', ?, ?)",
-        args: [key, newValue, editor],
-      });
 
       console.log(`[cms] ${editor} created new block: ${key} (${inferredType})`);
       broadcast({ type: "cms_block_updated", key, value: newValue, blockType: inferredType, updatedBy: editor, table: "content_blocks" });
       return res.json({ success: true, block: { block_key: key, value: newValue, block_type: inferredType, updated_by: editor } });
     }
 
-    const block    = existing.rows[0];
-    const oldValue = block.value;
+    const block = existing.rows[0];
 
-    // Write revision before overwriting
-    await db.execute({
-      sql: "INSERT INTO content_block_revisions (block_key, old_value, new_value, changed_by) VALUES (?,?,?,?)",
-      args: [key, oldValue, newValue, editor],
-    });
-
-    // Update the block
+    // Direct in-place update — single source of truth without old duplicate revisions
     await db.execute({
       sql: "UPDATE content_blocks SET value = ?, updated_at = CURRENT_TIMESTAMP, updated_by = ? WHERE block_key = ?",
       args: [newValue, editor, key],
@@ -314,13 +303,7 @@ router.put("/services/catalog", requireAuth, async (req, res) => {
       });
     }
 
-    // 3. Record revision
-    await db.execute({
-      sql: "INSERT INTO content_block_revisions (block_key, old_value, new_value, changed_by) VALUES (?, ?, ?, ?)",
-      args: [key, oldValue.slice(0, 5000), catalogJson.slice(0, 5000), editor],
-    });
-
-    // 4. Broadcast live SSE event to all open visitor tabs and editors immediately
+    // Broadcast live SSE event to all open visitor tabs and editors immediately
     broadcast({
       type: "cms_block_updated",
       key,

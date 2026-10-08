@@ -2112,14 +2112,9 @@
         <!-- Toolbar: Analysis Scope & Time Selector -->
         <div class="dashboard-toolbar">
           <div>
-            <h2 style="font-size:18px; font-weight:700; color:#fff; display:flex; align-items:center; gap:8px;">
-              <i class="bi bi-graph-up-arrow text-warning"></i> Website & Inquiries Real-time Telemetry
-            </h2>
-            <div class="d-flex align-items-center gap-2" style="margin-top:4px;">
-              <div class="live-status-pill">
-                <span class="live-pulse-dot" id="livePulseDot"></span>
-                <span id="realtimeStatusText">Real-Time DB Sync Active</span>
-              </div>
+            <div class="d-flex align-items-center gap-2">
+              <span id="livePulseDot" style="display:none;"></span>
+              <span id="realtimeStatusText" style="display:none;"></span>
               <span class="last-sync-tag" id="lastUpdatedTime">Synced just now</span>
               <button class="btn btn-sm" onclick="loadDashboard()" title="Refresh Telemetry Now" style="padding:1px 8px; font-size:11px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#cbd5e1; border-radius:6px; cursor:pointer;">
                 <i class="bi bi-arrow-clockwise me-1"></i>Sync
