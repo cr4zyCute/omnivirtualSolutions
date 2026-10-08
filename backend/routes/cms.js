@@ -180,6 +180,16 @@ router.patch("/blocks/:key", requireAuth, async (req, res) => {
         sql: "UPDATE services SET price_display = ? WHERE slug = ?",
         args: [newValue, slug],
       }).catch(() => {});
+    } else if (key.match(/^home\.hero\.book(\d+)\.image$/)) {
+      const match = key.match(/^home\.hero\.book(\d+)\.image$/);
+      const bookNum = parseInt(match[1], 10);
+      const cleanPath = newValue.startsWith('/') ? newValue.slice(1) : newValue;
+      await db.execute({
+        sql: `UPDATE showcase_books 
+              SET image_asset_id = (SELECT id FROM media_assets WHERE file_path = ? OR file_path = ? LIMIT 1)
+              WHERE display_order = ?`,
+        args: [cleanPath, newValue, bookNum],
+      }).catch(() => {});
     }
 
     if (existing.rows.length === 0) {

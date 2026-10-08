@@ -3843,18 +3843,19 @@
         if (!activeImageBlockKey) return;
         const targetKey = activeImageBlockKey;
         const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
+        const normalizedSrc = cleanPath.startsWith('http') ? cleanPath : '/' + cleanPath;
         
         // 1. Immediately update image inside liveEditorIframe
         const iframe = document.getElementById('liveEditorIframe');
         if (iframe && iframe.contentDocument) {
           iframe.contentDocument.querySelectorAll(`img[data-block-key="${targetKey}"]`).forEach(img => {
-            img.src = cleanPath;
+            img.src = normalizedSrc;
             img.classList.add('cms-live-pulsing');
             setTimeout(() => img.classList.remove('cms-live-pulsing'), 1200);
           });
           // Also post message to iframe for deep sync
           try {
-            iframe.contentWindow.postMessage({ type: 'IMAGE_CHANGED', key: targetKey, src: cleanPath }, '*');
+            iframe.contentWindow.postMessage({ type: 'IMAGE_CHANGED', key: targetKey, src: normalizedSrc }, '*');
           } catch (_) {}
         }
 
@@ -3872,7 +3873,7 @@
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ' + token
             },
-            body: JSON.stringify({ value: cleanPath })
+            body: JSON.stringify({ value: normalizedSrc })
           });
           const data = await res.json();
           if (res.ok && data.success) {
@@ -3884,7 +3885,7 @@
             if (typeof BroadcastChannel !== 'undefined') {
               try {
                 const ch = new BroadcastChannel('omni_cms_channel');
-                ch.postMessage({ type: 'cms_block_updated', key: targetKey, value: cleanPath });
+                ch.postMessage({ type: 'cms_block_updated', key: targetKey, value: normalizedSrc });
                 ch.close();
               } catch (_) {}
             }
