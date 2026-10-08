@@ -200,7 +200,21 @@
       justify-content:space-between; padding:0 28px;
       position:sticky; top:0; z-index:900;
     }
-    .page-title { font-size:17px; font-weight:700; display:flex; align-items:center; gap:10px; }
+    .top-header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 38px;
+    }
+    .page-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1;
+      white-space: nowrap;
+    }
     .header-actions { display:flex; align-items:center; gap:12px; }
 
     /* Buttons */
@@ -218,167 +232,522 @@
     .admin-tab { display:none; }
     .admin-tab.active { display:block; }
 
-    /* ── Inbox Layout (3-pane) ─────────────────────────────────── */
+    /* ── Inbox Layout (Modern 2-pane) ─────────────────────────── */
     .inbox-shell {
       display: grid;
-      grid-template-columns: 300px 1fr;
+      grid-template-columns: 340px 1fr;
       gap: 0;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      background: #0b0f19;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
       overflow: hidden;
-      height: calc(100vh - 140px);
-      min-height: 500px;
+      height: calc(100vh - 128px);
+      min-height: 580px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    /* Completely hide scrollbars while preserving fluid scrolling */
+    .inbox-list,
+    .detail-body,
+    #detailBodyScroll,
+    .inbox-shell,
+    .inbox-list-pane,
+    .inbox-detail-pane,
+    .inbox-shell * {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    .inbox-list::-webkit-scrollbar,
+    .detail-body::-webkit-scrollbar,
+    #detailBodyScroll::-webkit-scrollbar,
+    .inbox-shell::-webkit-scrollbar,
+    .inbox-list-pane::-webkit-scrollbar,
+    .inbox-detail-pane::-webkit-scrollbar,
+    .inbox-shell *::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
     }
 
     /* Message list pane */
     .inbox-list-pane {
-      border-right: 1px solid var(--border);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      background: #090d16;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
     .inbox-toolbar {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(13, 17, 27, 0.9);
+      backdrop-filter: blur(10px);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       flex-shrink: 0;
     }
+    .search-box-wrap {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+    .search-box-wrap .search-icon {
+      position: absolute;
+      left: 14px;
+      color: #64748b;
+      font-size: 13.5px;
+      pointer-events: none;
+      transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
     .search-box {
-      background: rgba(0,0,0,0.3);
-      border: 1px solid var(--border);
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #f8fafc;
+      padding: 10px 14px 10px 38px;
+      border-radius: 10px;
       font-size: 13px;
       width: 100%;
       font-family: inherit;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .search-box:focus { outline: none; border-color: var(--gold); }
-    .filter-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
-    .filter-tab { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.2s; font-family: inherit; }
-    .filter-tab:hover, .filter-tab.active { background: var(--gold-dim); color: var(--gold); border-color: rgba(235,162,45,0.3); }
-
-    .inbox-list { flex: 1; overflow-y: auto; }
-    .msg-item {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
+    .search-box-wrap:focus-within .search-icon {
+      color: var(--gold);
+    }
+    .search-box:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.07);
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(235, 162, 45, 0.16);
+    }
+    .search-box::placeholder {
+      color: #64748b;
+    }
+    .filter-tabs {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .filter-tab {
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 5px 11px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      color: #94a3b8;
       cursor: pointer;
-      transition: background 0.15s;
-      position: relative;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      font-family: inherit;
     }
-    .msg-item:hover { background: rgba(255,255,255,0.03); }
-    .msg-item.selected { background: var(--gold-dim); border-left: 3px solid var(--gold); }
-    .msg-item.unread .msg-name { font-weight: 700; color: #fff; }
-    .msg-item.unread .msg-preview { color: #cbd5e0; }
-    .msg-unread-dot { position:absolute; top:18px; right:14px; width:8px; height:8px; background:var(--gold); border-radius:50%; }
-    .msg-name { font-size: 13.5px; font-weight: 500; color: #e2e8f0; margin-bottom: 3px; display: flex; align-items: center; gap: 8px; }
-    .msg-subject { font-size: 12px; color: #cbd5e0; margin-bottom: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .msg-preview { font-size: 11.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .msg-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
-    .msg-time { font-size: 11px; color: var(--muted); }
-    .msg-empty { text-align:center; padding:48px 20px; color:var(--muted); font-size:14px; }
+    .filter-tab:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: #f1f5f9;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .filter-tab.active {
+      background: rgba(235, 162, 45, 0.16);
+      color: var(--gold);
+      border-color: rgba(235, 162, 45, 0.4);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(235, 162, 45, 0.12);
+    }
+
+    .inbox-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .msg-item {
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      background: transparent;
+    }
+    .msg-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .msg-item.selected {
+      background: linear-gradient(90deg, rgba(235, 162, 45, 0.14) 0%, rgba(235, 162, 45, 0.02) 100%);
+      border-left: 3px solid var(--gold);
+      box-shadow: inset 0 1px 0 rgba(235, 162, 45, 0.1);
+    }
+    .msg-item.unread .msg-name {
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .msg-item.unread .msg-preview {
+      color: #cbd5e1;
+    }
+    .msg-unread-dot {
+      position: absolute;
+      top: 20px;
+      right: 16px;
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(235, 162, 45, 0.8);
+      animation: pulseDot 2s infinite ease-in-out;
+    }
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.75; }
+    }
+    .msg-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .msg-subject {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #cbd5e1;
+      margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .msg-preview {
+      font-size: 12px;
+      color: #64748b;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 1.45;
+    }
+    .msg-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .msg-time {
+      font-size: 11px;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .msg-empty {
+      text-align: center;
+      padding: 60px 24px;
+      color: #64748b;
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
 
     /* Status badges */
-    .badge { display:inline-flex; align-items:center; gap:4px; font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:20px; text-transform:capitalize; }
-    .badge-new      { background:rgba(239,68,68,0.15);   color:#f87171; border:1px solid rgba(239,68,68,0.3); }
-    .badge-in_review{ background:rgba(235,162,45,0.15);  color:#fbbf24; border:1px solid rgba(235,162,45,0.3); }
-    .badge-contacted{ background:rgba(59,130,246,0.15);  color:#60a5fa; border:1px solid rgba(59,130,246,0.3); }
-    .badge-replied  { background:rgba(139,92,246,0.15);  color:#a78bfa; border:1px solid rgba(139,92,246,0.3); }
-    .badge-closed   { background:rgba(16,185,129,0.15);  color:#34d399; border:1px solid rgba(16,185,129,0.3); }
-    .badge-sent     { background:rgba(16,185,129,0.15);  color:#34d399; border:1px solid rgba(16,185,129,0.3); }
-    .badge-failed   { background:rgba(239,68,68,0.15);   color:#f87171; border:1px solid rgba(239,68,68,0.3); }
-    .badge-skipped  { background:rgba(255,255,255,0.06); color:var(--muted); border:1px solid var(--border); }
-    .badge-pending  { background:rgba(235,162,45,0.1);   color:#fbbf24; border:1px solid rgba(235,162,45,0.25); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 2.5px 8.5px;
+      border-radius: 9999px;
+      text-transform: capitalize;
+      letter-spacing: 0.02em;
+    }
+    .badge-new {
+      background: rgba(244, 63, 94, 0.12);
+      color: #fb7185;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    .badge-in_review {
+      background: rgba(245, 158, 11, 0.12);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .badge-contacted {
+      background: rgba(59, 130, 246, 0.12);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .badge-replied {
+      background: rgba(168, 85, 247, 0.14);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+    .badge-closed {
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .badge-sent {
+      background: rgba(16, 185, 129, 0.12);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .badge-failed {
+      background: rgba(239, 68, 68, 0.14);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.32);
+    }
+    .badge-skipped {
+      background: rgba(255, 255, 255, 0.06);
+      color: #94a3b8;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .badge-pending {
+      background: rgba(235, 162, 45, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(235, 162, 45, 0.28);
+    }
 
     /* Detail pane */
     .inbox-detail-pane {
+      background: #0d121f;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
     .detail-empty {
-      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: var(--muted); gap: 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      gap: 14px;
+      padding: 32px;
+      text-align: center;
     }
-    .detail-empty i { font-size: 48px; color: rgba(255,255,255,0.08); }
+    .detail-empty i {
+      font-size: 54px;
+      color: rgba(235, 162, 45, 0.25);
+      background: rgba(235, 162, 45, 0.05);
+      padding: 24px;
+      border-radius: 50%;
+      border: 1px solid rgba(235, 162, 45, 0.15);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    }
+    .detail-empty p {
+      font-size: 15px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
 
     /* Opened message */
-    #msgDetailView { display: none; flex-direction: column; height: 100%; overflow: hidden; }
-    #msgDetailView.visible { display: flex; }
+    #msgDetailView {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+    #msgDetailView.visible {
+      display: flex;
+    }
     .detail-header {
-      padding: 18px 22px;
-      border-bottom: 1px solid var(--border);
+      padding: 20px 26px;
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.8) 0%, rgba(13, 18, 31, 0.5) 100%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       flex-shrink: 0;
     }
-    .detail-subject { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
-    .detail-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-    .detail-meta-item { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
-    .detail-meta-item strong { color: #e2e8f0; }
-    .detail-actions {
-      padding: 12px 22px;
-      border-bottom: 1px solid var(--border);
+    .detail-subject {
+      font-size: 20px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.015em;
+      line-height: 1.35;
+      margin-bottom: 12px;
+    }
+    .detail-meta {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .detail-meta-item {
+      font-size: 12px;
+      color: #94a3b8;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 5px 10px;
+    }
+    .detail-meta-item strong {
+      color: #f1f5f9;
+    }
+    .detail-meta-item a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .detail-meta-item a:hover {
+      text-decoration: underline;
+    }
+    .detail-actions {
+      padding: 10px 26px;
+      background: rgba(255, 255, 255, 0.015);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      align-items: center;
+      gap: 10px;
       flex-wrap: wrap;
       flex-shrink: 0;
     }
     .status-select {
-      background: var(--card2); color: #fff; border: 1px solid var(--border);
-      border-radius: 7px; padding: 5px 10px; font-size: 12.5px; font-family: inherit;
+      background: #111827;
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12.5px;
+      font-weight: 600;
+      font-family: inherit;
       cursor: pointer;
+      transition: all 0.2s;
+    }
+    .status-select:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(235, 162, 45, 0.2);
     }
 
     /* Scrollable body */
-    .detail-body { flex: 1; overflow-y: auto; padding: 22px; }
+    .detail-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 26px;
+      background: #0d121f;
+    }
     .msg-body-card {
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px;
+      background: rgba(18, 25, 41, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 22px 24px;
       line-height: 1.7;
-      font-size: 14px;
-      color: #e2e8f0;
+      font-size: 14.5px;
+      color: #f1f5f9;
       white-space: pre-wrap;
       word-break: break-word;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     }
 
     /* Thread / replies */
-    .thread-divider { display: flex; align-items: center; gap: 10px; margin: 20px 0 16px; }
-    .thread-divider span { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
-    .thread-divider::before, .thread-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .thread-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 26px 0 18px;
+    }
+    .thread-divider span {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .thread-divider::before,
+    .thread-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.07);
+    }
 
     .reply-bubble {
-      background: rgba(235,162,45,0.06);
-      border: 1px solid rgba(235,162,45,0.2);
-      border-radius: 10px;
-      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(235, 162, 45, 0.07) 0%, rgba(15, 23, 42, 0.65) 100%);
+      border: 1px solid rgba(235, 162, 45, 0.24);
+      border-radius: 12px;
+      padding: 18px 22px;
       margin-bottom: 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     }
-    .reply-meta { font-size: 11.5px; color: var(--muted); margin-bottom: 8px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .reply-meta strong { color: var(--gold); }
-    .reply-body-text { font-size: 14px; color: #e2e8f0; white-space: pre-wrap; line-height: 1.65; }
+    .reply-meta {
+      font-size: 11.5px;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .reply-meta strong {
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .reply-body-text {
+      font-size: 14px;
+      color: #f1f5f9;
+      white-space: pre-wrap;
+      line-height: 1.65;
+    }
 
     /* Reply compose */
     .reply-compose {
-      border-top: 1px solid var(--border);
-      padding: 16px 22px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 18px 26px;
       flex-shrink: 0;
-      background: var(--sidebar);
+      background: #0a0e18;
     }
-    .reply-compose-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .reply-compose-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
     .reply-textarea {
-      width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border);
-      color: #fff; padding: 12px 14px; border-radius: 9px; font-size: 14px;
-      font-family: inherit; resize: vertical; min-height: 90px; transition: border-color 0.2s;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 96px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .reply-textarea:focus { outline: none; border-color: var(--gold); }
-    .reply-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; gap: 10px; }
-    .reply-to-info { font-size: 12px; color: var(--muted); }
+    .reply-textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 0 3px rgba(235, 162, 45, 0.16);
+    }
+    .reply-textarea::placeholder {
+      color: #64748b;
+    }
+    .reply-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .reply-to-info {
+      font-size: 12px;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 6px 12px;
+    }
 
     /* ── Email Settings Panel ───────────────────────────────────── */
     .settings-grid { display: grid; gap: 24px; }
@@ -513,14 +882,115 @@
       opacity: 1;
     }
 
-    /* Desktop Sidebar Collapsed State */
+    /* ── Desktop Sidebar Collapsed State: Mini Icon Rail (72px) ── */
     @media (min-width: 1025px) {
       body.sidebar-collapsed #sidebar {
-        transform: translateX(-100%);
+        width: 72px !important;
+        transform: translateX(0) !important;
+        overflow: visible;
+        transition: width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
       }
       body.sidebar-collapsed #mainContent {
-        margin-left: 0 !important;
-        width: 100% !important;
+        margin-left: 72px !important;
+        width: calc(100% - 72px) !important;
+        transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1), width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      body.sidebar-collapsed #sidebar .brand-box {
+        padding: 16px 0;
+        justify-content: center;
+      }
+      body.sidebar-collapsed #sidebar .brand-box > div:not(.brand-icon),
+      body.sidebar-collapsed #sidebar .sidebar-close-btn {
+        display: none !important;
+      }
+      body.sidebar-collapsed #sidebar .brand-icon {
+        width: 38px;
+        height: 38px;
+        margin: 0 auto;
+      }
+      body.sidebar-collapsed #sidebar .nav-label {
+        display: none !important;
+      }
+      body.sidebar-collapsed #sidebar .nav-list {
+        padding: 12px 8px;
+        overflow: visible;
+      }
+      body.sidebar-collapsed #sidebar .nav-item,
+      body.sidebar-collapsed #sidebar .nav-dropdown-toggle {
+        justify-content: center;
+        padding: 11px 0;
+        position: relative;
+        border-radius: 10px;
+        gap: 0;
+      }
+      body.sidebar-collapsed #sidebar .nav-item span:not(.nav-badge),
+      body.sidebar-collapsed #sidebar .nav-dropdown-toggle span:not(.nav-badge),
+      body.sidebar-collapsed #sidebar .nav-dropdown-arrow {
+        display: none !important;
+      }
+      body.sidebar-collapsed #sidebar .nav-item i,
+      body.sidebar-collapsed #sidebar .nav-dropdown-toggle i {
+        font-size: 19px;
+        margin: 0;
+      }
+      body.sidebar-collapsed #sidebar .nav-badge {
+        position: absolute;
+        top: 6px;
+        right: 14px;
+        width: 8px;
+        height: 8px;
+        min-width: 8px;
+        min-height: 8px;
+        padding: 0;
+        font-size: 0;
+        border-radius: 50%;
+      }
+      /* Floating Tooltips */
+      body.sidebar-collapsed #sidebar .nav-item[data-tooltip]:hover::after,
+      body.sidebar-collapsed #sidebar .nav-dropdown-toggle[data-tooltip]:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: 74px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #151a24;
+        color: #ffffff;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+        white-space: nowrap;
+        z-index: 1060;
+        pointer-events: none;
+      }
+      /* Flyout Submenu in Rail Mode */
+      body.sidebar-collapsed #sidebar .nav-dropdown {
+        position: relative;
+      }
+      body.sidebar-collapsed #sidebar .nav-dropdown.open .nav-submenu {
+        position: absolute;
+        left: 74px;
+        top: 0;
+        width: 210px;
+        background: #0f131a;
+        border: 1px solid rgba(235, 162, 45, 0.3);
+        border-radius: 10px;
+        padding: 8px;
+        margin: 0;
+        box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+        z-index: 1050;
+      }
+      body.sidebar-collapsed #sidebar .sidebar-footer {
+        padding: 14px 0;
+        justify-content: center;
+      }
+      body.sidebar-collapsed #sidebar .user-info {
+        justify-content: center;
+      }
+      body.sidebar-collapsed #sidebar .user-info > div {
+        display: none !important;
       }
     }
 
@@ -544,7 +1014,102 @@
       color: var(--gold);
     }
 
-    /* ── Responsive Breakpoints ── */
+    /* ── Delete Confirmation Modal ──────────────────────────────── */
+    .delete-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fadeInDelModal 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .delete-modal-dialog {
+      background: #0d121e;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 24px 65px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      animation: popInDelModal 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeInDelModal {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes popInDelModal {
+      from { transform: scale(0.95) translateY(8px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    .delete-modal-header {
+      padding: 18px 22px;
+      background: rgba(239, 68, 68, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .delete-modal-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .delete-modal-icon-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f87171;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .delete-modal-close {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 16px;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .delete-modal-close:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+    .delete-modal-body {
+      padding: 22px;
+    }
+    .delete-modal-target {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .delete-modal-footer {
+      padding: 16px 22px;
+      background: rgba(0, 0, 0, 0.25);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* ── Responsive Breakpoints (Mobile-First Polish) ── */
     @media (max-width: 1024px) {
       #sidebar {
         width: min(290px, 86vw);
@@ -570,22 +1135,28 @@
       .top-header {
         padding: 0 16px;
       }
+      .inbox-shell {
+        height: calc(100dvh - 120px);
+      }
     }
 
     @media (max-width: 860px) {
       .inbox-shell {
         grid-template-columns: 1fr;
-        height: calc(100dvh - 120px);
+        height: calc(100dvh - 110px);
         min-height: 480px;
         position: relative;
+        border-radius: 12px;
       }
       .inbox-list-pane {
         width: 100%;
         border-right: none;
+        height: 100%;
       }
       .inbox-detail-pane {
         width: 100%;
         display: none;
+        height: 100%;
       }
       .inbox-shell.show-detail .inbox-list-pane {
         display: none;
@@ -595,18 +1166,48 @@
         flex: 1;
       }
       .back-to-list-btn {
-        display: inline-flex;
+        display: inline-flex !important;
         min-height: 44px;
         align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        padding: 8px 16px;
+        margin-bottom: 14px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        border-radius: 8px;
+        touch-action: manipulation;
+      }
+      .back-to-list-btn:hover {
+        background: rgba(235, 162, 45, 0.2);
+        border-color: var(--gold);
+        color: var(--gold);
       }
       .smtp-grid-wrap {
         grid-template-columns: 1fr !important;
+      }
+      .detail-header {
+        padding: 16px 18px;
+      }
+      .detail-subject {
+        font-size: 18px;
+      }
+      .detail-actions {
+        padding: 10px 18px;
+        gap: 8px;
+      }
+      .detail-body {
+        padding: 18px;
+      }
+      .reply-compose {
+        padding: 14px 18px;
       }
     }
 
     @media (max-width: 640px) {
       .content-area {
-        padding: 14px 10px;
+        padding: 10px 8px;
       }
       .top-header {
         height: auto;
@@ -646,17 +1247,70 @@
       .stat-row {
         grid-template-columns: repeat(2, 1fr);
       }
+      .inbox-toolbar {
+        padding: 12px 14px;
+        gap: 10px;
+      }
+      .filter-tabs {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .filter-tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .filter-tab {
+        flex-shrink: 0;
+        padding: 6px 14px;
+        font-size: 12px;
+        min-height: 38px;
+        touch-action: manipulation;
+      }
+      .msg-item {
+        padding: 14px 14px;
+      }
+      .detail-meta {
+        gap: 6px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .detail-meta-item {
+        font-size: 11.5px;
+        padding: 4px 8px;
+      }
+      .detail-actions {
+        justify-content: space-between;
+        padding: 10px 14px;
+        gap: 6px;
+      }
+      .status-select {
+        min-height: 44px;
+        font-size: 16px !important;
+      }
       .reply-compose {
-        padding: 14px 16px;
+        padding: 12px 14px;
       }
       .reply-footer {
         flex-direction: column;
         align-items: stretch;
+        gap: 10px;
+      }
+      .reply-footer > div {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
       }
       .reply-footer .btn {
         width: 100%;
         justify-content: center;
         min-height: 44px;
+        touch-action: manipulation;
       }
     }
 
@@ -664,30 +1318,14 @@
       .stat-row {
         grid-template-columns: 1fr;
       }
-      .filter-tabs {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        padding-bottom: 4px;
-        -webkit-overflow-scrolling: touch;
-      }
-      .filter-tab {
-        white-space: nowrap;
-        min-height: 40px;
-        padding: 8px 12px;
-        touch-action: manipulation;
-      }
-      .detail-meta {
-        gap: 8px;
+      .delete-modal-footer {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
       }
-      .detail-actions {
-        padding: 10px 14px;
-        gap: 6px;
-      }
-      .status-select {
+      .delete-modal-footer .btn {
+        width: 100%;
         min-height: 44px;
-        font-size: 16px !important;
+        justify-content: center;
       }
     }
   </style>
@@ -714,32 +1352,32 @@
     <ul class="nav-list">
       <li class="nav-label">Navigation</li>
       <li>
-        <a class="nav-item" href="admin/#overview">
-          <i class="bi bi-grid-1x2-fill"></i> Overview Dashboard
+        <a class="nav-item" href="admin/#overview" data-tooltip="Overview Dashboard">
+          <i class="bi bi-grid-1x2-fill"></i> <span>Overview Dashboard</span>
         </a>
       </li>
       <li>
-        <a class="nav-item" href="admin/#live-editor">
-          <i class="bi bi-browser-chrome" style="color:var(--gold);"></i> Live Website Editor
+        <a class="nav-item" href="admin/#live-editor" data-tooltip="Live Website Editor">
+          <i class="bi bi-browser-chrome" style="color:var(--gold);"></i> <span>Live Website Editor</span>
         </a>
       </li>
       <li>
-        <a class="nav-item" href="admin/#business-profile">
-          <i class="bi bi-building-gear" style="color:var(--gold);"></i> Business Profile &amp; Contact
+        <a class="nav-item" href="admin/#business-profile" data-tooltip="Business Profile &amp; Contact">
+          <i class="bi bi-building-gear" style="color:var(--gold);"></i> <span>Business Profile &amp; Contact</span>
         </a>
       </li>
       <li>
-        <a class="nav-item" href="admin/#services">
-          <i class="bi bi-briefcase-fill" style="color:var(--gold);"></i> Services Catalog
+        <a class="nav-item" href="admin/#services" data-tooltip="Services Catalog">
+          <i class="bi bi-briefcase-fill" style="color:var(--gold);"></i> <span>Services Catalog</span>
         </a>
       </li>
       <li>
-        <a class="nav-item" href="admin/#leads">
-          <i class="bi bi-envelope-open-fill"></i> Leads CRM
+        <a class="nav-item" href="admin/#leads" data-tooltip="Leads CRM">
+          <i class="bi bi-envelope-open-fill"></i> <span>Leads CRM</span>
         </a>
       </li>
       <li class="nav-dropdown open" id="contactNavDropdown">
-        <div class="nav-dropdown-toggle" onclick="toggleContactDropdown()" role="button" aria-expanded="true" tabindex="0">
+        <div class="nav-dropdown-toggle" onclick="toggleContactDropdown()" role="button" aria-expanded="true" tabindex="0" data-tooltip="Contact Messages">
           <i class="bi bi-inbox-fill" style="color:var(--gold);"></i>
           <span>Contact Messages</span>
           <span class="nav-badge" id="unreadBadge" style="background:#e53e3e; color:#fff; margin-left:auto;">0</span>
@@ -759,13 +1397,13 @@
         </ul>
       </li>
       <li>
-        <a class="nav-item" href="admin/#media">
-          <i class="bi bi-images"></i> Media Library
+        <a class="nav-item" href="admin/#media" data-tooltip="Media Library">
+          <i class="bi bi-images"></i> <span>Media Library</span>
         </a>
       </li>
       <li>
-        <a class="nav-item" href="admin/#account-security">
-          <i class="bi bi-shield-lock-fill" style="color:var(--gold);"></i> Account Security
+        <a class="nav-item" href="admin/#account-security" data-tooltip="Account Security">
+          <i class="bi bi-shield-lock-fill" style="color:var(--gold);"></i> <span>Account Security</span>
         </a>
       </li>
     </ul>
@@ -785,12 +1423,12 @@
   <!-- ── Main Content ── -->
   <main id="mainContent">
     <header class="top-header">
-      <div style="display:flex; align-items:center;">
-        <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle Navigation">
+      <div class="top-header-left">
+        <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle Navigation" title="Toggle navigation rail (Ctrl+B)">
           <i class="bi bi-list"></i>
         </button>
         <div class="page-title" id="topTitle">
-          <i class="bi bi-inbox-fill" style="color:var(--gold)"></i> Contact Messages
+          <i class="bi bi-inbox-fill" style="color:var(--gold)"></i> <span>Contact Messages</span>
         </div>
       </div>
       <div class="header-actions">
@@ -809,7 +1447,10 @@
           <!-- Left: message list -->
           <div class="inbox-list-pane">
             <div class="inbox-toolbar">
-              <input class="search-box" type="text" id="inboxSearch" placeholder="🔍  Search messages..." oninput="searchDebounce()">
+              <div class="search-box-wrap">
+                <i class="bi bi-search search-icon"></i>
+                <input class="search-box" type="text" id="inboxSearch" placeholder="Search messages..." oninput="searchDebounce()">
+              </div>
               <div class="filter-tabs">
                 <button class="filter-tab active" onclick="setFilter('', this)">All</button>
                 <button class="filter-tab" onclick="setFilter('new', this)">New</button>
@@ -847,11 +1488,11 @@
 
               <div class="detail-actions">
                 <select class="status-select" id="statusSelect" onchange="updateStatus(this.value)">
-                  <option value="new">● New</option>
-                  <option value="in_review">● In Review</option>
-                  <option value="contacted">● Contacted</option>
-                  <option value="replied">● Replied</option>
-                  <option value="closed">● Closed</option>
+                  <option value="new">New</option>
+                  <option value="in_review">In Review</option>
+                  <option value="contacted">Contacted</option>
+                  <option value="replied">Replied</option>
+                  <option value="closed">Closed</option>
                 </select>
                 <button class="btn btn-sm" onclick="markUnread()" title="Mark as unread"><i class="bi bi-envelope"></i> Mark Unread</button>
                 <button class="btn btn-sm" onclick="retryNotification()" id="retryBtn" style="display:none"><i class="bi bi-arrow-repeat"></i> Retry Email</button>
@@ -861,7 +1502,10 @@
 
               <div class="detail-body" id="detailBodyScroll">
                 <!-- Original message -->
-                <div style="font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px;">Original Message</div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                  <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--gold);"></span>
+                  <span style="font-size:11px; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;">Original Customer Message</span>
+                </div>
                 <div class="msg-body-card" id="detailMessage">—</div>
 
                 <!-- Thread -->
@@ -870,16 +1514,16 @@
 
               <!-- Compose reply -->
               <div class="reply-compose">
-                <div class="reply-compose-title"><i class="bi bi-reply-fill"></i> Reply to Customer</div>
+                <div class="reply-compose-title"><i class="bi bi-reply-fill" style="color:var(--gold);"></i> Reply to Customer</div>
                 <textarea class="reply-textarea" id="replyTextarea" placeholder="Write your reply here..."></textarea>
                 <div class="reply-footer">
-                  <div class="reply-to-info">Sending to: <span id="replyToEmail" style="color:var(--gold);">—</span></div>
-                  <div style="display:flex; gap:8px; align-items:center;">
+                  <div class="reply-to-info">Sending to: <span id="replyToEmail" style="color:var(--gold); font-weight:600;">—</span></div>
+                  <div style="display:flex; gap:10px; align-items:center;">
                     <button class="btn btn-gold" id="replyGmailBtn" onclick="replyInGmail()">
                       <i class="bi bi-google"></i> Reply via Gmail
                     </button>
-                    <button class="btn btn-sm" id="sendReplyBtn" onclick="sendReply()" style="color:var(--muted); font-size:12px;">
-                      <i class="bi bi-send-fill"></i> Send via Server
+                    <button class="btn btn-sm" id="sendReplyBtn" onclick="sendReply()" style="color:#cbd5e1; font-weight:600; border-color:rgba(255,255,255,0.12);">
+                      <i class="bi bi-send-fill" style="color:var(--gold);"></i> Send via Server
                     </button>
                   </div>
                 </div>
@@ -1344,6 +1988,11 @@
         toggleSidebar();
       }
       if (e.key === 'Escape') {
+        const delModal = document.getElementById('deleteModal');
+        if (delModal && delModal.style.display === 'flex') {
+          closeDeleteModal();
+          return;
+        }
         if (!isDesktop() && sidebarEl && sidebarEl.classList.contains('active')) {
           closeSidebar();
         }
@@ -1403,7 +2052,10 @@
     // ── Toast ────────────────────────────────────────────────────
     function toast(msg, type = 'success') {
       const el = document.getElementById('toastEl');
-      el.textContent = (type === 'success' ? '✅ ' : type === 'error' ? '❌ ' : 'ℹ️ ') + msg;
+      const icon = type === 'success' ? '<i class="bi bi-check-circle-fill" style="color:#34d399"></i>'
+                 : type === 'error'   ? '<i class="bi bi-x-circle-fill" style="color:#f87171"></i>'
+                 : '<i class="bi bi-info-circle-fill" style="color:#60a5fa"></i>';
+      el.innerHTML = `${icon} <span>${escHtml(msg)}</span>`;
       el.className = 'toast-msg ' + type;
       el.style.display = 'flex';
       clearTimeout(window._toastTimer);
@@ -1493,14 +2145,14 @@
           <div class="msg-item${unread ? ' unread' : ''}${selected}" onclick="openMessage(${m.id})" id="msgItem-${m.id}">
             ${unread ? '<div class="msg-unread-dot"></div>' : ''}
             <div class="msg-name">
-              ${escHtml(m.full_name)}
-              <span class="badge badge-${m.status}" style="font-size:9.5px;">${m.status}</span>
+              <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:210px;">${escHtml(m.full_name)}</span>
+              <span class="badge badge-${m.status}" style="font-size:9.5px; flex-shrink:0;">${m.status}</span>
             </div>
             <div class="msg-subject">${escHtml(m.subject || 'No subject')}</div>
             <div class="msg-preview">${escHtml(m.message)}</div>
             <div class="msg-meta">
-              <span class="msg-time">${fmt(m.created_at)}</span>
-              ${m.reply_count > 0 ? `<span style="font-size:10.5px; color:var(--muted);"><i class="bi bi-chat-left-fill"></i> ${m.reply_count}</span>` : ''}
+              <span class="msg-time"><i class="bi bi-clock"></i> ${fmt(m.created_at)}</span>
+              ${m.reply_count > 0 ? `<span style="font-size:10.5px; color:var(--gold); font-weight:600;"><i class="bi bi-chat-left-fill"></i> ${m.reply_count}</span>` : ''}
             </div>
           </div>`;
       }).join('');
@@ -1565,13 +2217,15 @@
         const thread = document.getElementById('replyThread');
         if (replies.length > 0) {
           thread.innerHTML = `
-            <div class="thread-divider"><span>Reply Thread (${replies.length})</span></div>
+            <div class="thread-divider"><span>Conversation History (${replies.length})</span></div>
             ${replies.map(r => `
               <div class="reply-bubble">
                 <div class="reply-meta">
-                  <strong>${escHtml(r.sent_by || 'Admin')}</strong>
-                  <span>${fmt(r.sent_at)}</span>
-                  <span class="badge badge-${r.email_sent ? 'sent' : 'failed'}" style="font-size:9px;">${r.email_sent ? '✓ Emailed' : '✗ Email failed'}</span>
+                  <span style="display:inline-flex; align-items:center; gap:5px; color:var(--gold); font-weight:700;">
+                    <i class="bi bi-shield-lock-fill"></i> ${escHtml(r.sent_by || 'Admin')}
+                  </span>
+                  <span><i class="bi bi-clock"></i> ${fmt(r.sent_at)}</span>
+                  <span class="badge badge-${r.email_sent ? 'sent' : 'failed'}" style="font-size:9.5px; margin-left:auto;">${r.email_sent ? '✓ Emailed' : '✗ Email failed'}</span>
                   ${r.email_error ? `<span style="font-size:10.5px; color:var(--danger);" title="${escHtml(r.email_error)}">⚠ ${escHtml(r.email_error.substring(0,50))}</span>` : ''}
                 </div>
                 <div class="reply-body-text">${escHtml(r.reply_body)}</div>
@@ -1642,7 +2296,7 @@
         if (data.success) {
           toast('Notification email sent!');
           btn.style.display = 'none';
-          document.getElementById('detailEmailNotify').innerHTML = '<span class="badge badge-sent">✉ sent</span>';
+          document.getElementById('detailEmailNotify').innerHTML = '<span class="badge badge-sent"><i class="bi bi-envelope-check-fill"></i> sent</span>';
         } else {
           toast('Email still failing: ' + (data.reason || 'unknown'), 'error');
         }
@@ -1651,21 +2305,58 @@
       btn.innerHTML = '<i class="bi bi-arrow-repeat"></i> Retry Email';
     };
 
-    window.deleteMessage = async function () {
+    window.deleteMessage = function () {
+      if (!currentMsgId || !currentSubmission) return;
+      document.getElementById('delTargetSubject').textContent = currentSubmission.subject || 'No subject';
+      document.getElementById('delTargetSender').textContent = currentSubmission.full_name || 'Customer';
+      document.getElementById('delTargetEmail').textContent = currentSubmission.email || '—';
+      const modal = document.getElementById('deleteModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        document.getElementById('confirmDeleteBtn')?.focus();
+      }
+    };
+
+    window.closeDeleteModal = function () {
+      const modal = document.getElementById('deleteModal');
+      if (modal) modal.style.display = 'none';
+      document.body.style.overflow = '';
+    };
+
+    window.confirmDeleteMessage = async function () {
       if (!currentMsgId) return;
-      if (!confirm('Delete this message and all its replies? This cannot be undone.')) return;
+      const btn = document.getElementById('confirmDeleteBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-sm"></span> Deleting...';
+      }
       try {
-        await fetch('/api/v1/contact/submissions/' + currentMsgId, {
+        const res = await fetch('/api/v1/contact/submissions/' + currentMsgId, {
           method: 'DELETE',
           headers: { Authorization: 'Bearer ' + token },
         });
-        toast('Message deleted');
-        allMessages = allMessages.filter(m => m.id !== currentMsgId);
-        currentMsgId = null;
-        document.getElementById('msgDetailView').classList.remove('visible');
-        document.getElementById('detailEmpty').style.display = '';
-        renderList();
-      } catch (e) { toast('Failed to delete', 'error'); }
+        if (res.ok) {
+          toast('Message deleted successfully');
+          allMessages = allMessages.filter(m => m.id !== currentMsgId);
+          currentMsgId = null;
+          currentSubmission = null;
+          closeDeleteModal();
+          document.getElementById('msgDetailView').classList.remove('visible');
+          document.getElementById('detailEmpty').style.display = '';
+          document.querySelector('.inbox-shell')?.classList.remove('show-detail');
+          renderList();
+        } else {
+          toast('Failed to delete message', 'error');
+        }
+      } catch (e) {
+        toast('Failed to delete message', 'error');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-trash3-fill"></i> Delete Message';
+        }
+      }
     };
 
     window.replyInGmail = async function () {
@@ -2159,6 +2850,50 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ── Delete Message Confirmation Modal ── -->
+  <div id="deleteModal" class="delete-modal-backdrop" style="display:none;" onclick="if(event.target===this) closeDeleteModal()">
+    <div class="delete-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+      <div class="delete-modal-header">
+        <div class="delete-modal-title" id="deleteModalTitle">
+          <div class="delete-modal-icon-badge">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </div>
+          <div>
+            <h3 style="margin:0; font-size:16px; font-weight:700; color:#fff;">Delete Conversation</h3>
+            <span style="font-size:11.5px; color:#94a3b8;">This action permanently erases customer record</span>
+          </div>
+        </div>
+        <button class="delete-modal-close" onclick="closeDeleteModal()" aria-label="Close dialog">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="delete-modal-body">
+        <p style="margin:0 0 14px 0; font-size:13.5px; color:#cbd5e1; line-height:1.55;">
+          Are you sure you want to permanently delete this message along with all replied threads and history?
+        </p>
+        <div class="delete-modal-target" id="deleteModalTargetInfo">
+          <div style="font-weight:700; color:#fff; font-size:13.5px; margin-bottom:4px;" id="delTargetSubject">—</div>
+          <div style="font-size:12px; color:#94a3b8; display:flex; align-items:center; gap:8px;">
+            <span><i class="bi bi-person-fill" style="color:var(--gold);"></i> <strong id="delTargetSender" style="color:#e2e8f0;">—</strong></span>
+            <span><i class="bi bi-envelope-fill"></i> <span id="delTargetEmail">—</span></span>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:14px; font-size:12px; color:#f87171; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); border-radius:8px; padding:10px 12px;">
+          <i class="bi bi-shield-slash-fill" style="font-size:15px; flex-shrink:0;"></i>
+          <span>Database record and threads will be irreversibly removed from Turso.</span>
+        </div>
+      </div>
+      <div class="delete-modal-footer">
+        <button type="button" class="btn" onclick="closeDeleteModal()" style="min-height:40px; padding:8px 18px;">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDeleteMessage()" style="min-height:40px; padding:8px 20px; font-weight:700;">
+          <i class="bi bi-trash3-fill"></i> Delete Message
+        </button>
+      </div>
     </div>
   </div>
 </body>
