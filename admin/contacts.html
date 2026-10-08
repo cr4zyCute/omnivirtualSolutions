@@ -756,11 +756,6 @@
               <i class="bi bi-palette2" style="color:var(--gold);"></i> Email UI &amp; Settings
             </a>
           </li>
-          <li>
-            <a class="nav-sub-item" onclick="switchTab('email-stats', this)">
-              <i class="bi bi-bar-chart-fill"></i> Email Usage Stats
-            </a>
-          </li>
         </ul>
       </li>
       <li>
@@ -1210,32 +1205,6 @@
         </div>
       </div>
 
-      <!-- ── TAB: EMAIL STATS ── -->
-      <div id="tab-email-stats" class="admin-tab">
-
-        <div class="stat-row" id="statsRow">
-          <div class="mini-stat"><div class="mini-stat-val" id="statTotalSub">—</div><div class="mini-stat-lbl">Total Submissions</div></div>
-          <div class="mini-stat"><div class="mini-stat-val" id="statNewSub" style="color:var(--danger)">—</div><div class="mini-stat-lbl">New (Unactioned)</div></div>
-          <div class="mini-stat"><div class="mini-stat-val" id="statEmailSent" style="color:var(--success)">—</div><div class="mini-stat-lbl">Emails Sent</div></div>
-          <div class="mini-stat"><div class="mini-stat-val" id="statEmailFailed" style="color:var(--danger)">—</div><div class="mini-stat-lbl">Failed Notifications</div></div>
-          <div class="mini-stat"><div class="mini-stat-val" id="statEmailSkipped" style="color:var(--muted)">—</div><div class="mini-stat-lbl">Skipped / Disabled</div></div>
-        </div>
-
-        <div class="settings-card">
-          <div class="settings-card-header"><i class="bi bi-list-ul" style="color:var(--gold)"></i> Recent Email Log (last 20)</div>
-          <div style="overflow-x:auto;">
-            <table class="log-table" id="emailLogTable">
-              <thead>
-                <tr><th>Event</th><th>Submission #</th><th>Recipient</th><th>Subject</th><th>Status</th><th>Time</th></tr>
-              </thead>
-              <tbody id="emailLogBody">
-                <tr><td colspan="6" style="text-align:center; padding:24px; color:var(--muted)">Loading...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
     </div><!-- /content-area -->
   </main>
 
@@ -1415,12 +1384,11 @@
       const titles = {
         inbox: '<i class="bi bi-inbox-fill" style="color:var(--gold)"></i> Contact Messages',
         'email-settings': '<i class="bi bi-gear-fill" style="color:var(--gold)"></i> Email Settings',
-        'email-stats': '<i class="bi bi-bar-chart-fill" style="color:var(--gold)"></i> Email Usage Stats',
       };
       document.getElementById('topTitle').innerHTML = titles[id] || 'Admin';
 
+      if (id === 'inbox')          loadInbox();
       if (id === 'email-settings') loadEmailSettings();
-      if (id === 'email-stats')    loadEmailStats();
     };
 
     // ── Contact Messages Dropdown Toggle ──────────────────────
@@ -1932,35 +1900,6 @@
     };
 
     // ════════════════════════════════════════════════════════════
-    // EMAIL STATS
-    // ════════════════════════════════════════════════════════════
-    async function loadEmailStats() {
-      try {
-        const res = await fetch('/api/v1/contact/email-stats', { headers: { Authorization: 'Bearer ' + token } });
-        const data = await res.json();
-
-        document.getElementById('statTotalSub').textContent  = data.contactStats?.total_submissions ?? '—';
-        document.getElementById('statNewSub').textContent    = data.contactStats?.new_count ?? '—';
-        document.getElementById('statEmailSent').textContent = data.emailStats?.sent ?? '—';
-        document.getElementById('statEmailFailed').textContent = data.emailStats?.failed ?? '—';
-        document.getElementById('statEmailSkipped').textContent = data.emailStats?.skipped ?? '—';
-
-        const log = data.recentLog || [];
-        document.getElementById('emailLogBody').innerHTML = log.length ? log.map(l => `
-          <tr>
-            <td><code style="color:var(--gold); font-size:11px;">${escHtml(l.event_type)}</code></td>
-            <td>${l.submission_id ? `#${l.submission_id}` : '—'}</td>
-            <td style="color:var(--muted);">${escHtml(l.recipient_email || '—')}</td>
-            <td style="max-width:240px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escHtml(l.subject || '—')}</td>
-            <td><span class="badge badge-${l.status}">${l.status}</span></td>
-            <td style="color:var(--muted); font-size:11px;">${fmt(l.sent_at)}</td>
-          </tr>
-        `).join('') : '<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--muted)">No email activity yet.</td></tr>';
-
-      } catch (e) { toast('Failed to load stats', 'error'); }
-    }
-
-    // ════════════════════════════════════════════════════════════
     // EMAIL TEMPLATES STUDIO
     // ════════════════════════════════════════════════════════════
     let activeContactsTemplate = 'luxury_gold';
@@ -2156,7 +2095,7 @@
 
     // ── Init ─────────────────────────────────────────────────────
     const initialHash = window.location.hash.replace('#', '');
-    if (initialHash && ['inbox', 'email-settings', 'email-stats'].includes(initialHash)) {
+    if (initialHash && ['inbox', 'email-settings'].includes(initialHash)) {
       const matchingSub = document.querySelector(`.nav-sub-item[onclick*="'${initialHash}'"]`);
       switchTab(initialHash, matchingSub);
     } else {
