@@ -52,6 +52,9 @@ const CMS_TABLES = [
 
 // ── All homepage editable content blocks ─────────────────────────
 const CONTENT_BLOCKS = [
+  // Brand / Header
+  { key: "site.powered_by",        type: "text",  label: "Navbar — Sub-Brand / Powered By", value: "Powered by . EC ENTERTAINMENT AND EC PUBLISHING LLC" },
+
   // Hero
   { key: "home.hero.title",        type: "text",  label: "Hero — Main Title",       value: "Empowering Individuals\nand Businesses" },
   { key: "home.hero.subtitle",     type: "text",  label: "Hero — Subtitle",          value: "Balancing employee autonomy with expert oversight — providing qualified virtual specialists to power your sustainability and industry superiority." },
@@ -128,6 +131,14 @@ async function migrateCms() {
       console.error("❌ Error:", err.message, "\nSQL:", sql.substring(0, 80));
       process.exit(1);
     }
+  }
+
+  // ── Ensure company_profile table has powered_by column ─────────────
+  try {
+    await db.execute("ALTER TABLE company_profile ADD COLUMN powered_by TEXT");
+    console.log("  ✅ Added column powered_by to company_profile");
+  } catch (_) {
+    // Column already exists or table structure is ready
   }
 
   // ── Seed content blocks (INSERT OR IGNORE — never overwrite existing edits)

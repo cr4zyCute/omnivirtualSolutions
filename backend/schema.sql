@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS company_profile (
     address_line2    TEXT,
     city_state_zip   TEXT,
     copyright_text   TEXT,
+    powered_by       TEXT,
     created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at       DATETIME DEFAULT CURRENT_TIMESTAMP
 );

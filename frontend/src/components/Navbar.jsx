@@ -107,7 +107,12 @@ export default function Navbar() {
           {/* Logo & Title — centered on mobile, left-aligned on desktop */}
           <Link to="/" className="logo header-center-brand" onClick={closeMobileNav}>
             <img src={logoSrc} alt={company?.company_name || t('site.name', 'Omni Virtual Solutions Logo')} />
-            <span className="sitename">{company?.company_name || t('site.name', 'Omni Virtual Solutions')}</span>
+            <div className="brand-text-group">
+              <span className="sitename">{company?.company_name || t('site.name', 'Omni Virtual Solutions')}</span>
+              <span className="site-tagline-sub" data-block-key="site.powered_by">
+                {company?.powered_by || t('site.powered_by', 'Powered by . EC ENTERTAINMENT AND EC PUBLISHING LLC')}
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation (Screens >= 1200px) */}
@@ -217,7 +222,12 @@ export default function Navbar() {
         <div className="mobile-drawer-header">
           <Link to="/" className="mobile-drawer-brand" onClick={closeMobileNav}>
             <img src={logoSrc} alt={company?.company_name || t('site.name', 'Omni Virtual Solutions Logo')} />
-            <span className="drawer-sitename">{company?.company_name || t('site.name', 'Omni Virtual Solutions')}</span>
+            <div className="brand-text-group">
+              <span className="drawer-sitename">{company?.company_name || t('site.name', 'Omni Virtual Solutions')}</span>
+              <span className="drawer-tagline-sub" data-block-key="site.powered_by">
+                {company?.powered_by || t('site.powered_by', 'Powered by . EC ENTERTAINMENT AND EC PUBLISHING LLC')}
+              </span>
+            </div>
           </Link>
           <button
             type="button"

@@ -66,6 +66,9 @@ router.get("/", async (req, res) => {
     if (company.copyright_text) {
       blockMap['footer.copyright'] = company.copyright_text;
     }
+    const activePoweredBy = company.powered_by || blockMap['site.powered_by'] || "Powered by . EC ENTERTAINMENT AND EC PUBLISHING LLC";
+    company.powered_by = activePoweredBy;
+    blockMap['site.powered_by'] = activePoweredBy;
 
     company.hq_caption = blockMap['footer.hq.caption'] || "New York, NY";
     blockMap['footer.hq.caption'] = company.hq_caption;

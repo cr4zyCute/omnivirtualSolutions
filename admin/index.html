@@ -2510,6 +2510,12 @@
               </div>
 
               <div style="margin-bottom:16px;">
+                <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:6px;">Navbar Subtitle / Powered By</label>
+                <input type="text" id="profPoweredBy" class="search-input" style="width:100%; box-sizing:border-box;" placeholder="Powered by . EC ENTERTAINMENT AND EC PUBLISHING LLC">
+                <div style="font-size:11px; color:var(--muted); margin-top:4px;">Appears directly below the company name in the website navigation bar.</div>
+              </div>
+
+              <div style="margin-bottom:16px;">
                 <label style="display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:6px;">Company Tagline / Motto</label>
                 <input type="text" id="profTagline" class="search-input" style="width:100%; box-sizing:border-box;" placeholder="Empowering Individuals and Businesses">
                 <div style="font-size:11px; color:var(--muted); margin-top:4px;">Appears in meta tags, subheaders, and automated email intro cards.</div>
@@ -5286,6 +5292,7 @@
           if (data.success && data.profile) {
             const p = data.profile;
             if (document.getElementById('profCompanyName')) document.getElementById('profCompanyName').value = p.company_name || '';
+            if (document.getElementById('profPoweredBy')) document.getElementById('profPoweredBy').value = p.powered_by || '';
             if (document.getElementById('profTagline')) document.getElementById('profTagline').value = p.tagline || '';
             if (document.getElementById('profHqCaption')) document.getElementById('profHqCaption').value = p.hq_caption || '';
             if (document.getElementById('profCopyright')) document.getElementById('profCopyright').value = p.copyright_text || '';
@@ -5333,6 +5340,7 @@
 
         const payload = {
           company_name: document.getElementById('profCompanyName')?.value.trim(),
+          powered_by: document.getElementById('profPoweredBy')?.value.trim(),
           tagline: document.getElementById('profTagline')?.value.trim(),
           hq_caption: document.getElementById('profHqCaption')?.value.trim(),
           copyright_text: document.getElementById('profCopyright')?.value.trim(),

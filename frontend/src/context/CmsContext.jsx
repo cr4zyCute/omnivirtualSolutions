@@ -31,6 +31,7 @@ export const CmsProvider = ({ children }) => {
               setBlocks((prev) => ({
                 ...prev,
                 ...(data.company.company_name ? { 'site.name': data.company.company_name } : {}),
+                ...(data.company.powered_by ? { 'site.powered_by': data.company.powered_by } : {}),
                 ...(data.company.tagline ? { 'site.tagline': data.company.tagline } : {}),
                 ...(data.company.email ? { 'footer.email': data.company.email, 'services.cta.email': data.company.email } : {}),
                 ...(data.company.phone ? { 'footer.phone': data.company.phone } : {}),
@@ -91,6 +92,8 @@ export const CmsProvider = ({ children }) => {
               setCompany((prev) => ({ ...prev, full_address: data.value }));
             } else if (data.key === 'site.name') {
               setCompany((prev) => ({ ...prev, company_name: data.value }));
+            } else if (data.key === 'site.powered_by') {
+              setCompany((prev) => ({ ...prev, powered_by: data.value }));
             } else if (data.key === 'site.tagline') {
               setCompany((prev) => ({ ...prev, tagline: data.value }));
             } else if (data.key === 'footer.copyright') {
@@ -113,6 +116,7 @@ export const CmsProvider = ({ children }) => {
       if (typeof window === 'undefined' || !window.EventSource) return;
       try {
         eventSource = new EventSource('/api/v1/live');
+
         eventSource.onmessage = (event) => {
           try {
             const data = JSON.parse(event.data);
@@ -128,6 +132,8 @@ export const CmsProvider = ({ children }) => {
                 setCompany((prev) => ({ ...prev, full_address: data.value }));
               } else if (data.key === 'site.name') {
                 setCompany((prev) => ({ ...prev, company_name: data.value }));
+              } else if (data.key === 'site.powered_by') {
+                setCompany((prev) => ({ ...prev, powered_by: data.value }));
               } else if (data.key === 'site.tagline') {
                 setCompany((prev) => ({ ...prev, tagline: data.value }));
               } else if (data.key === 'footer.copyright') {
@@ -150,6 +156,7 @@ export const CmsProvider = ({ children }) => {
                   ...(comp.phone ? { 'footer.phone': comp.phone } : {}),
                   ...(fullAddress ? { 'footer.address': fullAddress } : {}),
                   ...(comp.company_name ? { 'site.name': comp.company_name } : {}),
+                  ...(comp.powered_by ? { 'site.powered_by': comp.powered_by } : {}),
                   ...(comp.tagline ? { 'site.tagline': comp.tagline } : {}),
                   ...(comp.copyright_text ? { 'footer.copyright': comp.copyright_text } : {}),
                   ...(comp.hq_caption ? { 'footer.hq.caption': comp.hq_caption } : {}),

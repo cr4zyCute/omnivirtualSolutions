@@ -33,6 +33,7 @@ const PROFILE_BLOCK_KEYS = [
   "footer.copyright",
   "site.name",
   "company.name",
+  "site.powered_by",
 ];
 
 function isProfileKey(key) {
@@ -44,7 +45,8 @@ function isProfileKey(key) {
     lower.endsWith(".phone") ||
     lower.endsWith(".address") ||
     lower === "site.name" ||
-    lower === "company.name"
+    lower === "company.name" ||
+    lower === "site.powered_by"
   );
 }
 
@@ -59,7 +61,7 @@ async function getFullBusinessProfile() {
         "SELECT setting_key, setting_value FROM email_settings WHERE setting_key IN ('recipient_email', 'sender_email', 'sender_name')"
       ).catch(() => ({ rows: [] })),
       db.execute(
-        "SELECT block_key, value FROM content_blocks WHERE block_key IN ('footer.email', 'services.cta.email', 'footer.phone', 'footer.address', 'footer.hq.caption', 'footer.copyright', 'site.name')"
+        "SELECT block_key, value FROM content_blocks WHERE block_key IN ('footer.email', 'services.cta.email', 'footer.phone', 'footer.address', 'footer.hq.caption', 'footer.copyright', 'site.name', 'site.powered_by')"
       ).catch(() => ({ rows: [] })),
     ]);
 
@@ -98,6 +100,7 @@ async function getFullBusinessProfile() {
       full_address,
       hq_caption: blockMap["footer.hq.caption"] || "New York, NY",
       copyright_text: company.copyright_text || blockMap["footer.copyright"] || "© 2026 Omni Virtual Solutions. All Rights Reserved.",
+      powered_by: company.powered_by || blockMap["site.powered_by"] || "Powered by . EC ENTERTAINMENT AND EC PUBLISHING LLC",
       updated_at: company.updated_at || new Date().toISOString(),
     };
   } catch (err) {
@@ -108,6 +111,7 @@ async function getFullBusinessProfile() {
       email: "admin@omnivirtualsolution.com",
       recipient_email: "admin@omnivirtualsolution.com",
       phone: "+1 315-915-4799",
+      powered_by: "Powered by . EC ENTERTAINMENT AND EC PUBLISHING LLC",
       address_line1: "1350 Ave of the Americas",
       address_line2: "Fl 2 -1100",
       city_state_zip: "New York, NY 10019",
@@ -141,6 +145,7 @@ async function updateBusinessProfile(data = {}, editor = "admin") {
   const city_state_zip = (data.city_state_zip !== undefined) ? String(data.city_state_zip).trim() : current.city_state_zip;
   const hq_caption = (data.hq_caption !== undefined && String(data.hq_caption).trim()) ? String(data.hq_caption).trim() : current.hq_caption;
   const copyright_text = (data.copyright_text !== undefined && String(data.copyright_text).trim()) ? String(data.copyright_text).trim() : current.copyright_text;
+  const powered_by = (data.powered_by !== undefined) ? String(data.powered_by).trim() : (current.powered_by || "Powered by . EC ENTERTAINMENT AND EC PUBLISHING LLC");
 
   const addressTokens = [address_line1, address_line2, city_state_zip].filter(Boolean);
   const full_address = addressTokens.join(", ");
@@ -149,45 +154,92 @@ async function updateBusinessProfile(data = {}, editor = "admin") {
   try {
     const check = await db.execute("SELECT id FROM company_profile ORDER BY id DESC LIMIT 1");
     if (check.rows && check.rows.length > 0) {
-      await db.execute({
-        sql: `UPDATE company_profile SET
-                company_name = ?,
-                tagline = ?,
-                phone = ?,
-                email = ?,
-                address_line1 = ?,
-                address_line2 = ?,
-                city_state_zip = ?,
-                copyright_text = ?,
-                updated_at = CURRENT_TIMESTAMP
-              WHERE id = ?`,
-        args: [
-          company_name,
-          tagline,
-          phone,
-          email,
-          address_line1,
-          address_line2,
-          city_state_zip,
-          copyright_text,
-          check.rows[0].id,
-        ],
-      });
+      try {
+        await db.execute({
+          sql: `UPDATE company_profile SET
+                  company_name = ?,
+                  tagline = ?,
+                  phone = ?,
+                  email = ?,
+                  address_line1 = ?,
+                  address_line2 = ?,
+                  city_state_zip = ?,
+                  copyright_text = ?,
+                  powered_by = ?,
+                  updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?`,
+          args: [
+            company_name,
+            tagline,
+            phone,
+            email,
+            address_line1,
+            address_line2,
+            city_state_zip,
+            copyright_text,
+            powered_by,
+            check.rows[0].id,
+          ],
+        });
+      } catch (_) {
+        await db.execute({
+          sql: `UPDATE company_profile SET
+                  company_name = ?,
+                  tagline = ?,
+                  phone = ?,
+                  email = ?,
+                  address_line1 = ?,
+                  address_line2 = ?,
+                  city_state_zip = ?,
+                  copyright_text = ?,
+                  updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?`,
+          args: [
+            company_name,
+            tagline,
+            phone,
+            email,
+            address_line1,
+            address_line2,
+            city_state_zip,
+            copyright_text,
+            check.rows[0].id,
+          ],
+        });
+      }
     } else {
-      await db.execute({
-        sql: `INSERT INTO company_profile (company_name, tagline, phone, email, address_line1, address_line2, city_state_zip, copyright_text)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        args: [
-          company_name,
-          tagline,
-          phone,
-          email,
-          address_line1,
-          address_line2,
-          city_state_zip,
-          copyright_text,
-        ],
-      });
+      try {
+        await db.execute({
+          sql: `INSERT INTO company_profile (company_name, tagline, phone, email, address_line1, address_line2, city_state_zip, copyright_text, powered_by)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          args: [
+            company_name,
+            tagline,
+            phone,
+            email,
+            address_line1,
+            address_line2,
+            city_state_zip,
+            copyright_text,
+            powered_by,
+          ],
+        });
+      } catch (_) {
+        await db.execute({
+          sql: `INSERT INTO company_profile (company_name, tagline, phone, email, address_line1, address_line2, city_state_zip, copyright_text)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          args: [
+            company_name,
+            tagline,
+            phone,
+            email,
+            address_line1,
+            address_line2,
+            city_state_zip,
+            copyright_text,
+          ],
+        });
+      }
     }
   } catch (err) {
     console.error("[business-profile-sync] Failed to update company_profile table:", err.message);
@@ -224,6 +276,7 @@ async function updateBusinessProfile(data = {}, editor = "admin") {
     { key: "footer.hq.caption",  val: hq_caption,     label: "Footer — HQ Caption" },
     { key: "footer.copyright",   val: copyright_text, label: "Footer — Copyright Notice" },
     { key: "site.name",          val: company_name,   label: "Website Brand Name" },
+    { key: "site.powered_by",    val: powered_by,      label: "Navbar — Sub-Brand / Powered By" },
   ];
 
   for (const b of blockUpdates) {
