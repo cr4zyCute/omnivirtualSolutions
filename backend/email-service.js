@@ -180,7 +180,7 @@ function buildEmailShell({
   const brandAddress = company?.full_address || "1350 Ave of the Americas, Fl 2 -1100, New York, NY 10019";
   const emailTo = supportEmail || company?.email || "admin@omnivirtualsolution.com";
   const copyrightLine = company?.copyright_text || `© ${new Date().getFullYear()} ${brandName}. All rights reserved.`;
-  const siteBaseUrl = (process.env.PUBLIC_URL || process.env.URL || "https://www.omnivirtualsolution.com").replace(/\/$/, "");
+  const siteBaseUrl = (process.env.PUBLIC_URL || process.env.URL || "https://omnivirtualsolution.com").replace(/\/$/, "");
   const logoSrc = isWebPreview
     ? "/assets/img/OmniLogo2.png"
     : `${siteBaseUrl}/assets/img/OmniLogo2.png`;
@@ -845,7 +845,7 @@ function buildFailureAlertHtml({
   settings,
 }) {
   const brandName = company?.company_name || "Omni Virtual Solutions";
-  const siteBaseUrl = (process.env.PUBLIC_URL || process.env.URL || "https://www.omnivirtualsolution.com").replace(/\/$/, "");
+  const siteBaseUrl = (process.env.PUBLIC_URL || process.env.URL || "https://omnivirtualsolution.com").replace(/\/$/, "");
   const adminUrl = `${siteBaseUrl}/admin/contacts.html#inbox`;
   const templateStyle = settings?.email_template_style || "luxury_gold";
 
