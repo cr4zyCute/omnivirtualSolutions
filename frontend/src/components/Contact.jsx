@@ -354,7 +354,7 @@ export default function Contact() {
                       type="text"
                       name="name"
                       className="form-control"
-                      placeholder="John Doe"
+                      placeholder="Your Name"
                       value={formData.name}
                       onChange={handleChange}
                       required
@@ -368,7 +368,7 @@ export default function Contact() {
                       type="email"
                       name="email"
                       className="form-control"
-                      placeholder="john@example.com (optional)"
+                      placeholder="Your Email (optional)"
                       value={formData.email}
                       onChange={handleChange}
                     />

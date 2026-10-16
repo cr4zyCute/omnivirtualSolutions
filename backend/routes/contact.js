@@ -218,10 +218,12 @@ const handleContactSubmission = async (req, res) => {
       emailSvc.sendAutoReply(submission),
     ]);
 
-    const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve("timeout"), 8000));
+    // We await them with a 10-second safety timeout so serverless environments (Netlify)
+    // do not freeze the container before the emails are transmitted to Gmail.
+    const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve("timeout"), 10000));
     const raceResult = await Promise.race([emailPromise, timeoutPromise]);
     if (raceResult === "timeout") {
-      console.warn(`[contact] Submission #${newId} emails took >8s; response returned while sending completes.`);
+      console.warn(`[contact] Submission #${newId} emails took >10s; response returned while sending completes in background.`);
     }
   } catch (err) {
     console.error("[contact] Email dispatch error:", err.message);

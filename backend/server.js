@@ -369,6 +369,19 @@ if (require.main === module) {
     } catch (syncErr) {
       console.warn("[server] Inbound sync service failed to initialize:", syncErr.message);
     }
+
+    // Start background periodic email recovery ticker (every 60s)
+    try {
+      const emailSvc = require("./email-service");
+      const recoveryTimer = setInterval(() => {
+        emailSvc.processPendingSubmissions(5).catch((err) => {
+          console.warn("[server] Periodic email recovery error:", err.message);
+        });
+      }, 60000);
+      if (recoveryTimer.unref) recoveryTimer.unref();
+    } catch (recErr) {
+      console.warn("[server] Email recovery ticker failed to initialize:", recErr.message);
+    }
   });
 }
 

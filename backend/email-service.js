@@ -85,12 +85,10 @@ async function createTransporter(settings, { noCache = false } = {}) {
     transportConfig = {
       service: "gmail",
       auth: { user, pass },
-      pool: !noCache,
-      maxConnections: 3,
-      maxMessages: 50,
-      connectionTimeout: 8000,
-      greetingTimeout: 6000,
-      socketTimeout: 12000,
+      pool: false, // Critical: Gmail drops idle pooled sockets after 2-4 mins causing silent dead writes. Disabling pooling forces fresh TLS handshakes (~400ms) with zero stale sockets.
+      connectionTimeout: 6000,
+      greetingTimeout: 5000,
+      socketTimeout: 7000,
     };
   } else {
     transportConfig = {
@@ -103,7 +101,7 @@ async function createTransporter(settings, { noCache = false } = {}) {
       maxConnections: 3,
       connectionTimeout: 8000,
       greetingTimeout: 6000,
-      socketTimeout: 12000,
+      socketTimeout: 8000,
     };
   }
 
@@ -1136,6 +1134,31 @@ async function sendNewSubmissionNotification(submission) {
     console.log(`[email] Notification sent for submission #${submission.id} → ${recipientEmail}`);
     return { success: true };
   } catch (err) {
+    const isSocketErr = /ECONNRESET|ETIMEDOUT|EPIPE|closed|socket/i.test(err.code || err.message);
+    if (isSocketErr) {
+      console.warn(`[email] Transient socket error on notification #${submission.id} (${err.message}). Retrying once with fresh connection...`);
+      clearTransporterCache();
+      try {
+        const retryTransporter = await createTransporter(settings, { noCache: true });
+        if (retryTransporter) {
+          await retryTransporter.sendMail({
+            from: fromAddress,
+            to:   recipientEmail,
+            replyTo: submission.email,
+            subject,
+            html: htmlBody,
+            text: `New inquiry from ${submission.full_name} (${submission.email})\n\nSubject: ${submission.subject || "General Inquiry"}\n\nMessage:\n${submission.message}`,
+          });
+          await updateNotifyStatus(submission.id, "sent");
+          await logEmail({ eventType: "new_submission_notify", submissionId: submission.id, recipientEmail, subject, status: "sent" });
+          console.log(`[email] Notification sent on retry for submission #${submission.id} → ${recipientEmail}`);
+          return { success: true };
+        }
+      } catch (retryErr) {
+        err = retryErr;
+      }
+    }
+
     const errMsg = err.message;
     await updateNotifyStatus(submission.id, "failed");
     await logEmail({ eventType: "new_submission_notify", submissionId: submission.id, recipientEmail, subject, status: "failed", errorMessage: errMsg });
@@ -1193,6 +1216,31 @@ async function sendAutoReply(submission) {
     await logEmail({ eventType: "auto_reply", submissionId: submission.id, recipientEmail: submission.email, subject, status: "sent" });
     return { success: true };
   } catch (err) {
+    const isSocketErr = /ECONNRESET|ETIMEDOUT|EPIPE|closed|socket/i.test(err.code || err.message);
+    if (isSocketErr) {
+      console.warn(`[email] Transient socket error on auto-reply #${submission.id} (${err.message}). Retrying once with fresh connection...`);
+      clearTransporterCache();
+      try {
+        const retryTransporter = await createTransporter(settings, { noCache: true });
+        if (retryTransporter) {
+          await retryTransporter.sendMail({
+            from: fromAddress,
+            to: submission.email,
+            replyTo: recipientEmail,
+            subject,
+            text: bodyText,
+            html: htmlBody,
+            messageId: `<submission-${submission.id}@omnivirtualsolution.com>`,
+          });
+          await logEmail({ eventType: "auto_reply", submissionId: submission.id, recipientEmail: submission.email, subject, status: "sent" });
+          console.log(`[email] Auto-reply sent on retry for submission #${submission.id} → ${submission.email}`);
+          return { success: true };
+        }
+      } catch (retryErr) {
+        err = retryErr;
+      }
+    }
+
     await logEmail({ eventType: "auto_reply", submissionId: submission.id, recipientEmail: submission.email, subject, status: "failed", errorMessage: err.message });
     sendEmailFailureAlert({
       failedEventType: "auto_reply",
@@ -1256,6 +1304,37 @@ async function sendReply({ submission, replyBody, replyId, sentBy }) {
     await logEmail({ eventType: "reply_sent", submissionId: submission.id, recipientEmail: submission.email, subject, status: "sent" });
     return { success: true };
   } catch (err) {
+    const isSocketErr = /ECONNRESET|ETIMEDOUT|EPIPE|closed|socket/i.test(err.code || err.message);
+    if (isSocketErr) {
+      console.warn(`[email-service] Transient socket error on reply #${replyId} (${err.message}). Retrying once with fresh connection...`);
+      clearTransporterCache();
+      try {
+        const retryTransporter = await createTransporter(settings, { noCache: true });
+        if (retryTransporter) {
+          await retryTransporter.sendMail({
+            from: `"${senderName}" <${senderEmail}>`,
+            to:   submission.email,
+            replyTo: senderEmail,
+            subject,
+            text: fullBody,
+            html: htmlBody,
+            messageId: `<submission-${submission.id}-reply-${replyId || Date.now()}@omnivirtualsolution.com>`,
+            inReplyTo: `<submission-${submission.id}@omnivirtualsolution.com>`,
+            references: `<submission-${submission.id}@omnivirtualsolution.com>`,
+          });
+          await db.execute({
+            sql: "UPDATE contact_replies SET email_sent = 1 WHERE id = ?",
+            args: [replyId],
+          });
+          await logEmail({ eventType: "reply_sent", submissionId: submission.id, recipientEmail: submission.email, subject, status: "sent" });
+          console.log(`[email-service] Reply sent on retry for submission #${submission.id}`);
+          return { success: true };
+        }
+      } catch (retryErr) {
+        err = retryErr;
+      }
+    }
+
     await db.execute({
       sql: "UPDATE contact_replies SET email_sent = 0, email_error = ? WHERE id = ?",
       args: [err.message, replyId],
