@@ -24,3 +24,8 @@ Thumbs.db
 
 # Scratch and temporary dev scripts
 scratch/
+
+# Showcase screenshots
+**/screenshots/
+screenshots/
+deliverables/**/screenshots/
