@@ -41,6 +41,23 @@ if (fs.existsSync(assetsSrc)) {
   console.log("  ✅ Assets copied to frontend/dist/assets");
 }
 
+// 4. Ensure root seo and favicon assets exist at dist root
+const rootFilesToDist = [
+  "favicon.ico",
+  "favicon-48x48.png",
+  "apple-touch-icon.png",
+  "favicon.png",
+  "robots.txt",
+  "sitemap.xml",
+];
+for (const file of rootFilesToDist) {
+  const src = path.join(root, file);
+  if (fs.existsSync(src)) {
+    fs.copyFileSync(src, path.join(dist, file));
+  }
+}
+console.log("  ✅ Root SEO and Favicon files copied to frontend/dist");
+
 const redirectsContent = `# Cloudflare & Netlify Redirects
 /admin/site/assets/*   /assets/:splat         200
 `;
